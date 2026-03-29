@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'px-4 py-2 rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+      'px-4 py-2 rounded-sm font-medium transition-colors focus:outline-hidden focus:ring-2 focus:ring-offset-2',
       variantClasses[variant],
       { 'opacity-50 cursor-not-allowed': disabled || loading }
     ]"
@@ -25,10 +25,10 @@ const props = defineProps<{
 const variant = props.variant || 'primary'
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
-  secondary: 'bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500',
-  outline: 'border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-indigo-500',
-  ghost: 'bg-transparent text-gray-600 hover:bg-gray-100 focus:ring-gray-400',
-  danger: 'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500'
+  primary: 'bg-primary-main text-white hover:opacity-90 focus:ring-primary-main',
+  secondary: 'bg-secondary-main text-white hover:opacity-90 focus:ring-secondary-main',
+  outline: 'border border-border-main bg-transparent text-text-primary hover:bg-surface-main focus:ring-accent-main',
+  ghost: 'bg-transparent text-text-secondary hover:bg-surface-main focus:ring-border-main',
+  danger: 'bg-error-main text-white hover:opacity-90 focus:ring-error-main'
 }
 </script>

@@ -1,62 +1,41 @@
 <template>
-  <aside class="divi-sidebar" :class="{ 'collapsed': isCollapsed }">
-    <div class="sidebar-header">
-      <div class="logo">
-        <span class="logo-text">Divi</span>
+  <aside 
+    class="w-64 h-screen bg-primary-main text-white flex flex-col transition-all duration-300 sticky top-0"
+    :class="{ 'w-20': isCollapsed }"
+  >
+    <div class="p-6 border-b border-white/10 flex items-center justify-between">
+      <div v-if="!isCollapsed" class="flex items-center gap-2">
+        <span class="text-2xl font-bold text-accent-main">Divi</span>
       </div>
+      <button 
+        @click="isCollapsed = !isCollapsed" 
+        class="p-1 rounded-sm hover:bg-white/10 transition-colors"
+      >
+        <span class="text-white/70">{{ isCollapsed ? '➡️' : '⬅️' }}</span>
+      </button>
     </div>
     
-    <nav class="sidebar-nav">
-      <RouterLink to="/" class="nav-item" active-class="active">
-        <span class="nav-icon">📊</span>
-        <span class="nav-label">Dashboard</span>
-      </RouterLink>
-      
-      <RouterLink to="/transactions" class="nav-item" active-class="active">
-        <span class="nav-icon">💸</span>
-        <span class="nav-label">Transactions</span>
-      </RouterLink>
-
-      <RouterLink to="/budgets" class="nav-item" active-class="active">
-        <span class="nav-icon">🎯</span>
-        <span class="nav-label">Budgets</span>
-      </RouterLink>
-
-      <RouterLink to="/goals" class="nav-item" active-class="active">
-        <span class="nav-icon">🏆</span>
-        <span class="nav-label">Goals</span>
-      </RouterLink>
-
-      <RouterLink to="/loans" class="nav-item" active-class="active">
-        <span class="nav-icon">🏛️</span>
-        <span class="nav-label">Loans</span>
-      </RouterLink>
-
-      <RouterLink to="/subscriptions" class="nav-item" active-class="active">
-        <span class="nav-icon">📅</span>
-        <span class="nav-label">Subscriptions</span>
-      </RouterLink>
-
-      <RouterLink to="/calendar" class="nav-item" active-class="active">
-        <span class="nav-icon">🗓️</span>
-        <span class="nav-label">Calendar</span>
-      </RouterLink>
-
-      <RouterLink to="/reports" class="nav-item" active-class="active">
-        <span class="nav-icon">📈</span>
-        <span class="nav-label">Reports</span>
-      </RouterLink>
-
-      <RouterLink to="/activity-log" class="nav-item" active-class="active">
-        <span class="nav-icon">📑</span>
-        <span class="nav-label">Activity Log</span>
+    <nav class="flex-1 py-4 overflow-y-auto">
+      <RouterLink 
+        v-for="item in navItems" 
+        :key="item.to"
+        :to="item.to" 
+        class="flex items-center py-3 px-6 text-white/70 hover:bg-white/5 hover:text-white transition-all border-l-4 border-transparent" 
+        active-class="active-nav-item"
+      >
+        <span class="text-xl" :class="{ 'mr-3': !isCollapsed }">{{ item.icon }}</span>
+        <span v-if="!isCollapsed" class="font-medium">{{ item.label }}</span>
       </RouterLink>
     </nav>
 
-    <div class="sidebar-footer">
-      <button @click="$emit('logout')" class="logout-btn">
-        <span class="nav-icon">🚪</span>
-        <span class="nav-label">Logout</span>
+    <div class="p-4 border-t border-white/10">
+      <button 
+        @click="$emit('logout')" 
+        class="w-full flex items-center py-3 px-2 text-white/70 hover:bg-error-main/20 hover:text-error-main rounded-sm transition-all"
+        :class="{ 'justify-center': isCollapsed }"
+      >
+        <span class="text-xl" :class="{ 'mr-3': !isCollapsed }">🚪</span>
+        <span v-if="!isCollapsed" class="font-medium">Logout</span>
       </button>
     </div>
   </aside>
@@ -68,88 +47,24 @@ import { ref } from 'vue'
 defineEmits(['logout'])
 
 const isCollapsed = ref(false)
+
+const navItems = [
+  { to: '/', icon: '📊', label: 'Dashboard' },
+  { to: '/transactions', icon: '💸', label: 'Transactions' },
+  { to: '/budgets', icon: '🎯', label: 'Budgets' },
+  { to: '/goals', icon: '🏆', label: 'Goals' },
+  { to: '/loans', icon: '🏛️', label: 'Loans' },
+  { to: '/subscriptions', icon: '📅', label: 'Subscriptions' },
+  { to: '/calendar', icon: '🗓️', label: 'Calendar' },
+  { to: '/reports', icon: '📈', label: 'Reports' },
+  { to: '/activity-log', icon: '📑', label: 'Activity Log' },
+]
 </script>
 
 <style scoped>
-.divi-sidebar {
-  width: 260px;
-  height: 100vh;
-  background: #1f2937;
-  color: #f3f4f6;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s;
-  position: sticky;
-  top: 0;
-}
-.sidebar-header {
-  padding: 1.5rem;
-  border-bottom: 1px solid #374151;
-}
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #10b981;
-}
-.sidebar-nav {
-  flex: 1;
-  padding: 1rem 0;
-}
-.nav-item {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1.5rem;
-  color: #9ca3af;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.nav-item:hover {
-  background: #374151;
-  color: #f3f4f6;
-}
-.nav-item.active {
-  background: #111827;
-  color: #10b981;
-  border-left: 4px solid #10b981;
-}
-.nav-icon {
-  margin-right: 0.75rem;
-  font-size: 1.25rem;
-}
-.sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid #374151;
-}
-.logout-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 0.5rem;
-  background: none;
-  border: none;
-  color: #9ca3af;
-  cursor: pointer;
-  border-radius: 0.375rem;
-  transition: background 0.2s;
-}
-.logout-btn:hover {
-  background: #374151;
-  color: #ef4444;
-}
+@reference "../../../core/styles/main.css";
 
-@media (max-width: 768px) {
-  .divi-sidebar {
-    width: 70px;
-  }
-  .nav-label, .logo-text, .sidebar-header span {
-    display: none;
-  }
-  .nav-item {
-    padding: 1rem;
-    justify-content: center;
-  }
-  .nav-icon {
-    margin-right: 0;
-  }
+.active-nav-item {
+  @apply bg-white/10 text-accent-main border-accent-main;
 }
 </style>

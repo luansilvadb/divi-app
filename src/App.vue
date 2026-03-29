@@ -1,7 +1,7 @@
 <template>
-  <div class="divi-app-container">
+  <div class="flex min-h-screen bg-bg-main text-text-primary">
     <AppSidebar v-if="isLoggedIn" @logout="handleLogout" />
-    <main class="divi-main-content">
+    <main class="flex-1 p-8 overflow-y-auto bg-bg-main">
       <RouterView />
     </main>
   </div>
@@ -46,55 +46,5 @@ async function handleLogout() {
 </script>
 
 <style>
-:root {
-  --bg-color: #f9fafb;
-  --text-color: #111827;
-  --card-bg: #ffffff;
-  --border-color: #e5e7eb;
-  --sidebar-bg: #1f2937;
-  --sidebar-text: #f3f4f6;
-}
-
-.dark {
-  --bg-color: #111827;
-  --text-color: #f3f4f6;
-  --card-bg: #1f2937;
-  --border-color: #374151;
-  --sidebar-bg: #111827;
-  --sidebar-text: #f3f4f6;
-}
-
-/* Global resets */
-body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.divi-app-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.divi-main-content {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
-}
-
-/* Base Card overrides for dark theme */
-.base-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-}
-
-/* Remove default link styles */
-a {
-  color: inherit;
-  text-decoration: none;
-}
+/* Reset global style can stay empty if we used main.css */
 </style>
