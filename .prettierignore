@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.vscode/
+.idea/
+*.tmp
+*.swp
