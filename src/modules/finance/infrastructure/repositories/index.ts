@@ -119,11 +119,11 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           const validRecords = records.reduce(
             (acc, record, i) => {
               if (record) {
-                acc.push({ ...record, ...updates[i]?.changes })
+                acc.push({ ...record, ...updates[i]?.changes } as LocalTransaction)
               }
               return acc
             },
-            [] as Record<string, unknown>[],
+            [] as LocalTransaction[],
           )
 
           if (validRecords.length > 0) {
