@@ -1,27 +1,21 @@
 <template>
-  <BaseCard class="budget-card glass-card hover-glow">
+  <BaseCard class="budget-card" clickable>
     <template #header>
       <div class="header-content">
         <div class="budget-title-area">
-          <div 
-            class="icon-container" 
-            :style="{ backgroundColor: (budget.color || '#3b82f6') + '20', color: budget.color || '#3b82f6' }"
-          >
+          <BaseIconBox :color="budget.color || 'var(--color-primary-main)'">
             <svg v-if="budget.type === 'saving'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
+          </BaseIconBox>
           <span class="budget-name">{{ budget.name }}</span>
         </div>
-        <div 
-          class="budget-badge" 
-          :style="{ 
-            backgroundColor: (budget.color || '#3b82f6') + '15', 
-            color: budget.color || '#3b82f6',
-            borderColor: (budget.color || '#3b82f6') + '30'
-          }"
+        
+        <BaseBadge 
+          :color="budget.color || 'var(--color-primary-main)'"
+          variant="subtle"
         >
           {{ budget.type === 'spending' ? 'Gasto' : 'Reserva' }}
-        </div>
+        </BaseBadge>
       </div>
     </template>
     
@@ -36,16 +30,11 @@
         </div>
       </div>
       
-      <div class="progress-track">
-        <div 
-          class="progress-fill" 
-          :class="{ 'over-budget-fill': isOverBudget }"
-          :style="{ 
-            width: `${Math.min(percentage, 100)}%`,
-            backgroundColor: isOverBudget ? 'var(--color-error-main)' : (budget.color || 'var(--color-primary-main)')
-          }"
-        ></div>
-      </div>
+      <BaseProgressBar 
+        :percentage="percentage" 
+        :color="budget.color" 
+        :is-over-budget="isOverBudget" 
+      />
       
       <div class="budget-footer-details">
         <div class="cadence" v-if="daysRemaining > 0 && !isOverBudget">
@@ -71,6 +60,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
+import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
+import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import type { Budget } from '@/modules/finance/domain/entities'
 
 const props = defineProps<{
@@ -108,27 +100,6 @@ const formatCurrency = (value: number) => {
 </script>
 
 <style scoped>
-.budget-card {
-  margin-bottom: 1.5rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 1.25rem;
-}
-
-:is(.dark) .budget-card {
-  background: rgba(30, 41, 59, 0.4);
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-.hover-glow:hover {
-  border-color: rgba(var(--color-primary-main-rgb), 0.3);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-}
-
 .header-content {
   display: flex;
   justify-content: space-between;
@@ -141,30 +112,11 @@ const formatCurrency = (value: number) => {
   gap: 1rem;
 }
 
-.icon-container {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .budget-name {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--color-text-primary, #111827);
+  color: var(--color-text-primary);
   letter-spacing: -0.01em;
-}
-
-.budget-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 1px solid transparent;
 }
 
 .budget-info {
@@ -189,7 +141,7 @@ const formatCurrency = (value: number) => {
 .consumed {
   font-size: 1.75rem;
   font-weight: 800;
-  color: var(--color-text-primary, #111827);
+  color: var(--color-text-primary);
   line-height: 1;
   letter-spacing: -0.02em;
 }
@@ -197,14 +149,14 @@ const formatCurrency = (value: number) => {
 .limit {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-secondary);
 }
 
 .percentage-pill {
   font-size: 0.875rem;
   font-weight: 700;
   background: rgba(0, 0, 0, 0.05);
-  color: var(--color-text-secondary, #4b5563);
+  color: var(--color-text-secondary);
   padding: 0.25rem 0.6rem;
   border-radius: 8px;
 }
@@ -214,58 +166,12 @@ const formatCurrency = (value: number) => {
 }
 
 .percentage-pill.over-budget {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--color-error-main, #ef4444);
+  background: rgba(var(--color-error-main-rgb), 0.1);
+  color: var(--color-error-main);
 }
 
 .text-error-main {
-  color: var(--color-error-main, #ef4444) !important;
-}
-
-.progress-track {
-  height: 10px;
-  background: rgba(0,0,0,0.06);
-  border-radius: 999px;
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-}
-
-:is(.dark) .progress-track {
-  background: rgba(255,255,255,0.06);
-}
-
-.progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.over-budget-fill {
-  animation: pulse-error 2s infinite;
-}
-
-@keyframes pulse-error {
-  0% { opacity: 1; }
-  50% { opacity: 0.8; }
-  100% { opacity: 1; }
+  color: var(--color-error-main) !important;
 }
 
 .budget-footer-details {
@@ -288,12 +194,12 @@ const formatCurrency = (value: number) => {
 }
 
 .cadence-label {
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-secondary);
 }
 
 .cadence-value {
   font-weight: 700;
-  color: var(--color-text-primary, #1f2937);
+  color: var(--color-text-primary);
   background: rgba(0,0,0,0.04);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
@@ -304,7 +210,7 @@ const formatCurrency = (value: number) => {
 }
 
 .over-alert {
-  color: var(--color-error-main, #ef4444);
+  color: var(--color-error-main);
   font-weight: 600;
 }
 
@@ -318,7 +224,7 @@ const formatCurrency = (value: number) => {
   gap: 0.35rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-text-secondary, #6b7280);
+  color: var(--color-text-secondary);
   background: rgba(0,0,0,0.03);
   padding: 0.35rem 0.6rem;
   border-radius: 8px;

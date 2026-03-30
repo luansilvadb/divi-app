@@ -7,6 +7,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-29
 - Supabase (SDK / RPC) (002-refactor-color-palette)
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Tailwindcss, Vite (002-refactor-color-palette)
 - LocalStorage (Persistência de preferência de tema) (002-refactor-color-palette)
+- Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS (004-standardize-ui-consistency)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -44,10 +45,10 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 004-standardize-ui-consistency: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
+- 003-standardize-design-system: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 - 002-refactor-color-palette: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Tailwindcss, Vite
-- 002-refactor-color-palette: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 
-- **Initial Architecture Setup**: Divi Constitution v1.0.0 established with Vertical Slicing and Clean Architecture principles.
 
 <!-- MANUAL ADDITIONS START -->
 ## Design System & Themes

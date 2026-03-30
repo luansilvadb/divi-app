@@ -19,6 +19,14 @@
   --color-error-main: #D73A49;
   --color-warning-main: #F2994A; /* Adding standard warning from general premium palettes */
   --color-info-main: #2F80ED; /* Adding standard info from general premium palettes */
+
+  /* Glassmorphism Tokens */
+  --color-glass-bg: rgba(255, 255, 255, 0.75);
+  --color-glass-border: rgba(255, 255, 255, 0.4);
+  --color-glass-blur: 16px;
+  --color-hover-border: rgba(26, 43, 76, 0.3); /* Primary Navy with opacity */
+  --color-glass-hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --card-radius: 1.25rem;
 }
 
 .dark {
@@ -42,4 +50,12 @@
   --color-error-main: #F85149;
   --color-warning-main: #FFB347;
   --color-info-main: #56CCF2;
+
+  /* Glassmorphism Tokens */
+  --color-glass-bg: rgba(30, 41, 59, 0.4);
+  --color-glass-border: rgba(255, 255, 255, 0.05);
+  --color-glass-blur: 16px;
+  --color-hover-border: rgba(61, 90, 128, 0.3); /* Primary Steel Blue with opacity */
+  --color-glass-hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  --card-radius: 1.25rem;
 }
