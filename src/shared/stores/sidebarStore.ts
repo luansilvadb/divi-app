@@ -56,7 +56,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
     try {
       prefetchQueue.add(to);
       const route = router.resolve(to);
-      const components = route.matched.flatMap(m => Object.values(m.components));
+      const components = route.matched.flatMap(m => m.components ? Object.values(m.components) : []);
       
       // Dispara o carregamento dos componentes (importação dinâmica)
       const loaders = components.map(c => {

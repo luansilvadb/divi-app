@@ -1,7 +1,7 @@
 <template>
   <aside 
     v-motion
-    :initial="false"
+
     :variants="{
       expanded: { width: '260px' },
       collapsed: { width: '80px' }
