@@ -4,7 +4,12 @@ import type {
   ICategoryRepository,
 } from '../../domain/repositories'
 import type { Transaction, Wallet, Category } from '../../domain/entities'
-import { db, type LocalTransaction, type LocalWallet, type LocalCategory } from '../../../../core/db'
+import {
+  db,
+  type LocalTransaction,
+  type LocalWallet,
+  type LocalCategory,
+} from '../../../../core/db'
 import { supabase } from '../../../../core/supabase'
 
 export class DexieSupabaseTransactionRepository implements ITransactionRepository {
@@ -107,11 +112,22 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           })
           .filter(Boolean) as { key: string; changes: Record<string, unknown> }[]
 
-        // We can't use bulkUpdate directly in Dexie 3 with differing values per key easily without an extension or loop,
-        // but bulkPut can be used or a fast loop since local DB is fast. We use a fast loop for local updates.
+        // Utilizando bulkPut/bulkGet em lote para evitar gargalos bloqueantes de I/O em loops
+        const keysToUpdate = updates.map((u) => u.key as string)
         await db.transaction('rw', db.transactions, async () => {
-          for (const update of updates) {
-            await db.transactions.update(update.key, update.changes)
+          const records = await db.transactions.bulkGet(keysToUpdate)
+          const validRecords = records.reduce(
+            (acc, record, i) => {
+              if (record) {
+                acc.push({ ...record, ...updates[i]?.changes })
+              }
+              return acc
+            },
+            [] as Record<string, unknown>[],
+          )
+
+          if (validRecords.length > 0) {
+            await db.transactions.bulkPut(validRecords)
           }
         })
       } else {
