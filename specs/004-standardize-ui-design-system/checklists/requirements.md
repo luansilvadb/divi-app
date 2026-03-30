@@ -1,8 +1,8 @@
-# Specification Quality Checklist: Standardize UI Design System
+# Specification Quality Checklist: Standardize UI & Design System
 
 **Purpose**: Validate specification completeness and quality before proceeding to planning
 **Created**: 2026-03-29
-**Feature**: [specs/004-standardize-ui-consistency/spec.md]
+**Feature**: [specs/004-standardize-ui-design-system/spec.md]
 
 ## Content Quality
 
@@ -31,5 +31,5 @@
 
 ## Notes
 
-- The spec is focused on standardizing the UI/UX based on the Budgets screen.
-- All requirements are testable and success criteria are measurable.
+- A especificação foca estritamente no padrão visual (UI/UX) e na organização de componentes compartilhados, sem entrar em detalhes de implementação de backend ou bibliotecas específicas além das já estabelecidas no projeto.
+- O "Santo Graal" (BudgetsView) foi mapeado para requisitos funcionais testáveis.

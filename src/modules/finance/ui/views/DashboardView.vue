@@ -25,38 +25,44 @@
       <main class="main-column">
         <!-- Stats Overview -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <BaseSummaryItem 
-            label="Entradas (Mês)" 
-            :value="formatCurrency(totalIncome)" 
-            color="var(--color-success-main)" 
-            status="success"
-          >
-            <template #icon>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-            </template>
-          </BaseSummaryItem>
+          <BaseCard :is-loading="isLoading">
+            <BaseSummaryItem 
+              label="Entradas (Mês)" 
+              :value="formatCurrency(totalIncome)" 
+              color="var(--color-success-main)" 
+              status="success"
+            >
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </template>
+            </BaseSummaryItem>
+          </BaseCard>
           
-          <BaseSummaryItem 
-            label="Saídas (Mês)" 
-            :value="formatCurrency(totalExpense)" 
-            color="var(--color-error-main)" 
-            status="error"
-          >
-            <template #icon>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-            </template>
-          </BaseSummaryItem>
+          <BaseCard :is-loading="isLoading">
+            <BaseSummaryItem 
+              label="Saídas (Mês)" 
+              :value="formatCurrency(totalExpense)" 
+              color="var(--color-error-main)" 
+              status="error"
+            >
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+              </template>
+            </BaseSummaryItem>
+          </BaseCard>
 
-          <BaseSummaryItem 
-            label="Saldo Geral" 
-            :value="formatCurrency(store.totalBalance)" 
-            color="var(--color-primary-main)"
-            status="info"
-          >
-            <template #icon>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </template>
-          </BaseSummaryItem>
+          <BaseCard :is-loading="isLoading">
+            <BaseSummaryItem 
+              label="Saldo Geral" 
+              :value="formatCurrency(store.totalBalance)" 
+              color="var(--color-primary-main)"
+              status="info"
+            >
+              <template #icon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </template>
+            </BaseSummaryItem>
+          </BaseCard>
         </div>
 
         <!-- Wallets Section -->
@@ -193,6 +199,7 @@ import TransactionForm from '../components/TransactionForm.vue'
 
 const store = useFinanceStore()
 const showTransactionForm = ref(false)
+const isLoading = ref(true)
 
 // Mock chart data - Will be integrated with a dedicated AnalyticsService later
 const growthData = [15000, 16200, 15800, 17500, 18900, 20100]
@@ -215,14 +222,19 @@ onMounted(async () => {
 })
 
 async function refreshData() {
+  isLoading.value = true
   const now = new Date()
-  await Promise.all([
-    store.fetchWallets(),
-    store.fetchCategories(),
-    store.fetchTransactionsByMonth(now.getFullYear(), now.getMonth() + 1),
-    store.fetchLoans(),
-    store.fetchSubscriptions()
-  ])
+  try {
+    await Promise.all([
+      store.fetchWallets(),
+      store.fetchCategories(),
+      store.fetchTransactionsByMonth(now.getFullYear(), now.getMonth() + 1),
+      store.fetchLoans(),
+      store.fetchSubscriptions()
+    ])
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 

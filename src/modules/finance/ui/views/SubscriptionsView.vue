@@ -20,16 +20,20 @@
     <div class="view-content-grid">
       <!-- MAIN COLUMN -->
       <main class="main-column">
-        <div v-if="subscriptions.length === 0" class="empty-state glass-card p-20 text-center flex flex-col items-center justify-center">
-          <BaseIconBox color="var(--color-primary-main)" size="lg" class="mb-8 opacity-80">
+        <BaseCard
+          v-if="subscriptions.length === 0"
+          is-empty
+          empty-title="Sem assinaturas ativas"
+          empty-subtitle="Registre seus serviços de streaming, software ou clubes para ter uma visão clara dos seus custos fixos mensais."
+          empty-color="var(--color-primary-main)"
+        >
+          <template #empty-icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h.01"/></svg>
-          </BaseIconBox>
-          <div class="max-w-md">
-            <h3 class="text-2xl font-black text-text-primary mb-3">Sem assinaturas ativas</h3>
-            <p class="text-text-secondary text-sm leading-relaxed mb-8">Registre seus serviços de streaming, software ou clubes para ter uma visão clara dos seus custos fixos mensais.</p>
+          </template>
+          <template #empty-action>
             <BaseButton variant="primary" class="px-8" @click="showAddSubscriptionModal = true">Adicionar Assinatura</BaseButton>
-          </div>
-        </div>
+          </template>
+        </BaseCard>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <BaseCard v-for="sub in subscriptions" :key="sub.id" clickable>
