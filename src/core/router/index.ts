@@ -69,21 +69,21 @@ const router = createRouter({
 })
 
 // Auth Guard logic
-router.beforeEach(async (to, _from, next) => {
+router.beforeEach(async (to, _from) => {
   try {
     const authService = container.resolve<IAuthService>('IAuthService')
     const user = await authService.getCurrentUser()
 
     if (to.meta.requiresAuth && !user) {
-      next({ name: 'login' })
+      return { name: 'login' }
     } else if (to.meta.guestOnly && user) {
-      next({ name: 'dashboard' })
+      return { name: 'dashboard' }
     } else {
-      next()
+      return true
     }
   } catch (e) {
     console.error('Router Auth Guard Error:', e)
-    next()
+    return true
   }
 })
 
