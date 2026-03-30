@@ -174,9 +174,11 @@
                   v-for="t in group"
                   :key="t.id || t.localId"
                   :transaction="t"
-                  :categoryName="getCategoryName(t.category_id)"
-                  :categoryColor="getCategoryColor(t.category_id)"
-                  :walletName="getWalletName(t.wallet_id)"
+                  :categoryName="store.categoryMap.get(t.category_id)?.name || 'Outras'"
+                  :categoryColor="
+                    store.categoryMap.get(t.category_id)?.color || 'var(--color-primary-main)'
+                  "
+                  :walletName="store.walletMap.get(t.wallet_id)?.name || 'Carteira'"
                   showTime
                   class="rounded-xl"
                   @delete="handleDelete"
@@ -204,7 +206,7 @@
           <div class="flex flex-col gap-6 pt-2">
             <BaseSummaryItem
               label="Entradas"
-              :value="formatCurrency(totalIncome)"
+              :value="formatCurrency(store.totalIncome)"
               color="var(--color-success-main)"
               status="success"
             >
@@ -229,7 +231,7 @@
 
             <BaseSummaryItem
               label="Saídas"
-              :value="formatCurrency(totalExpense)"
+              :value="formatCurrency(store.totalExpense)"
               color="var(--color-error-main)"
               status="error"
             >
@@ -261,9 +263,9 @@
               >
               <div
                 class="text-3xl font-black tracking-tighter"
-                :class="totalBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
+                :class="store.monthlyBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
               >
-                {{ formatCurrencySign(totalBalance) }}
+                {{ formatCurrencySign(store.monthlyBalance) }}
               </div>
             </div>
           </div>
@@ -275,7 +277,7 @@
 
           <!-- Empty Category State -->
           <div
-            v-if="topCategories.length === 0"
+            v-if="store.topCategories.length === 0"
             class="flex flex-col items-center justify-center py-12 opacity-40 text-center"
           >
             <svg
@@ -301,7 +303,7 @@
 
           <!-- Category Progress Bars -->
           <div v-else class="flex flex-col gap-6 pt-2">
-            <div v-for="cat in topCategories" :key="cat.id" class="flex flex-col gap-2.5">
+            <div v-for="cat in store.topCategories" :key="cat.id" class="flex flex-col gap-2.5">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                   <div
@@ -357,10 +359,7 @@ const currentDate = ref(new Date())
 const searchQuery = ref('')
 
 // Helpers for the template
-const getCategoryName = (id: string) => store.categories.find((c) => c.id === id)?.name || 'Outras'
-const getCategoryColor = (id: string) =>
-  store.categories.find((c) => c.id === id)?.color || 'var(--color-primary-main)'
-const getWalletName = (id: string) => store.wallets.find((w) => w.id === id)?.name || 'Carteira'
+// Getters replaced with O(1) store maps
 
 // Date Labels
 const monthLabelOnly = computed(() => {
@@ -377,7 +376,7 @@ const filteredTransactionsArray = computed(() => {
   return store.transactions.filter(
     (t) =>
       t.title.toLowerCase().includes(query) ||
-      getCategoryName(t.category_id).toLowerCase().includes(query) ||
+      (store.categoryMap.get(t.category_id)?.name || 'Outras').toLowerCase().includes(query) ||
       formatCurrency(t.amount).toLowerCase().includes(query),
   )
 })
@@ -402,45 +401,8 @@ const groupedTransactions = computed(() => {
 })
 
 // Summary Calculations
-const totalIncome = computed(() =>
-  store.transactions.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0),
-)
-
-const totalExpense = computed(() =>
-  store.transactions.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
-)
-
-const totalBalance = computed(() => totalIncome.value - totalExpense.value)
 
 // Category Analysis
-const topCategories = computed(() => {
-  const expenses = store.transactions.filter((t) => t.type === 'expense')
-  const catMap: Record<string, number> = {}
-
-  expenses.forEach((t) => {
-    catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
-  })
-
-  const sorted = Object.entries(catMap)
-    .map(([id, total]) => {
-      const cat = store.categories.find((c) => c.id === id)
-      return {
-        id,
-        name: cat?.name || 'Outros',
-        color: cat?.color || '#9ca3af',
-        total,
-      }
-    })
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 5)
-
-  if (totalExpense.value === 0) return []
-
-  return sorted.map((s) => ({
-    ...s,
-    percent: (s.total / totalExpense.value) * 100,
-  }))
-})
 
 // Initialization
 onMounted(async () => {

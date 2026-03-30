@@ -31,6 +31,59 @@ export const useFinanceStore = defineStore('finance', () => {
 
   const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
 
+  // Optimized Maps for O(1) Lookups
+  const categoryMap = computed(() => {
+    const map = new Map<string, Category>()
+    categories.value.forEach((c) => map.set(c.id, c))
+    return map
+  })
+
+  const walletMap = computed(() => {
+    const map = new Map<string, Wallet>()
+    wallets.value.forEach((w) => map.set(w.id, w))
+    return map
+  })
+
+  // Aggregation Getters
+  const totalIncome = computed(() =>
+    transactions.value.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0),
+  )
+
+  const totalExpense = computed(() =>
+    transactions.value.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
+  )
+
+  const monthlyBalance = computed(() => totalIncome.value - totalExpense.value)
+
+  const topCategories = computed(() => {
+    const expenses = transactions.value.filter((t) => t.type === 'expense')
+    const catMap: Record<string, number> = {}
+
+    expenses.forEach((t) => {
+      catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
+    })
+
+    const sorted = Object.entries(catMap)
+      .map(([id, total]) => {
+        const cat = categoryMap.value.get(id)
+        return {
+          id,
+          name: cat?.name || 'Outros',
+          color: cat?.color || '#9ca3af',
+          total,
+        }
+      })
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5)
+
+    if (totalExpense.value === 0) return []
+
+    return sorted.map((s) => ({
+      ...s,
+      percent: (s.total / totalExpense.value) * 100,
+    }))
+  })
+
   // Actions
   async function fetchWallets() {
     wallets.value = await walletRepo.getAll()
@@ -97,6 +150,12 @@ export const useFinanceStore = defineStore('finance', () => {
     subscriptions,
     isLoading,
     totalBalance,
+    categoryMap,
+    walletMap,
+    totalIncome,
+    totalExpense,
+    monthlyBalance,
+    topCategories,
     totalDebt,
     fetchWallets,
     fetchCategories,
