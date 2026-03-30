@@ -366,34 +366,42 @@ const monthLabelOnly = computed(() => {
     .replace(/^\w/, (c) => c.toUpperCase())
 })
 
-// Search Logic: Optimized text matching
-const filteredTransactionsArray = computed(() => {
-  if (!searchQuery.value.trim()) return store.transactions
-
-  const query = searchQuery.value.toLowerCase().trim()
-  return store.transactions.filter((t) => {
-    // Basic match on title
-    if (t.title.toLowerCase().includes(query)) return true
-
-    // Category match using dict lookup
-    const catName = store.categoryMap[t.category_id]?.name
-    if (catName && catName.toLowerCase().includes(query)) return true
-
-    return false // Currency matching was expensive and confusing to users typing 10,00 vs 1000
+// Pre-calculate derivations for O(1) rendering lookups and avoid Date/String allocations
+const uiTransactions = computed(() => {
+  return store.transactions.map((t) => {
+    return {
+      ...t,
+      // Otimização: Cache de lowercase e numérico
+      _titleLower: t.title.toLowerCase(),
+      _timestamp: new Date(t.date).getTime(),
+    }
   })
 })
 
-// Grouping Logic: Optimized to minimize string and object allocations
-const groupedTransactions = computed(() => {
-  const groups: Record<string, Transaction[]> = {}
+// Search Logic: O(N) optimized with pre-cached text
+const filteredTransactionsArray = computed(() => {
+  if (!searchQuery.value.trim()) return uiTransactions.value
 
-  // O(N log N) sorting, but parsing timestamp natively once per item if possible
-  const sorted = [...filteredTransactionsArray.value].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  )
+  const query = searchQuery.value.toLowerCase().trim()
+  return uiTransactions.value.filter((t) => {
+    if (t._titleLower.includes(query)) return true
+
+    const catName = store.categoryMap[t.category_id]?.name
+    // Optamos por não cachear nome da categoria na transação para manter single source of truth,
+    // mas o trim/lower da busca principal já foi otimizado acima.
+    if (catName && catName.toLowerCase().includes(query)) return true
+
+    return false
+  })
+})
+
+// Grouping Logic: O(N log N) fast numerical sorting, minimal allocations
+const groupedTransactions = computed(() => {
+  const groups: Record<string, (Transaction & { _titleLower: string; _timestamp: number })[]> = {}
+
+  const sorted = [...filteredTransactionsArray.value].sort((a, b) => b._timestamp - a._timestamp)
 
   for (const t of sorted) {
-    // Avoid split if substring works
     const dateKey = t.date.substring(0, 10)
     if (dateKey) {
       if (!groups[dateKey]) {
