@@ -3,6 +3,10 @@
 Auto-generated from all feature plans. Last updated: 2026-03-29
 
 ## Active Technologies
+- Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite (002-refactor-color-palette)
+- Supabase (SDK / RPC) (002-refactor-color-palette)
+- Vue 3 (Composition API), TypeScript (Strict Mode) + Tailwindcss, Vite (002-refactor-color-palette)
+- LocalStorage (Persistência de preferência de tema) (002-refactor-color-palette)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -40,8 +44,28 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 002-refactor-color-palette: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Tailwindcss, Vite
+- 002-refactor-color-palette: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 
 - **Initial Architecture Setup**: Divi Constitution v1.0.0 established with Vertical Slicing and Clean Architecture principles.
 
 <!-- MANUAL ADDITIONS START -->
+## Design System & Themes
+
+### Color Tokens (Tailwind & CSS Variables)
+A aplicação utiliza um sistema de temas baseado em variáveis CSS injetadas no Tailwind CSS.
+
+- **Brand Tokens**: `primary-main` (Navy), `secondary-main` (Emerald), `accent-main` (Gold).
+- **Neutral Tokens**: `bg-main`, `surface-main`, `border-main`.
+- **Text Tokens**: `text-primary`, `text-secondary`, `text-disabled`.
+- **Semantic Tokens**: `success-main`, `error-main`, `warning-main`, `info-main`.
+
+### Usage
+Sempre utilize classes do Tailwind para cores:
+- `<div class="bg-bg-main text-text-primary">`
+- `<button class="bg-primary-main hover:opacity-90">`
+
+### Theme Toggling
+O tema é controlado pela classe `.dark` no elemento `<html>`.
+Utilize o hook `useTheme()` de `src/core/theme` para gerenciar o estado programaticamente.
 <!-- MANUAL ADDITIONS END -->

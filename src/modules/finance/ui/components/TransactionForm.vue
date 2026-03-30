@@ -1,20 +1,22 @@
 <template>
-  <div class="transaction-form-overlay" @click.self="$emit('close')">
-    <BaseCard class="transaction-form">
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-4" @click.self="$emit('close')">
+    <BaseCard class="w-full max-w-lg shadow-2xl">
       <template #header>
-        <h2>New Transaction</h2>
+        <h2 class="text-xl font-bold text-text-primary">New Transaction</h2>
       </template>
 
-      <form @submit.prevent="handleSubmit">
-        <div class="type-switch">
+      <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div class="flex p-1 bg-bg-main rounded-lg gap-1">
           <button 
             type="button" 
-            :class="{ active: form.type === 'expense' }"
+            class="flex-1 py-2 px-4 rounded-md font-semibold transition-all"
+            :class="form.type === 'expense' ? 'bg-error-main text-white shadow-xs' : 'text-text-secondary hover:bg-surface-main'"
             @click="form.type = 'expense'"
           >Expense</button>
           <button 
             type="button" 
-            :class="{ active: form.type === 'income' }"
+            class="flex-1 py-2 px-4 rounded-md font-semibold transition-all"
+            :class="form.type === 'income' ? 'bg-success-main text-white shadow-xs' : 'text-text-secondary hover:bg-surface-main'"
             @click="form.type = 'income'"
           >Income</button>
         </div>
@@ -35,10 +37,10 @@
           v-model="form.amount"
         />
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="divi-label">Category</label>
-            <select v-model="form.category_id" class="divi-select">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="block text-sm font-medium text-text-primary">Category</label>
+            <select v-model="form.category_id" class="w-full px-3 py-2 rounded-md border bg-surface-main border-border-main text-text-primary focus:outline-hidden focus:ring-2 focus:ring-primary-main/20 focus:border-primary-main transition-all">
               <option value="">Select Category</option>
               <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
                 {{ cat.name }}
@@ -46,9 +48,9 @@
             </select>
           </div>
 
-          <div class="form-group">
-            <label class="divi-label">Wallet</label>
-            <select v-model="form.wallet_id" class="divi-select">
+          <div class="space-y-1">
+            <label class="block text-sm font-medium text-text-primary">Wallet</label>
+            <select v-model="form.wallet_id" class="w-full px-3 py-2 rounded-md border bg-surface-main border-border-main text-text-primary focus:outline-hidden focus:ring-2 focus:ring-primary-main/20 focus:border-primary-main transition-all">
               <option value="">Select Wallet</option>
               <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
                 {{ wallet.name }}
@@ -64,9 +66,11 @@
           v-model="form.date"
         />
 
-        <div class="form-actions">
+        <div class="flex justify-end gap-3 pt-4">
           <BaseButton variant="outline" type="button" @click="$emit('close')">Cancel</BaseButton>
-          <BaseButton type="submit" :loading="isSubmitting">Save Transaction</BaseButton>
+          <BaseButton type="submit" :loading="isSubmitting" :variant="form.type === 'expense' ? 'danger' : 'secondary'">
+            Save Transaction
+          </BaseButton>
         </div>
       </form>
     </BaseCard>
@@ -141,71 +145,5 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
-.transaction-form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.transaction-form {
-  width: 100%;
-  max-width: 500px;
-  background: white;
-}
-.type-switch {
-  display: flex;
-  background: #f3f4f6;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-.type-switch button {
-  flex: 1;
-  padding: 0.5rem;
-  border: none;
-  background: none;
-  border-radius: 0.375rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.type-switch button.active {
-  background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  color: #4f46e5;
-}
-.form-row {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.form-group {
-  flex: 1;
-}
-.divi-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: #374151;
-}
-.divi-select {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid #d1d5db;
-  background: white;
-}
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2rem;
-}
+/* Scoped styles removed in favor of Tailwind classes */
 </style>

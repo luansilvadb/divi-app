@@ -1,0 +1,45 @@
+:root {
+  /* Brand Tokens */
+  --color-primary-main: #1A2B4C; /* Deep Navy */
+  --color-secondary-main: #004B23; /* Emerald */
+  --color-accent-main: #C5A059; /* Gold */
+
+  /* Neutral Tokens */
+  --color-bg-main: #F8F9FA; /* Soft Gray */
+  --color-surface-main: #FFFFFF;
+  --color-border-main: #E1E4E8;
+
+  /* Text Tokens */
+  --color-text-primary: #0B0E14;
+  --color-text-secondary: #586069;
+  --color-text-disabled: #9CA3AF;
+
+  /* Semantic Tokens */
+  --color-success-main: #008000;
+  --color-error-main: #D73A49;
+  --color-warning-main: #F2994A; /* Adding standard warning from general premium palettes */
+  --color-info-main: #2F80ED; /* Adding standard info from general premium palettes */
+}
+
+.dark {
+  /* Brand Tokens */
+  --color-primary-main: #3D5A80; /* Steel Blue */
+  --color-secondary-main: #00A34D; /* Bright Emerald */
+  --color-accent-main: #D4AF37; /* Metallic Gold */
+
+  /* Neutral Tokens */
+  --color-bg-main: #0B0E14; /* Deep Night */
+  --color-surface-main: #161B22;
+  --color-border-main: #30363D;
+
+  /* Text Tokens */
+  --color-text-primary: #F0F6FC;
+  --color-text-secondary: #8B949E;
+  --color-text-disabled: #4B5563;
+
+  /* Semantic Tokens */
+  --color-success-main: #32CD32;
+  --color-error-main: #F85149;
+  --color-warning-main: #FFB347;
+  --color-info-main: #56CCF2;
+}

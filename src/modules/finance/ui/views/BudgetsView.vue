@@ -1,55 +1,122 @@
 <template>
-  <div class="budgets-view">
+  <div class="view-wrapper animate-fade-in">
+    <!-- Background Orbs (Glassmorphism effect similar to Login/Dashboard) -->
+    <BaseBackgroundOrbs />
+
+    <!-- Header Section -->
     <header class="view-header">
       <div class="title-section">
-        <h1>Orçamentos</h1>
-        <p class="subtitle">Acompanhe seus limites de gastos (Regra 50/30/20)</p>
+        <h1 class="page-title">Meus <span class="text-primary-main">Orçamentos</span></h1>
+        <p class="page-subtitle">Acompanhe seus limites de gastos inteligentes com a Regra 50/30/20.</p>
       </div>
-      <BaseButton @click="showAddBudgetModal = true">+ Novo Orçamento</BaseButton>
+      <BaseButton 
+        variant="primary" 
+        class="create-budget-btn"
+        @click="showAddBudgetModal = true"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </template>
+        Novo Orçamento
+      </BaseButton>
     </header>
 
-    <div class="budgets-grid">
-      <div v-if="budgets.length === 0" class="empty-state">
-        <BaseCard>
+    <div class="view-content-grid">
+      <!-- Main Content (Budgets List) -->
+      <main class="main-column">
+        <div v-if="budgets.length === 0" class="empty-state glass-card hover-glow">
           <div class="empty-content">
-            <span class="icon">📊</span>
-            <h3>Nenhum orçamento definido</h3>
-            <p>Crie orçamentos para controlar seus gastos essenciais, desejos e investimentos.</p>
-            <BaseButton variant="secondary" @click="showAddBudgetModal = true">Começar Agora</BaseButton>
+            <div class="empty-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="empty-svg"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <h3>Nenhum orçamento ativo</h3>
+            <p>Crie limites para controlar melhor seus gastos essenciais, conforto e investimentos.</p>
+            <BaseButton variant="primary" class="mt-4" @click="showAddBudgetModal = true">
+              Começar a organizar
+            </BaseButton>
           </div>
-        </BaseCard>
-      </div>
-      
-      <div v-else class="budgets-list">
-        <BudgetCard 
-          v-for="budget in budgets" 
-          :key="budget.id" 
-          :budget="budget" 
-          :consumed="getConsumed(budget)"
-        />
-      </div>
-
-      <aside class="summary-sidebar">
-        <BaseCard class="rule-explanation">
-          <template #header>Regra 50/30/20</template>
-          <ul class="rule-list">
-            <li><strong>50% Necessidades:</strong> Aluguel, contas, mercado, saúde.</li>
-            <li><strong>30% Desejos:</strong> Lazer, assinaturas, jantar fora.</li>
-            <li><strong>20% Dívidas/Investimentos:</strong> Reserva, ações, pagar empréstimos.</li>
-          </ul>
-        </BaseCard>
+        </div>
         
-        <BaseCard class="current-summary">
-          <template #header>Resumo do Mês</template>
-          <div class="summary-item">
-            <span>Total Orçado:</span>
-            <strong>{{ formatCurrency(totalBudgeted) }}</strong>
+        <div v-else class="budgets-list">
+          <!-- The BudgetCard component handles its own glass-card style now -->
+          <BudgetCard 
+            v-for="budget in budgets" 
+            :key="budget.id" 
+            :budget="budget" 
+            :consumed="getConsumed(budget)"
+          />
+        </div>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="side-column">
+        <!-- Summary Premium Card -->
+        <BaseCard class="summary-card glass-card hover-glow">
+          <template #header>
+            <div class="card-header-flex">
+              Visão Geral do Mês
+            </div>
+          </template>
+          <div class="summary-details">
+            <div class="summary-item">
+              <div class="summary-icon bg-info-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-info-main)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+              </div>
+              <div class="summary-text">
+                <span class="label">Total Orçado</span>
+                <strong class="value">{{ formatCurrency(totalBudgeted) }}</strong>
+              </div>
+            </div>
+            
+            <div class="summary-divider"></div>
+
+            <div class="summary-item">
+              <div class="summary-icon" :class="totalConsumed > totalBudgeted ? 'bg-error-light' : 'bg-primary-light'">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" :stroke="totalConsumed > totalBudgeted ? 'var(--color-error-main)' : 'var(--color-primary-main)'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              </div>
+              <div class="summary-text">
+                <span class="label">Gasto Acumulado</span>
+                <strong class="value" :class="{ 'text-error-main': totalConsumed > totalBudgeted }">
+                  {{ formatCurrency(totalConsumed) }}
+                </strong>
+              </div>
+            </div>
           </div>
-          <div class="summary-item">
-            <span>Total Gasto:</span>
-            <strong :class="{ 'over': totalConsumed > totalBudgeted }">
-              {{ formatCurrency(totalConsumed) }}
-            </strong>
+        </BaseCard>
+
+        <!-- Rule Explanation Card -->
+        <BaseCard class="rule-card glass-card">
+          <template #header>
+            <div class="card-header-flex">
+              Metodologia 50/30/20
+            </div>
+          </template>
+          <div class="rule-explanation">
+            <p class="rule-intro">A maneira mais simples de organizar suas finanças mantendo equilíbrio.</p>
+            
+            <ul class="rule-timeline">
+              <li class="timeline-item">
+                <div class="timeline-marker needs-marker"></div>
+                <div class="timeline-content">
+                  <h4 class="needs-title">50% Essenciais</h4>
+                  <p>Moradia, contas básicas, mercado, saúde urbana e transporte.</p>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-marker wants-marker"></div>
+                <div class="timeline-content">
+                  <h4 class="wants-title">30% Estilo de Vida</h4>
+                  <p>Lazer, hobbies, restaurantes, streaming e viagens curtas.</p>
+                </div>
+              </li>
+              <li class="timeline-item">
+                <div class="timeline-marker savings-marker"></div>
+                <div class="timeline-content">
+                  <h4 class="savings-title">20% Futuro</h4>
+                  <p>Reserva de emergência, quitação de dívidas e investimentos.</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </BaseCard>
       </aside>
@@ -62,6 +129,7 @@ import { ref, computed } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BudgetCard from '../components/BudgetCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 import type { Budget } from '@/modules/finance/domain/entities'
 
 const showAddBudgetModal = ref(false)
@@ -123,83 +191,251 @@ const formatCurrency = (value: number) => {
 </script>
 
 <style scoped>
-.budgets-view {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Glass Cards & Effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 1.25rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
+
+:is(.dark) .glass-card {
+  background: rgba(30, 41, 59, 0.4);
+  border-color: rgba(255, 255, 255, 0.05);
 }
-.title-section h1 {
-  margin: 0;
-  font-size: 1.875rem;
-  color: #111827;
+
+.hover-glow:hover {
+  border-color: rgba(var(--color-primary-main-rgb), 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
-.subtitle {
-  margin: 0.25rem 0 0;
-  color: #6b7280;
+
+.create-budget-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(var(--color-primary-main-rgb), 0.25);
 }
-.budgets-grid {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2rem;
-}
+
+/* Empty State */
 .empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem 2rem;
   text-align: center;
-  padding: 3rem 0;
 }
+
 .empty-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 400px;
+}
+
+.empty-icon-wrapper {
+  width: 96px;
+  height: 96px;
+  background: linear-gradient(135deg, rgba(var(--color-primary-main-rgb), 0.1), rgba(var(--color-secondary-main-rgb), 0.1));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary-main, #3b82f6);
+}
+
+.empty-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
+  margin: 0 0 0.75rem;
+}
+
+.empty-content p {
+  color: var(--color-text-secondary, #6b7280);
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+}
+
+/* Sidebar Summaries */
+.card-header-flex {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-primary, #111827);
+  letter-spacing: -0.01em;
+}
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
-.empty-content .icon {
-  font-size: 3rem;
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
-.empty-content h3 {
-  margin: 0;
-  color: #374151;
+
+.summary-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.06);
+  margin: 0.25rem 0;
 }
-.empty-content p {
-  color: #6b7280;
-  max-width: 300px;
+
+:is(.dark) .summary-divider {
+  background: rgba(255,255,255,0.06);
 }
-.summary-sidebar {
+
+.summary-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bg-info-light { background: rgba(var(--color-info-main-rgb, 59, 130, 246), 0.1); }
+.bg-primary-light { background: rgba(var(--color-primary-main-rgb, 16, 185, 129), 0.1); }
+.bg-error-light { background: rgba(var(--color-error-main-rgb, 239, 68, 68), 0.1); }
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summary-text .label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #6b7280);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-text .value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-text-primary, #111827);
+}
+
+.text-error-main {
+  color: var(--color-error-main, #ef4444) !important;
+}
+
+/* Timeline Rule */
+.rule-explanation {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
-.rule-list {
-  padding-left: 1.25rem;
-  margin: 0.5rem 0;
-  font-size: 0.875rem;
+
+.rule-intro {
+  color: var(--color-text-secondary, #4b5563);
+  font-size: 0.95rem;
   line-height: 1.5;
-  color: #4b5563;
-}
-.rule-list li {
-  margin-bottom: 0.75rem;
-}
-.summary-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-  font-size: 0.9375rem;
-}
-.summary-item:last-child {
-  margin-bottom: 0;
-  padding-top: 0.75rem;
-  border-top: 1px solid #f3f4f6;
-}
-.over {
-  color: #ef4444;
+  margin: 0;
 }
 
-@media (max-width: 1024px) {
-  .budgets-grid {
+.rule-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.rule-timeline::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 2px;
+}
+
+:is(.dark) .rule-timeline::before {
+  background: rgba(255,255,255,0.05);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.timeline-marker {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid var(--color-primary-main);
+  box-shadow: 0 0 0 4px rgba(var(--color-primary-main-rgb), 0.1);
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+:is(.dark) .timeline-marker {
+  background: #1e293b;
+}
+
+.needs-marker { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+.wants-marker { border-color: #f59e0b; box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); }
+.savings-marker { border-color: #10b981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+
+.needs-title { color: #3b82f6; }
+.wants-title { color: #f59e0b; }
+.savings-title { color: #10b981; }
+
+.timeline-content h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.timeline-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+/* Animations */
+.animate-fade-in {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .side-column {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .create-budget-btn {
+    width: 100%;
+  }
+
+  .side-column {
     grid-template-columns: 1fr;
   }
 }

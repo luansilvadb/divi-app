@@ -1,98 +1,122 @@
 <template>
-  <div class="loans-view">
+  <div class="view-wrapper">
+    <!-- Animated background orbs -->
+    <BaseBackgroundOrbs />
+
+    <!-- Noise texture overlay -->
+    <div class="noise-overlay" aria-hidden="true"></div>
+
     <header class="view-header">
       <div class="title-section">
-        <h1>Empréstimos e Financiamentos</h1>
-        <p class="subtitle">Acompanhe suas dívidas de longo prazo e juros</p>
+        <div class="title-icon-wrapper">
+          <svg
+            class="title-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+            <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+            <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+            <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+            <path d="M8 12h8" />
+            <path d="M12 8v8" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="page-title">Controle de Dívidas</h1>
+          <p class="subtitle">Acompanhe seus empréstimos, parcelamentos e planeje a quitação</p>
+        </div>
       </div>
-      <BaseButton @click="showAddLoanModal = true">+ Novo Empréstimo</BaseButton>
+      <button class="primary-btn pulse-hover" @click="showAddLoanModal = true">
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Novo Registro
+      </button>
     </header>
 
-    <div class="view-content">
-      <div v-if="loans.length === 0" class="empty-state">
-        <BaseCard>
-          <div class="empty-content">
-            <span class="icon">🏛️</span>
-            <h3>Nenhum empréstimo ativo</h3>
-            <p>Registre seus financiamentos, empréstimos ou dívidas parceladas para acompanhar o saldo devedor.</p>
-            <BaseButton variant="secondary" @click="showAddLoanModal = true">Registrar Primeiro</BaseButton>
-          </div>
-        </BaseCard>
-      </div>
-
-      <div v-else class="loans-grid">
-        <div class="loans-list">
-          <BaseCard v-for="loan in loans" :key="loan.id" class="loan-card">
-            <div class="loan-info">
-              <div class="loan-header">
-                <h3>{{ loan.name }}</h3>
-                <span class="due-date">Vence em: {{ formatDate(loan.due_date) }}</span>
-              </div>
-              
-              <div class="loan-progress">
-                <div class="progress-labels">
-                  <span>Pago: {{ formatCurrency(loan.total_value - loan.remaining_value) }}</span>
-                  <span>Total: {{ formatCurrency(loan.total_value) }}</span>
-                </div>
-                <div class="progress-bar-container">
-                  <div 
-                    class="progress-bar" 
-                    :style="{ width: getProgress(loan) + '%' }"
-                  ></div>
-                </div>
-                <div class="progress-percentage">
-                  {{ getProgress(loan).toFixed(1) }}% amortizado
-                </div>
-              </div>
-
-              <div class="loan-details">
-                <div class="detail">
-                  <span class="label">Saldo Restante</span>
-                  <span class="value highlighting">{{ formatCurrency(loan.remaining_value) }}</span>
-                </div>
-                <div v-if="loan.interest_rate" class="detail">
-                  <span class="label">Taxa de Juros</span>
-                  <span class="value">{{ loan.interest_rate }}% a.m.</span>
-                </div>
-              </div>
-            </div>
-            <template #footer>
-              <div class="card-actions">
-                <BaseButton variant="secondary" size="sm" @click="deleteLoan(loan.id)">Remover</BaseButton>
-                <BaseButton variant="primary" size="sm">Registrar Pagamento</BaseButton>
-              </div>
-            </template>
-          </BaseCard>
+    <div v-if="loans.length === 0" class="empty-state glass-card">
+      <div class="empty-content">
+        <div class="empty-icon-wrapper">
+          <svg
+            class="empty-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
         </div>
-
-        <aside class="summary-sidebar">
-          <BaseCard class="debt-summary">
-            <template #header>Resumo de Dívidas</template>
-            <div class="summary-total">
-              <span class="label">Total Devedor</span>
-              <h2 class="total-value">{{ formatCurrency(totalDebt) }}</h2>
-            </div>
-            <div class="debt-chart-placeholder">
-              <!-- Placeholder for a mini debt distribution chart -->
-              <div class="chart-mock">
-                <div class="bar" style="height: 60%; background: #ef4444;"></div>
-                <div class="bar" style="height: 40%; background: #f59e0b;"></div>
-                <div class="bar" style="height: 20%; background: #3b82f6;"></div>
-              </div>
-              <p class="chart-label">Distribuição por Empréstimo</p>
-            </div>
-          </BaseCard>
-
-          <BaseCard class="tips-card">
-            <template #header>Dicas Financeiras</template>
-            <ul class="tips-list">
-              <li>Tente priorizar o pagamento das dívidas com <strong>maiores taxas de juros</strong>.</li>
-              <li>Considere a portabilidade de crédito se encontrar taxas menores em outro banco.</li>
-              <li>Evite comprometer mais de 30% da sua renda com parcelas de empréstimos.</li>
-            </ul>
-          </BaseCard>
-        </aside>
+        <h3>Nenhum empréstimo ativo</h3>
+        <p>
+          Registre financiamentos ou dívidas para ter controle total sobre seu saldo devedor e
+          juros pagos com elegância.
+        </p>
+        <button class="primary-btn outline" @click="showAddLoanModal = true">Registrar Primeiro Empréstimo</button>
       </div>
+    </div>
+
+    <div v-else class="view-content-grid">
+      <div class="main-column loans-list">
+        <div class="loans-grid">
+          <LoanCard
+            v-for="(loan, index) in loans"
+            :key="loan.id"
+            :loan="loan"
+            :style="{ '--anim-delay': `${index * 0.1}s` }"
+            @delete="deleteLoan(loan.id)"
+          />
+        </div>
+      </div>
+
+      <aside class="side-column summary-sidebar">
+        <div class="glass-card impact-summary stagger-1">
+          <div class="summary-header">
+            <h3>Resumo de Dívidas</h3>
+            <div class="icon-pulse">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+            </div>
+          </div>
+          <div class="total-impact">
+            <h2 class="value gradient-text">{{ formatNumber(totalDebt) }}</h2>
+            <p class="label">Total Devedor</p>
+          </div>
+          <div class="impact-bar-container">
+            <div class="impact-bar" :style="{ width: '100%' }">
+              <div class="impact-bar-glow"></div>
+            </div>
+          </div>
+          <p class="impact-text">
+            Priorize quitar as dívidas que possuem <strong>maiores taxas de juros</strong> mensais.
+          </p>
+        </div>
+      </aside>
     </div>
   </div>
 </template>
@@ -101,9 +125,8 @@
 import { ref, onMounted } from 'vue'
 import { useFinanceStore } from '../../application/stores/financeStore'
 import { storeToRefs } from 'pinia'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import type { Loan } from '@/modules/finance/domain/entities'
+import LoanCard from '../components/LoanCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 
 const financeStore = useFinanceStore()
 const { loans, totalDebt } = storeToRefs(financeStore)
@@ -114,21 +137,11 @@ onMounted(async () => {
   await financeStore.fetchLoans()
 })
 
-const getProgress = (loan: Loan) => {
-  if (loan.total_value === 0) return 0
-  const paid = loan.total_value - loan.remaining_value
-  return (paid / loan.total_value) * 100
-}
-
-const formatCurrency = (value: number) => {
+const formatNumber = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
   }).format(value)
-}
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('pt-BR')
 }
 
 const deleteLoan = async (id: string) => {
@@ -139,182 +152,403 @@ const deleteLoan = async (id: string) => {
 </script>
 
 <style scoped>
-.loans-view {
-  max-width: 1200px;
-  margin: 0 auto;
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  pointer-events: none;
 }
+
+/* ===== Header ===== */
 .view-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2rem;
-}
-.title-section h1 {
-  margin: 0;
-  font-size: 1.875rem;
-  color: #111827;
-}
-.subtitle {
-  margin: 0.25rem 0 0;
-  color: #6b7280;
-}
-.loans-grid {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 2rem;
-}
-.loans-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.loan-card {
-  transition: transform 0.2s;
-}
-.loan-card:hover {
-  transform: translateY(-2px);
-}
-.loan-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-.loan-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-}
-.due-date {
-  font-size: 0.875rem;
-  color: #6b7280;
-}
-.loan-progress {
-  margin-bottom: 1.5rem;
-}
-.progress-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8125rem;
-  color: #6b7280;
-  margin-bottom: 0.5rem;
-}
-.progress-bar-container {
-  height: 10px;
-  background: #f3f4f6;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-.progress-bar {
-  height: 100%;
-  background: #10b981;
-  border-radius: 5px;
-  transition: width 0.5s ease-out;
-}
-.progress-percentage {
-  text-align: right;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #10b981;
-}
-.loan-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #f3f4f6;
-}
-.detail {
-  display: flex;
-  flex-direction: column;
-}
-.detail .label {
-  font-size: 0.75rem;
-  color: #9ca3af;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  margin-bottom: 0.25rem;
-}
-.detail .value {
-  font-weight: 600;
-  color: #374151;
-}
-.detail .highlighting {
-  color: #ef4444;
-  font-size: 1.125rem;
-}
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+  animation: slide-down 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.summary-sidebar {
+.title-icon-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-.summary-total {
-  text-align: center;
-  padding: 1rem 0;
-}
-.summary-total .label {
-  color: #6b7280;
-  font-size: 0.875rem;
-}
-.total-value {
-  margin: 0.5rem 0 0;
-  color: #ef4444;
-  font-size: 2rem;
-}
-.debt-chart-placeholder {
-  margin-top: 1.5rem;
-  text-align: center;
-}
-.chart-mock {
-  display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary-main) 10%, transparent),
+    color-mix(in srgb, var(--color-secondary-main) 10%, transparent)
+  );
+  color: var(--color-primary-main);
+  border: 1px solid color-mix(in srgb, var(--color-primary-main) 20%, transparent);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary-main) 10%, transparent);
+}
+
+:is(.dark) .title-icon-wrapper {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary-main) 20%, transparent),
+    color-mix(in srgb, var(--color-secondary-main) 15%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--color-primary-main) 30%, transparent);
+}
+
+.title-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+/* ===== Buttons ===== */
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
   gap: 0.5rem;
-  height: 80px;
-  margin-bottom: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-main));
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary-main) 30%, transparent);
 }
-.chart-mock .bar {
-  width: 20px;
-  border-radius: 4px 4px 0 0;
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--color-primary-main) 40%, transparent);
 }
-.chart-label {
-  font-size: 0.75rem;
-  color: #9ca3af;
+
+.primary-btn:active {
+  transform: translateY(0);
 }
-.tips-list {
-  padding-left: 1.25rem;
-  margin: 0.5rem 0;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: #4b5563;
+
+.primary-btn.outline {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-main);
+  box-shadow: none;
 }
-.tips-list li {
-  margin-bottom: 0.75rem;
+
+.primary-btn.outline:hover {
+  background: color-mix(in srgb, var(--color-primary-main) 5%, transparent);
+  border-color: var(--color-primary-main);
 }
+
+:is(.dark) .primary-btn.outline:hover {
+  background: color-mix(in srgb, var(--color-primary-main) 10%, transparent);
+}
+
+/* ===== Glass Card ===== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    0 8px 24px -8px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s ease;
+}
+
+:is(.dark) .glass-card {
+  background: rgba(22, 27, 34, 0.65);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 8px 24px -8px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Empty State ===== */
 .empty-state {
+  padding: 5rem 2rem;
   text-align: center;
-  padding: 4rem 0;
+  animation: fade-in 0.8s ease both;
 }
+
 .empty-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-}
-.empty-content .icon {
-  font-size: 4rem;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
+.empty-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-primary-main) 8%, transparent),
+    color-mix(in srgb, var(--color-secondary-main) 8%, transparent)
+  );
+  color: var(--color-primary-main);
+  margin-bottom: 1.5rem;
+}
+
+.empty-icon {
+  width: 40px;
+  height: 40px;
+  opacity: 0.8;
+}
+
+.empty-content h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-text-primary);
+}
+
+.empty-content p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+/* ===== Layout ===== */
+.loans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.loans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ===== Summary Sidebar ===== */
+.summary-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 2rem;
+}
+
+.summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.summary-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.icon-pulse {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-primary-main) 10%, transparent);
+  color: var(--color-primary-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-ring 2s infinite;
+}
+
+.icon-pulse svg {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary-main) 40%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.impact-summary {
+  padding: 1.5rem;
+  animation: slide-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.total-impact {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-main));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.total-impact .label {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.impact-bar-container {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+:is(.dark) .impact-bar-container {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.impact-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-main), var(--color-secondary-main));
+  border-radius: 999px;
+  position: relative;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.impact-bar-glow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5));
+  filter: blur(4px);
+  animation: slide-glow 2s infinite linear;
+}
+
+@keyframes slide-glow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.impact-text {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+.impact-text strong {
+  color: var(--color-text-primary);
+}
+
+/* ===== Animations ===== */
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-left {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    filter: blur(0);
+  }
+}
+
+/* ===== Responsive ===== */
 @media (max-width: 1024px) {
-  .loans-grid {
+  .view-content-grid {
     grid-template-columns: 1fr;
+  }
+
+  .summary-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .view-wrapper {
+    padding: 1rem;
+  }
+
+  .view-header {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-pulse,
+  .impact-bar-glow,
+  .loan-card,
+  .impact-summary,
+  .view-header,
+  .empty-state {
+    animation: none !important;
+    transition: none !important;
   }
 }
 </style>
