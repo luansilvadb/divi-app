@@ -355,7 +355,10 @@ import type { Transaction } from '@/modules/finance/domain/entities'
 const store = useFinanceStore()
 const showForm = ref(false)
 const currentDate = ref(new Date())
-const searchQuery = ref('')
+const searchQuery = computed({
+  get: () => store.searchQuery,
+  set: (val) => { store.searchQuery = val }
+})
 
 // Helpers for the template
 
@@ -366,52 +369,8 @@ const monthLabelOnly = computed(() => {
     .replace(/^\w/, (c) => c.toUpperCase())
 })
 
-// Pre-calculate derivations for O(1) rendering lookups and avoid Date/String allocations
-const uiTransactions = computed(() => {
-  return store.transactions as (Transaction & { _titleLower: string; _timestamp: number; _dateKey: string })[]
-})
-
-// Search Logic: O(N) optimized with pre-cached text
-const filteredTransactionsArray = computed(() => {
-  if (!searchQuery.value.trim()) return uiTransactions.value
-
-  const query = searchQuery.value.toLowerCase().trim()
-  return uiTransactions.value.filter((t) => {
-    if ((t._titleLower || t.title.toLowerCase()).includes(query)) return true
-
-    const cat = store.categoryMap[t.category_id]
-    if (cat && cat.name.toLowerCase().includes(query)) return true
-
-    return false
-  })
-})
-
-// Grouping Logic: O(N log N) fast numerical sorting, minimal allocations
-const groupedTransactions = computed(() => {
-  const groups: Record<string, { total: number; items: (Transaction & { _titleLower: string; _timestamp: number; _dateKey: string })[] }> = {}
-
-  // O(N) grouping without re-sorting if we can trust the DB order, or using a more efficient sort
-  // Utilize pre-calculated timestamp if available
-  const sorted = [...filteredTransactionsArray.value].sort((a, b) => {
-    const timeA = a._timestamp || new Date(a.date).getTime()
-    const timeB = b._timestamp || new Date(b.date).getTime()
-    return timeB - timeA
-  })
-
-  for (let i = 0, len = sorted.length; i < len; i++) {
-    const t = sorted[i]!
-    const dateKey = t._dateKey || t.date.substring(0, 10)
-    if (dateKey) {
-      if (!groups[dateKey]) {
-        groups[dateKey] = { total: 0, items: [] }
-      }
-      groups[dateKey].items.push(t)
-      groups[dateKey].total += (t.type === 'income' ? t.amount : -t.amount)
-    }
-  }
-
-  return groups
-})
+// Grouping Logic: Moved to store for performance
+const groupedTransactions = computed(() => store.groupedTransactions)
 
 // Initialization
 onMounted(async () => {

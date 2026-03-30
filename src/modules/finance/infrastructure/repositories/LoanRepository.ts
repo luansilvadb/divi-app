@@ -1,36 +1,53 @@
 import type { ILoanRepository } from '../../domain/repositories'
 import type { Loan } from '../../domain/entities'
-import { db } from '../../../../core/db'
+import { db, type LocalLoan } from '../../../../core/db'
 import { supabase } from '../../../../core/supabase'
+import { InfrastructureError } from '../../domain/errors'
 
 export class DexieLoanRepository implements ILoanRepository {
   async getAll(): Promise<Loan[]> {
-    const list = await db.loans.toArray()
-    return list.map(this.mapToEntity)
+    try {
+      const list = await db.loans.toArray()
+      return list.map(this.mapToEntity)
+    } catch (err) {
+      throw new InfrastructureError('Failed to fetch loans from local DB', err)
+    }
   }
 
   async save(loan: Loan): Promise<void> {
-    const data = {
-      ...loan,
-      synced: false,
-    }
-    await db.loans.put(data as any)
+    try {
+      const data: LocalLoan = {
+        ...loan,
+        synced: false,
+      }
+      await db.loans.put(data)
 
-    // Attempt background sync
-    this.sync().catch(console.error)
+      // Attempt background sync
+      this.sync().catch((err) => console.error('[LoanSync] Background sync error', err))
+    } catch (err) {
+      throw new InfrastructureError('Failed to save loan to local DB', err)
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await db.loans.delete(id)
-    const { error } = await supabase.from('loans').delete().eq('id', id)
-    if (error) console.error('Error syncing loan deletion:', error)
+    try {
+      await db.loans.delete(id)
+      const { error } = await supabase.from('loans').delete().eq('id', id)
+      if (error) {
+        throw new InfrastructureError('Error syncing loan deletion with Supabase', error)
+      }
+    } catch (err) {
+       if (err instanceof InfrastructureError) throw err
+       throw new InfrastructureError('Failed to delete loan', err)
+    }
   }
 
   async sync(): Promise<void> {
-    const unsynced = await db.loans.where('synced').equals(0).toArray()
+    try {
+      const unsynced = await db.loans.where('synced').equals(0).toArray()
+      if (unsynced.length === 0) return
 
-    for (const item of unsynced) {
-      const { error } = await supabase.from('loans').upsert({
+      const upsertPayload = unsynced.map((item) => ({
         id: item.id,
         user_id: item.user_id,
         name: item.name,
@@ -39,15 +56,37 @@ export class DexieLoanRepository implements ILoanRepository {
         interest_rate: item.interest_rate,
         due_date: item.due_date,
         created_at: item.created_at,
-      })
+      }))
 
-      if (!error) {
-        await db.loans.update(item.id, { synced: true })
+      const { data, error } = await supabase.from('loans').upsert(upsertPayload).select('id')
+
+      if (error) {
+        throw new InfrastructureError('[Sync] Bulk upsert failed', error)
       }
+
+      if (data) {
+        const idsToUpdate = data.map((d: Record<string, unknown>) => d.id as string)
+        await db.transaction('rw', db.loans, async () => {
+          const records = await db.loans.bulkGet(idsToUpdate)
+          const validRecords = records.reduce((acc, record) => {
+             if (record) {
+                acc.push({ ...record, synced: true })
+             }
+             return acc
+          }, [] as LocalLoan[])
+
+          if (validRecords.length > 0) {
+              await db.loans.bulkPut(validRecords)
+          }
+        })
+      }
+    } catch (err) {
+      if (err instanceof InfrastructureError) throw err
+      throw new InfrastructureError('Sync process failed', err)
     }
   }
 
-  private mapToEntity(item: any): Loan {
+  private mapToEntity(item: LocalLoan): Loan {
     return {
       id: item.id,
       user_id: item.user_id,
