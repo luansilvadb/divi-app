@@ -1,36 +1,53 @@
 import type { ISubscriptionRepository } from '../../domain/repositories'
 import type { Subscription } from '../../domain/entities'
-import { db } from '../../../../core/db'
+import { db, type LocalSubscription } from '../../../../core/db'
 import { supabase } from '../../../../core/supabase'
+import { InfrastructureError } from '../../domain/errors'
 
 export class DexieSubscriptionRepository implements ISubscriptionRepository {
   async getAll(): Promise<Subscription[]> {
-    const list = await db.subscriptions.toArray()
-    return list.map(this.mapToEntity)
+    try {
+      const list = await db.subscriptions.toArray()
+      return list.map(this.mapToEntity)
+    } catch (err) {
+      throw new InfrastructureError('Failed to fetch subscriptions from local DB', err)
+    }
   }
 
   async save(subscription: Subscription): Promise<void> {
-    const data = {
-      ...subscription,
-      synced: false,
-    }
-    await db.subscriptions.put(data as any)
+    try {
+      const data: LocalSubscription = {
+        ...subscription,
+        synced: false,
+      }
+      await db.subscriptions.put(data)
 
-    // Attempt background sync
-    this.sync().catch(console.error)
+      // Attempt background sync
+      this.sync().catch((err) => console.error('[SubscriptionSync] Background sync error', err))
+    } catch (err) {
+      throw new InfrastructureError('Failed to save subscription to local DB', err)
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await db.subscriptions.delete(id)
-    const { error } = await supabase.from('subscriptions').delete().eq('id', id)
-    if (error) console.error('Error syncing subscription deletion:', error)
+    try {
+      await db.subscriptions.delete(id)
+      const { error } = await supabase.from('subscriptions').delete().eq('id', id)
+      if (error) {
+        throw new InfrastructureError('Error syncing subscription deletion with Supabase', error)
+      }
+    } catch (err) {
+       if (err instanceof InfrastructureError) throw err
+       throw new InfrastructureError('Failed to delete subscription', err)
+    }
   }
 
   async sync(): Promise<void> {
-    const unsynced = await db.subscriptions.where('synced').equals(0).toArray()
+    try {
+      const unsynced = await db.subscriptions.where('synced').equals(0).toArray()
+      if (unsynced.length === 0) return
 
-    for (const item of unsynced) {
-      const { error } = await supabase.from('subscriptions').upsert({
+      const upsertPayload = unsynced.map((item) => ({
         id: item.id,
         user_id: item.user_id,
         name: item.name,
@@ -41,15 +58,37 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
         frequency: item.frequency,
         last_billed_at: item.last_billed_at,
         created_at: item.created_at,
-      })
+      }))
 
-      if (!error) {
-        await db.subscriptions.update(item.id, { synced: true })
+      const { data, error } = await supabase.from('subscriptions').upsert(upsertPayload).select('id')
+
+      if (error) {
+        throw new InfrastructureError('[Sync] Bulk upsert failed', error)
       }
+
+      if (data) {
+        const idsToUpdate = data.map((d: Record<string, unknown>) => d.id as string)
+        await db.transaction('rw', db.subscriptions, async () => {
+          const records = await db.subscriptions.bulkGet(idsToUpdate)
+          const validRecords = records.reduce((acc, record) => {
+             if (record) {
+                acc.push({ ...record, synced: true })
+             }
+             return acc
+          }, [] as LocalSubscription[])
+
+          if (validRecords.length > 0) {
+              await db.subscriptions.bulkPut(validRecords)
+          }
+        })
+      }
+    } catch (err) {
+      if (err instanceof InfrastructureError) throw err
+      throw new InfrastructureError('Sync process failed', err)
     }
   }
 
-  private mapToEntity(item: any): Subscription {
+  private mapToEntity(item: LocalSubscription): Subscription {
     return {
       id: item.id,
       user_id: item.user_id,

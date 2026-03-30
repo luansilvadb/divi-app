@@ -10,6 +10,8 @@ import type {
 } from '../../domain/repositories'
 import type { Transaction, Wallet, Category, Loan, Subscription } from '../../domain/entities'
 
+type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+
 export const useFinanceStore = defineStore('finance', () => {
   // Repositories
   const transactionRepo = container.resolve<ITransactionRepository>('ITransactionRepository')
@@ -26,8 +28,10 @@ export const useFinanceStore = defineStore('finance', () => {
   const subscriptions = ref<Subscription[]>([])
   const isLoading = ref(false)
 
-  // O(N) single-pass aggregation
+  // UI State
+  const searchQuery = ref('')
 
+  // O(N) single-pass aggregation
 
   // Getters
   const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
@@ -81,6 +85,51 @@ export const useFinanceStore = defineStore('finance', () => {
       })
       .sort((a, b) => b.total - a.total)
       .slice(0, 5)
+  })
+
+  // UI Getters
+  const uiTransactions = computed(() => {
+    return transactions.value as UITransaction[]
+  })
+
+  const filteredTransactionsArray = computed(() => {
+    if (!searchQuery.value.trim()) return uiTransactions.value
+
+    const query = searchQuery.value.toLowerCase().trim()
+    return uiTransactions.value.filter((t) => {
+      if ((t._titleLower || t.title.toLowerCase()).includes(query)) return true
+
+      const cat = categoryMap.value[t.category_id]
+      if (cat && cat.name.toLowerCase().includes(query)) return true
+
+      return false
+    })
+  })
+
+  const groupedTransactions = computed(() => {
+    const groups: Record<string, { total: number; items: UITransaction[] }> = {}
+
+    // O(N) grouping without re-sorting if we can trust the DB order, or using a more efficient sort
+    // Utilize pre-calculated timestamp if available
+    const sorted = [...filteredTransactionsArray.value].sort((a, b) => {
+      const timeA = a._timestamp || new Date(a.date).getTime()
+      const timeB = b._timestamp || new Date(b.date).getTime()
+      return timeB - timeA
+    })
+
+    for (let i = 0, len = sorted.length; i < len; i++) {
+      const t = sorted[i]!
+      const dateKey = t._dateKey || t.date.substring(0, 10)
+      if (dateKey) {
+        if (!groups[dateKey]) {
+          groups[dateKey] = { total: 0, items: [] }
+        }
+        groups[dateKey].items.push(t)
+        groups[dateKey].total += (t.type === 'income' ? t.amount : -t.amount)
+      }
+    }
+
+    return groups
   })
 
   // Actions
@@ -160,6 +209,7 @@ export const useFinanceStore = defineStore('finance', () => {
     loans,
     subscriptions,
     isLoading,
+    searchQuery,
     totalBalance,
     categoryMap,
     walletMap,
@@ -168,6 +218,7 @@ export const useFinanceStore = defineStore('finance', () => {
     monthlyBalance,
     topCategories,
     totalDebt,
+    groupedTransactions,
     fetchWallets,
     fetchCategories,
     fetchLoans,
