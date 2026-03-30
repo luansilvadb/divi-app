@@ -4,14 +4,14 @@ import type {
   ICategoryRepository,
 } from '../../domain/repositories'
 import type { Transaction, Wallet, Category } from '../../domain/entities'
-import { db } from '../../../../core/db'
+import { db, type LocalTransaction, type LocalWallet, type LocalCategory } from '../../../../core/db'
 import { supabase } from '../../../../core/supabase'
 
 export class DexieSupabaseTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<Transaction[]> {
     const list = await db.transactions.toArray()
     // Map local DB format to Domain Entity
-    return list.map(this.mapToEntity)
+    return list.map((item) => this.mapToEntity(item))
   }
 
   async getByMonth(year: number, month: number): Promise<Transaction[]> {
@@ -24,21 +24,21 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
       .and((t) => !t.deleted)
       .toArray()
 
-    return list.map(this.mapToEntity)
+    return list.map((item) => this.mapToEntity(item))
   }
 
   async save(transaction: Transaction): Promise<void> {
     const now = new Date().toISOString()
-    const localData = {
+    const localData: LocalTransaction = {
       ...transaction,
       synced: false,
       updated_at: now,
     }
 
     if (transaction.localId) {
-      await db.transactions.put(localData as Required<typeof localData>)
+      await db.transactions.put(localData)
     } else {
-      await db.transactions.add(localData as Required<typeof localData>)
+      await db.transactions.add(localData)
     }
 
     // Attempt background sync
@@ -120,7 +120,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     }
   }
 
-  private mapToEntity(item: Record<string, unknown>): Transaction {
+  private mapToEntity(item: LocalTransaction): Transaction {
     return {
       ...(item as unknown as Transaction),
       synced: !!item.synced,
@@ -136,7 +136,7 @@ export class DexieWalletRepository implements IWalletRepository {
   }
 
   async save(wallet: Wallet): Promise<void> {
-    await db.wallets.put(wallet as Required<Wallet>)
+    await db.wallets.put({ ...wallet, synced: false } as LocalWallet)
   }
 
   async getById(id: string): Promise<Wallet | null> {
@@ -152,6 +152,6 @@ export class DexieCategoryRepository implements ICategoryRepository {
   }
 
   async save(category: Category): Promise<void> {
-    await db.categories.put(category as Required<Category>)
+    await db.categories.put({ ...category, synced: false } as LocalCategory)
   }
 }
