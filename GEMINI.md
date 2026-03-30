@@ -1,6 +1,6 @@
 ﻿# Arquitetura Divi Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-29
+Auto-generated from all feature plans. Last updated: 2026-03-30
 
 ## Active Technologies
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite (002-refactor-color-palette)
@@ -9,6 +9,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-29
 - LocalStorage (Persistência de preferência de tema) (002-refactor-color-palette)
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS (004-standardize-ui-consistency)
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Vite, TailwindCSS (005-remove-bg-orbs)
+- LocalStorage (for theme preference) (006-sidebar-polish-performance)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -46,9 +47,9 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 006-sidebar-polish-performance: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
 - 005-remove-bg-orbs: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Vite, TailwindCSS
 - 004-standardize-ui-consistency: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
-- 003-standardize-design-system: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 
 
 <!-- MANUAL ADDITIONS START -->
