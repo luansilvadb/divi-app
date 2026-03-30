@@ -24,14 +24,14 @@ export class BudgetLogicService implements IBudgetLogicService {
         const txDate = new Date(tx.date)
         const startDate = new Date(budget.period_start)
         const endDate = new Date(budget.period_end)
-        
+
         if (txDate < startDate || txDate > endDate) return false
-        
+
         // Filter by category if specified
         if (budget.categories && budget.categories.length > 0) {
           if (!budget.categories.includes(tx.category_id)) return false
         }
-        
+
         // Filter by wallet if specified
         if (budget.wallets && budget.wallets.length > 0) {
           if (!budget.wallets.includes(tx.wallet_id)) return false

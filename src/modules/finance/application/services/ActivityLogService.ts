@@ -3,11 +3,7 @@ import { db } from '../../../../core/db'
 
 export class ActivityLogService implements IActivityLogService {
   async getRecentActivities(): Promise<Activity[]> {
-    const list = await db.activities
-      .orderBy('timestamp')
-      .reverse()
-      .limit(50)
-      .toArray()
+    const list = await db.activities.orderBy('timestamp').reverse().limit(50).toArray()
     return list as Activity[]
   }
 
@@ -15,7 +11,7 @@ export class ActivityLogService implements IActivityLogService {
     const newActivity: Activity = {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
-      ...activity
+      ...activity,
     }
     await db.activities.add(newActivity)
   }

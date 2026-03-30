@@ -93,7 +93,7 @@ export class DiviDatabase extends Dexie {
       payees: '++id, name, synced',
       loans: 'id, name, synced',
       subscriptions: 'id, name, synced',
-      activities: 'id, timestamp'
+      activities: 'id, timestamp',
     })
   }
 }

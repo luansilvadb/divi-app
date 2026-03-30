@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '../../../../core/di'
-import type { 
-  ITransactionRepository, 
-  IWalletRepository, 
+import type {
+  ITransactionRepository,
+  IWalletRepository,
   ICategoryRepository,
   ILoanRepository,
-  ISubscriptionRepository
+  ISubscriptionRepository,
 } from '../../domain/repositories'
 import type { Transaction, Wallet, Category, Loan, Subscription } from '../../domain/entities'
 
@@ -27,13 +27,9 @@ export const useFinanceStore = defineStore('finance', () => {
   const isLoading = ref(false)
 
   // Getters
-  const totalBalance = computed(() => 
-    wallets.value.reduce((sum, w) => sum + w.balance, 0)
-  )
+  const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
 
-  const totalDebt = computed(() =>
-    loans.value.reduce((sum, l) => sum + l.remaining_value, 0)
-  )
+  const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
 
   // Actions
   async function fetchWallets() {
@@ -70,7 +66,7 @@ export const useFinanceStore = defineStore('finance', () => {
 
   async function deleteTransaction(id: string) {
     await transactionRepo.delete(id)
-    transactions.value = transactions.value.filter(t => t.id !== id)
+    transactions.value = transactions.value.filter((t) => t.id !== id)
   }
 
   async function saveLoan(loan: Loan) {
@@ -112,6 +108,6 @@ export const useFinanceStore = defineStore('finance', () => {
     saveLoan,
     deleteLoan,
     saveSubscription,
-    deleteSubscription
+    deleteSubscription,
   }
 })

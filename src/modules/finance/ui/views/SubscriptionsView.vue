@@ -1,10 +1,9 @@
 <template>
   <div class="view-wrapper animate-fade-in relative min-h-screen">
-
     <!-- Feature header -->
-    <BaseViewHeader 
-      title="Minhas Assinaturas" 
-      highlight="Assinaturas" 
+    <BaseViewHeader
+      title="Minhas Assinaturas"
+      highlight="Assinaturas"
       subtitle="Gerencie seus serviços recorrentes e evite gastos desnecessários."
     >
       <template #action>
@@ -26,10 +25,27 @@
           empty-color="var(--color-primary-main)"
         >
           <template #empty-icon>
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h.01"/></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 15V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2z" />
+              <path d="M3 10h18" />
+              <path d="M7 15h.01" />
+              <path d="M11 15h.01" />
+            </svg>
           </template>
           <template #empty-action>
-            <BaseButton variant="primary" class="px-8" @click="showAddSubscriptionModal = true">Adicionar Assinatura</BaseButton>
+            <BaseButton variant="primary" class="px-8" @click="showAddSubscriptionModal = true"
+              >Adicionar Assinatura</BaseButton
+            >
           </template>
         </BaseCard>
 
@@ -42,12 +58,19 @@
                 </BaseIconBox>
                 <div class="flex flex-col">
                   <span class="font-black text-text-primary tracking-tight">{{ sub.name }}</span>
-                  <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{ sub.frequency === 'monthly' ? 'Mensal' : 'Anual' }}</span>
+                  <span
+                    class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                    >{{ sub.frequency === 'monthly' ? 'Mensal' : 'Anual' }}</span
+                  >
                 </div>
               </div>
               <div class="text-right">
-                <div class="font-black text-lg text-text-primary tracking-tighter">{{ formatCurrency(sub.amount) }}</div>
-                <div class="text-[10px] font-black uppercase tracking-widest text-text-disabled">Dia de cobrança: {{ sub.billing_day }}</div>
+                <div class="font-black text-lg text-text-primary tracking-tighter">
+                  {{ formatCurrency(sub.amount) }}
+                </div>
+                <div class="text-[10px] font-black uppercase tracking-widest text-text-disabled">
+                  Dia de cobrança: {{ sub.billing_day }}
+                </div>
               </div>
             </div>
           </BaseCard>
@@ -59,14 +82,26 @@
         <BaseCard>
           <template #header>Impacto Mensal</template>
           <div class="flex flex-col gap-8 pt-2">
-            <BaseSummaryItem 
-              label="Custo Fixo Total" 
-              :value="formatCurrency(totalMonthlyCost)" 
+            <BaseSummaryItem
+              label="Custo Fixo Total"
+              :value="formatCurrency(totalMonthlyCost)"
               color="var(--color-primary-main)"
               status="info"
             >
               <template #icon>
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
               </template>
             </BaseSummaryItem>
 
@@ -74,7 +109,9 @@
 
             <div class="flex flex-col gap-4">
               <div class="flex justify-between items-end">
-                <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">Comprometimento da Renda</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                  >Comprometimento da Renda</span
+                >
                 <span class="text-xl font-black text-primary-main tracking-tighter">8%</span>
               </div>
               <BaseProgressBar :percentage="8" color="var(--color-primary-main)" />

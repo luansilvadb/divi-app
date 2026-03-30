@@ -8,11 +8,12 @@ const themeState = ref<Theme>((localStorage.getItem('divi-ui-theme') as Theme) |
 // Utilitário para aplicar o tema no DOM (Otimizado para evitar reflows desnecessários)
 const applyTheme = () => {
   const root = document.documentElement
-  const isDarkValue = themeState.value === 'system' 
-    ? window.matchMedia('(prefers-color-scheme: dark)').matches
-    : themeState.value === 'dark'
-  
-  // Usa requestAnimationFrame para garantir que a mudança de classe ocorra 
+  const isDarkValue =
+    themeState.value === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+      : themeState.value === 'dark'
+
+  // Usa requestAnimationFrame para garantir que a mudança de classe ocorra
   // no início do próximo frame, evitando conflitos com outras manipulações de DOM.
   requestAnimationFrame(() => {
     if (isDarkValue) {
@@ -71,6 +72,6 @@ export const useTheme = () => {
     theme: themeState,
     isDark,
     setTheme,
-    toggle
+    toggle,
   }
 }

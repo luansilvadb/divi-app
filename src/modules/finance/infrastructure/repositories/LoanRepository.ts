@@ -12,10 +12,10 @@ export class DexieLoanRepository implements ILoanRepository {
   async save(loan: Loan): Promise<void> {
     const data = {
       ...loan,
-      synced: false
+      synced: false,
     }
     await db.loans.put(data as any)
-    
+
     // Attempt background sync
     this.sync().catch(console.error)
   }
@@ -28,20 +28,18 @@ export class DexieLoanRepository implements ILoanRepository {
 
   async sync(): Promise<void> {
     const unsynced = await db.loans.where('synced').equals(0).toArray()
-    
+
     for (const item of unsynced) {
-      const { error } = await supabase
-        .from('loans')
-        .upsert({
-          id: item.id,
-          user_id: item.user_id,
-          name: item.name,
-          total_value: item.total_value,
-          remaining_value: item.remaining_value,
-          interest_rate: item.interest_rate,
-          due_date: item.due_date,
-          created_at: item.created_at
-        })
+      const { error } = await supabase.from('loans').upsert({
+        id: item.id,
+        user_id: item.user_id,
+        name: item.name,
+        total_value: item.total_value,
+        remaining_value: item.remaining_value,
+        interest_rate: item.interest_rate,
+        due_date: item.due_date,
+        created_at: item.created_at,
+      })
 
       if (!error) {
         await db.loans.update(item.id, { synced: true })
@@ -58,7 +56,7 @@ export class DexieLoanRepository implements ILoanRepository {
       remaining_value: item.remaining_value,
       interest_rate: item.interest_rate,
       due_date: item.due_date,
-      created_at: item.created_at
+      created_at: item.created_at,
     }
   }
 }

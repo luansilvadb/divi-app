@@ -1,22 +1,25 @@
 <template>
-  <aside 
+  <aside
     v-motion
-
     :variants="{
       expanded: { width: '260px' },
-      collapsed: { width: '80px' }
+      collapsed: { width: '80px' },
     }"
     :animate="isCollapsed ? 'collapsed' : 'expanded'"
-    :transition="sidebarStore.isLowPowerMode ? { duration: 0 } : {
-      type: 'spring',
-      stiffness: 250,
-      damping: 25,
-      mass: 0.5
-    }"
+    :transition="
+      sidebarStore.isLowPowerMode
+        ? { duration: 0 }
+        : {
+            type: 'spring',
+            stiffness: 250,
+            damping: 25,
+            mass: 0.5,
+          }
+    "
     class="sidebar"
-    :class="{ 
+    :class="{
       'sidebar--collapsed': isCollapsed,
-      'low-power-mode': sidebarStore.isLowPowerMode
+      'low-power-mode': sidebarStore.isLowPowerMode,
     }"
   >
     <div class="sidebar-noise" aria-hidden="true"></div>
@@ -25,15 +28,25 @@
     <div class="sidebar-header">
       <RouterLink to="/" class="sidebar-brand">
         <div class="sidebar-logo-icon">
-          <svg width="34" height="34" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="44" height="44" rx="11" fill="url(#sidebarLogoGrad)"/>
-            <path d="M14 16C14 14.8954 14.8954 14 16 14H22C25.866 14 29 17.134 29 21C29 24.866 25.866 28 22 28H18V30C18 31.1046 17.1046 32 16 32C14.8954 32 14 31.1046 14 30V16Z" fill="white" fill-opacity="0.95"/>
-            <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.6"/>
+          <svg
+            width="34"
+            height="34"
+            viewBox="0 0 44 44"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="44" height="44" rx="11" fill="url(#sidebarLogoGrad)" />
+            <path
+              d="M14 16C14 14.8954 14.8954 14 16 14H22C25.866 14 29 17.134 29 21C29 24.866 25.866 28 22 28H18V30C18 31.1046 17.1046 32 16 32C14.8954 32 14 31.1046 14 30V16Z"
+              fill="white"
+              fill-opacity="0.95"
+            />
+            <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.6" />
             <defs>
               <linearGradient id="sidebarLogoGrad" x1="0" y1="0" x2="44" y2="44">
-                <stop stop-color="var(--color-primary-main)"/>
-                <stop offset="0.5" stop-color="var(--color-secondary-main)"/>
-                <stop offset="1" stop-color="var(--color-accent-main)"/>
+                <stop stop-color="var(--color-primary-main)" />
+                <stop offset="0.5" stop-color="var(--color-secondary-main)" />
+                <stop offset="1" stop-color="var(--color-accent-main)" />
               </linearGradient>
             </defs>
           </svg>
@@ -42,17 +55,22 @@
       </RouterLink>
 
       <!-- Superior Toggle Button -->
-      <button 
+      <button
         @click="isCollapsed = !isCollapsed"
         class="sidebar-master-toggle"
         :aria-label="isCollapsed ? 'Expandir menu' : 'Recolher menu'"
       >
-        <svg 
-          class="sidebar-toggle-icon" 
+        <svg
+          class="sidebar-toggle-icon"
           :class="{ 'sidebar-toggle-icon--rotated': isCollapsed }"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         >
-          <polyline points="15 18 9 12 15 6"/>
+          <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
     </div>
@@ -63,7 +81,7 @@
         <span class="sidebar-nav-label">Menu Principal</span>
         <div class="sidebar-nav-divider"></div>
       </div>
-      
+
       <RouterLink
         v-for="(item, index) in mainNavItems"
         :key="item.to"
@@ -73,7 +91,7 @@
         active-class="sidebar-nav-item--active"
         :style="{ '--item-delay': `${index * 30}ms` }"
         :aria-label="item.label"
-        @mouseenter="sidebarStore.prefetchRoute(item.to)"
+        @mouseenter="handlePrefetch(item.to)"
       >
         <div class="sidebar-nav-item-indicator"></div>
         <div class="sidebar-nav-item-icon-wrapper">
@@ -85,7 +103,7 @@
         </div>
       </RouterLink>
 
-      <div class="sidebar-nav-group" style="margin-top: 1rem;">
+      <div class="sidebar-nav-group" style="margin-top: 1rem">
         <span class="sidebar-nav-label">Análise</span>
         <div class="sidebar-nav-divider"></div>
       </div>
@@ -99,7 +117,7 @@
         active-class="sidebar-nav-item--active"
         :style="{ '--item-delay': `${(index + mainNavItems.length) * 30}ms` }"
         :aria-label="item.label"
-        @mouseenter="sidebarStore.prefetchRoute(item.to)"
+        @mouseenter="handlePrefetch(item.to)"
       >
         <div class="sidebar-nav-item-indicator"></div>
         <div class="sidebar-nav-item-icon-wrapper">
@@ -114,12 +132,9 @@
     <!-- User section / Footer -->
     <div class="sidebar-footer">
       <div class="sidebar-footer-divider"></div>
-      
+
       <!-- Theme toggle -->
-      <button 
-        @click="toggleTheme"
-        class="sidebar-footer-btn"
-      >
+      <button @click="toggleTheme" class="sidebar-footer-btn">
         <div class="sidebar-nav-item-icon-wrapper">
           <div class="sidebar-nav-item-icon" v-html="isDark ? sunIcon : moonIcon"></div>
         </div>
@@ -129,10 +144,7 @@
       </button>
 
       <!-- Logout -->
-      <button 
-        @click="$emit('logout')"
-        class="sidebar-footer-btn sidebar-footer-btn--danger"
-      >
+      <button @click="$emit('logout')" class="sidebar-footer-btn sidebar-footer-btn--danger">
         <div class="sidebar-nav-item-icon-wrapper">
           <div class="sidebar-nav-item-icon" v-html="logoutIcon"></div>
         </div>
@@ -146,7 +158,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount } from 'vue'
-import { useRouter } from 'vue-router'
+
 import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
 
@@ -155,10 +167,18 @@ defineEmits(['logout'])
 const sidebarStore = useSidebarStore()
 const { isDark, toggle: toggleTheme } = useTheme()
 
+let prefetchTimeout: ReturnType<typeof setTimeout> | null = null
+const handlePrefetch = (to: string) => {
+  if (prefetchTimeout) clearTimeout(prefetchTimeout)
+  prefetchTimeout = setTimeout(() => {
+    sidebarStore.prefetchRoute(to)
+  }, 100)
+}
+
 // Mapeia o estado do store para a prop local (invertida para manter compatibilidade com o template atual)
 const isCollapsed = computed({
   get: () => !sidebarStore.isExpanded,
-  set: (val: boolean) => sidebarStore.setExpanded(!val)
+  set: (val: boolean) => sidebarStore.setExpanded(!val),
 })
 
 // Breakpoint detection using matchMedia (Efficient & Event-driven)
@@ -175,10 +195,10 @@ function handleBreakpointChange(e: MediaQueryListEvent | MediaQueryList) {
 onMounted(() => {
   // Initialize performance detection
   sidebarStore.initPerformanceDetection()
-  
+
   // Set initial state based on current viewport
   handleBreakpointChange(lgQuery)
-  
+
   // Listen for breakpoint changes
   lgQuery.addEventListener('change', handleBreakpointChange)
 })
@@ -196,51 +216,51 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { 
-    to: '/', 
+  {
+    to: '/',
     label: 'Dashboard',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="14" y="10" width="7" height="11" rx="1.5"/><rect x="3" y="13" width="7" height="8" rx="1.5"/></svg>`,
   },
-  { 
-    to: '/transactions', 
+  {
+    to: '/transactions',
     label: 'Transações',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17l3-3h14"/><path d="M22 7l-3 3H5"/><polyline points="17 12 19 14 17 16"/><polyline points="7 8 5 10 7 12"/></svg>`,
   },
-  { 
-    to: '/budgets', 
+  {
+    to: '/budgets',
     label: 'Orçamentos',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12"/><path d="M8 10c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4c1.1 0 2-.9 2-2"/></svg>`,
   },
-  { 
-    to: '/goals', 
+  {
+    to: '/goals',
     label: 'Metas',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`
+    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
   },
-  { 
-    to: '/loans', 
+  {
+    to: '/loans',
     label: 'Empréstimos',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>`,
   },
-  { 
-    to: '/subscriptions', 
+  {
+    to: '/subscriptions',
     label: 'Assinaturas',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 3"/></svg>`,
   },
 ]
 
 const analysisNavItems: NavItem[] = [
-  { 
-    to: '/calendar', 
+  {
+    to: '/calendar',
     label: 'Calendário',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="8" y="14" width="3" height="3" rx="0.5"/></svg>`,
   },
-  { 
-    to: '/reports', 
+  {
+    to: '/reports',
     label: 'Relatórios',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 5-9"/></svg>`,
   },
-  { 
-    to: '/activity-log', 
+  {
+    to: '/activity-log',
     label: 'Atividades',
     icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`,
   },
@@ -279,23 +299,21 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   backdrop-filter: blur(40px) saturate(1.6);
   -webkit-backdrop-filter: blur(40px) saturate(1.6);
   border-right: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 
+  box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.4),
     4px 0 32px -4px rgba(0, 0, 0, 0.04);
   z-index: 50;
-  
+
   /* Performance Optimizations (GPU) */
   will-change: transform, width;
   contain: paint;
-  transition: 
-    transform var(--transition-speed) var(--transition-timing),
-    background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 :is(.dark) .sidebar {
   background: rgba(18, 22, 28, 0.7);
   border-right-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 
+  box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.02),
     8px 0 40px -8px rgba(0, 0, 0, 0.4);
 }
@@ -321,12 +339,13 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   z-index: 1;
   opacity: 0.015;
   /* Decision: Static Data URI is faster than live SVG filter */
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4OcnJyXl5ejo6Onp6ednZ2goKCfbm6urq6np6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6fS8vPMAAAAFHRSTlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAAADh0STlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAA");
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4OcnJyXl5ejo6Onp6ednZ2goKCfbm6urq6np6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6fS8vPMAAAAFHRSTlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAAADh0STlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAA');
   background-repeat: repeat;
   pointer-events: none;
-  
+
   /* GPU Layer Isolation */
   will-change: opacity;
+  contain: paint;
 }
 
 :is(.low-power-mode) .sidebar-noise {
@@ -358,7 +377,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   min-width: 0;
   opacity: 1;
   transform: translateX(0);
-  transition: 
+  transition:
     opacity calc(var(--transition-speed) * 0.4) var(--transition-timing),
     transform var(--transition-speed) var(--transition-timing),
     max-width var(--transition-speed) var(--transition-timing);
@@ -375,7 +394,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 .sidebar-logo-icon {
   flex-shrink: 0;
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
-  transition: 
+  transition:
     transform 0.3s var(--transition-timing),
     filter 0.3s ease;
   margin-right: 1rem;
@@ -491,7 +510,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   opacity: 1;
   max-height: 20px;
   margin-bottom: 6px;
-  transition: 
+  transition:
     opacity calc(var(--transition-speed) * 0.3) ease,
     max-height var(--transition-speed) var(--transition-timing),
     margin var(--transition-speed) var(--transition-timing);
@@ -530,12 +549,12 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   margin-bottom: 4px;
   overflow: hidden;
   white-space: nowrap;
-  transition: 
+  transition:
     color 0.3s var(--transition-timing),
     transform 0.2s var(--transition-timing);
   margin-left: 10px;
   margin-right: 10px;
-  
+
   /* Performance Optimization */
   contain: content;
 }
@@ -594,9 +613,9 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   height: 24px;
   border-radius: 0 4px 4px 0;
   background: linear-gradient(to bottom, var(--color-primary-main), var(--color-secondary-main));
-  transition: 
-    transform 0.4s var(--transition-timing),
-    opacity 0.4s var(--transition-timing);
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    opacity 0.4s ease;
   z-index: 10;
   transform-origin: left;
 }
@@ -632,7 +651,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   justify-content: center;
   width: var(--icon-size);
   height: var(--icon-size);
-  transition: 
+  transition:
     transform 0.4s var(--transition-timing),
     color 0.3s ease;
 }
@@ -658,7 +677,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   flex: 1;
   margin-left: 0.25rem;
   overflow: hidden;
-  transition: 
+  transition:
     opacity calc(var(--transition-speed) * 0.4) var(--transition-timing),
     transform var(--transition-speed) var(--transition-timing);
 }
@@ -684,7 +703,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   font-weight: 800;
   color: white;
   background: var(--color-primary-main);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Footer ===== */
@@ -751,7 +770,9 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 /* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  .sidebar, .sidebar-nav-item, .sidebar-toggle-icon {
+  .sidebar,
+  .sidebar-nav-item,
+  .sidebar-toggle-icon {
     transition-duration: 0.01ms !important;
   }
 }

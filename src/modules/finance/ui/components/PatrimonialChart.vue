@@ -15,7 +15,7 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 } from 'chart.js'
 import type { ChartOptions } from 'chart.js'
 import { Line } from 'vue-chartjs'
@@ -28,7 +28,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 )
 
 const props = defineProps<{
@@ -49,9 +49,9 @@ const chartData = computed(() => ({
       pointHoverBorderColor: '#10b981',
       fill: true,
       tension: 0.4,
-      data: props.data
-    }
-  ]
+      data: props.data,
+    },
+  ],
 }))
 
 const chartOptions: ChartOptions<'line'> = {
@@ -59,7 +59,7 @@ const chartOptions: ChartOptions<'line'> = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      display: false
+      display: false,
     },
     tooltip: {
       mode: 'index' as const,
@@ -78,39 +78,41 @@ const chartOptions: ChartOptions<'line'> = {
             label += ': '
           }
           if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y)
+            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
+              context.parsed.y,
+            )
           }
           return label
-        }
-      }
-    }
+        },
+      },
+    },
   },
   scales: {
     y: {
       beginAtZero: true,
       grid: {
-        color: '#f3f4f6'
+        color: '#f3f4f6',
       },
       ticks: {
         color: '#9ca3af',
         callback: (value: any) => {
-          return new Intl.NumberFormat('pt-BR', { 
-            style: 'currency', 
+          return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
             currency: 'BRL',
-            maximumSignificantDigits: 3 
+            maximumSignificantDigits: 3,
           }).format(value)
-        }
-      }
+        },
+      },
     },
     x: {
       grid: {
-        display: false
+        display: false,
       },
       ticks: {
-        color: '#9ca3af'
-      }
-    }
-  }
+        color: '#9ca3af',
+      },
+    },
+  },
 }
 </script>
 

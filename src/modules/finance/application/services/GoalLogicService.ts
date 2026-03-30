@@ -22,7 +22,7 @@ export class GoalLogicService implements IGoalLogicService {
     const monthsRemaining = remainingValue / averageMonthlySaving
     const completionDate = new Date()
     completionDate.setMonth(completionDate.getMonth() + Math.ceil(monthsRemaining))
-    
+
     return completionDate
   }
 }

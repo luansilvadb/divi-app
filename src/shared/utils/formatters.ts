@@ -9,7 +9,7 @@
 export function formatCurrency(value: number): string {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
   }).format(value)
 }
 
@@ -20,7 +20,7 @@ export function formatCurrencySign(value: number): string {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-    signDisplay: 'always'
+    signDisplay: 'always',
   }).format(value)
 }
 
@@ -40,9 +40,7 @@ export function formatDateShort(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr + (dateStr.includes('T') ? '' : 'T12:00:00'))
   const day = date.getDate().toString().padStart(2, '0')
-  const month = date.toLocaleDateString('pt-BR', { month: 'short' })
-    .replace('.', '')
-    .toUpperCase()
+  const month = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
   return `${day} ${month}`
 }
 
@@ -54,15 +52,15 @@ export function getRelativeDayLabel(dateStr: string): string {
   const date = new Date(dateStr + (dateStr.includes('T') ? '' : 'T12:00:00'))
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  
+
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 1)
-  
+
   const checkDate = new Date(date)
   checkDate.setHours(0, 0, 0, 0)
-  
+
   if (checkDate.getTime() === today.getTime()) return 'Hoje'
   if (checkDate.getTime() === yesterday.getTime()) return 'Ontem'
-  
+
   return date.getDate().toString().padStart(2, '0')
 }

@@ -3,22 +3,42 @@
     <div class="card-top flex justify-between items-start">
       <div class="loan-identity flex gap-4 items-center">
         <BaseIconBox color="var(--color-secondary-main)" size="lg">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="24" height="24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            width="24"
+            height="24"
+          >
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+          </svg>
         </BaseIconBox>
         <div class="flex flex-col gap-0.5">
-          <h3 class="loan-name text-lg font-bold text-text-primary tracking-tight leading-tight">{{ loan.name }}</h3>
-          <span class="loan-due text-xs font-semibold text-text-disabled">Vence: {{ formatDate(loan.due_date) }}</span>
+          <h3 class="loan-name text-lg font-bold text-text-primary tracking-tight leading-tight">
+            {{ loan.name }}
+          </h3>
+          <span class="loan-due text-xs font-semibold text-text-disabled"
+            >Vence: {{ formatDate(loan.due_date) }}</span
+          >
         </div>
       </div>
     </div>
 
     <div class="loan-metrics grid grid-cols-2 gap-4 bg-black/3 dark:bg-white/3 p-4 rounded-xl mt-4">
       <div class="metric flex flex-col gap-1">
-        <span class="label text-[0.7rem] font-bold text-text-disabled uppercase tracking-widest">Saldo Devedor</span>
-        <span class="value text-lg font-black text-error-main leading-none">{{ formatCurrency(loan.remaining_value) }}</span>
+        <span class="label text-[0.7rem] font-bold text-text-disabled uppercase tracking-widest"
+          >Saldo Devedor</span
+        >
+        <span class="value text-lg font-black text-error-main leading-none">{{
+          formatCurrency(loan.remaining_value)
+        }}</span>
       </div>
       <div class="metric flex flex-col gap-1">
-        <span class="label text-[0.7rem] font-bold text-text-disabled uppercase tracking-widest">Taxa</span>
+        <span class="label text-[0.7rem] font-bold text-text-disabled uppercase tracking-widest"
+          >Taxa</span
+        >
         <div class="flex items-center">
           <BaseBadge variant="subtle" color="var(--color-primary-main)">
             {{ loan.interest_rate || '0' }}% a.m.
@@ -37,12 +57,14 @@
 
     <div class="card-footer pt-4 border-t border-black/5 dark:border-white/5 mt-2">
       <div class="card-actions flex justify-end gap-2">
-        <BaseButton variant="ghost" class="!px-4 !py-1.5 text-xs text-error-main" @click="$emit('delete', loan.id)">
+        <BaseButton
+          variant="ghost"
+          class="!px-4 !py-1.5 text-xs text-error-main"
+          @click="$emit('delete', loan.id)"
+        >
           Remover
         </BaseButton>
-        <BaseButton variant="outline" class="!px-4 !py-1.5 text-xs">
-          Registrar Parcela
-        </BaseButton>
+        <BaseButton variant="outline" class="!px-4 !py-1.5 text-xs"> Registrar Parcela </BaseButton>
       </div>
     </div>
   </BaseCard>
@@ -73,7 +95,7 @@ const getProgress = (loan: Loan) => {
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
   }).format(value)
 }
 

@@ -4,38 +4,63 @@
       <div class="header-content">
         <div class="budget-title-area">
           <BaseIconBox :color="budget.color || 'var(--color-primary-main)'">
-            <svg v-if="budget.type === 'saving'" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            <svg
+              v-if="budget.type === 'saving'"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+            <svg
+              v-else
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
           </BaseIconBox>
           <span class="budget-name">{{ budget.name }}</span>
         </div>
-        
-        <BaseBadge 
-          :color="budget.color || 'var(--color-primary-main)'"
-          variant="subtle"
-        >
+
+        <BaseBadge :color="budget.color || 'var(--color-primary-main)'" variant="subtle">
           {{ budget.type === 'spending' ? 'Gasto' : 'Reserva' }}
         </BaseBadge>
       </div>
     </template>
-    
+
     <div class="budget-info">
       <div class="values-row">
         <div class="values-main">
-          <span class="consumed" :class="{ 'text-error-main': isOverBudget }">{{ formatCurrency(consumed) }}</span>
+          <span class="consumed" :class="{ 'text-error-main': isOverBudget }">{{
+            formatCurrency(consumed)
+          }}</span>
           <span class="limit">/ {{ formatCurrency(budget.limit_value) }}</span>
         </div>
         <div class="percentage-pill" :class="{ 'over-budget': isOverBudget }">
           {{ Math.round(percentage) }}%
         </div>
       </div>
-      
-      <BaseProgressBar 
-        :percentage="percentage" 
-        :color="budget.color" 
-        :is-over-budget="isOverBudget" 
+
+      <BaseProgressBar
+        :percentage="percentage"
+        :color="budget.color"
+        :is-over-budget="isOverBudget"
       />
-      
+
       <div class="budget-footer-details">
         <div class="cadence" v-if="daysRemaining > 0 && !isOverBudget">
           <span class="cadence-label">Sugerido por dia:</span>
@@ -45,11 +70,38 @@
         </div>
         <div class="cadence over-alert" v-else-if="isOverBudget">
           <span class="cadence-label">Orçamento estourado</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
         </div>
-        
+
         <div class="days-remaining">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
           {{ daysRemaining }} dias
         </div>
       </div>
@@ -94,7 +146,7 @@ const dailyCadence = computed(() => {
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
   }).format(value)
 }
 </script>
@@ -178,12 +230,12 @@ const formatCurrency = (value: number) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   padding-top: 1rem;
 }
 
 :is(.dark) .budget-footer-details {
-  border-top-color: rgba(255,255,255,0.05);
+  border-top-color: rgba(255, 255, 255, 0.05);
 }
 
 .cadence {
@@ -200,13 +252,13 @@ const formatCurrency = (value: number) => {
 .cadence-value {
   font-weight: 700;
   color: var(--color-text-primary);
-  background: rgba(0,0,0,0.04);
+  background: rgba(0, 0, 0, 0.04);
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
 }
 
 :is(.dark) .cadence-value {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .over-alert {
@@ -225,12 +277,12 @@ const formatCurrency = (value: number) => {
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-text-secondary);
-  background: rgba(0,0,0,0.03);
+  background: rgba(0, 0, 0, 0.03);
   padding: 0.35rem 0.6rem;
   border-radius: 8px;
 }
 
 :is(.dark) .days-remaining {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 </style>
