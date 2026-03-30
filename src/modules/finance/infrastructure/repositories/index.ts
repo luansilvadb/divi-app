@@ -1,7 +1,7 @@
-import type { 
-  ITransactionRepository, 
-  IWalletRepository, 
-  ICategoryRepository 
+import type {
+  ITransactionRepository,
+  IWalletRepository,
+  ICategoryRepository,
 } from '../../domain/repositories'
 import type { Transaction, Wallet, Category } from '../../domain/entities'
 import { db } from '../../../../core/db'
@@ -17,13 +17,13 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
   async getByMonth(year: number, month: number): Promise<Transaction[]> {
     const start = new Date(year, month - 1, 1).toISOString()
     const end = new Date(year, month, 0, 23, 59, 59).toISOString()
-    
+
     const list = await db.transactions
       .where('date')
       .between(start, end)
-      .and(t => !t.deleted)
+      .and((t) => !t.deleted)
       .toArray()
-      
+
     return list.map(this.mapToEntity)
   }
 
@@ -32,15 +32,15 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     const localData = {
       ...transaction,
       synced: false,
-      updated_at: now
+      updated_at: now,
     }
-    
+
     if (transaction.localId) {
       await db.transactions.put(localData as any)
     } else {
       await db.transactions.add(localData as any)
     }
-    
+
     // Attempt background sync
     this.sync().catch(console.error)
   }
@@ -53,7 +53,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
 
   async sync(): Promise<void> {
     const unsynced = await db.transactions.where('synced').equals(0).toArray()
-    
+
     for (const item of unsynced) {
       if (item.deleted && item.id) {
         const { error } = await supabase.from('transactions').delete().eq('id', item.id)
@@ -74,15 +74,15 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
             payee_id: item.payee_id,
             user_id: item.user_id,
             notes: item.notes,
-            updated_at: item.updated_at
+            updated_at: item.updated_at,
           })
           .select()
           .single()
 
         if (!error && data) {
-          await db.transactions.update(item.localId!, { 
-            id: data.id, 
-            synced: true 
+          await db.transactions.update(item.localId!, {
+            id: data.id,
+            synced: true,
           })
         }
       }
@@ -93,7 +93,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     return {
       ...item,
       synced: !!item.synced,
-      deleted: !!item.deleted
+      deleted: !!item.deleted,
     }
   }
 }

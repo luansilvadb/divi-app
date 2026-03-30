@@ -1,4 +1,13 @@
-import type { Transaction, Wallet, Category, Payee, Budget, Goal, Loan, Subscription } from '../entities'
+import type {
+  Transaction,
+  Wallet,
+  Category,
+  Payee,
+  Budget,
+  Goal,
+  Loan,
+  Subscription,
+} from '../entities'
 
 export interface ISubscriptionRepository {
   getAll(): Promise<Subscription[]>

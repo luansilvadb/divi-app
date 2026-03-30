@@ -12,10 +12,10 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
   async save(subscription: Subscription): Promise<void> {
     const data = {
       ...subscription,
-      synced: false
+      synced: false,
     }
     await db.subscriptions.put(data as any)
-    
+
     // Attempt background sync
     this.sync().catch(console.error)
   }
@@ -28,22 +28,20 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async sync(): Promise<void> {
     const unsynced = await db.subscriptions.where('synced').equals(0).toArray()
-    
+
     for (const item of unsynced) {
-      const { error } = await supabase
-        .from('subscriptions')
-        .upsert({
-          id: item.id,
-          user_id: item.user_id,
-          name: item.name,
-          amount: item.amount,
-          category_id: item.category_id,
-          wallet_id: item.wallet_id,
-          billing_day: item.billing_day,
-          frequency: item.frequency,
-          last_billed_at: item.last_billed_at,
-          created_at: item.created_at
-        })
+      const { error } = await supabase.from('subscriptions').upsert({
+        id: item.id,
+        user_id: item.user_id,
+        name: item.name,
+        amount: item.amount,
+        category_id: item.category_id,
+        wallet_id: item.wallet_id,
+        billing_day: item.billing_day,
+        frequency: item.frequency,
+        last_billed_at: item.last_billed_at,
+        created_at: item.created_at,
+      })
 
       if (!error) {
         await db.subscriptions.update(item.id, { synced: true })
@@ -62,7 +60,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
       billing_day: item.billing_day,
       frequency: item.frequency,
       last_billed_at: item.last_billed_at,
-      created_at: item.created_at
+      created_at: item.created_at,
     }
   }
 }

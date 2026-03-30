@@ -6,8 +6,8 @@ export class SupabaseAuthService implements IAuthService {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin
-      }
+        redirectTo: window.location.origin,
+      },
     })
 
     if (error) throw error
@@ -19,15 +19,17 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
     if (!user) return null
 
     return {
       id: user.id,
       email: user.email!,
       name: user.user_metadata.full_name,
-      avatar_url: user.user_metadata.avatar_url
+      avatar_url: user.user_metadata.avatar_url,
     }
   }
 
@@ -43,7 +45,7 @@ export class SupabaseAuthService implements IAuthService {
         id: user.id,
         email: user.email!,
         name: user.user_metadata.full_name,
-        avatar_url: user.user_metadata.avatar_url
+        avatar_url: user.user_metadata.avatar_url,
       })
     })
   }

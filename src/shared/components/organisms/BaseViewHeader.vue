@@ -1,5 +1,7 @@
 <template>
-  <header class="view-header flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
+  <header
+    class="view-header flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6"
+  >
     <!-- Page title and subtitle -->
     <div class="title-section flex flex-col gap-2">
       <h1 class="page-title text-4xl font-black tracking-tight text-text-primary m-0 leading-none">
@@ -14,11 +16,14 @@
           </template>
         </slot>
       </h1>
-      <p v-if="subtitle" class="page-subtitle text-base font-medium text-text-secondary m-0 max-w-2xl">
+      <p
+        v-if="subtitle"
+        class="page-subtitle text-base font-medium text-text-secondary m-0 max-w-2xl"
+      >
         {{ subtitle }}
       </p>
     </div>
-    
+
     <!-- Action slot -->
     <div v-if="$slots.action" class="header-actions flex gap-3 transition-transform duration-300">
       <slot name="action" />

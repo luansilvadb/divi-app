@@ -4,7 +4,7 @@
     <main
       :class="[
         'flex-1 h-full overflow-y-auto overflow-x-hidden relative',
-        isLoginRoute ? '' : 'bg-bg-main'
+        isLoginRoute ? '' : 'bg-bg-main',
       ]"
     >
       <RouterView />
@@ -32,13 +32,17 @@ const user = ref<User | null>(null)
 const isLoginRoute = computed(() => route.name === 'login')
 
 // Watch for performance mode changes to apply global CSS class
-watch(() => sidebarStore.isLowPowerMode, (isLow) => {
-  if (isLow) {
-    document.documentElement.classList.add('low-power-mode')
-  } else {
-    document.documentElement.classList.remove('low-power-mode')
-  }
-}, { immediate: true })
+watch(
+  () => sidebarStore.isLowPowerMode,
+  (isLow) => {
+    if (isLow) {
+      document.documentElement.classList.add('low-power-mode')
+    } else {
+      document.documentElement.classList.remove('low-power-mode')
+    }
+  },
+  { immediate: true },
+)
 
 onMounted(async () => {
   // Set initial user
@@ -49,7 +53,7 @@ onMounted(async () => {
   authService.onAuthStateChange((newUser) => {
     user.value = newUser
     isLoggedIn.value = !!newUser
-    
+
     if (!newUser) {
       router.push({ name: 'login' })
     } else if (router.currentRoute.value.name === 'login') {

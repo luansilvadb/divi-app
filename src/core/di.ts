@@ -4,10 +4,10 @@
  */
 
 import { SupabaseAuthService } from '../modules/finance/infrastructure/services/SupabaseAuthService'
-import { 
-  DexieSupabaseTransactionRepository, 
-  DexieWalletRepository, 
-  DexieCategoryRepository 
+import {
+  DexieSupabaseTransactionRepository,
+  DexieWalletRepository,
+  DexieCategoryRepository,
 } from '../modules/finance/infrastructure/repositories/index'
 import { DexiePayeeRepository } from '../modules/finance/infrastructure/repositories/PayeeRepository'
 import { DexieLoanRepository } from '../modules/finance/infrastructure/repositories/LoanRepository'

@@ -21,12 +21,14 @@ async function processSubscriptions() {
       if (sub.billing_day <= currentDay) {
         // Check if already billed this month
         const lastBilled = sub.last_billed_at ? new Date(sub.last_billed_at) : null
-        const alreadyBilled = lastBilled && 
-          (lastBilled.getMonth() === today.getMonth() && lastBilled.getFullYear() === today.getFullYear())
+        const alreadyBilled =
+          lastBilled &&
+          lastBilled.getMonth() === today.getMonth() &&
+          lastBilled.getFullYear() === today.getFullYear()
 
         if (!alreadyBilled) {
           console.log(`[SW] Billing subscription: ${sub.name}`)
-          
+
           // Create transaction
           await db.table('transactions').add({
             id: crypto.randomUUID(),
@@ -38,13 +40,13 @@ async function processSubscriptions() {
             date: today.toISOString(),
             synced: false,
             deleted: false,
-            updated_at: today.toISOString()
+            updated_at: today.toISOString(),
           })
 
           // Update subscription last billed date
           await db.table('subscriptions').update(sub.id, {
             last_billed_at: today.toISOString(),
-            synced: false
+            synced: false,
           })
         }
       }
@@ -59,7 +61,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
-  
+
   if (event.data && event.data.type === 'CHECK_SUBSCRIPTIONS') {
     processSubscriptions()
   }

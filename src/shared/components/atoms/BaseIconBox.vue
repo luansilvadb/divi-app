@@ -1,10 +1,7 @@
 <template>
-  <div 
+  <div
     class="rounded-xl flex items-center justify-center transition-all duration-300"
-    :class="[
-      sizeClasses[size],
-      customClasses
-    ]"
+    :class="[sizeClasses[size], customClasses]"
     :style="customStyle"
   >
     <slot />
@@ -16,29 +13,32 @@ import { computed } from 'vue'
 
 type BoxSize = 'sm' | 'md' | 'lg'
 
-const props = withDefaults(defineProps<{
-  color?: string // Hex or CSS Variable
-  size?: BoxSize
-}>(), {
-  size: 'md'
-})
+const props = withDefaults(
+  defineProps<{
+    color?: string // Hex or CSS Variable
+    size?: BoxSize
+  }>(),
+  {
+    size: 'md',
+  },
+)
 
 const sizeClasses: Record<BoxSize, string> = {
   sm: 'w-8 h-8',
   md: 'w-10 h-10',
-  lg: 'w-12 h-12'
+  lg: 'w-12 h-12',
 }
 
 const isCssVar = computed(() => props.color?.startsWith('var('))
 
 const customStyle = computed(() => {
   if (!props.color) return {}
-  
+
   const colorValue = props.color
 
   return {
     backgroundColor: isCssVar.value ? `rgba(${props.color}, 0.1)` : `${props.color}15`,
-    color: colorValue
+    color: colorValue,
   }
 })
 

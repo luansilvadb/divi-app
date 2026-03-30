@@ -1,10 +1,7 @@
 <template>
-  <div 
+  <div
     class="relative overflow-hidden bg-black/5 dark:bg-white/5 animate-pulse"
-    :class="[
-      rounded ? 'rounded-full' : 'rounded-lg',
-      customClass
-    ]"
+    :class="[rounded ? 'rounded-full' : 'rounded-lg', customClass]"
     :style="customStyle"
   >
     <!-- Shimmer effect overlay -->
@@ -19,20 +16,23 @@
  */
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<{
-  width?: string
-  height?: string
-  rounded?: boolean
-  customClass?: string
-}>(), {
-  width: '100%',
-  height: '20px',
-  rounded: false
-})
+const props = withDefaults(
+  defineProps<{
+    width?: string
+    height?: string
+    rounded?: boolean
+    customClass?: string
+  }>(),
+  {
+    width: '100%',
+    height: '20px',
+    rounded: false,
+  },
+)
 
 const customStyle = computed(() => ({
   width: props.width,
-  height: props.height
+  height: props.height,
 }))
 </script>
 

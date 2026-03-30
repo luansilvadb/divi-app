@@ -1,37 +1,88 @@
 <template>
   <div class="account-carousel">
     <div class="carousel-track-container rounded-[1.25rem] overflow-hidden">
-      <div class="carousel-track flex transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1)" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+      <div
+        class="carousel-track flex transition-transform duration-700 cubic-bezier(0.16, 1, 0.3, 1)"
+        :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
+      >
         <div v-for="wallet in wallets" :key="wallet.id" class="wallet-slide min-w-full p-1">
           <BaseCard class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden" clickable>
-            <div class="wallet-accent w-1.5 h-full" :style="{ background: getWalletColor(wallet) }"></div>
+            <div
+              class="wallet-accent w-1.5 h-full"
+              :style="{ background: getWalletColor(wallet) }"
+            ></div>
             <div class="wallet-body flex-1 p-6 flex flex-col justify-center">
               <div class="wallet-meta flex justify-between items-center mb-2">
-                <span class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest">{{ wallet.name }}</span>
-                <span class="wallet-label text-[0.7rem] font-bold text-text-disabled uppercase opacity-80">{{ wallet.currency }}</span>
+                <span
+                  class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest"
+                  >{{ wallet.name }}</span
+                >
+                <span
+                  class="wallet-label text-[0.7rem] font-bold text-text-disabled uppercase opacity-80"
+                  >{{ wallet.currency }}</span
+                >
               </div>
               <div class="wallet-main">
-                <h3 class="wallet-balance text-4xl font-extrabold text-text-primary tracking-tighter">{{ formatCurrency(wallet.balance) }}</h3>
+                <h3
+                  class="wallet-balance text-4xl font-extrabold text-text-primary tracking-tighter"
+                >
+                  {{ formatCurrency(wallet.balance) }}
+                </h3>
               </div>
             </div>
           </BaseCard>
         </div>
       </div>
     </div>
-    
+
     <div v-if="wallets.length > 1" class="carousel-nav flex items-center justify-center gap-6 mt-5">
-      <button class="nav-btn prev bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed" @click="prev" :disabled="currentIndex === 0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <button
+        class="nav-btn prev bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed"
+        @click="prev"
+        :disabled="currentIndex === 0"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
       </button>
       <div class="carousel-dots flex gap-2">
-        <span 
-          v-for="(_, index) in wallets" 
-          :key="index" 
-          :class="['carousel-dot w-2 h-2 rounded-full bg-border-main transition-all duration-300', { 'active !bg-primary-main !w-5 !rounded-lg': index === currentIndex }]"
+        <span
+          v-for="(_, index) in wallets"
+          :key="index"
+          :class="[
+            'carousel-dot w-2 h-2 rounded-full bg-border-main transition-all duration-300',
+            { 'active !bg-primary-main !w-5 !rounded-lg': index === currentIndex },
+          ]"
         ></span>
       </div>
-      <button class="nav-btn next bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed" @click="next" :disabled="currentIndex === wallets.length - 1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6 6-6"/></svg>
+      <button
+        class="nav-btn next bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed"
+        @click="next"
+        :disabled="currentIndex === wallets.length - 1"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M9 18l6-6 6-6" />
+        </svg>
       </button>
     </div>
   </div>
@@ -61,7 +112,12 @@ function prev() {
 }
 
 function getWalletColor(wallet: Wallet) {
-  const colors = ['var(--color-primary-main)', 'var(--color-secondary-main)', 'var(--color-accent-main)', 'var(--color-info-main)']
+  const colors = [
+    'var(--color-primary-main)',
+    'var(--color-secondary-main)',
+    'var(--color-accent-main)',
+    'var(--color-info-main)',
+  ]
   let hash = 0
   for (let i = 0; i < wallet.name.length; i++) {
     hash = wallet.name.charCodeAt(i) + ((hash << 5) - hash)
