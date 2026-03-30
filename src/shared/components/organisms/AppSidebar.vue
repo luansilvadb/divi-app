@@ -125,28 +125,46 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTheme } from '../../../core/theme'
+import { useSidebarStore } from '../../stores/sidebarStore'
 
 defineEmits(['logout'])
 
+const sidebarStore = useSidebarStore()
 const { isDark, toggle: toggleTheme } = useTheme()
-const isCollapsed = ref(false)
 
-// Collapse on small screens
-function handleResize() {
-  if (window.innerWidth < 1024) {
-    isCollapsed.value = true
+// Mapeia o estado do store para a prop local (invertida para manter compatibilidade com o template atual)
+const isCollapsed = computed({
+  get: () => !sidebarStore.isExpanded,
+  set: (val: boolean) => sidebarStore.setExpanded(!val)
+})
+
+// Breakpoint detection using matchMedia (Efficient & Event-driven)
+const lgQuery = window.matchMedia('(max-width: 1024px)')
+
+function handleBreakpointChange(e: MediaQueryListEvent | MediaQueryList) {
+  if (e.matches) {
+    sidebarStore.setExpanded(false)
+  } else {
+    sidebarStore.setExpanded(true)
   }
 }
 
 onMounted(() => {
-  handleResize()
-  window.addEventListener('resize', handleResize)
+  // Initialize performance detection
+  sidebarStore.initPerformanceDetection()
+  
+  // Set initial state based on current viewport
+  handleBreakpointChange(lgQuery)
+  
+  // Listen for breakpoint changes
+  lgQuery.addEventListener('change', handleBreakpointChange)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize)
+  lgQuery.removeEventListener('change', handleBreakpointChange)
 })
 
 // SVG Icons
@@ -221,8 +239,8 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   --sidebar-width: 260px;
   --sidebar-collapsed-width: 80px;
   --sidebar-nav-padding: 30px;
-  --transition-speed: 0.5s;
-  --transition-timing: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-speed: 0.4s;
+  --transition-timing: cubic-bezier(0.25, 1, 0.5, 1); /* Faster initial, smoother end */
   --nav-item-height: 48px;
   --icon-size: 22px;
   --indicator-width: 4px;
@@ -244,8 +262,15 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   box-shadow: 
     1px 0 0 0 rgba(255, 255, 255, 0.4),
     4px 0 32px -4px rgba(0, 0, 0, 0.04);
-  transition: width var(--transition-speed) var(--transition-timing);
   z-index: 50;
+  
+  /* Performance Optimizations (GPU) */
+  will-change: transform, width;
+  contain: paint;
+  transition: 
+    transform var(--transition-speed) var(--transition-timing),
+    width var(--transition-speed) var(--transition-timing),
+    background-color 0.3s ease;
 }
 
 :is(.dark) .sidebar {
@@ -256,6 +281,17 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
     8px 0 40px -8px rgba(0, 0, 0, 0.4);
 }
 
+/* Low Power Mode - Disable heavy effects */
+:is(.low-power-mode) .sidebar {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgb(255, 255, 255);
+}
+
+:is(.dark.low-power-mode) .sidebar {
+  background: rgb(18, 22, 28);
+}
+
 .sidebar--collapsed {
   width: var(--sidebar-collapsed-width);
 }
@@ -264,10 +300,15 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   position: absolute;
   inset: 0;
   z-index: 1;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  /* Decision: Static Data URI is faster than live SVG filter */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4OcnJyXl5ejo6Onp6ednZ2goKCfbm6urq6np6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6fS8vPMAAAAFHRSTlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAAADh0STlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAA");
   background-repeat: repeat;
   pointer-events: none;
+}
+
+:is(.low-power-mode) .sidebar-noise {
+  display: none;
 }
 
 /* ===== Header (Logo & Toggle) ===== */
@@ -468,11 +509,13 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   overflow: hidden;
   white-space: nowrap;
   transition: 
-    background 0.3s var(--transition-timing),
     color 0.3s var(--transition-timing),
     transform 0.2s var(--transition-timing);
   margin-left: 10px;
   margin-right: 10px;
+  
+  /* Performance Optimization */
+  contain: content;
 }
 
 .sidebar--collapsed .sidebar-nav-item {
@@ -488,17 +531,19 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   position: absolute;
   inset: 2px 2px;
   border-radius: 12px;
-  background: transparent;
-  transition: background 0.3s ease;
+  background: rgba(0, 0, 0, 0.04);
+  opacity: 0;
+  transition: opacity 0.2s ease;
   z-index: 0;
+  will-change: opacity;
+}
+
+:is(.dark) .sidebar-nav-item::before {
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .sidebar-nav-item:hover::before {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-:is(.dark) .sidebar-nav-item:hover::before {
-  background: rgba(255, 255, 255, 0.04);
+  opacity: 1;
 }
 
 .sidebar-nav-item--active {
@@ -506,6 +551,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 }
 
 .sidebar-nav-item--active::before {
+  opacity: 1;
   background: rgba(var(--color-primary-main-rgb, 0, 0, 0), 0.06);
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
