@@ -150,7 +150,14 @@ onBeforeUnmount(() => {
 })
 
 // SVG Icons (Lucide-inspired, clean line icons)
-const mainNavItems = [
+interface NavItem {
+  to: string
+  label: string
+  icon: string
+  badge?: string | number
+}
+
+const mainNavItems: NavItem[] = [
   { 
     to: '/', 
     label: 'Dashboard',
@@ -183,7 +190,7 @@ const mainNavItems = [
   },
 ]
 
-const analysisNavItems = [
+const analysisNavItems: NavItem[] = [
   { 
     to: '/calendar', 
     label: 'Calendário',

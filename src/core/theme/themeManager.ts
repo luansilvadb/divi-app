@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 export type Theme = 'light' | 'dark' | 'system'
 
@@ -10,13 +10,21 @@ export const useTheme = () => {
     localStorage.setItem('divi-ui-theme', newTheme)
   }
 
+  const isDark = computed(() => {
+    if (themeState.value === 'system') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    return themeState.value === 'dark'
+  })
+
+  const toggle = () => {
+    setTheme(isDark.value ? 'light' : 'dark')
+  }
+
   const applyTheme = () => {
     const root = document.documentElement
-    const isDark = 
-      themeState.value === 'dark' || 
-      (themeState.value === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
     
-    if (isDark) {
+    if (isDark.value) {
       root.classList.add('dark')
     } else {
       root.classList.remove('dark')
@@ -38,6 +46,8 @@ export const useTheme = () => {
 
   return {
     theme: themeState,
-    setTheme
+    isDark,
+    setTheme,
+    toggle
   }
 }
