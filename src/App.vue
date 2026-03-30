@@ -1,10 +1,10 @@
 <template>
-  <div class="flex min-h-screen bg-bg-main text-text-primary">
+  <div class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
     <AppSidebar v-if="isLoggedIn" @logout="handleLogout" />
     <main
       :class="[
-        'flex-1 overflow-y-auto',
-        isLoginRoute ? '' : 'p-8 bg-bg-main'
+        'flex-1 h-full overflow-y-auto overflow-x-hidden relative',
+        isLoginRoute ? '' : 'bg-bg-main'
       ]"
     >
       <RouterView />
