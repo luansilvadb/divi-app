@@ -1,7 +1,23 @@
 <template>
   <aside 
+    v-motion
+    :initial="false"
+    :variants="{
+      expanded: { width: '260px' },
+      collapsed: { width: '80px' }
+    }"
+    :animate="isCollapsed ? 'collapsed' : 'expanded'"
+    :transition="sidebarStore.isLowPowerMode ? { duration: 0 } : {
+      type: 'spring',
+      stiffness: 250,
+      damping: 25,
+      mass: 0.5
+    }"
     class="sidebar"
-    :class="{ 'sidebar--collapsed': isCollapsed }"
+    :class="{ 
+      'sidebar--collapsed': isCollapsed,
+      'low-power-mode': sidebarStore.isLowPowerMode
+    }"
   >
     <div class="sidebar-noise" aria-hidden="true"></div>
 
@@ -52,10 +68,12 @@
         v-for="(item, index) in mainNavItems"
         :key="item.to"
         :to="item.to"
+        v-memo="[item.to, item.badge, isCollapsed]"
         class="sidebar-nav-item"
         active-class="sidebar-nav-item--active"
         :style="{ '--item-delay': `${index * 30}ms` }"
         :aria-label="item.label"
+        @mouseenter="sidebarStore.prefetchRoute(item.to)"
       >
         <div class="sidebar-nav-item-indicator"></div>
         <div class="sidebar-nav-item-icon-wrapper">
@@ -76,10 +94,12 @@
         v-for="(item, index) in analysisNavItems"
         :key="item.to"
         :to="item.to"
+        v-memo="[item.to, isCollapsed]"
         class="sidebar-nav-item"
         active-class="sidebar-nav-item--active"
         :style="{ '--item-delay': `${(index + mainNavItems.length) * 30}ms` }"
         :aria-label="item.label"
+        @mouseenter="sidebarStore.prefetchRoute(item.to)"
       >
         <div class="sidebar-nav-item-indicator"></div>
         <div class="sidebar-nav-item-icon-wrapper">
@@ -269,7 +289,6 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   contain: paint;
   transition: 
     transform var(--transition-speed) var(--transition-timing),
-    width var(--transition-speed) var(--transition-timing),
     background-color 0.3s ease;
 }
 
@@ -305,10 +324,13 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4OcnJyXl5ejo6Onp6ednZ2goKCfbm6urq6np6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6fS8vPMAAAAFHRSTlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAAADh0STlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAA");
   background-repeat: repeat;
   pointer-events: none;
+  
+  /* GPU Layer Isolation */
+  will-change: opacity;
 }
 
 :is(.low-power-mode) .sidebar-noise {
-  display: none;
+  display: none !important;
 }
 
 /* ===== Header (Logo & Toggle) ===== */

@@ -10,6 +10,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-30
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS (004-standardize-ui-consistency)
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Vite, TailwindCSS (005-remove-bg-orbs)
 - LocalStorage (for theme preference) (006-sidebar-polish-performance)
+- Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS, @vueuse/motion (007-sidebar-polish-performance)
+- LocalStorage (for theme and sidebar state) (007-sidebar-polish-performance)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -47,9 +49,9 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 007-sidebar-polish-performance: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS, @vueuse/motion
 - 006-sidebar-polish-performance: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
 - 005-remove-bg-orbs: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Vite, TailwindCSS
-- 004-standardize-ui-consistency: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
 
 
 <!-- MANUAL ADDITIONS START -->

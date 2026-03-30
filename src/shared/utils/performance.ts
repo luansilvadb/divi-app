@@ -16,7 +16,13 @@ export async function checkIsLowPowerMode(): Promise<boolean> {
     }
   }
 
-  // 2. Heurística de FPS (Detecta se o hardware está sofrendo ou em economia de energia)
+  // 2. Verificação de Preferência do Usuário (Reduced Motion)
+  // Quase sempre indica economia de recursos ou necessidade de acessibilidade.
+  if (isReducedMotionDetected()) {
+    return true;
+  }
+
+  // 3. Heurística de FPS (Detecta se o hardware está sofrendo ou em economia de energia)
   // Mede o tempo de resposta do requestAnimationFrame em uma janela curta de 100ms.
   return new Promise((resolve) => {
     let frameCount = 0;
@@ -38,4 +44,12 @@ export async function checkIsLowPowerMode(): Promise<boolean> {
 
     requestAnimationFrame(check);
   });
+}
+
+/**
+ * Detecta se o usuário prefere movimentos reduzidos (Configuração do SO).
+ */
+export function isReducedMotionDetected(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
