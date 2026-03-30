@@ -36,9 +36,9 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     }
 
     if (transaction.localId) {
-      await db.transactions.put(localData as any)
+      await db.transactions.put(localData as Required<typeof localData>)
     } else {
-      await db.transactions.add(localData as any)
+      await db.transactions.add(localData as Required<typeof localData>)
     }
 
     // Attempt background sync
@@ -53,45 +53,76 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
 
   async sync(): Promise<void> {
     const unsynced = await db.transactions.where('synced').equals(0).toArray()
+    if (unsynced.length === 0) return
 
-    for (const item of unsynced) {
-      if (item.deleted && item.id) {
-        const { error } = await supabase.from('transactions').delete().eq('id', item.id)
-        if (!error) {
-          await db.transactions.delete(item.localId!)
-        }
+    const toDelete = unsynced.filter((item) => item.deleted && item.id)
+    const toUpsert = unsynced.filter((item) => !item.deleted)
+
+    // Bulk Delete
+    if (toDelete.length > 0) {
+      const deleteIds = toDelete.map((i) => i.id as string)
+      const { error } = await supabase.from('transactions').delete().in('id', deleteIds)
+
+      if (!error) {
+        const localDeleteIds = toDelete.map((i) => i.localId as string)
+        await db.transactions.bulkDelete(localDeleteIds)
       } else {
-        const { data, error } = await supabase
-          .from('transactions')
-          .upsert({
-            id: item.id,
-            title: item.title,
-            amount: item.amount,
-            type: item.type,
-            date: item.date,
-            category_id: item.category_id,
-            wallet_id: item.wallet_id,
-            payee_id: item.payee_id,
-            user_id: item.user_id,
-            notes: item.notes,
-            updated_at: item.updated_at,
-          })
-          .select()
-          .single()
+        console.error('[Sync] Bulk delete failed', error)
+      }
+    }
 
-        if (!error && data) {
-          await db.transactions.update(item.localId!, {
-            id: data.id,
-            synced: true,
+    // Bulk Upsert
+    if (toUpsert.length > 0) {
+      const upsertPayload = toUpsert.map((item) => ({
+        id: item.id,
+        title: item.title,
+        amount: item.amount,
+        type: item.type,
+        date: item.date,
+        category_id: item.category_id,
+        wallet_id: item.wallet_id,
+        payee_id: item.payee_id,
+        user_id: item.user_id,
+        notes: item.notes,
+        updated_at: item.updated_at,
+      }))
+
+      const { data, error } = await supabase.from('transactions').upsert(upsertPayload).select('id')
+
+      if (!error && data) {
+        // Find which local records got synced and update their status
+        const updates = toUpsert
+          .map((item) => {
+            const remoteRecord = data.find((d: Record<string, unknown>) => d.id === item.id)
+            if (remoteRecord) {
+              return {
+                key: item.localId,
+                changes: {
+                  id: remoteRecord.id as string,
+                  synced: true,
+                },
+              }
+            }
+            return null
           })
-        }
+          .filter(Boolean) as { key: string; changes: Record<string, unknown> }[]
+
+        // We can't use bulkUpdate directly in Dexie 3 with differing values per key easily without an extension or loop,
+        // but bulkPut can be used or a fast loop since local DB is fast. We use a fast loop for local updates.
+        await db.transaction('rw', db.transactions, async () => {
+          for (const update of updates) {
+            await db.transactions.update(update.key, update.changes)
+          }
+        })
+      } else {
+        console.error('[Sync] Bulk upsert failed', error)
       }
     }
   }
 
-  private mapToEntity(item: any): Transaction {
+  private mapToEntity(item: Record<string, unknown>): Transaction {
     return {
-      ...item,
+      ...(item as unknown as Transaction),
       synced: !!item.synced,
       deleted: !!item.deleted,
     }
@@ -105,7 +136,7 @@ export class DexieWalletRepository implements IWalletRepository {
   }
 
   async save(wallet: Wallet): Promise<void> {
-    await db.wallets.put(wallet as any)
+    await db.wallets.put(wallet as Required<Wallet>)
   }
 
   async getById(id: string): Promise<Wallet | null> {
@@ -121,6 +152,6 @@ export class DexieCategoryRepository implements ICategoryRepository {
   }
 
   async save(category: Category): Promise<void> {
-    await db.categories.put(category as any)
+    await db.categories.put(category as Required<Category>)
   }
 }

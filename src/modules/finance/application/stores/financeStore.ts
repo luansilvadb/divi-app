@@ -26,62 +26,73 @@ export const useFinanceStore = defineStore('finance', () => {
   const subscriptions = ref<Subscription[]>([])
   const isLoading = ref(false)
 
+  // O(N) single-pass aggregation
+  const transactionTotals = computed(() => {
+    return transactions.value.reduce(
+      (acc, t) => {
+        if (t.type === 'income') {
+          acc.income += t.amount
+        } else if (t.type === 'expense') {
+          acc.expense += t.amount
+        }
+        return acc
+      },
+      { income: 0, expense: 0 },
+    )
+  })
+
   // Getters
   const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
-
   const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
 
-  // Optimized Maps for O(1) Lookups
+  const totalIncome = computed(() => transactionTotals.value.income)
+  const totalExpense = computed(() => transactionTotals.value.expense)
+  const monthlyBalance = computed(() => totalIncome.value - totalExpense.value)
+
+  // Optimized Maps for O(1) Lookups using Plain Objects (Record) for Vue reactivity
   const categoryMap = computed(() => {
-    const map = new Map<string, Category>()
-    categories.value.forEach((c) => map.set(c.id, c))
+    const map: Record<string, Category> = {}
+    for (const c of categories.value) {
+      map[c.id] = c
+    }
     return map
   })
 
   const walletMap = computed(() => {
-    const map = new Map<string, Wallet>()
-    wallets.value.forEach((w) => map.set(w.id, w))
+    const map: Record<string, Wallet> = {}
+    for (const w of wallets.value) {
+      map[w.id] = w
+    }
     return map
   })
 
-  // Aggregation Getters
-  const totalIncome = computed(() =>
-    transactions.value.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0),
-  )
-
-  const totalExpense = computed(() =>
-    transactions.value.filter((t) => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0),
-  )
-
-  const monthlyBalance = computed(() => totalIncome.value - totalExpense.value)
-
+  // Top Categories Single Pass
   const topCategories = computed(() => {
-    const expenses = transactions.value.filter((t) => t.type === 'expense')
     const catMap: Record<string, number> = {}
 
-    expenses.forEach((t) => {
-      catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
-    })
+    // Calculate total explicitly using loop
+    for (const t of transactions.value) {
+      if (t.type === 'expense') {
+        catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
+      }
+    }
 
-    const sorted = Object.entries(catMap)
+    const expenseTotal = totalExpense.value
+    if (expenseTotal === 0) return []
+
+    return Object.entries(catMap)
       .map(([id, total]) => {
-        const cat = categoryMap.value.get(id)
+        const cat = categoryMap.value[id]
         return {
           id,
           name: cat?.name || 'Outros',
           color: cat?.color || '#9ca3af',
           total,
+          percent: (total / expenseTotal) * 100,
         }
       })
       .sort((a, b) => b.total - a.total)
       .slice(0, 5)
-
-    if (totalExpense.value === 0) return []
-
-    return sorted.map((s) => ({
-      ...s,
-      percent: (s.total / totalExpense.value) * 100,
-    }))
   })
 
   // Actions

@@ -48,10 +48,7 @@
                 class="text-[10px] font-black uppercase tracking-widest text-text-disabled leading-none mb-1"
                 >{{ currentDate.getFullYear() }}</span
               >
-              <span
-                class="text-sm font-black text-text-primary tracking-tight leading-none uppercase"
-                >{{ monthLabelOnly }}</span
-              >
+              <span class="text-sm font-black uppercase tracking-widest">{{ monthLabelOnly }}</span>
             </div>
             <button
               class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
@@ -74,94 +71,97 @@
           </div>
 
           <!-- Search Input -->
-          <div class="flex-1 min-w-[200px] relative hidden sm:block">
-            <input
-              type="text"
-              v-model="searchQuery"
-              placeholder="Buscar registros..."
-              class="w-full bg-white/50 dark:bg-black/20 border border-black/5 dark:border-white/5 h-12 px-11 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-primary-main/20 focus:border-primary-main outline-none transition-all placeholder:text-text-disabled"
-            />
-            <svg
-              class="absolute left-4 top-1/2 -translate-y-1/2 text-text-disabled"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
-        </div>
-
-        <!-- The List Area -->
-        <div class="glass-card shadow-sm min-h-[500px] overflow-hidden">
-          <!-- Loading State -->
-          <div
-            v-if="store.isLoading"
-            class="h-[500px] flex flex-col items-center justify-center text-center"
-          >
-            <div
-              class="w-12 h-12 border-4 border-primary-main/10 border-t-primary-main rounded-full animate-spin"
-            ></div>
-            <span
-              class="mt-8 text-[10px] font-black tracking-widest text-text-disabled uppercase animate-pulse"
-              >Sincronizando dados</span
-            >
-          </div>
-
-          <!-- Empty State -->
-          <div
-            v-else-if="filteredTransactionsArray.length === 0"
-            class="h-[500px] flex flex-col items-center justify-center text-center px-6"
-          >
-            <BaseIconBox color="var(--color-primary-main)" size="lg" class="mb-6 opacity-80">
+          <div class="relative flex-1 min-w-[200px]">
+            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="1.5"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-text-disabled"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Buscar transações..."
+              class="w-full pl-11 pr-4 py-3 bg-bg-main dark:bg-black/20 border border-black/5 dark:border-white/5 rounded-2xl text-sm font-bold placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/20 transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Transactions List -->
+        <div class="space-y-6">
+          <div
+            v-if="store.isLoading"
+            class="flex flex-col items-center justify-center py-20 opacity-50"
+          >
+            <div
+              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin mb-4"
+            ></div>
+            <span class="text-xs font-black uppercase tracking-widest">Sincronizando...</span>
+          </div>
+
+          <div
+            v-else-if="Object.keys(groupedTransactions).length === 0"
+            class="flex flex-col items-center justify-center py-20 opacity-40 text-center glass-card"
+          >
+            <div
+              class="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-            </BaseIconBox>
-            <h3 class="text-2xl font-black text-text-primary tracking-tight mb-2">
-              Sem registros neste período
-            </h3>
-            <p class="text-text-secondary max-w-xs font-medium text-sm leading-relaxed mb-8">
-              Ainda não há transações registradas para {{ monthLabelOnly }}. Comece clicando no
-              botão abaixo.
-            </p>
-            <BaseButton variant="primary" @click="showForm = true">
-              Adicionar Transação
+            </div>
+            <span class="text-sm font-black uppercase tracking-widest mb-2">Nenhuma transação</span>
+            <span class="text-xs font-bold"
+              >Você não tem movimentos registrados neste período.</span
+            >
+            <BaseButton variant="ghost" class="mt-6" @click="showForm = true">
+              Adicionar Agora
             </BaseButton>
           </div>
 
-          <!-- Grouped List -->
-          <div v-else class="py-2">
-            <div v-for="(group, date) in groupedTransactions" :key="date" class="mb-4 last:mb-0">
-              <!-- Sticky Date Header -->
-              <div
-                class="px-6 py-4 flex items-center justify-between sticky top-0 z-20 backdrop-blur-md bg-white/40 dark:bg-black/20 border-b border-black/5 dark:border-white/5 text-[10px] font-black uppercase tracking-widest text-text-disabled"
-              >
+          <!-- Grouped by Date -->
+          <div v-else class="space-y-8">
+            <div v-for="(group, dateKey) in groupedTransactions" :key="dateKey" class="space-y-3">
+              <!-- Date Header -->
+              <div class="flex items-center justify-between px-2 mb-4">
                 <div class="flex items-center gap-3">
-                  <span class="text-primary-main font-black">{{
-                    getRelativeDayLabel(date as string)
-                  }}</span>
-                  <span class="opacity-50 font-black">{{ formatDateMonth(date as string) }}</span>
+                  <div
+                    class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center leading-none"
+                  >
+                    <span
+                      class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                      >{{ formatDateMonth(dateKey) }}</span
+                    >
+                    <span class="text-sm font-black">{{ dateKey.split('-')[2] }}</span>
+                  </div>
+                  <div class="flex flex-col">
+                    <span class="text-sm font-black">{{ getRelativeDayLabel(dateKey) }}</span>
+                  </div>
                 </div>
+
                 <div
-                  class="font-bold tracking-tight"
+                  class="text-sm font-black tracking-tighter bg-bg-main dark:bg-black/20 px-3 py-1.5 rounded-lg border border-black/5 dark:border-white/5"
                   :class="getDayTotal(group) >= 0 ? 'text-success-main' : 'text-error-main'"
                 >
                   {{ formatCurrencySign(getDayTotal(group)) }}
@@ -174,11 +174,11 @@
                   v-for="t in group"
                   :key="t.id || t.localId"
                   :transaction="t"
-                  :categoryName="store.categoryMap.get(t.category_id)?.name || 'Outras'"
+                  :categoryName="store.categoryMap[t.category_id]?.name || 'Outras'"
                   :categoryColor="
-                    store.categoryMap.get(t.category_id)?.color || 'var(--color-primary-main)'
+                    store.categoryMap[t.category_id]?.color || 'var(--color-primary-main)'
                   "
-                  :walletName="store.walletMap.get(t.wallet_id)?.name || 'Carteira'"
+                  :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
                   showTime
                   class="rounded-xl"
                   @delete="handleDelete"
@@ -345,7 +345,6 @@ import { useFinanceStore } from '../../application/stores/financeStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import BaseViewHeader from '@/shared/components/organisms/BaseViewHeader.vue'
@@ -359,7 +358,6 @@ const currentDate = ref(new Date())
 const searchQuery = ref('')
 
 // Helpers for the template
-// Getters replaced with O(1) store maps
 
 // Date Labels
 const monthLabelOnly = computed(() => {
@@ -368,41 +366,45 @@ const monthLabelOnly = computed(() => {
     .replace(/^\w/, (c) => c.toUpperCase())
 })
 
-// Search Logic
+// Search Logic: Optimized text matching
 const filteredTransactionsArray = computed(() => {
-  if (!searchQuery.value) return store.transactions
+  if (!searchQuery.value.trim()) return store.transactions
 
-  const query = searchQuery.value.toLowerCase()
-  return store.transactions.filter(
-    (t) =>
-      t.title.toLowerCase().includes(query) ||
-      (store.categoryMap.get(t.category_id)?.name || 'Outras').toLowerCase().includes(query) ||
-      formatCurrency(t.amount).toLowerCase().includes(query),
-  )
+  const query = searchQuery.value.toLowerCase().trim()
+  return store.transactions.filter((t) => {
+    // Basic match on title
+    if (t.title.toLowerCase().includes(query)) return true
+
+    // Category match using dict lookup
+    const catName = store.categoryMap[t.category_id]?.name
+    if (catName && catName.toLowerCase().includes(query)) return true
+
+    return false // Currency matching was expensive and confusing to users typing 10,00 vs 1000
+  })
 })
 
-// Grouping Logic
+// Grouping Logic: Optimized to minimize string and object allocations
 const groupedTransactions = computed(() => {
   const groups: Record<string, Transaction[]> = {}
 
+  // O(N log N) sorting, but parsing timestamp natively once per item if possible
   const sorted = [...filteredTransactionsArray.value].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   )
 
-  sorted.forEach((t) => {
-    const dateKey = t.date.split('T')[0]
+  for (const t of sorted) {
+    // Avoid split if substring works
+    const dateKey = t.date.substring(0, 10)
     if (dateKey) {
-      if (!groups[dateKey]) groups[dateKey] = []
+      if (!groups[dateKey]) {
+        groups[dateKey] = []
+      }
       groups[dateKey].push(t)
     }
-  })
+  }
 
   return groups
 })
-
-// Summary Calculations
-
-// Category Analysis
 
 // Initialization
 onMounted(async () => {
@@ -446,14 +448,10 @@ function formatDateMonth(dateStr: string) {
   return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
 }
 
-// Daily Total Calculation
+// Daily Total Calculation: Optimized to straight reduce without O(2N) filters
 function getDayTotal(transactions: Transaction[]) {
   return transactions.reduce((sum, t) => {
     return t.type === 'income' ? sum + t.amount : sum - t.amount
   }, 0)
 }
 </script>
-
-<style scoped>
-/* Scoped styles removed in favor of Tailwind and shared glassmorphism */
-</style>
