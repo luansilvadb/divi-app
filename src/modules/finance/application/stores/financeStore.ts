@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { container } from '../../../../core/di'
 import type {
   ITransactionRepository,
@@ -27,44 +27,32 @@ export const useFinanceStore = defineStore('finance', () => {
   const isLoading = ref(false)
 
   // O(N) single-pass aggregation
-  const transactionTotals = computed(() => {
-    return transactions.value.reduce(
-      (acc, t) => {
-        if (t.type === 'income') {
-          acc.income += t.amount
-        } else if (t.type === 'expense') {
-          acc.expense += t.amount
-        }
-        return acc
-      },
-      { income: 0, expense: 0 },
-    )
-  })
+
 
   // Getters
   const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
   const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
 
-  const totalIncome = computed(() => transactionTotals.value.income)
-  const totalExpense = computed(() => transactionTotals.value.expense)
+  const totalIncome = ref(0)
+  const totalExpense = ref(0)
   const monthlyBalance = computed(() => totalIncome.value - totalExpense.value)
 
-  // Optimized Maps for O(1) Lookups using Plain Objects (Record) for Vue reactivity
-  const categoryMap = computed(() => {
-    const map: Record<string, Category> = {}
-    for (const c of categories.value) {
-      map[c.id] = c
+  watch(transactions, (newTransactions: Transaction[]) => {
+    let inc = 0
+    let exp = 0
+    for (let i = 0, len = newTransactions.length; i < len; i++) {
+      const t = newTransactions[i]!
+      if (t.type === 'income') inc += t.amount
+      else if (t.type === 'expense') exp += t.amount
     }
-    return map
-  })
+    totalIncome.value = inc
+    totalExpense.value = exp
+  }, { immediate: true })
 
-  const walletMap = computed(() => {
-    const map: Record<string, Wallet> = {}
-    for (const w of wallets.value) {
-      map[w.id] = w
-    }
-    return map
-  })
+  // Optimized Maps for O(1) Lookups using Plain Objects (Record) for Vue reactivity
+  const categoryMap = ref<Record<string, Category>>({})
+
+  const walletMap = ref<Record<string, Wallet>>({})
 
   // Top Categories Single Pass
   const topCategories = computed(() => {
@@ -98,10 +86,22 @@ export const useFinanceStore = defineStore('finance', () => {
   // Actions
   async function fetchWallets() {
     wallets.value = await walletRepo.getAll()
+    const map: Record<string, Wallet> = {}
+    for (let i = 0, len = wallets.value.length; i < len; i++) {
+      const w = wallets.value[i]!
+      map[w.id] = w
+    }
+    walletMap.value = map
   }
 
   async function fetchCategories() {
     categories.value = await categoryRepo.getAll()
+    const map: Record<string, Category> = {}
+    for (let i = 0, len = categories.value.length; i < len; i++) {
+      const c = categories.value[i]!
+      map[c.id] = c
+    }
+    categoryMap.value = map
   }
 
   async function fetchLoans() {

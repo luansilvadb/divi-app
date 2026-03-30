@@ -136,11 +136,18 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     }
   }
 
-  private mapToEntity(item: LocalTransaction): Transaction {
-    return {
+  private mapToEntity(item: LocalTransaction): Transaction & { _titleLower?: string; _timestamp?: number; _dateKey?: string } {
+    const t = {
       ...(item as unknown as Transaction),
       synced: !!item.synced,
       deleted: !!item.deleted,
+    };
+    // Pre-calculate derivations to optimize UI rendering
+    return {
+      ...t,
+      _titleLower: t.title.toLowerCase(),
+      _timestamp: new Date(t.date).getTime(),
+      _dateKey: t.date.substring(0, 10),
     }
   }
 }

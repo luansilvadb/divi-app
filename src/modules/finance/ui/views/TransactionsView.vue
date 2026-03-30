@@ -162,16 +162,16 @@
 
                 <div
                   class="text-sm font-black tracking-tighter bg-bg-main dark:bg-black/20 px-3 py-1.5 rounded-lg border border-black/5 dark:border-white/5"
-                  :class="getDayTotal(group) >= 0 ? 'text-success-main' : 'text-error-main'"
+                  :class="group.total >= 0 ? 'text-success-main' : 'text-error-main'"
                 >
-                  {{ formatCurrencySign(getDayTotal(group)) }}
+                  {{ formatCurrencySign(group.total) }}
                 </div>
               </div>
 
               <!-- Transaction Items -->
               <div class="space-y-0.5 mt-1 px-1">
                 <TransactionItem
-                  v-for="t in group"
+                  v-for="t in group.items"
                   :key="t.id || t.localId"
                   :transaction="t"
                   :categoryName="store.categoryMap[t.category_id]?.name || 'Outras'"
@@ -368,14 +368,7 @@ const monthLabelOnly = computed(() => {
 
 // Pre-calculate derivations for O(1) rendering lookups and avoid Date/String allocations
 const uiTransactions = computed(() => {
-  return store.transactions.map((t) => {
-    return {
-      ...t,
-      // Otimização: Cache de lowercase e numérico
-      _titleLower: t.title.toLowerCase(),
-      _timestamp: new Date(t.date).getTime(),
-    }
-  })
+  return store.transactions as (Transaction & { _titleLower: string; _timestamp: number; _dateKey: string })[]
 })
 
 // Search Logic: O(N) optimized with pre-cached text
@@ -384,12 +377,10 @@ const filteredTransactionsArray = computed(() => {
 
   const query = searchQuery.value.toLowerCase().trim()
   return uiTransactions.value.filter((t) => {
-    if (t._titleLower.includes(query)) return true
+    if ((t._titleLower || t.title.toLowerCase()).includes(query)) return true
 
-    const catName = store.categoryMap[t.category_id]?.name
-    // Optamos por não cachear nome da categoria na transação para manter single source of truth,
-    // mas o trim/lower da busca principal já foi otimizado acima.
-    if (catName && catName.toLowerCase().includes(query)) return true
+    const cat = store.categoryMap[t.category_id]
+    if (cat && cat.name.toLowerCase().includes(query)) return true
 
     return false
   })
@@ -397,17 +388,25 @@ const filteredTransactionsArray = computed(() => {
 
 // Grouping Logic: O(N log N) fast numerical sorting, minimal allocations
 const groupedTransactions = computed(() => {
-  const groups: Record<string, (Transaction & { _titleLower: string; _timestamp: number })[]> = {}
+  const groups: Record<string, { total: number; items: (Transaction & { _titleLower: string; _timestamp: number; _dateKey: string })[] }> = {}
 
-  const sorted = [...filteredTransactionsArray.value].sort((a, b) => b._timestamp - a._timestamp)
+  // O(N) grouping without re-sorting if we can trust the DB order, or using a more efficient sort
+  // Utilize pre-calculated timestamp if available
+  const sorted = [...filteredTransactionsArray.value].sort((a, b) => {
+    const timeA = a._timestamp || new Date(a.date).getTime()
+    const timeB = b._timestamp || new Date(b.date).getTime()
+    return timeB - timeA
+  })
 
-  for (const t of sorted) {
-    const dateKey = t.date.substring(0, 10)
+  for (let i = 0, len = sorted.length; i < len; i++) {
+    const t = sorted[i]!
+    const dateKey = t._dateKey || t.date.substring(0, 10)
     if (dateKey) {
       if (!groups[dateKey]) {
-        groups[dateKey] = []
+        groups[dateKey] = { total: 0, items: [] }
       }
-      groups[dateKey].push(t)
+      groups[dateKey].items.push(t)
+      groups[dateKey].total += (t.type === 'income' ? t.amount : -t.amount)
     }
   }
 
@@ -456,10 +455,4 @@ function formatDateMonth(dateStr: string) {
   return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
 }
 
-// Daily Total Calculation: Optimized to straight reduce without O(2N) filters
-function getDayTotal(transactions: Transaction[]) {
-  return transactions.reduce((sum, t) => {
-    return t.type === 'income' ? sum + t.amount : sum - t.amount
-  }, 0)
-}
 </script>
