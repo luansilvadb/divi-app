@@ -92,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Transaction } from "../../domain/entities";
 import { ref, reactive, onMounted } from 'vue'
 import { useFinanceStore } from '../../application/stores/financeStore'
 import { AutoCategorizationService } from '../../application/services/AutoCategorizationService'
@@ -147,7 +148,7 @@ async function handleSubmit() {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
-    await store.saveTransaction(transactionData as any)
+    await store.saveTransaction(transactionData as unknown as Transaction)
     emit('saved')
     emit('close')
   } catch (error) {

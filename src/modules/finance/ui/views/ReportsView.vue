@@ -243,7 +243,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'

@@ -83,7 +83,7 @@
           <!-- Activity Timeline -->
           <div v-else class="activity-list flex flex-col gap-10 relative">
             <div
-              v-for="(activity, index) in activities"
+              v-for="(activity) in activities"
               :key="activity.id"
               class="activity-item flex gap-10 relative group"
             >

@@ -119,7 +119,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           // Find which local records got synced and update their status
           const updates = toUpsert
             .map((item) => {
-              const remoteRecord = data.find((d: Record<string, unknown>) => d.id === item.id)
+              const remoteRecord = (data as { id: string }[]).find((d) => d.id === item.id)
               if (remoteRecord) {
                 return {
                   key: item.localId,
@@ -131,7 +131,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
               }
               return null
             })
-            .filter(Boolean) as { key: string; changes: Record<string, unknown> }[]
+            .filter((x): x is { key: string; changes: { id: string, synced: boolean } } => x !== null && x.key !== undefined)
 
           // Utilizando bulkPut/bulkGet em lote para evitar gargalos bloqueantes de I/O em loops
           const keysToUpdate = updates.map((u) => u.key as string)

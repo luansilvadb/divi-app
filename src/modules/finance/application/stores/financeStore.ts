@@ -97,7 +97,7 @@ export const useFinanceStore = defineStore('finance', () => {
 
     const query = searchQuery.value.toLowerCase().trim()
     return uiTransactions.value.filter((t) => {
-      if ((t._titleLower || t.title.toLowerCase()).includes(query)) return true
+      if ((t._titleLower ?? t.title.toLowerCase()).includes(query)) return true
 
       const cat = categoryMap.value[t.category_id]
       if (cat && cat.name.toLowerCase().includes(query)) return true
@@ -112,14 +112,15 @@ export const useFinanceStore = defineStore('finance', () => {
     // O(N) grouping without re-sorting if we can trust the DB order, or using a more efficient sort
     // Utilize pre-calculated timestamp if available
     const sorted = [...filteredTransactionsArray.value].sort((a, b) => {
-      const timeA = a._timestamp || new Date(a.date).getTime()
-      const timeB = b._timestamp || new Date(b.date).getTime()
+      // Use cached timestamp exclusively if available; ensure creation sets it or it's handled on fetch
+      const timeA = a._timestamp ?? new Date(a.date).getTime()
+      const timeB = b._timestamp ?? new Date(b.date).getTime()
       return timeB - timeA
     })
 
     for (let i = 0, len = sorted.length; i < len; i++) {
       const t = sorted[i]!
-      const dateKey = t._dateKey || t.date.substring(0, 10)
+      const dateKey = t._dateKey ?? t.date.substring(0, 10)
       if (dateKey) {
         if (!groups[dateKey]) {
           groups[dateKey] = { total: 0, items: [] }

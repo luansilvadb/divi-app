@@ -15,10 +15,11 @@ import { DexieSubscriptionRepository } from '../modules/finance/infrastructure/r
 import { ActivityLogService } from '../modules/finance/application/services/ActivityLogService'
 import { ExportService } from '../modules/finance/application/services/ExportService'
 
-type Token<T = any> = string | (new (...args: any[]) => T)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Token<T = unknown> = string | (new (...args: any[]) => T)
 
 class Container {
-  private services = new Map<string, any>()
+  private services = new Map<string, unknown>()
 
   /**
    * Register a service by token or class reference
@@ -38,7 +39,7 @@ class Container {
     if (!service) {
       throw new Error(`[DI] Service not found: ${key}`)
     }
-    return service
+    return service as T
   }
 }
 

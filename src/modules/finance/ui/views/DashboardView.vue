@@ -289,15 +289,9 @@ const isLoading = ref(true)
 const growthData = [15000, 16200, 15800, 17500, 18900, 20100]
 const growthLabels = ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar']
 
-const totalIncome = computed(() => {
-  return store.transactions.filter((t) => t.type === 'income').reduce((sum, t) => sum + t.amount, 0)
-})
+const totalIncome = computed(() => store.totalIncome)
 
-const totalExpense = computed(() => {
-  return store.transactions
-    .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0)
-})
+const totalExpense = computed(() => store.totalExpense)
 
 onMounted(async () => {
   await refreshData()

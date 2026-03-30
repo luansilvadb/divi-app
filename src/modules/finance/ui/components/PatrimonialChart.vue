@@ -72,7 +72,7 @@ const chartOptions: ChartOptions<'line'> = {
       padding: 10,
       displayColors: false,
       callbacks: {
-        label: (context: any) => {
+        label: (context: { raw: unknown, dataset: { label?: string }, parsed: { y: number | null } }) => {
           let label = context.dataset.label || ''
           if (label) {
             label += ': '
@@ -95,12 +95,12 @@ const chartOptions: ChartOptions<'line'> = {
       },
       ticks: {
         color: '#9ca3af',
-        callback: (value: any) => {
+        callback: (value: number | string) => {
           return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
             maximumSignificantDigits: 3,
-          }).format(value)
+          }).format(Number(value))
         },
       },
     },
