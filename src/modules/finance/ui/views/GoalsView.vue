@@ -1,7 +1,5 @@
 <template>
   <div class="view-wrapper animate-fade-in relative min-h-screen">
-    <!-- Visual background shell -->
-    <BaseBackgroundOrbs />
     
     <!-- Feature header -->
     <BaseViewHeader 
@@ -154,7 +152,6 @@ import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import BaseViewHeader from '@/shared/components/organisms/BaseViewHeader.vue'
-import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 import GoalCard from '../components/GoalCard.vue'
 import type { Goal } from '@/modules/finance/domain/entities'
 

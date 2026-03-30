@@ -1,7 +1,5 @@
 <template>
   <div class="view-wrapper animate-fade-in relative min-h-screen">
-    <!-- Visual background shell -->
-    <BaseBackgroundOrbs />
 
     <!-- Feature header -->
     <BaseViewHeader 
@@ -91,7 +89,6 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseViewHeader from '@/shared/components/organisms/BaseViewHeader.vue'
-import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 import LoanCard from '../components/LoanCard.vue'
 
 const financeStore = useFinanceStore()

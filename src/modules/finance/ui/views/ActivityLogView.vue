@@ -1,7 +1,5 @@
 <template>
   <div class="view-wrapper animate-fade-in relative min-h-screen">
-    <!-- Visual background shell -->
-    <BaseBackgroundOrbs />
     
     <!-- Feature header -->
     <BaseViewHeader 
@@ -109,7 +107,6 @@ import type { IActivityLogService, Activity } from '@/modules/finance/domain/ser
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseViewHeader from '@/shared/components/organisms/BaseViewHeader.vue'
-import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 
 // Component State
 const activityService = container.resolve<IActivityLogService>('IActivityLogService')
