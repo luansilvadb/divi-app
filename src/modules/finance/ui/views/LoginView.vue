@@ -1,12 +1,5 @@
 <template>
   <div class="login-page">
-    <!-- Animated background orbs -->
-    <div class="login-bg-orbs" aria-hidden="true">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-      <div class="orb orb-4"></div>
-    </div>
 
     <!-- Noise texture overlay -->
     <div class="noise-overlay" aria-hidden="true"></div>
@@ -130,85 +123,6 @@ async function handleLogin() {
   background: var(--color-bg-main);
 }
 
-/* ===== Animated Background Orbs ===== */
-.login-bg-orbs {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
-  will-change: transform;
-}
-
-:is(.dark) .orb {
-  opacity: 0.25;
-}
-
-.orb-1 {
-  width: 600px;
-  height: 600px;
-  background: var(--color-primary-main);
-  top: -15%;
-  left: -10%;
-  animation: float-1 20s ease-in-out infinite;
-}
-
-.orb-2 {
-  width: 500px;
-  height: 500px;
-  background: var(--color-secondary-main);
-  bottom: -10%;
-  right: -5%;
-  animation: float-2 25s ease-in-out infinite;
-}
-
-.orb-3 {
-  width: 350px;
-  height: 350px;
-  background: var(--color-accent-main);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: float-3 18s ease-in-out infinite;
-}
-
-.orb-4 {
-  width: 250px;
-  height: 250px;
-  background: var(--color-info-main);
-  top: 20%;
-  right: 20%;
-  animation: float-4 22s ease-in-out infinite;
-  opacity: 0.2;
-}
-
-@keyframes float-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(60px, 40px) scale(1.1); }
-  66% { transform: translate(-30px, 60px) scale(0.95); }
-}
-
-@keyframes float-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-50px, -30px) scale(1.05); }
-  66% { transform: translate(40px, -50px) scale(0.9); }
-}
-
-@keyframes float-3 {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-40%, -60%) scale(1.15); }
-}
-
-@keyframes float-4 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-30px, 20px) rotate(180deg); }
-}
 
 /* ===== Noise Overlay ===== */
 .noise-overlay {
@@ -594,7 +508,6 @@ async function handleLogin() {
 
 /* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  .orb,
   .login-content,
   .logo-container,
   .tagline,
@@ -606,8 +519,5 @@ async function handleLogin() {
     animation: none !important;
   }
 
-  .orb {
-    animation: none !important;
-  }
 }
 </style>
