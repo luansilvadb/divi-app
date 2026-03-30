@@ -1,14 +1,11 @@
 <template>
-  <div class="calendar-view dashboard-view animate-fade-in">
+  <div class="view-wrapper animate-fade-in">
     <!-- Background Decor -->
-    <div class="dashboard-bg-decor" aria-hidden="true">
-      <div class="glass-orb orb-primary"></div>
-      <div class="glass-orb orb-secondary"></div>
-    </div>
+    <BaseBackgroundOrbs />
 
     <!-- Header Section -->
-    <header class="dashboard-header">
-      <div class="header-content">
+    <header class="view-header">
+      <div class="title-section">
         <h1 class="page-title">
           Calendário <span class="text-accent-main">Financeiro</span>
         </h1>
@@ -28,7 +25,7 @@
       </div>
     </header>
 
-    <div class="calendar-content-grid">
+    <div class="view-content-grid">
       <!-- Main Column: Calendar Interface -->
       <div class="main-column">
         <div class="calendar-card glass-card">
@@ -137,6 +134,7 @@ import { useFinanceStore } from '../../application/stores/financeStore'
 import { storeToRefs } from 'pinia'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 
 const financeStore = useFinanceStore()
 const { transactions } = storeToRefs(financeStore)
@@ -254,102 +252,6 @@ const formatDateFull = (date: Date) => {
 </script>
 
 <style scoped>
-/* ===== Core Layout (Matches DashboardView) ===== */
-.dashboard-view {
-  width: 100%;
-  padding: 2rem 2.5rem;
-  position: relative;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-/* Background Decorations */
-.dashboard-bg-decor {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glass-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.12;
-}
-
-:is(.dark) .glass-orb {
-  opacity: 0.15;
-}
-
-.orb-primary {
-  width: 500px;
-  height: 500px;
-  background: var(--color-primary-main);
-  top: -150px;
-  right: -100px;
-  animation: float-orb 20s ease-in-out infinite alternate;
-}
-
-.orb-secondary {
-  width: 400px;
-  height: 400px;
-  background: var(--color-secondary-main);
-  bottom: -100px;
-  left: -50px;
-  animation: float-orb 25s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes float-orb {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-30px, 40px) scale(1.05); }
-}
-
-/* Header Styles */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2.5rem;
-  gap: 1.5rem;
-}
-
-.page-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-}
-
-/* Layout Grid */
-.calendar-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2rem;
-  width: 100%;
-}
-
-.main-column {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.side-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  min-width: 0;
-}
-
 /* ===== Glass Card Common ===== */
 .glass-card {
   background: rgba(255, 255, 255, 0.7);
@@ -718,27 +620,10 @@ const formatDateFull = (date: Date) => {
 
 /* Responsive */
 @media (max-width: 1200px) {
-  .calendar-content-grid {
-    grid-template-columns: 1fr 320px;
-  }
+  /* No overrides needed if we stick to view-content-grid responsive styles in main.css */
 }
 
-@media (max-width: 992px) {
-  .calendar-content-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-view {
-    padding: 1.5rem 1rem;
-  }
-  
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
+@media (max-width: 768px) {  
   .calendar-nav {
     width: 100%;
     justify-content: space-between;

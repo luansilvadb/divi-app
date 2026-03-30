@@ -12,7 +12,7 @@
 <script setup lang="ts">
 type BadgeVariant = 'default' | 'success' | 'error' | 'warning' | 'info' | 'primary'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   variant?: BadgeVariant
 }>(), {
   variant: 'default'

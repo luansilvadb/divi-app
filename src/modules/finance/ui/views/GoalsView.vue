@@ -1,131 +1,164 @@
 <template>
-  <div class="goals-view animate-fade-in">
-    <!-- Background Decor -->
-    <div class="goals-bg-decor" aria-hidden="true">
-      <div class="glass-orb orb-1"></div>
-      <div class="glass-orb orb-2"></div>
-    </div>
-
-    <!-- Header Section -->
-    <header class="goals-header">
-      <div class="header-content">
-        <h1 class="page-title">
-          Metas <span class="text-accent-main">Financeiras</span>
-        </h1>
-        <p class="page-subtitle">Planeje seu futuro, acompanhe seu progresso e realize seus sonhos.</p>
+  <div class="goals-view view-wrapper animate-fade-in">
+    <!-- Background Enhancement -->
+    <BaseBackgroundOrbs />
+    
+    <header class="view-header-premium">
+      <div class="header-left">
+        <div class="breadcrumb">Finanças • Metas</div>
+        <h1 class="page-title">Suas <span class="text-accent-main">Conquistas</span></h1>
+        <p class="page-subtitle">Transforme seus planos financeiros em realidade tangível.</p>
       </div>
-      <div class="header-actions">
-        <BaseButton 
-          variant="primary" 
-          class="new-goal-btn"
-          @click="showAddGoalModal = true"
-        >
-          <template #icon>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-          </template>
-          Nova Meta
-        </BaseButton>
-      </div>
+      
+      <BaseButton 
+        variant="primary" 
+        class="add-goal-btn shadow-premium"
+        @click="showAddGoalModal = true"
+      >
+        <template #icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </template>
+        Criar Meta
+      </BaseButton>
     </header>
 
-    <div class="goals-content-grid">
-      <!-- Main Column: Goals List -->
-      <div class="main-column">
-        <div v-if="goals.length === 0" class="empty-state">
-          <BaseCard class="glass-card empty-state-card">
-            <div class="empty-content">
-              <div class="empty-icon-wrapper">
-                <span class="icon">🎯</span>
-              </div>
-              <h3 class="empty-title">Defina sua primeira meta</h3>
-              <p class="empty-text">Seja para uma viagem inesquecível, uma reserva de emergência ou para quitar uma dívida. Dê o primeiro passo!</p>
-              <BaseButton variant="primary" @click="showAddGoalModal = true" class="mt-4">
-                Criar Minha Primeira Meta
-              </BaseButton>
+    <div class="view-layout-container">
+      <!-- Main Content Area -->
+      <div class="content-primary">
+
+        <div v-if="goals.length === 0" class="empty-state-premium glass-card">
+          <div class="empty-visual">
+            <div class="empty-icon-ring">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-          </BaseCard>
+          </div>
+          <div class="empty-text">
+            <h3>Comece sua Jornada</h3>
+            <p>Defina objetivos claros para ver seu patrimônio crescer com propósito.</p>
+            <BaseButton variant="primary" class="mt-4 px-8" @click="showAddGoalModal = true">
+              Definir Minha Primeira Meta
+            </BaseButton>
+          </div>
         </div>
-        
-        <div v-else class="goals-list">
+
+        <transition-group name="list-stagger" tag="div" v-else class="goals-grid-premium">
           <GoalCard 
             v-for="(goal, index) in goals" 
             :key="goal.id" 
             :goal="goal"
-            :style="{ animationDelay: `${index * 0.1}s` }"
-            class="goal-card-animated"
+            :style="{ '--index': index }"
           />
-        </div>
+        </transition-group>
       </div>
 
-      <!-- Right Column: Info Sidebar -->
-      <aside class="side-column">
-        <!-- Dashboard Summary -->
-        <BaseCard class="summary-card glass-card hover-glow">
+      <!-- Side Content Area / Sidebar -->
+      <aside class="content-secondary">
+        <!-- Dashboard Summary Card: High Fidelity -->
+        <BaseCard class="wealth-summary-card glass-card hover-glow">
           <template #header>
-            <div class="card-header text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-icon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-              <span>Resumo do Patrimônio</span>
+            <div class="card-header-flex">
+              Visão Geral das Metas
             </div>
           </template>
           
-          <div class="summary-body">
+          <div class="summary-details">
             <div class="summary-item">
-              <div class="item-label">
-                <div class="label-dot bg-success-main"></div>
-                <span>Total Acumulado</span>
+              <div class="summary-icon-box bg-success-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-success-main"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               </div>
-              <strong class="item-value text-success-main">{{ formatCurrency(totalSaved) }}</strong>
+              <div class="summary-text-stack">
+                <span class="summary-label">VALOR ACUMULADO</span>
+                <strong class="summary-value text-success-main">{{ formatCurrency(totalSaved) }}</strong>
+              </div>
             </div>
 
-            <div class="summary-item">
-              <div class="item-label">
-                <div class="label-dot bg-primary-main"></div>
-                <span>Objetivo Total</span>
-              </div>
-              <strong class="item-value">{{ formatCurrency(totalTarget) }}</strong>
-            </div>
+            <div class="summary-divider-line"></div>
 
-            <div class="total-progress-section">
-              <div class="progress-header">
-                <span class="progress-label">Progresso Geral</span>
-                <span class="progress-percent text-primary-main">{{ totalProgressFormatted }}%</span>
+            <div class="summary-item">
+              <div class="summary-icon-box bg-accent-light">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-accent-main"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
               </div>
-              <div class="progress-track">
-                <div class="progress-fill" :style="{ width: `${totalProgressFormatted}%` }"></div>
+              <div class="summary-text-stack">
+                <span class="summary-label">OBJETIVO TOTAL</span>
+                <strong class="summary-value">{{ formatCurrency(totalTarget) }}</strong>
               </div>
             </div>
           </div>
+
+          <!-- Overall Progress Viz (Refined) -->
+          <div class="overall-progress-viz-box">
+            <div class="viz-header">
+              <span class="viz-label">Conclusão Geral</span>
+              <span class="viz-percentage">{{ totalProgressFormatted }}%</span>
+            </div>
+            <div class="progress-track-fidelidade">
+              <div 
+                class="progress-fill-premium" 
+                :style="{ 
+                  width: `${totalProgressFormatted}%`,
+                  background: 'linear-gradient(90deg, var(--color-primary-main), var(--color-secondary-main))'
+                }"
+              >
+                <div class="shimmer-fast"></div>
+              </div>
+            </div>
+            <p class="viz-subtitle" v-if="Number(totalProgressFormatted) < 100">
+               Faltam <span class="font-bold text-text-primary">{{ formatCurrency(totalTarget - totalSaved) }}</span> para a conquista plena.
+            </p>
+          </div>
         </BaseCard>
 
-        <!-- Tooltip/Tips Card -->
-        <BaseCard class="tips-card glass-card hover-glow">
+        <!-- Mastery/Tips Section: High Fidelity -->
+        <BaseCard class="mastery-guide-card glass-card">
           <template #header>
-            <div class="card-header text-accent">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-icon"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-              <span>Dicas para o Sucesso</span>
+            <div class="card-header-flex">
+              Estratégias de Sucesso
             </div>
           </template>
           
-          <ul class="tips-list">
-            <li class="tip-item">
-              <div class="tip-icon">✨</div>
-              <div class="tip-content">
-                <strong>Seja Específico:</strong> Defina exatamente quanto você precisa e um prazo claro.
-              </div>
-            </li>
-            <li class="tip-item">
-              <div class="tip-icon">🌱</div>
-              <div class="tip-content">
-                <strong>Seja Realista:</strong> Comece com valores que cabem confortavelmente no seu orçamento.
-              </div>
-            </li>
-            <li class="tip-item">
-              <div class="tip-icon">🎉</div>
-              <div class="tip-content">
-                <strong>Comemore:</strong> Cada pequeno progresso é um grande passo rumo à sua liberdade.
-              </div>
-            </li>
-          </ul>
+          <div class="guide-timeline-wrapper">
+            <p class="guide-intro-text">Pequenas ações diárias que aceleram seus objetivos de longo prazo.</p>
+            
+            <ul class="fidelidade-timeline-list">
+              <li class="fidelidade-timeline-item">
+                <div class="timeline-marker-container">
+                  <div class="marker-target-ring primary-ring">
+                    <div class="marker-target-dot"></div>
+                  </div>
+                  <div class="timeline-marker-line"></div>
+                </div>
+                <div class="fidelidade-timeline-content">
+                  <h4 class="text-primary-main">Constância é Chave</h4>
+                  <p>Aportes pequenos e regulares vencem grandes aportes esporádicos.</p>
+                </div>
+              </li>
+              
+              <li class="fidelidade-timeline-item">
+                <div class="timeline-marker-container">
+                  <div class="marker-target-ring accent-ring">
+                    <div class="marker-target-dot"></div>
+                  </div>
+                  <div class="timeline-marker-line"></div>
+                </div>
+                <div class="fidelidade-timeline-content">
+                  <h4 class="text-accent-main">Proteja seus Sonhos</h4>
+                  <p>Priorize sua reserva de emergência antes de iniciar metas de prazer.</p>
+                </div>
+              </li>
+              
+              <li class="fidelidade-timeline-item">
+                <div class="timeline-marker-container">
+                  <div class="marker-target-ring secondary-ring">
+                    <div class="marker-target-dot"></div>
+                  </div>
+                </div>
+                <div class="fidelidade-timeline-content">
+                  <h4 class="text-secondary-main">Visualize a Vitória</h4>
+                  <p>Revise suas metas semanalmente para manter o foco inabalável.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
         </BaseCard>
       </aside>
     </div>
@@ -137,6 +170,7 @@ import { ref, computed } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import GoalCard from '../components/GoalCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 import type { Goal } from '@/modules/finance/domain/entities'
 
 const showAddGoalModal = ref(false)
@@ -195,353 +229,369 @@ const formatCurrency = (value: number) => {
 </script>
 
 <style scoped>
+.view-wrapper {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
 .goals-view {
+  min-height: 100vh;
+}
+
+.view-layout-container {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2.5rem;
   width: 100%;
-  padding: 2rem 2.5rem;
-  position: relative;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  min-height: 100%;
 }
 
-/* Background Decorations */
-.goals-bg-decor {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
+.content-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.glass-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
+@media (max-width: 1200px) {
+  .view-layout-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 }
 
-.orb-1 {
-  width: 500px;
-  height: 500px;
-  background: var(--color-primary-main);
-  top: -150px;
-  right: -100px;
-}
-
-.orb-2 {
-  width: 400px;
-  height: 400px;
-  background: var(--color-accent-main);
-  bottom: -100px;
-  left: -50px;
-  opacity: 0.1;
-}
-
-:is(.dark) .glass-orb {
-  opacity: 0.2;
-}
-
-/* Header Styles */
-.goals-header {
+/* Header Premium */
+.view-header-premium {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3rem;
   gap: 1.5rem;
 }
 
+.breadcrumb {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent-main);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+}
+
 .page-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.5rem 0;
+  line-height: 1;
 }
 
 .page-subtitle {
+  font-size: 1.125rem;
   color: var(--color-text-secondary);
-  font-size: 1rem;
+  max-width: 600px;
+  margin: 0;
 }
 
-/* Layout Grid */
-.goals-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2rem;
-  width: 100%;
+.add-goal-btn {
+  padding: 1rem 2rem;
+  border-radius: 1.25rem;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-.main-column {
+/* Grid & Empty State */
+.goals-grid-premium {
   display: flex;
   flex-direction: column;
-  min-width: 0;
+  gap: 1.5rem;
 }
 
-.side-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  min-width: 0;
-}
-
-/* Glass Cards Generic */
-.glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-}
-
-:is(.dark) .glass-card {
-  background: rgba(30, 41, 59, 0.4);
-  border-color: rgba(255, 255, 255, 0.05);
-}
-
-.hover-glow:hover {
-  border-color: var(--color-primary-main);
-  box-shadow: 0 4px 24px rgba(var(--color-primary-main-rgb), 0.1);
-  transform: translateY(-2px);
-}
-
-/* Empty State Premium */
-.empty-state-card {
-  padding: 4rem 2rem;
+.empty-state-premium {
+  padding: 5rem 2rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 1.5rem;
-}
-
-.empty-icon-wrapper {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, rgba(var(--color-primary-main-rgb), 0.1), rgba(var(--color-secondary-main-rgb), 0.1));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
-  box-shadow: 0 0 30px rgba(var(--color-primary-main-rgb), 0.2);
-}
-
-.empty-content .icon {
-  font-size: 2.5rem;
-}
-
-.empty-title {
-  margin: 0 0 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-.empty-text {
-  color: var(--color-text-secondary);
-  max-width: 380px;
-  margin: 0 auto 1.5rem;
-  line-height: 1.6;
-}
-
-/* Goals List */
-.goals-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
   gap: 1.5rem;
 }
 
-.goal-card-animated {
-  animation: slideUpFade 0.6s ease-out both;
-}
-
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Sidebar Cards */
-.card-header {
+.empty-icon-ring {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  border: 2px dashed rgba(var(--color-accent-main-rgb), 0.3);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  font-size: 1.125rem;
-}
-
-.text-primary {
-  color: var(--color-primary-main);
-}
-
-.text-accent {
+  justify-content: center;
   color: var(--color-accent-main);
+  background: rgba(var(--color-accent-main-rgb), 0.05);
 }
 
-.header-icon {
-  opacity: 0.8;
+.empty-text h3 {
+  font-size: 1.75rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
 }
 
-/* Summary Card */
-.summary-body {
+/* Sidebar Cards Base Styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:is(.dark) .glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.hover-glow:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--color-primary-main-rgb), 0.3);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+:is(.dark) .hover-glow:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.card-header-flex {
+  font-size: 1.25rem;
+  font-weight: 850;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* Wealth Summary Fidelity */
+.wealth-summary-card {
+  padding: 1.5rem;
+}
+
+.summary-details {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.5rem;
 }
 
 .summary-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px dashed var(--color-border-main);
+  gap: 1.25rem;
+  padding: 0.75rem 0;
 }
 
-.item-label {
+.summary-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9375rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.label-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.bg-success-light { background: rgba(var(--color-success-main-rgb), 0.1); }
+.bg-accent-light { background: rgba(var(--color-accent-main-rgb), 0.1); }
+
+.summary-text-stack {
+  display: flex;
+  flex-direction: column;
 }
 
-.item-value {
-  font-size: 1.125rem;
+.summary-label {
+  font-size: 0.75rem;
   font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
 }
 
-.total-progress-section {
-  margin-top: 0.5rem;
-  background: rgba(var(--color-primary-main-rgb), 0.03);
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid rgba(var(--color-primary-main-rgb), 0.1);
-}
-
-:is(.dark) .total-progress-section {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 0.75rem;
-}
-
-.progress-label {
-  font-size: 0.875rem;
-  font-weight: 600;
+.summary-value {
+  font-size: 1.75rem;
+  font-weight: 900;
   color: var(--color-text-primary);
-}
-
-.progress-percent {
-  font-size: 1.5rem;
-  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
-.progress-track {
-  height: 8px;
+.summary-divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--color-text-primary-rgb, 255,255,255), 0.08) 0%, transparent 100%);
+  width: 100%;
+}
+
+.overall-progress-viz-box {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.viz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.viz-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.viz-percentage {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-primary-main);
+  line-height: 1;
+}
+
+.progress-track-fidelidade {
+  height: 12px;
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 99px;
+  border-radius: 999px;
   overflow: hidden;
+  margin: 1.25rem 0;
+  position: relative;
 }
 
-:is(.dark) .progress-track {
-  background: rgba(255, 255, 255, 0.05);
+:is(.dark) .progress-track-fidelidade {
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.progress-fill {
+.progress-fill-premium {
   height: 100%;
-  border-radius: 99px;
-  background: linear-gradient(90deg, var(--color-primary-main), var(--color-accent-main));
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Tips Card */
-.tips-list {
+.shimmer-fast {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer-animation 2s infinite linear;
+}
+
+@keyframes shimmer-animation {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.viz-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* Mastery Timeline Fidelity */
+.mastery-guide-card {
+  padding: 1.5rem;
+}
+
+.guide-timeline-wrapper {
+  margin-top: 0.5rem;
+}
+
+.guide-intro-text {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.fidelidade-timeline-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
 }
 
-.tip-item {
+.fidelidade-timeline-item {
   display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+  gap: 1.5rem;
+  min-height: 100px;
 }
 
-.tip-icon {
-  font-size: 1.25rem;
-  line-height: 1.2;
-  background: rgba(var(--color-accent-main-rgb), 0.1);
-  padding: 0.5rem;
-  border-radius: 10px;
+.fidelidade-timeline-item:last-child {
+  min-height: auto;
 }
 
-.tip-content {
-  font-size: 0.875rem;
-  line-height: 1.5;
+.timeline-marker-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.timeline-marker-line {
+  flex-grow: 1;
+  width: 2px;
+  background: rgba(var(--color-text-primary-rgb, 255,255,255), 0.08);
+  margin: 0.5rem 0;
+}
+
+.marker-target-ring {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background: var(--color-bg-main, #0f172a);
+}
+
+.marker-target-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.primary-ring { border-color: rgba(var(--color-primary-main-rgb), 0.2); color: var(--color-primary-main); }
+.accent-ring { border-color: rgba(var(--color-accent-main-rgb), 0.2); color: var(--color-accent-main); }
+.secondary-ring { border-color: rgba(var(--color-secondary-main-rgb), 0.2); color: var(--color-secondary-main); }
+
+.fidelidade-timeline-content {
+  padding-bottom: 1.5rem;
+}
+
+.fidelidade-timeline-content h4 {
+  font-size: 1.125rem;
+  font-weight: 850;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.fidelidade-timeline-content p {
+  font-size: 0.9375rem;
   color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
-.tip-content strong {
-  color: var(--color-text-primary);
-  display: block;
-  margin-bottom: 0.125rem;
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-  .goals-content-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  
-  .side-column {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .goals-view {
-    padding: 1.5rem 1rem;
-  }
-
-  .goals-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .new-goal-btn {
-    width: 100%;
-  }
-
-  .side-column {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Animations */
+/* Animations Core */
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out both;
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+.list-stagger-enter-active, .list-stagger-leave-active {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.list-stagger-enter-from, .list-stagger-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>

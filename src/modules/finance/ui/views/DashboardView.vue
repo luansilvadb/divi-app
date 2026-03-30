@@ -1,14 +1,11 @@
 <template>
-  <div class="dashboard-view animate-fade-in">
+  <div class="view-wrapper animate-fade-in">
     <!-- Background Decor -->
-    <div class="dashboard-bg-decor" aria-hidden="true">
-      <div class="glass-orb orb-primary"></div>
-      <div class="glass-orb orb-secondary"></div>
-    </div>
+    <BaseBackgroundOrbs />
 
     <!-- Header Section -->
-    <header class="dashboard-header">
-      <div class="header-content">
+    <header class="view-header">
+      <div class="title-section">
         <h1 class="page-title">
           Dashboard <span class="text-accent-main">Financeiro</span>
         </h1>
@@ -28,7 +25,7 @@
       </div>
     </header>
 
-    <div class="dashboard-content-grid">
+    <div class="view-content-grid">
       <!-- Main Column: Charts and Wallets -->
       <div class="main-column">
         <!-- Stats Summary -->
@@ -185,6 +182,7 @@ import AccountCarousel from '../components/AccountCarousel.vue'
 import PatrimonialChart from '../components/PatrimonialChart.vue'
 import SummaryPanels from '../components/SummaryPanels.vue'
 import TransactionForm from '../components/TransactionForm.vue'
+import BaseBackgroundOrbs from '../../../../shared/components/atoms/BaseBackgroundOrbs.vue'
 
 const store = useFinanceStore()
 const showTransactionForm = ref(false)
@@ -230,88 +228,7 @@ function formatCurrency(amount: number) {
 </script>
 
 <style scoped>
-.dashboard-view {
-  width: 100%;
-  padding: 2rem 2.5rem;
-  position: relative;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-/* Background Decorations */
-.dashboard-bg-decor {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glass-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.15;
-}
-
-.orb-primary {
-  width: 400px;
-  height: 400px;
-  background: var(--color-primary-main);
-  top: -100px;
-  right: -100px;
-}
-
-.orb-secondary {
-  width: 300px;
-  height: 300px;
-  background: var(--color-secondary-main);
-  bottom: -50px;
-  left: -50px;
-}
-
-/* Header Styles */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2.5rem;
-  gap: 1.5rem;
-}
-
-.page-title {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.page-subtitle {
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-}
-
 /* Layout Grid */
-.dashboard-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2rem;
-  width: 100%;
-}
-
-.main-column {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.side-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  min-width: 0;
-}
 
 /* Glass Cards & Effects */
 .glass-card {
@@ -541,43 +458,9 @@ function formatCurrency(amount: number) {
 .chart-period { font-size: 0.75rem; font-weight: 400; opacity: 0.7; }
 
 /* Responsive */
-@media (max-width: 1400px) {
-  .dashboard-content-grid {
-    grid-template-columns: 1fr 340px;
-    gap: 1.5rem;
-  }
-}
-
-@media (max-width: 1100px) {
-  .dashboard-content-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  
-  .side-column {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
 @media (max-width: 768px) {
-  .dashboard-view {
-    padding: 1.5rem 1rem;
-  }
-
   .stats-overview-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .side-column {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
     gap: 1rem;
   }
   

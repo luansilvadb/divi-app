@@ -1,18 +1,15 @@
 <template>
-  <div class="reports-view animate-fade-in">
-    <!-- Background Decor -->
-    <div class="reports-bg-decor" aria-hidden="true">
-      <div class="glass-orb orb-1"></div>
-      <div class="glass-orb orb-2"></div>
-    </div>
+  <div class="view-wrapper animate-fade-in">
+    <!-- Background Decor (Consistent with Dashboard) -->
+    <BaseBackgroundOrbs />
 
     <!-- Header Section -->
-    <header class="reports-header">
-      <div class="header-content">
+    <header class="view-header">
+      <div class="title-section">
         <h1 class="page-title">
-          Relatórios e <span class="text-accent-main">Análises</span>
+          Relatórios <span class="text-primary-main">Financeiros</span>
         </h1>
-        <p class="page-subtitle">Entenda para onde vai o seu dinheiro com insights detalhados.</p>
+        <p class="page-subtitle">Analise seus dados e tome melhores decisões.</p>
       </div>
       <div class="report-filters">
         <button 
@@ -26,8 +23,8 @@
       </div>
     </header>
 
-    <div class="reports-content-grid">
-      <!-- Main Column: Charts -->
+    <div class="view-content-grid">
+      <!-- Main Content Zone: Reports & Charts -->
       <div class="main-column">
         <BaseCard class="chart-section glass-card">
           <template #header>
@@ -166,6 +163,7 @@ import { ref, computed } from 'vue'
 import { useFinanceStore } from '../../application/stores/financeStore'
 import { storeToRefs } from 'pinia'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 
 const financeStore = useFinanceStore()
 const { transactions } = storeToRefs(financeStore)
@@ -222,61 +220,17 @@ const formatCurrency = (value: number) => {
 </script>
 
 <style scoped>
-.reports-view {
+.view-wrapper {
   width: 100%;
   padding: 2rem 2.5rem;
   position: relative;
   box-sizing: border-box;
   overflow-x: hidden;
-  min-height: calc(100vh - 80px); /* Fill space smoothly */
-}
-
-/* ===== Background Decorations ===== */
-.reports-bg-decor {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glass-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.15;
-  will-change: transform;
-}
-
-:is(.dark) .glass-orb {
-  opacity: 0.2;
-}
-
-.orb-1 {
-  width: 450px;
-  height: 450px;
-  background: var(--color-primary-main);
-  top: -100px;
-  left: -100px;
-  animation: float 15s ease-in-out infinite;
-}
-
-.orb-2 {
-  width: 350px;
-  height: 350px;
-  background: var(--color-accent-main);
-  bottom: -50px;
-  right: -50px;
-  animation: float 18s ease-in-out infinite reverse;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(30px) scale(1.05); }
+  min-height: calc(100vh - 80px);
 }
 
 /* ===== Header Styles ===== */
-.reports-header {
+.view-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -299,11 +253,8 @@ const formatCurrency = (value: number) => {
   margin: 0;
 }
 
-.text-accent-main {
-  background: linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-main));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.text-primary-main {
+  color: var(--color-primary-main);
 }
 
 /* ===== Filter Buttons ===== */
@@ -342,7 +293,7 @@ const formatCurrency = (value: number) => {
 }
 
 /* ===== Layout Grid ===== */
-.reports-content-grid {
+.view-content-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 2rem;
@@ -580,7 +531,7 @@ const formatCurrency = (value: number) => {
   height: 100%;
   border-radius: 99px;
   transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 10px opacity(0.5); /* subtle glow on fill */
+  box-shadow: 0 0 10px opacity(0.5);
 }
 
 /* ===== Placeholder Flow Chart ===== */
@@ -749,14 +700,17 @@ const formatCurrency = (value: number) => {
   to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
-@media (max-width: 1024px) {
-  .reports-content-grid {
-    grid-template-columns: 1fr;
-  }
-  
+@media (max-width: 1100px) {
   .side-column {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .view-content-grid {
+    grid-template-columns: 1fr;
   }
   
   .chart-container {
@@ -771,11 +725,11 @@ const formatCurrency = (value: number) => {
 }
 
 @media (max-width: 768px) {
-  .reports-view {
+  .view-wrapper {
     padding: 1.5rem 1rem;
   }
 
-  .reports-header {
+  .view-header {
     flex-direction: column;
     align-items: flex-start;
   }

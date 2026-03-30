@@ -1,11 +1,7 @@
 <template>
-  <div class="activity-log-view animate-fade-in">
+  <div class="view-wrapper animate-fade-in">
     <!-- Animated background orbs -->
-    <div class="view-bg-orbs" aria-hidden="true">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-    </div>
+    <BaseBackgroundOrbs />
     
     <!-- Noise texture overlay -->
     <div class="noise-overlay" aria-hidden="true"></div>
@@ -16,7 +12,7 @@
           <div class="title-icon-wrapper">
              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="title-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
           </div>
-          <div>
+          <div class="flex flex-col gap-1">
             <h1 class="page-title">
               Log de <span class="text-accent-main">Atividades</span>
             </h1>
@@ -90,6 +86,7 @@
 import { ref, onMounted } from 'vue'
 import { container } from '@/core/di'
 import type { IActivityLogService, Activity } from '@/modules/finance/domain/services/IActivityLogService'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 
 // Component State
 const activityService = container.resolve<IActivityLogService>('IActivityLogService')
@@ -138,81 +135,6 @@ const formatDateTime = (timestamp: string) => {
 
 <style scoped>
 /* ===== Page Layout ===== */
-.activity-log-view {
-  position: relative;
-  width: 100%;
-  min-height: 100%;
-  padding: 2rem 2.5rem;
-  box-sizing: border-box;
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* ===== Background Effects ===== */
-.view-bg-orbs {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: -2;
-  pointer-events: none;
-}
-
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.2;
-  will-change: transform;
-}
-
-:is(.dark) .orb {
-  opacity: 0.15;
-}
-
-.orb-1 {
-  width: 600px;
-  height: 600px;
-  background: var(--color-primary-main);
-  top: -10%;
-  right: -10%;
-  animation: float-1 20s ease-in-out infinite;
-}
-
-.orb-2 {
-  width: 500px;
-  height: 500px;
-  background: var(--color-secondary-main);
-  bottom: -20%;
-  left: -5%;
-  animation: float-2 25s ease-in-out infinite;
-}
-
-.orb-3 {
-  width: 400px;
-  height: 400px;
-  background: var(--color-accent-main);
-  top: 40%;
-  left: 30%;
-  animation: float-3 22s ease-in-out infinite;
-  opacity: 0.1;
-}
-
-@keyframes float-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-40px, 30px) scale(1.05); }
-  66% { transform: translate(20px, -40px) scale(0.95); }
-}
-
-@keyframes float-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -40px) scale(1.1); }
-  66% { transform: translate(-20px, 30px) scale(0.9); }
-}
-
-@keyframes float-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, 20px) scale(1.1); }
-}
 
 .noise-overlay {
   position: absolute;
@@ -232,50 +154,6 @@ const formatDateTime = (timestamp: string) => {
   z-index: 10;
 }
 
-.view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2.5rem;
-  gap: 1.5rem;
-}
-
-.title-section {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.title-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--color-primary-main), var(--color-secondary-main));
-  color: white;
-  box-shadow: 0 8px 16px rgba(var(--color-primary-main-rgb), 0.2);
-}
-
-.title-icon {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.page-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary);
-  margin: 0 0 0.25rem 0;
-  line-height: 1.1;
-}
-
-.page-subtitle {
-  color: var(--color-text-secondary);
-  font-size: 1.05rem;
-  margin: 0;
-}
 
 /* ===== Refresh Button ===== */
 .refresh-btn {
@@ -605,35 +483,11 @@ const formatDateTime = (timestamp: string) => {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .activity-log-view {
-    padding: 1.5rem 1rem;
-  }
-  
   .glass-container {
     padding: 1.5rem;
     border-radius: 20px;
   }
   
-  .view-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.25rem;
-  }
-
-  .title-icon-wrapper {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .title-icon-wrapper svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .page-title {
-    font-size: 1.75rem;
-  }
-
   .activity-header {
     flex-direction: column;
     gap: 0.5rem;
@@ -651,7 +505,6 @@ const formatDateTime = (timestamp: string) => {
 
 /* ===== Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  .orb,
   .animate-fade-in,
   .animate-enter {
     animation: none !important;

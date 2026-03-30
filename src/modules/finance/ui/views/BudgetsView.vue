@@ -1,11 +1,7 @@
 <template>
-  <div class="budgets-view animate-fade-in">
+  <div class="view-wrapper animate-fade-in">
     <!-- Background Orbs (Glassmorphism effect similar to Login/Dashboard) -->
-    <div class="background-orbs" aria-hidden="true">
-      <div class="glass-orb orb-primary"></div>
-      <div class="glass-orb orb-secondary"></div>
-      <div class="glass-orb orb-accent"></div>
-    </div>
+    <BaseBackgroundOrbs />
 
     <!-- Header Section -->
     <header class="view-header">
@@ -25,7 +21,7 @@
       </BaseButton>
     </header>
 
-    <div class="budgets-content-grid">
+    <div class="view-content-grid">
       <!-- Main Content (Budgets List) -->
       <main class="main-column">
         <div v-if="budgets.length === 0" class="empty-state glass-card hover-glow">
@@ -133,6 +129,7 @@ import { ref, computed } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BudgetCard from '../components/BudgetCard.vue'
+import BaseBackgroundOrbs from '@/shared/components/atoms/BaseBackgroundOrbs.vue'
 import type { Budget } from '@/modules/finance/domain/entities'
 
 const showAddBudgetModal = ref(false)
@@ -194,80 +191,6 @@ const formatCurrency = (value: number) => {
 </script>
 
 <style scoped>
-/* Main View Container */
-.budgets-view {
-  width: 100%;
-  padding: 2rem 2.5rem;
-  position: relative;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  min-height: calc(100vh - 60px); /* Adjust based on your header/layout */
-}
-
-/* Background Decorations */
-.background-orbs {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glass-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
-  will-change: transform;
-}
-
-:is(.dark) .glass-orb {
-  opacity: 0.1;
-}
-
-.orb-primary {
-  width: 450px;
-  height: 450px;
-  background: var(--color-primary-main, #3b82f6);
-  top: -150px;
-  right: -50px;
-  animation: orb-float-1 20s ease-in-out infinite alternate;
-}
-
-.orb-secondary {
-  width: 350px;
-  height: 350px;
-  background: var(--color-secondary-main, #10b981);
-  bottom: 100px;
-  left: -100px;
-  animation: orb-float-2 25s ease-in-out infinite alternate;
-}
-
-.orb-accent {
-  width: 250px;
-  height: 250px;
-  background: var(--color-accent-main, #f59e0b);
-  top: 40%;
-  left: 30%;
-  animation: orb-float-3 15s ease-in-out infinite alternate;
-  opacity: 0.08;
-}
-
-@keyframes orb-float-1 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-50px, 80px) scale(1.1); }
-}
-
-@keyframes orb-float-2 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(80px, -50px) scale(1.15); }
-}
-
-@keyframes orb-float-3 {
-  0% { transform: translate(0, 0) scale(1) rotate(0); }
-  100% { transform: translate(50px, 50px) scale(0.9) rotate(45deg); }
-}
-
 /* Glass Cards & Effects */
 .glass-card {
   background: rgba(255, 255, 255, 0.75);
@@ -289,61 +212,11 @@ const formatCurrency = (value: number) => {
   transform: translateY(-2px);
 }
 
-/* Header Styles */
-.view-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 2.5rem;
-  gap: 1.5rem;
-}
-
-.page-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-text-primary, #111827);
-  margin: 0 0 0.5rem 0;
-  line-height: 1.2;
-}
-
-.text-primary-main {
-  color: var(--color-primary-main, #3b82f6);
-}
-
-.page-subtitle {
-  color: var(--color-text-secondary, #6b7280);
-  font-size: 1.05rem;
-  margin: 0;
-}
-
 .create-budget-btn {
   padding: 0.75rem 1.5rem;
   border-radius: 999px;
   font-weight: 600;
   box-shadow: 0 4px 14px rgba(var(--color-primary-main-rgb), 0.25);
-}
-
-/* Layout Grid */
-.budgets-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 2.5rem;
-  width: 100%;
-}
-
-.main-column {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  gap: 1.5rem;
-}
-
-.side-column {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  min-width: 0;
 }
 
 /* Empty State */
@@ -550,11 +423,6 @@ const formatCurrency = (value: number) => {
 
 /* Responsive adjustments */
 @media (max-width: 1100px) {
-  .budgets-content-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  
   .side-column {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -563,16 +431,6 @@ const formatCurrency = (value: number) => {
 }
 
 @media (max-width: 768px) {
-  .budgets-view {
-    padding: 1.5rem 1rem;
-  }
-
-  .view-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
   .create-budget-btn {
     width: 100%;
   }

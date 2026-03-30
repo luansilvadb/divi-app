@@ -57,3 +57,38 @@
     @apply text-inherit no-underline;
   }
 }
+
+@layer components {
+  /* Global Dashboard View Standardization */
+  .view-wrapper {
+    @apply w-full min-h-full p-6 md:p-10 relative overflow-hidden box-border z-10;
+  }
+  
+  .view-header {
+    @apply flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6;
+  }
+  
+  .title-section {
+    @apply flex flex-col gap-1;
+  }
+  
+  .page-title {
+    @apply text-3xl font-extrabold tracking-tight text-text-primary m-0 leading-tight;
+  }
+  
+  .page-subtitle {
+    @apply text-base text-text-secondary m-0;
+  }
+  
+  .view-content-grid {
+    @apply grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 w-full;
+  }
+  
+  .main-column {
+    @apply flex flex-col gap-6 min-w-0;
+  }
+  
+  .side-column {
+    @apply flex flex-col gap-6 min-w-0;
+  }
+}
