@@ -1,8 +1,9 @@
 <template>
   <span
     :class="[
-      'inline-flex items-center px-3 py-1 rounded-full text-[0.7rem] font-bold uppercase tracking-wider border transition-all duration-300',
+      'inline-flex items-center px-3 py-1 rounded-full text-[0.7rem] font-black uppercase tracking-widest border transition-all duration-300',
       variantClasses[variant],
+      statusClass,
       customClasses
     ]"
     :style="customStyle"
@@ -13,6 +14,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { UIStatus } from '@/shared/types/ui'
 
 type BadgeVariant = 'subtle' | 'outline' | 'solid'
 
@@ -20,8 +22,10 @@ const props = withDefaults(defineProps<{
   label?: string
   variant?: BadgeVariant
   color?: string // Hex or CSS Variable
+  status?: UIStatus
 }>(), {
-  variant: 'subtle'
+  variant: 'subtle',
+  status: 'normal'
 })
 
 const variantClasses: Record<BadgeVariant, string> = {
@@ -30,12 +34,46 @@ const variantClasses: Record<BadgeVariant, string> = {
   solid: 'text-white border-transparent'
 }
 
+const statusClass = computed(() => {
+  if (props.color) return ''
+  
+  const s = props.status
+  if (props.variant === 'solid') {
+    switch (s) {
+      case 'success': return 'bg-success-main text-white'
+      case 'error': return 'bg-error-main text-white'
+      case 'warning': return 'bg-warning-main text-white'
+      case 'info': return 'bg-primary-main text-white'
+      default: return 'bg-primary-main text-white'
+    }
+  }
+  
+  if (props.variant === 'outline') {
+    switch (s) {
+      case 'success': return 'border-success-main text-success-main'
+      case 'error': return 'border-error-main text-error-main'
+      case 'warning': return 'border-warning-main text-warning-main'
+      case 'info': return 'border-primary-main text-primary-main'
+      default: return 'border-primary-main text-primary-main'
+    }
+  }
+
+  // Default subtle
+  switch (s) {
+    case 'success': return 'bg-success-main/10 text-success-main border-success-main/20'
+    case 'error': return 'bg-error-main/10 text-error-main border-error-main/20'
+    case 'warning': return 'bg-warning-main/10 text-warning-main border-warning-main/20'
+    case 'info': return 'bg-primary-main/10 text-primary-main border-primary-main/20'
+    default: return 'bg-primary-main/10 text-primary-main border-primary-main/20'
+  }
+})
+
 const isCssVar = computed(() => props.color?.startsWith('var('))
 
 const customStyle = computed(() => {
   if (!props.color) return {}
   
-  const colorValue = isCssVar.value ? props.color : props.color
+  const colorValue = props.color
 
   if (props.variant === 'solid') {
     return {
@@ -59,11 +97,8 @@ const customStyle = computed(() => {
   }
 })
 
-// Special handling for CSS variables if they are just the color name in Tailwind
 const customClasses = computed(() => {
-  if (props.color || !props.variant) return ''
-  
-  // If no color provided, use default primary subtle
-  return 'bg-primary-main/10 text-primary-main border-primary-main/20'
+  if (props.color || props.status !== 'normal') return ''
+  return ''
 })
 </script>

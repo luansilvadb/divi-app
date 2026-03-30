@@ -20,19 +20,22 @@
     <div class="view-content-grid">
       <!-- MAIN COLUMN: Actions + List -->
       <main class="main-column">
-        <!-- Empty State -->
-        <div v-if="goals.length === 0" class="empty-state glass-card p-20 text-center flex flex-col items-center justify-center">
-          <BaseIconBox color="var(--color-accent-main)" size="lg" class="mb-8 opacity-80">
+        <BaseCard
+          v-if="goals.length === 0"
+          is-empty
+          empty-title="Comece sua Jornada"
+          empty-subtitle="Defina objetivos claros para ver seu patrimônio crescer com propósito."
+          empty-color="var(--color-accent-main)"
+        >
+          <template #empty-icon>
             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </BaseIconBox>
-          <div class="max-w-md">
-            <h3 class="text-2xl font-black text-text-primary mb-3">Comece sua Jornada</h3>
-            <p class="text-text-secondary text-sm leading-relaxed mb-8">Defina objetivos claros para ver seu patrimônio crescer com propósito.</p>
+          </template>
+          <template #empty-action>
             <BaseButton variant="primary" class="px-8" @click="showAddGoalModal = true">
               Definir Minha Primeira Meta
             </BaseButton>
-          </div>
-        </div>
+          </template>
+        </BaseCard>
 
         <div v-else class="flex flex-col gap-6">
           <GoalCard 

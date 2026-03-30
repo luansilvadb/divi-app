@@ -17,21 +17,25 @@
     </BaseViewHeader>
 
     <!-- Content Grid (Holy Grail) -->
-    <div v-if="loans.length === 0" class="empty-state glass-card p-20 text-center flex flex-col items-center justify-center">
-      <BaseIconBox color="var(--color-primary-main)" size="lg" class="mb-8 opacity-80">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
-      </BaseIconBox>
-      <div class="max-w-md">
-        <h3 class="text-2xl font-black text-text-primary mb-3">Nenhum empréstimo ativo</h3>
-        <p class="text-text-secondary text-sm leading-relaxed mb-8">Registre financiamentos ou dívidas para ter controle total sobre seu saldo devedor e juros pagos com elegância.</p>
-        <BaseButton variant="primary" class="px-8" @click="showAddLoanModal = true">Registrar Primeiro Empréstimo</BaseButton>
-      </div>
-    </div>
-
-    <div v-else class="view-content-grid">
+    <div class="view-content-grid">
       <!-- MAIN COLUMN -->
       <main class="main-column">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <BaseCard
+          v-if="loans.length === 0"
+          is-empty
+          empty-title="Nenhum empréstimo ativo"
+          empty-subtitle="Registre financiamentos ou dívidas para ter controle total sobre seu saldo devedor e juros pagos com elegância."
+          empty-color="var(--color-primary-main)"
+        >
+          <template #empty-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+          </template>
+          <template #empty-action>
+            <BaseButton variant="primary" class="px-8" @click="showAddLoanModal = true">Registrar Primeiro Empréstimo</BaseButton>
+          </template>
+        </BaseCard>
+
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <LoanCard
             v-for="loan in loans"
             :key="loan.id"

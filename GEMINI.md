@@ -47,7 +47,6 @@ src/
 ## Recent Changes
 - 004-standardize-ui-consistency: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
 - 003-standardize-design-system: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
-- 002-refactor-color-palette: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Tailwindcss, Vite
 
 
 <!-- MANUAL ADDITIONS START -->
