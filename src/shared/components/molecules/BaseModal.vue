@@ -6,7 +6,7 @@
     >
       <!-- Backdrop -->
       <div
-        class="modal-backdrop fixed inset-0 bg-black/60"
+        class="modal-backdrop fixed inset-0 bg-[#0e121b80] backdrop-blur-md transition-all duration-500"
         @click="handleClose"
       ></div>
 
@@ -36,5 +36,3 @@ function handleClose() {
   perspective: 1000px;
 }
 </style>
-
-

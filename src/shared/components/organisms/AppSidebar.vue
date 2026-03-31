@@ -134,7 +134,10 @@
       <div class="sidebar-footer-divider"></div>
 
       <!-- Theme toggle -->
-      <button @click="toggleTheme" class="sidebar-footer-btn">
+      <button 
+        @click="toggleTheme" 
+        class="sidebar-footer-btn"
+      >
         <div class="sidebar-nav-item-icon-wrapper">
           <div class="sidebar-nav-item-icon" v-html="isDark ? sunIcon : moonIcon"></div>
         </div>
@@ -311,7 +314,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 }
 
 :is(.dark) .sidebar {
-  background: rgba(18, 22, 28, 0.7);
+  background: rgba(19, 24, 36, 0.7);
   border-right-color: rgba(255, 255, 255, 0.04);
   box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.02),
@@ -326,7 +329,7 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 }
 
 :is(.dark.low-power-mode) .sidebar {
-  background: rgb(18, 22, 28);
+  background: rgb(19, 24, 36);
 }
 
 .sidebar--collapsed {
@@ -572,11 +575,12 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   position: absolute;
   inset: 2px 2px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(26, 35, 51, 0.03);
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 0;
   will-change: opacity;
+  contain: strict;
 }
 
 :is(.dark) .sidebar-nav-item::before {
