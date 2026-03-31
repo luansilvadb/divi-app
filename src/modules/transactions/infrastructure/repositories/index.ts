@@ -72,8 +72,17 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
       const unsynced = await db.transactions.where('synced').equals(0).toArray()
       if (unsynced.length === 0) return
 
-      const toDelete = unsynced.filter((item) => item.deleted && item.id)
-      const toUpsert = unsynced.filter((item) => !item.deleted)
+      const toDelete: LocalTransaction[] = []
+      const toUpsert: LocalTransaction[] = []
+
+      for (let i = 0, len = unsynced.length; i < len; i++) {
+        const item = unsynced[i]!
+        if (item.deleted && item.id) {
+          toDelete.push(item)
+        } else if (!item.deleted) {
+          toUpsert.push(item)
+        }
+      }
 
       // Bulk Delete
       if (toDelete.length > 0) {
@@ -114,38 +123,21 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
         }
 
         if (data) {
-          // Find which local records got synced and update their status
-          const updates = toUpsert
-            .map((item) => {
-              const remoteRecord = data.find((d: Record<string, unknown>) => d.id === item.id)
-              if (remoteRecord) {
-                return {
-                  key: item.localId,
-                  changes: {
-                    id: remoteRecord.id as string,
-                    synced: true,
-                  },
-                }
-              }
-              return null
-            })
-            .filter(Boolean) as { key: string; changes: Record<string, unknown> }[]
+          // Optimized lookup using Set
+          const remoteIds = new Set(data.map((d) => d.id))
 
-          // Utilizando bulkPut/bulkGet em lote para evitar gargalos bloqueantes de I/O em loops
-          const keysToUpdate = updates.map((u) => u.key as string)
-          await db.transaction('rw', db.transactions, async () => {
-            const records = await db.transactions.bulkGet(keysToUpdate)
-            const validRecords = records.reduce((acc, record, i) => {
-              if (record) {
-                acc.push({ ...record, ...updates[i]?.changes } as LocalTransaction)
-              }
-              return acc
-            }, [] as LocalTransaction[])
-
-            if (validRecords.length > 0) {
-              await db.transactions.bulkPut(validRecords)
+          const recordsToUpdate: LocalTransaction[] = []
+          for (let i = 0, len = toUpsert.length; i < len; i++) {
+            const item = toUpsert[i]!
+            if (remoteIds.has(item.id as string)) {
+              item.synced = true
+              recordsToUpdate.push(item)
             }
-          })
+          }
+
+          if (recordsToUpdate.length > 0) {
+            await db.transactions.bulkPut(recordsToUpdate)
+          }
         }
       }
     } catch (err) {
@@ -156,7 +148,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
 
   private mapToEntity(
     item: LocalTransaction,
-  ): Transaction & { _titleLower?: string; _timestamp?: number; _dateKey?: string } {
+  ): Transaction & { _titleLower: string; _timestamp: number; _dateKey: string } {
     const t = {
       ...(item as unknown as Transaction),
       synced: !!item.synced,
