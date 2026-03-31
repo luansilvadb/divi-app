@@ -2,11 +2,14 @@
   <Teleport to="body">
     <div
       v-if="show"
+      role="dialog"
+      aria-modal="true"
       class="modal-wrapper fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overflow-x-hidden"
     >
       <!-- Backdrop -->
       <div
         class="modal-backdrop fixed inset-0 bg-[#0e121b80] backdrop-blur-md transition-all duration-500"
+        aria-hidden="true"
         @click="handleClose"
       ></div>
 
@@ -19,7 +22,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { onMounted, onUnmounted } from 'vue'
+
+const props = defineProps<{
   show: boolean
 }>()
 
@@ -29,6 +34,20 @@ function handleClose() {
   emit('update:show', false)
   emit('closed')
 }
+
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && props.show) {
+    handleClose()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <style scoped>
