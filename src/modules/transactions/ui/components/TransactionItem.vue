@@ -1,7 +1,11 @@
 <template>
   <div
-    class="transaction-item flex items-center p-4 gap-4 cursor-pointer relative transition-all duration-300 rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-surface-main hover:bg-white/80 dark:hover:bg-[#1b2234] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0"
+    role="button"
+    tabindex="0"
+    class="transaction-item flex items-center p-4 gap-4 cursor-pointer relative transition-all duration-300 rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-surface-main hover:bg-white/80 dark:hover:bg-[#1b2234] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
     @click="$emit('click')"
+    @keydown.enter.prevent="$emit('click')"
+    @keydown.space.prevent="$emit('click')"
   >
     <!-- Left Section: Icon -->
     <div class="flex-shrink-0 relative">
@@ -107,11 +111,11 @@
 
       <!-- Quick Actions -->
       <div
-        class="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0 hidden md:block"
+        class="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0 group-focus-within:translate-x-0 hidden md:block"
       >
         <button
           aria-label="Excluir transação"
-          class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90"
+          class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main"
           @click.stop="$emit('delete', transaction.id)"
         >
           <svg
