@@ -1,61 +1,61 @@
 :root {
-  /* Brand Tokens */
-  --color-primary-main: #1a2b4c; /* Deep Navy */
-  --color-secondary-main: #004b23; /* Emerald */
-  --color-accent-main: #c5a059; /* Gold */
+  /* Brand Tokens - Refined for "Maximum Care" */
+  --color-primary-main: #1a2333; /* Celestial Navy */
+  --color-secondary-main: #10b981; /* Emerald Pulse */
+  --color-accent-main: #d49a46; /* Amber Gold */
 
-  /* Neutral Tokens */
-  --color-bg-main: #f8f9fa; /* Soft Gray */
+  /* Neutral Tokens - Suave Harmony */
+  --color-bg-main: #f5f7fa; /* Quiet Sky */
   --color-surface-main: #ffffff;
-  --color-border-main: #e1e4e8;
+  --color-border-main: #e2e8f0;
 
-  /* Text Tokens */
-  --color-text-primary: #0b0e14;
-  --color-text-secondary: #586069;
-  --color-text-disabled: #9ca3af;
+  /* Text Tokens - Professional Slate */
+  --color-text-primary: #1e293b; /* Deep Night Slate */
+  --color-text-secondary: #475569; /* Slate Gray */
+  --color-text-disabled: #94a3b8;
 
-  /* Semantic Tokens */
-  --color-success-main: #008000;
-  --color-error-main: #d73a49;
-  --color-warning-main: #f2994a; /* Adding standard warning from general premium palettes */
-  --color-info-main: #2f80ed; /* Adding standard info from general premium palettes */
+  /* Semantic Tokens - Sophisticated Suave */
+  --color-success-main: #059669; /* Balanced Emerald */
+  --color-error-main: #e11d48;   /* Ruby Rose */
+  --color-warning-main: #d97706; /* Polished Amber */
+  --color-info-main: #0284c7;    /* Arctic Blue */
 
-  /* Glassmorphism Tokens */
-  --color-glass-bg: rgba(255, 255, 255, 0.75);
+  /* Glassmorphism Tokens - Premium Light */
+  --color-glass-bg: rgba(255, 255, 255, 0.65);
   --color-glass-border: rgba(255, 255, 255, 0.4);
-  --color-glass-blur: 16px;
-  --color-hover-border: rgba(26, 43, 76, 0.3); /* Primary Navy with opacity */
-  --color-glass-hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  --card-radius: 1.25rem;
+  --color-glass-blur: 14px;
+  --color-hover-border: rgba(30, 41, 59, 0.08);
+  --color-glass-hover-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+  --card-radius: 2rem; /* More "rounded" care */
 }
 
 .dark {
-  /* Brand Tokens */
-  --color-primary-main: #3d5a80; /* Steel Blue */
-  --color-secondary-main: #00a34d; /* Bright Emerald */
-  --color-accent-main: #d4af37; /* Metallic Gold */
+  /* Brand Tokens - Deep Nocturnal */
+  --color-primary-main: #4a6fa5; /* Steel Blue Frost */
+  --color-secondary-main: #10b981;
+  --color-accent-main: #c5a059;
 
-  /* Neutral Tokens */
-  --color-bg-main: #0b0e14; /* Deep Night */
-  --color-surface-main: #161b22;
-  --color-border-main: #30363d;
+  /* Neutral Tokens - Deepest Cool Blue */
+  --color-bg-main: #0a0d14; /* Void Blue */
+  --color-surface-main: #131824; /* Core Nocturnal */
+  --color-border-main: #1e2433; /* Deep Indigo Gray */
 
-  /* Text Tokens */
+  /* Text Tokens - Soft Moon */
   --color-text-primary: #f0f6fc;
-  --color-text-secondary: #8b949e;
-  --color-text-disabled: #4b5563;
+  --color-text-secondary: #94a3b8;
+  --color-text-disabled: #334155;
 
-  /* Semantic Tokens */
-  --color-success-main: #32cd32;
-  --color-error-main: #f85149;
-  --color-warning-main: #ffb347;
-  --color-info-main: #56ccf2;
+  /* Semantic Tokens - Glowing Core */
+  --color-success-main: #10b981;
+  --color-error-main: #f43f5e;
+  --color-warning-main: #f59e0b;
+  --color-info-main: #0ea5e9;
 
-  /* Glassmorphism Tokens */
-  --color-glass-bg: rgba(30, 41, 59, 0.4);
-  --color-glass-border: rgba(255, 255, 255, 0.05);
-  --color-glass-blur: 16px;
-  --color-hover-border: rgba(61, 90, 128, 0.3); /* Primary Steel Blue with opacity */
-  --color-glass-hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  --card-radius: 1.25rem;
+  /* Glassmorphism Tokens - Deep Blue Translucency */
+  --color-glass-bg: rgba(19, 24, 36, 0.6);
+  --color-glass-border: rgba(255, 255, 255, 0.03);
+  --color-glass-blur: 20px;
+  --color-hover-border: rgba(74, 111, 165, 0.3);
+  --color-glass-hover-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+  --card-radius: 2rem;
 }

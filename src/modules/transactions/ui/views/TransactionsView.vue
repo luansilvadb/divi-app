@@ -14,52 +14,33 @@
       <main class="main-column">
         <!-- Tools & Filtering -->
         <div
-          class="glass-card p-4 flex flex-wrap items-center justify-between gap-4 shadow-sm mb-6"
+          class="p-4 flex flex-wrap items-center justify-between gap-4 glass-card bg-surface-main shadow-sm mb-8"
         >
           <!-- Month Selector -->
           <div
-            class="flex items-center bg-bg-main dark:bg-black/20 p-1.5 rounded-2xl border border-black/5 dark:border-white/5"
+            class="flex items-center bg-black/5 dark:bg-black/20 p-1.5 rounded-[1.5rem] border border-black/5 dark:border-white/5"
           >
             <button
-              class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
+              class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
               @click="prevMonth"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
-            <div class="px-6 flex flex-col items-center min-w-[140px]">
-              <span
-                class="text-[10px] font-black uppercase tracking-widest text-text-disabled leading-none mb-1"
-                >{{ currentDate.getFullYear() }}</span
-              >
-              <span class="text-sm font-black uppercase tracking-widest">{{ monthLabelOnly }}</span>
+            <div class="px-8 flex flex-col items-center min-w-[150px]">
+              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-text-disabled leading-none mb-1.5">
+                {{ currentDate.getFullYear() }}
+              </span>
+              <span class="text-sm font-black uppercase tracking-widest text-text-primary">
+                {{ monthLabelOnly }}
+              </span>
             </div>
             <button
-              class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
+              class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
               @click="nextMonth"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
@@ -70,12 +51,12 @@
             <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2.5"
+                stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 class="text-text-disabled"
@@ -88,7 +69,7 @@
               v-model="searchQuery"
               type="text"
               placeholder="Buscar transações..."
-              class="w-full pl-11 pr-4 py-3 bg-bg-main dark:bg-black/20 border border-black/5 dark:border-white/5 rounded-2xl text-sm font-bold placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/20 transition-all"
+              class="w-full pl-12 pr-4 h-14 bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 rounded-[1.5rem] text-sm font-bold placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/20 transition-all text-text-primary"
             />
           </div>
         </div>
@@ -165,7 +146,7 @@
               </div>
 
               <!-- Transaction Items -->
-              <div class="glass-card p-2 space-y-0.5">
+              <div class="flex flex-col gap-2">
                 <TransactionItem
                   v-for="t in group.items"
                   :key="t.id || t.localId"
@@ -177,7 +158,6 @@
                   :categoryIcon="store.categoryMap[t.category_id]?.icon"
                   :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
                   showTime
-                  class="rounded-xl"
                   @delete="handleDelete"
                   @click="handleEdit(t)"
                 />
@@ -338,6 +318,16 @@
       @close="showForm = false"
       @saved="refreshTransactions"
     />
+
+    <BaseConfirmModal
+      :show="showConfirmDelete"
+      title="Excluir Transação"
+      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+      confirm-text="Excluir"
+      cancel-text="Cancelar"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </StandardPageLayout>
 </template>
 
@@ -351,11 +341,14 @@ import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import TransactionForm from '@/shared/components/organisms/TransactionForm.vue'
+import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const store = useTransactionStore()
 const showForm = ref(false)
+const showConfirmDelete = ref(false)
+const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
 const searchQuery = computed({
   get: () => store.searchQuery,
@@ -398,10 +391,22 @@ function nextMonth() {
 watch(currentDate, refreshTransactions)
 
 // Actions
-const handleDelete = async (id: string) => {
-  if (confirm('Tem certeza que deseja excluir esta transação?')) {
-    await store.deleteTransaction(id)
+const handleDelete = (id: string) => {
+  transactionToDelete.value = id
+  showConfirmDelete.value = true
+}
+
+const confirmDelete = async () => {
+  if (transactionToDelete.value) {
+    await store.deleteTransaction(transactionToDelete.value)
+    showConfirmDelete.value = false
+    transactionToDelete.value = null
   }
+}
+
+const cancelDelete = () => {
+  showConfirmDelete.value = false
+  transactionToDelete.value = null
 }
 
 const handleEdit = (transaction: Transaction) => {

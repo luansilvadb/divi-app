@@ -6,7 +6,7 @@
         :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
       >
         <div v-for="wallet in wallets" :key="wallet.id" class="wallet-slide min-w-full p-1">
-          <BaseCard class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden" clickable>
+          <BaseCard class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]" clickable>
             <div
               class="wallet-accent w-1.5 h-full"
               :style="{ background: getWalletColor(wallet) }"
@@ -42,7 +42,7 @@
 
     <div v-if="wallets.length > 1" class="carousel-nav flex items-center justify-center gap-6 mt-5">
       <button
-        class="nav-btn prev bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed"
+        class="nav-btn next bg-surface-main border border-black/5 dark:border-white/5 text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-black/5 dark:hover:bg-white/10 hover:text-text-primary dark:hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
         @click="prev"
         :disabled="currentIndex === 0"
       >
@@ -71,7 +71,7 @@
         ></span>
       </div>
       <button
-        class="nav-btn next bg-surface-main border border-border-main text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-primary-main hover:text-white hover:border-primary-main disabled:opacity-30 disabled:cursor-not-allowed"
+        class="nav-btn next bg-surface-main border border-white/5 text-text-secondary w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-all hover:bg-[#1b2234] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
         @click="next"
         :disabled="currentIndex === wallets.length - 1"
       >
@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import type { Wallet } from '../../domain/entities/Wallet'
 import { container } from '@/core/di'

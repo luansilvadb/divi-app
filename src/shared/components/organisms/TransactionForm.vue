@@ -1,7 +1,7 @@
 <template>
   <BaseModal :show="show" @update:show="$emit('close')">
     <BaseCard
-      class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-white/10 !bg-surface-main overflow-hidden flex flex-col relative"
+      class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-white/5 !bg-surface-main overflow-hidden flex flex-col relative"
       padding="none"
     >
       <!-- Header Area (Premium Split) -->

@@ -43,44 +43,89 @@
             :initial="{ opacity: 0, y: 20 }"
             :enter="{ opacity: 1, y: 0, transition: { delay: 400 } }"
             padding="none"
-            class="overflow-hidden border border-white/5 bg-surface-main/30 shadow-2xl flex flex-col group"
+            class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
             <!-- Header Area (Harmonized Brand Glow) -->
             <div class="p-6 relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-success-main/5 to-transparent pointer-events-none"></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-success-main/5 to-transparent pointer-events-none"
+              ></div>
               <div class="flex justify-between items-start relative z-10">
                 <div>
-                  <h4 class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-success-main/80 mb-2">Entradas (Mês)</h4>
-                  <div class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1">
+                  <h4
+                    class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-success-main/80 mb-2"
+                  >
+                    Entradas (Mês)
+                  </h4>
+                  <div
+                    class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
+                  >
                     <span class="text-lg opacity-50 font-bold">R$</span>
-                    {{ transactionStore.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
+                    {{
+                      transactionStore.totalIncome.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-success-main/10 flex items-center justify-center text-success-main shadow-inner border border-success-main/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5z" class="rotate-180 origin-center"/></svg>
+                <div
+                  class="w-12 h-12 rounded-2xl bg-success-main/10 flex items-center justify-center text-success-main shadow-inner border border-success-main/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 10l5 5 5-5z" class="rotate-180 origin-center" />
+                  </svg>
                 </div>
               </div>
             </div>
-            
+
             <!-- Progress Section (Integrated) -->
             <div class="px-6 pb-6 pt-2 flex flex-col gap-4 relative">
-              <div class="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent mb-2"></div>
-              
-              <div class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60">
+              <div
+                class="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent mb-2"
+              ></div>
+
+              <div
+                class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60"
+              >
                 <span>Início do Mês</span>
                 <span>Projeção</span>
               </div>
-              
-              <div class="relative h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div 
-                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-success-main/60 to-success-main transition-all duration-1000 shadow-[0_0_15px_rgba(50,205,50,0.3)]"
+
+              <div
+                class="relative h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5"
+              >
+                <div
+                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-success-main/60 to-success-main transition-all duration-1000 shadow-[0_0_15px_rgba(5,150,105,0.3)]"
                   :style="{ width: '75%' }"
                 ></div>
               </div>
-              
+
               <div class="flex items-center gap-2 mt-1">
                 <span class="flex-none p-1 rounded bg-success-main/10 text-success-main">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m5 12 7-7 7 7" />
+                    <path d="M12 19V5" />
+                  </svg>
                 </span>
                 <p class="text-[0.62rem] font-bold text-text-secondary/80 uppercase tracking-tight">
                   <span class="text-success-main">+12%</span> em relação ao mês anterior
@@ -95,44 +140,89 @@
             :initial="{ opacity: 0, y: 20 }"
             :enter="{ opacity: 1, y: 0, transition: { delay: 500 } }"
             padding="none"
-            class="overflow-hidden border border-white/5 bg-surface-main/30 shadow-2xl flex flex-col group"
+            class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
             <!-- Header Area (Harmonized Brand Glow) -->
             <div class="p-6 relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-error-main/5 to-transparent pointer-events-none"></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-error-main/5 to-transparent pointer-events-none"
+              ></div>
               <div class="flex justify-between items-start relative z-10">
                 <div>
-                  <h4 class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-error-main/80 mb-2">Saídas (Mês)</h4>
-                  <div class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1">
+                  <h4
+                    class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-error-main/80 mb-2"
+                  >
+                    Saídas (Mês)
+                  </h4>
+                  <div
+                    class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
+                  >
                     <span class="text-lg opacity-50 font-bold">R$</span>
-                    {{ transactionStore.totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
+                    {{
+                      transactionStore.totalExpense.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-error-main/10 flex items-center justify-center text-error-main shadow-inner border border-error-main/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10l5 5 5-5z"/></svg>
+                <div
+                  class="w-12 h-12 rounded-2xl bg-error-main/10 flex items-center justify-center text-error-main shadow-inner border border-error-main/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M7 10l5 5 5-5z" />
+                  </svg>
                 </div>
               </div>
             </div>
 
             <!-- Progress Section (Integrated) -->
             <div class="px-6 pb-6 pt-2 flex flex-col gap-4 relative">
-              <div class="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent mb-2"></div>
-              
-              <div class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60">
+              <div
+                class="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent mb-2"
+              ></div>
+
+              <div
+                class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60"
+              >
                 <span>Gasto Real</span>
                 <span>Meta Mensal</span>
               </div>
-              
-              <div class="relative h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div 
-                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-error-main/60 to-error-main transition-all duration-1000 shadow-[0_0_15px_rgba(248,81,73,0.3)]"
+
+              <div
+                class="relative h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5"
+              >
+                <div
+                  class="absolute left-0 top-0 h-full bg-gradient-to-r from-error-main/60 to-error-main transition-all duration-1000 shadow-[0_0_15px_rgba(225,29,72,0.3)]"
                   :style="{ width: '42%' }"
                 ></div>
               </div>
 
               <div class="flex items-center gap-2 mt-1">
                 <span class="flex-none p-1 rounded bg-error-main/10 text-error-main">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="m19 12-7 7-7-7"/><path d="M12 5v14"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m19 12-7 7-7-7" />
+                    <path d="M12 5v14" />
+                  </svg>
                 </span>
                 <p class="text-[0.62rem] font-bold text-text-secondary/80 uppercase tracking-tight">
                   Economize <span class="text-error-main">R$ 45,00/dia</span> para manter a meta
@@ -147,36 +237,69 @@
             :initial="{ opacity: 0, y: 20 }"
             :enter="{ opacity: 1, y: 0, transition: { delay: 600 } }"
             padding="none"
-            class="overflow-hidden border border-white/5 bg-surface-main/30 shadow-2xl flex flex-col group"
+            class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
             <!-- Header Area (Harmonized Brand Glow) -->
             <div class="p-6 relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-primary-main/10 to-transparent pointer-events-none"></div>
+              <div
+                class="absolute inset-0 bg-gradient-to-br from-primary-main/10 to-transparent pointer-events-none"
+              ></div>
               <div class="flex justify-between items-start relative z-10">
                 <div>
-                  <h4 class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-primary-main mb-2">Saldo Geral</h4>
-                  <div class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1">
+                  <h4
+                    class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-primary-main mb-2"
+                  >
+                    Saldo Geral
+                  </h4>
+                  <div
+                    class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
+                  >
                     <span class="text-lg opacity-50 font-bold">R$</span>
-                    {{ dashboardStore.totalBalance.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
+                    {{
+                      dashboardStore.totalBalance.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-primary-main/10 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                <div
+                  class="w-12 h-12 rounded-2xl bg-primary-main/10 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" x2="22" y1="10" y2="10" />
+                  </svg>
                 </div>
               </div>
             </div>
 
             <!-- Progress Section (Integrated) -->
             <div class="px-6 pb-6 pt-2 flex flex-col gap-4 relative">
-              <div class="h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent mb-2"></div>
-              
-              <div class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60">
+              <div
+                class="h-px bg-gradient-to-r from-black/5 via-black/[0.02] to-transparent dark:from-white/10 dark:via-white/5 dark:to-transparent mb-2"
+              ></div>
+
+              <div
+                class="flex items-center justify-between text-[0.6rem] font-black uppercase tracking-widest text-text-secondary/60"
+              >
                 <span>Liquidez</span>
                 <span>Objetivo Anual</span>
               </div>
-              
-              <div class="relative h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                <div 
+
+              <div
+                class="relative h-2.5 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden border border-black/5 dark:border-white/5"
+              >
+                <div
                   class="absolute left-0 top-0 h-full bg-gradient-to-r from-primary-main/60 to-primary-main transition-all duration-1000 shadow-[0_0_15px_rgba(61,90,128,0.3)]"
                   :style="{ width: '88%' }"
                 ></div>
@@ -184,7 +307,19 @@
 
               <div class="flex items-center gap-2 mt-1">
                 <span class="flex-none p-1 rounded bg-accent-main/10 text-accent-main">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
                 </span>
                 <p class="text-[0.62rem] font-bold text-text-secondary/80 uppercase tracking-tight">
                   <span class="text-accent-main">Parabéns!</span> Caminho certo para a meta
@@ -206,19 +341,26 @@
               <span class="w-1.5 h-6 bg-accent-main rounded-full"></span>
               Minhas Contas
             </h2>
-            <BaseButton
-              variant="ghost"
-              size="sm"
-              class="!px-3 !py-1.5 opacity-50 hover:opacity-100 transition-all group"
+            <button
+              class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-accent-main hover:text-text-primary transition-all flex items-center gap-2 group"
               @click="$router.push('/wallets')"
             >
-              <span class="text-[0.65rem] font-black uppercase tracking-[0.2em]">Ver Todas</span>
-              <template #trailing>
-                <div
-                  class="w-4 h-px bg-current group-hover:w-6 transition-all duration-300 ml-2"
-                ></div>
-              </template>
-            </BaseButton>
+              Ver Todas
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="transition-all duration-300 transform group-hover:translate-x-1"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
           <AccountCarousel :wallets="dashboardStore.wallets" />
         </section>
@@ -228,7 +370,7 @@
           v-motion
           :initial="{ opacity: 0, y: 20 }"
           :enter="{ opacity: 1, y: 0, transition: { delay: 800 } }"
-          class="flex-1 bg-surface-main/30 border-white/5 shadow-2xl relative overflow-hidden group !p-4 h-full"
+          class="flex-1 bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl relative overflow-hidden group !p-4 h-full transition-all duration-300"
           h-full
         >
           <!-- Decorative Glow -->
@@ -268,9 +410,9 @@
                   </p>
                 </div>
               </div>
-              <div class="flex items-center bg-white/5 p-1 rounded-xl">
+              <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl">
                 <button
-                  class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white/10 text-white shadow-lg transition-all"
+                  class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all"
                 >
                   Últimos 6 meses
                 </button>
@@ -300,13 +442,13 @@
         <BaseCard
           h-full
           padding="none"
-          class="bg-surface-main/30 border-white/5 shadow-2xl relative overflow-hidden group flex flex-col"
+          class="bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl relative overflow-hidden group flex flex-col"
         >
           <!-- Filters / Tabs -->
           <div class="px-6 pt-6 pb-4 flex-none">
-            <div class="flex bg-white/5 p-1 rounded-xl">
+            <div class="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl">
               <button
-                class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white/10 text-text-primary shadow-lg transition-all"
+                class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary shadow-lg transition-all"
               >
                 Todos
               </button>
@@ -337,12 +479,12 @@
             <div
               v-for="t in transactionStore.transactions.slice(0, 25)"
               :key="t.id || t.localId"
-              class="flex items-center p-3 rounded-2xl transition-all duration-300 hover:bg-white/[0.03] group border border-transparent hover:border-white/5 shadow-sm hover:shadow-md"
+              class="flex items-center p-3 rounded-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] group border border-transparent hover:border-black/5 dark:hover:border-white/5 shadow-sm hover:shadow-md"
             >
               <!-- Leading Icon Container -->
               <div class="relative mr-4 flex-none">
                 <div
-                  class="w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-lg overflow-hidden border border-white/5 bg-surface-main/40"
+                  class="w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-lg overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main"
                   :style="{
                     borderLeftColor:
                       transactionStore.categoryMap[t.category_id]?.color || 'transparent',
@@ -369,12 +511,12 @@
                 <!-- Badges Row -->
                 <div class="flex items-center gap-1.5">
                   <span
-                    class="text-[0.6rem] font-black uppercase text-text-secondary opacity-60 bg-white/5 px-2 py-0.5 rounded shadow-sm"
+                    class="text-[0.6rem] font-black uppercase text-text-secondary opacity-60 bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded shadow-sm"
                   >
                     {{ transactionStore.walletMap[t.wallet_id]?.name || 'Nubank' }}
                   </span>
                   <span
-                    class="flex items-center gap-1 text-[0.6rem] font-black uppercase bg-white/5 px-2 py-0.5 rounded shadow-sm border border-white/5"
+                    class="flex items-center gap-1 text-[0.6rem] font-black uppercase bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded shadow-sm border border-black/5 dark:border-white/5"
                     :style="{
                       color:
                         transactionStore.categoryMap[t.category_id]?.color ||
@@ -428,7 +570,7 @@
             <!-- Footer Button - Pushed to bottom -->
             <div class="flex justify-center mt-auto pt-8 pb-4 flex-none">
               <button
-                class="px-8 py-2.5 rounded-full bg-surface-main/40 hover:bg-surface-main/60 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary transition-all border border-white/5 shadow-xl hover:text-text-primary"
+                class="px-8 py-2.5 rounded-full bg-surface-main/40 hover:bg-surface-main/60 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary transition-all border border-black/5 dark:border-white/5 shadow-xl hover:text-text-primary"
                 @click="$router.push('/transactions')"
               >
                 Ver todas as transações
