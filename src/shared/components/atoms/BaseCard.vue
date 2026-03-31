@@ -102,7 +102,11 @@
     </div>
 
     <!-- Default content -->
-    <div v-else class="p-6 text-text-primary" :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }">
+    <div
+      v-else
+      class="p-6 text-text-primary"
+      :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }"
+    >
       <slot />
     </div>
 

@@ -37,8 +37,8 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
         throw new InfrastructureError('Error syncing subscription deletion with Supabase', error)
       }
     } catch (err) {
-       if (err instanceof InfrastructureError) throw err
-       throw new InfrastructureError('Failed to delete subscription', err)
+      if (err instanceof InfrastructureError) throw err
+      throw new InfrastructureError('Failed to delete subscription', err)
     }
   }
 
@@ -60,7 +60,10 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
         created_at: item.created_at,
       }))
 
-      const { data, error } = await supabase.from('subscriptions').upsert(upsertPayload).select('id')
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .upsert(upsertPayload)
+        .select('id')
 
       if (error) {
         throw new InfrastructureError('[Sync] Bulk upsert failed', error)
@@ -71,14 +74,14 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
         await db.transaction('rw', db.subscriptions, async () => {
           const records = await db.subscriptions.bulkGet(idsToUpdate)
           const validRecords = records.reduce((acc, record) => {
-             if (record) {
-                acc.push({ ...record, synced: true })
-             }
-             return acc
+            if (record) {
+              acc.push({ ...record, synced: true })
+            }
+            return acc
           }, [] as LocalSubscription[])
 
           if (validRecords.length > 0) {
-              await db.subscriptions.bulkPut(validRecords)
+            await db.subscriptions.bulkPut(validRecords)
           }
         })
       }

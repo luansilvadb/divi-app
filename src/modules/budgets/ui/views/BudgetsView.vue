@@ -5,9 +5,7 @@
     subtitle="Defina limites, controle gastos e economize para o que realmente importa."
   >
     <template #action>
-      <BaseButton variant="primary" @click="showAddBudgetModal = true">
-        Novo Orçamento
-      </BaseButton>
+      <BaseButton variant="primary" @click="showAddBudgetModal = true"> Novo Orçamento </BaseButton>
     </template>
 
     <div class="view-content-grid">
@@ -82,7 +80,11 @@
             <BaseSummaryItem
               label="Total Consumido"
               :value="formatCurrency(store.totalConsumed)"
-              :color="store.totalConsumed > store.totalBudgeted ? 'var(--color-error-main)' : 'var(--color-success-main)'"
+              :color="
+                store.totalConsumed > store.totalBudgeted
+                  ? 'var(--color-error-main)'
+                  : 'var(--color-success-main)'
+              "
               :status="store.totalConsumed > store.totalBudgeted ? 'error' : 'normal'"
             />
 
@@ -141,11 +143,27 @@
           <template #header>Insights</template>
           <div class="p-2 space-y-4">
             <div class="flex gap-4">
-              <div class="w-8 h-8 rounded-lg bg-accent-main/10 text-accent-main flex-shrink-0 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <div
+                class="w-8 h-8 rounded-lg bg-accent-main/10 text-accent-main flex-shrink-0 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
               </div>
               <p class="text-xs font-bold text-text-secondary leading-relaxed">
-                Você economizou <span class="text-text-primary">R$ 340,00</span> em Lazer comparado ao mês passado. Bom trabalho!
+                Você economizou <span class="text-text-primary">R$ 340,00</span> em Lazer comparado
+                ao mês passado. Bom trabalho!
               </p>
             </div>
           </div>

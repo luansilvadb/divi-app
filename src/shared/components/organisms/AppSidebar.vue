@@ -134,10 +134,7 @@
       <div class="sidebar-footer-divider"></div>
 
       <!-- Theme toggle -->
-      <button 
-        @click="toggleTheme" 
-        class="sidebar-footer-btn"
-      >
+      <button @click="toggleTheme" class="sidebar-footer-btn">
         <div class="sidebar-nav-item-icon-wrapper">
           <div class="sidebar-nav-item-icon" v-html="isDark ? sunIcon : moonIcon"></div>
         </div>
