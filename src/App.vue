@@ -18,7 +18,8 @@ import { useRouter, useRoute } from 'vue-router'
 import { container } from './core/di'
 import { useTheme } from './core/theme'
 import { useSidebarStore } from './shared/stores/sidebarStore'
-import type { IAuthService, User } from './modules/finance/domain/services/IAuthService'
+import type { IAuthService } from './modules/auth/domain/contracts/IAuthService'
+import type { User } from './modules/auth/domain/entities/User'
 import AppSidebar from './shared/components/organisms/AppSidebar.vue'
 
 const router = useRouter()

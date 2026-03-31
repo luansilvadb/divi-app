@@ -12,6 +12,7 @@ Auto-generated from all feature plans. Last updated: 2026-03-30
 - LocalStorage (for theme preference) (006-sidebar-polish-performance)
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS, @vueuse/motion (007-sidebar-polish-performance)
 - LocalStorage (for theme and sidebar state) (007-sidebar-polish-performance)
+- Supabase (SDK / RPC), Dexie (Local Persistence) (001-refactor-finance-vertical-slice)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -49,9 +50,9 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
-- 007-sidebar-polish-performance: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS, @vueuse/motion
-- 006-sidebar-polish-performance: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
-- 005-remove-bg-orbs: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Vite, TailwindCSS
+- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
+- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
+- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 
 
 <!-- MANUAL ADDITIONS START -->
