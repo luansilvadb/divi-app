@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { container } from '../di'
-import type { IAuthService } from '../../modules/finance/domain/services/IAuthService'
+import type { IAuthService } from '../../modules/auth/domain/contracts/IAuthService'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,61 +8,61 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: () => import('../../modules/finance/ui/views/DashboardView.vue'),
+      component: () => import('../../modules/dashboard/ui/views/DashboardView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/transactions',
       name: 'transactions',
-      component: () => import('../../modules/finance/ui/views/TransactionsView.vue'),
+      component: () => import('../../modules/transactions/ui/views/TransactionsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/budgets',
       name: 'budgets',
-      component: () => import('../../modules/finance/ui/views/BudgetsView.vue'),
+      component: () => import('../../modules/budgets/ui/views/BudgetsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/goals',
       name: 'goals',
-      component: () => import('../../modules/finance/ui/views/GoalsView.vue'),
+      component: () => import('../../modules/goals/ui/views/GoalsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/loans',
       name: 'loans',
-      component: () => import('../../modules/finance/ui/views/LoansView.vue'),
+      component: () => import('../../modules/loans/ui/views/LoansView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/subscriptions',
       name: 'subscriptions',
-      component: () => import('../../modules/finance/ui/views/SubscriptionsView.vue'),
+      component: () => import('../../modules/subscriptions/ui/views/SubscriptionsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/calendar',
       name: 'calendar',
-      component: () => import('../../modules/finance/ui/views/CalendarView.vue'),
+      component: () => import('../../modules/calendar/ui/views/CalendarView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/reports',
       name: 'reports',
-      component: () => import('../../modules/finance/ui/views/ReportsView.vue'),
+      component: () => import('../../modules/reports/ui/views/ReportsView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/activity-log',
       name: 'activity-log',
-      component: () => import('../../modules/finance/ui/views/ActivityLogView.vue'),
+      component: () => import('../../modules/activity-log/ui/views/ActivityLogView.vue'),
       meta: { requiresAuth: true },
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../../modules/finance/ui/views/LoginView.vue'),
+      component: () => import('../../modules/auth/ui/views/LoginView.vue'),
       meta: { guestOnly: true },
     },
   ],
