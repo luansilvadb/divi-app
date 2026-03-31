@@ -1,6 +1,6 @@
 import type { Budget } from '@/shared/domain/entities/Budget'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { IBudgetLogicService } from '../contracts/IBudgetLogicService'
+import type { IBudgetLogicService } from '../../domain/contracts/IBudgetLogicService'
 
 export class BudgetLogicService implements IBudgetLogicService {
   /**

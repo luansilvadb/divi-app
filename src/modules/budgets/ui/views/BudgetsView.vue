@@ -14,35 +14,34 @@
       <!-- MAIN COLUMN -->
       <main class="main-column">
         <!-- Empty State -->
-        <div
+        <BaseCard
           v-if="store.budgets.length === 0 && !store.isLoading"
-          class="flex flex-col items-center justify-center py-20 opacity-40 text-center glass-card"
+          is-empty
+          empty-title="Nenhum orçamento"
+          empty-subtitle="Você ainda não criou planejamentos de gastos ou metas de economia."
+          empty-color="var(--color-primary-main)"
         >
-          <div
-            class="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
-          >
+          <template #empty-icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="32"
+              height="32"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
             >
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
-          </div>
-          <span class="text-sm font-black uppercase tracking-widest mb-2">Nenhum orçamento</span>
-          <p class="text-xs font-bold max-w-xs mx-auto mb-6">
-            Você ainda não criou planejamentos de gastos ou metas de economia.
-          </p>
-          <BaseButton variant="primary" @click="showAddBudgetModal = true">
-            Criar Primeiro Orçamento
-          </BaseButton>
-        </div>
+          </template>
+          <template #empty-action>
+            <BaseButton variant="primary" class="px-8 mt-4" @click="showAddBudgetModal = true">
+              Criar Primeiro Orçamento
+            </BaseButton>
+          </template>
+        </BaseCard>
 
         <!-- Loading State -->
         <div v-else-if="store.isLoading" class="flex justify-center py-20">

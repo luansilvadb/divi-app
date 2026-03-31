@@ -6,23 +6,10 @@
   >
     <template #action>
       <BaseButton
-        variant="outline"
+        variant="primary"
         @click="handleRefresh"
-        :class="{ 'is-refreshing': isRefreshing }"
-        class="font-black uppercase tracking-widest text-[10px] px-6"
+        :class="{ 'opacity-80': isRefreshing }"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="w-4 h-4 mr-2"
-          :class="{ 'animate-spin': isRefreshing }"
-        >
-          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.92-10.44l5.66 5.66" />
-        </svg>
         {{ isRefreshing ? 'Sincronizando...' : 'Atualizar' }}
       </BaseButton>
     </template>
@@ -238,8 +225,8 @@
 import { ref, onMounted } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IActivityLogService } from '../domain/contracts/IActivityLogService'
-import type { Activity } from '../domain/entities/Activity'
+import type { IActivityLogService } from '../../domain/contracts/IActivityLogService'
+import type { Activity } from '../../domain/entities/Activity'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'

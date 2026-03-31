@@ -105,7 +105,7 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
-import type { Goal } from '../../domain/entities'
+import type { Goal } from '../../domain/entities/Goal'
 
 const props = defineProps<{
   goal: Goal

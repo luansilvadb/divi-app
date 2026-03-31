@@ -132,7 +132,7 @@
 import { ref } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAuthService } from '../domain/contracts/IAuthService'
+import type { IAuthService } from '../../domain/contracts/IAuthService'
 
 const isLoading = ref(false)
 const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)

@@ -96,7 +96,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import type { Wallet } from '../../../transactions/domain/entities'
+import type { Wallet } from '../../domain/entities/Wallet'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'

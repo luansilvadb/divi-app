@@ -1,5 +1,5 @@
-import type { IAuthService } from '../domain/contracts/IAuthService'
-import type { User } from '../domain/entities/User'
+import type { IAuthService } from '../../domain/contracts/IAuthService'
+import type { User } from '../../domain/entities/User'
 import { supabase } from '@/core/supabase'
 
 export class SupabaseAuthService implements IAuthService {
