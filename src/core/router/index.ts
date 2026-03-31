@@ -69,43 +69,8 @@ const router = createRouter({
 })
 
 // Auth Guard logic
-let authInitialized = false
-const authReady = new Promise<void>((resolve) => {
-  const authService = container.resolve<IAuthService>('IAuthService')
-  
-  // First, check if we already have a session (sync/async)
-  authService.getCurrentUser().then(() => {
-    authInitialized = true
-    resolve()
-  }).catch(() => {
-    authInitialized = true
-    resolve()
-  })
-
-  // Also listen for change to be sure
-  authService.onAuthStateChange(() => {
-    if (!authInitialized) {
-      authInitialized = true
-      resolve()
-    }
-  })
-})
-
 router.beforeEach(async (to, _from) => {
   try {
-    // If we have an access_token in hash, let Supabase process it (stay on current route/entry)
-    const hasOAuthHash = window.location.hash && (window.location.hash.includes('access_token') || window.location.hash.includes('type=recovery'))
-    if (hasOAuthHash) {
-      console.debug('[Router] OAuth hash detected, bypassing immediate guard')
-      // Wait a bit for Supabase to parse the URL fragments
-      if (!authInitialized) await authReady
-    }
-
-    // Ensure auth state is resolved before first navigation
-    if (!authInitialized) {
-      await authReady
-    }
-
     const authService = container.resolve<IAuthService>('IAuthService')
     const user = await authService.getCurrentUser()
 
