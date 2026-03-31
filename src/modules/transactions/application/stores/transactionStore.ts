@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import { ref, shallowRef, computed, watch } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
@@ -9,7 +9,7 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
 
-type UITransaction = Transaction & { _titleLower?: string; _timestamp?: number; _dateKey?: string }
+type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
 
 export const useTransactionStore = defineStore('transactions', () => {
   // Repositories
@@ -18,17 +18,17 @@ export const useTransactionStore = defineStore('transactions', () => {
   const categoryRepo = container.resolve<ICategoryRepository>(DI_TOKENS.CategoryRepository)
 
   // State
-  const transactions = ref<Transaction[]>([])
-  const wallets = ref<Wallet[]>([])
-  const categories = ref<Category[]>([])
+  const transactions = shallowRef<Transaction[]>([])
+  const wallets = shallowRef<Wallet[]>([])
+  const categories = shallowRef<Category[]>([])
   const isLoading = ref(false)
 
   // UI State
   const searchQuery = ref('')
 
   // Maps for O(1) Lookups
-  const categoryMap = ref<Record<string, Category>>({})
-  const walletMap = ref<Record<string, Wallet>>({})
+  const categoryMap = shallowRef<Record<string, Category>>({})
+  const walletMap = shallowRef<Record<string, Wallet>>({})
 
   const totalIncome = ref(0)
   const totalExpense = ref(0)
@@ -37,8 +37,10 @@ export const useTransactionStore = defineStore('transactions', () => {
   // Top Categories Single Pass
   const topCategories = computed(() => {
     const catMap: Record<string, number> = {}
+    const trans = transactions.value
 
-    for (const t of transactions.value) {
+    for (let i = 0, len = trans.length; i < len; i++) {
+      const t = trans[i]!
       if (t.type === 'expense') {
         catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
       }
@@ -62,6 +64,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       .slice(0, 5)
   })
 
+  // Sort happens on fetch/update now, preventing O(N log N) on every UI computation.
   watch(
     transactions,
     (newTransactions: Transaction[]) => {
@@ -87,34 +90,41 @@ export const useTransactionStore = defineStore('transactions', () => {
     if (!searchQuery.value.trim()) return uiTransactions.value
 
     const query = searchQuery.value.toLowerCase().trim()
-    return uiTransactions.value.filter((t) => {
-      if ((t._titleLower || t.title.toLowerCase()).includes(query)) return true
+    const result: UITransaction[] = []
+    const trans = uiTransactions.value
+    const catMap = categoryMap.value
 
-      const cat = categoryMap.value[t.category_id]
-      if (cat && cat.name.toLowerCase().includes(query)) return true
+    for (let i = 0, len = trans.length; i < len; i++) {
+      const t = trans[i]!
+      if (t._titleLower.includes(query)) {
+        result.push(t)
+        continue
+      }
 
-      return false
-    })
+      const cat = catMap[t.category_id]
+      if (cat && cat.name.toLowerCase().includes(query)) {
+        result.push(t)
+      }
+    }
+
+    return result
   })
 
   const groupedTransactions = computed(() => {
     const groups: Record<string, { total: number; items: UITransaction[] }> = {}
+    const source = filteredTransactionsArray.value
 
-    const sorted = [...filteredTransactionsArray.value].sort((a, b) => {
-      const timeA = a._timestamp || new Date(a.date).getTime()
-      const timeB = b._timestamp || new Date(b.date).getTime()
-      return timeB - timeA
-    })
-
-    for (let i = 0, len = sorted.length; i < len; i++) {
-      const t = sorted[i]!
-      const dateKey = t._dateKey || t.date.substring(0, 10)
+    for (let i = 0, len = source.length; i < len; i++) {
+      const t = source[i]!
+      const dateKey = t._dateKey
       if (dateKey) {
-        if (!groups[dateKey]) {
-          groups[dateKey] = { total: 0, items: [] }
+        let group = groups[dateKey]
+        if (!group) {
+          group = { total: 0, items: [] }
+          groups[dateKey] = group
         }
-        groups[dateKey].items.push(t)
-        groups[dateKey].total += t.type === 'income' ? t.amount : -t.amount
+        group.items.push(t)
+        group.total += t.type === 'income' ? t.amount : -t.amount
       }
     }
 
@@ -123,21 +133,23 @@ export const useTransactionStore = defineStore('transactions', () => {
 
   // Actions
   async function fetchWallets() {
-    wallets.value = await walletRepo.getAll()
+    const w = await walletRepo.getAll()
+    wallets.value = w
     const map: Record<string, Wallet> = {}
-    for (let i = 0, len = wallets.value.length; i < len; i++) {
-      const w = wallets.value[i]!
-      map[w.id] = w
+    for (let i = 0, len = w.length; i < len; i++) {
+      const item = w[i]!
+      map[item.id] = item
     }
     walletMap.value = map
   }
 
   async function fetchCategories() {
-    categories.value = await categoryRepo.getAll()
+    const c = await categoryRepo.getAll()
+    categories.value = c
     const map: Record<string, Category> = {}
-    for (let i = 0, len = categories.value.length; i < len; i++) {
-      const c = categories.value[i]!
-      map[c.id] = c
+    for (let i = 0, len = c.length; i < len; i++) {
+      const item = c[i]!
+      map[item.id] = item
     }
     categoryMap.value = map
   }
@@ -145,7 +157,14 @@ export const useTransactionStore = defineStore('transactions', () => {
   async function fetchTransactionsByMonth(year: number, month: number) {
     isLoading.value = true
     try {
-      transactions.value = await transactionRepo.getByMonth(year, month)
+      const raw = await transactionRepo.getByMonth(year, month)
+      // Sort by timestamp descending once, preventing sorted re-computations in groupedTransactions
+      raw.sort((a, b) => {
+        const timeA = (a as UITransaction)._timestamp
+        const timeB = (b as UITransaction)._timestamp
+        return timeB - timeA
+      })
+      transactions.value = raw
     } finally {
       isLoading.value = false
     }
