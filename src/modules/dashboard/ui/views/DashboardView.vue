@@ -94,7 +94,7 @@
 
         <!-- Wallets Section -->
         <section>
-          <div class="flex justify-between items-center mb-5">
+          <div class="flex justify-between items-center">
             <h2 class="text-xl font-bold text-text-primary tracking-tight">Minhas Contas</h2>
             <BaseButton variant="ghost" class="text-sm font-bold" @click="$router.push('/wallets')">
               Ver todas →
