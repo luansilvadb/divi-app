@@ -4,5 +4,6 @@ export interface Wallet {
   balance: number
   currency: string
   user_id: string
+  icon?: string
   created_at?: string
 }

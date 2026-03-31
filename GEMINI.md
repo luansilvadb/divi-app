@@ -50,9 +50,9 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 002-fix-invalid-url-error: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
+- 002-fix-invalid-url-error: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 - 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
-- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
-- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 
 
 <!-- MANUAL ADDITIONS START -->

@@ -16,6 +16,7 @@ import { DexieGoalRepository } from '../modules/goals/infrastructure/repositorie
 import { DexieSubscriptionRepository } from '../modules/subscriptions/infrastructure/repositories/DexieSubscriptionRepository'
 import { ActivityLogService } from '../modules/activity-log/application/services/ActivityLogService'
 import { ExportService } from '../modules/transactions/application/services/ExportService'
+import { AssetLoader } from '../shared/utils/asset-loader'
 import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
 import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 
@@ -63,7 +64,9 @@ container.register(DI_TOKENS.GoalRepository, new DexieGoalRepository())
 container.register(DI_TOKENS.BudgetLogicService, new BudgetLogicService())
 container.register(DI_TOKENS.GoalLogicService, new GoalLogicService())
 container.register(DI_TOKENS.SubscriptionRepository, new DexieSubscriptionRepository())
-container.register(DI_TOKENS.ActivityLogService, new ActivityLogService())
+const activityLogService = new ActivityLogService()
+container.register(DI_TOKENS.ActivityLogService, activityLogService)
+container.register(DI_TOKENS.AssetLoader, new AssetLoader(activityLogService))
 container.register(DI_TOKENS.ExportService, new ExportService())
 
 // Helper to provide/inject services in Vue components if needed

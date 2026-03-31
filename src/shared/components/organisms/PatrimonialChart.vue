@@ -36,23 +36,35 @@ const props = defineProps<{
   labels: string[]
 }>()
 
-const chartData = computed(() => ({
-  labels: props.labels,
-  datasets: [
-    {
-      label: 'Patrimonial Growth',
-      backgroundColor: 'rgba(16, 185, 129, 0.1)',
-      borderColor: '#10b981',
-      pointBackgroundColor: '#10b981',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: '#10b981',
-      fill: true,
-      tension: 0.4,
-      data: props.data,
-    },
-  ],
-}))
+const chartData = computed(() => {
+  return {
+    labels: props.labels,
+    datasets: [
+      {
+        label: 'Patrimônio',
+        data: props.data,
+        borderColor: '#3D5A80',
+        borderWidth: 3,
+        pointBackgroundColor: '#3D5A80',
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        fill: true,
+        backgroundColor: (context: any) => {
+          const chart = context.chart
+          const { ctx, chartArea } = chart
+          if (!chartArea) return null
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
+          gradient.addColorStop(0, 'rgba(61, 90, 128, 0.4)')
+          gradient.addColorStop(1, 'rgba(61, 90, 128, 0)')
+          return gradient
+        },
+        tension: 0.4,
+      },
+    ],
+  }
+})
 
 const chartOptions: ChartOptions<'line'> = {
   responsive: true,
@@ -62,45 +74,40 @@ const chartOptions: ChartOptions<'line'> = {
       display: false,
     },
     tooltip: {
-      mode: 'index' as const,
-      intersect: false,
-      backgroundColor: '#1f2937',
-      titleColor: '#f3f4f6',
-      bodyColor: '#f3f4f6',
-      borderColor: '#374151',
+      enabled: true,
+      backgroundColor: '#161b22',
+      titleColor: '#f0f6fc',
+      titleFont: { size: 13, weight: 'bold' },
+      bodyColor: '#8b949e',
+      bodyFont: { size: 12 },
+      borderColor: 'rgba(255, 255, 255, 0.1)',
       borderWidth: 1,
-      padding: 10,
+      padding: 12,
       displayColors: false,
+      cornerRadius: 12,
       callbacks: {
         label: (context: any) => {
-          let label = context.dataset.label || ''
-          if (label) {
-            label += ': '
-          }
-          if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-              context.parsed.y,
-            )
-          }
-          return label
+          return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(context.parsed.y)
         },
       },
     },
   },
   scales: {
     y: {
-      beginAtZero: true,
       grid: {
-        color: '#f3f4f6',
+        color: 'rgba(255, 255, 255, 0.05)',
       },
+      border: { display: false },
       ticks: {
-        color: '#9ca3af',
+        color: '#8b949e',
+        font: { size: 10, weight: 'bold' },
+        padding: 10,
         callback: (value: any) => {
-          return new Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-            maximumSignificantDigits: 3,
-          }).format(value)
+          if (value >= 1000) return `R$ ${(value / 1000).toFixed(1)} mil`
+          return `R$ ${value}`
         },
       },
     },
@@ -108,8 +115,11 @@ const chartOptions: ChartOptions<'line'> = {
       grid: {
         display: false,
       },
+      border: { display: false },
       ticks: {
-        color: '#9ca3af',
+        color: '#8b949e',
+        font: { size: 10, weight: 'bold' },
+        padding: 5,
       },
     },
   },

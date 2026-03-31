@@ -4,6 +4,7 @@
     :class="{
       'cursor-pointer hover-glow active:scale-[0.98]': clickable,
       'border-error-main/50 animate-pulse-error': error,
+      'h-full flex flex-col': hFull,
     }"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"
@@ -101,7 +102,7 @@
     </div>
 
     <!-- Default content -->
-    <div v-else class="p-6 text-text-primary">
+    <div v-else class="p-6 text-text-primary" :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }">
       <slot />
     </div>
 
@@ -134,6 +135,8 @@ defineProps<{
   emptyTitle?: string
   emptySubtitle?: string
   emptyColor?: string
+  hFull?: boolean
+  padding?: 'none' | 'default'
 }>()
 
 defineEmits(['click', 'retry'])

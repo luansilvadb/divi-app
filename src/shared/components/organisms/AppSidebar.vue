@@ -338,8 +338,8 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   inset: 0;
   z-index: 1;
   opacity: 0.015;
-  /* Decision: Static Data URI is faster than live SVG filter */
-  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4OcnJyXl5ejo6Onp6ednZ2goKCfbm6urq6np6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6ejo6Onp6fS8vPMAAAAFHRSTlMAB0Y6NE9QUVByZ2eAgIaYp7m9vs7S8vMAAAABYktHRACIBR1IAAAAbUlEQVQ4y2NgYGRiYmJmZsbGxsYEBQUFBRQUFBTU1NTo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6Ojo6OgMFAAA=');
+  /* Decision: Physical file is more robust than long Data URIs */
+  background-image: url('/assets/noise.png');
   background-repeat: repeat;
   pointer-events: none;
 

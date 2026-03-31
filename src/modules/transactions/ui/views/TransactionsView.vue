@@ -97,7 +97,7 @@
         <div class="space-y-6">
           <div
             v-if="store.isLoading"
-            class="flex flex-col items-center justify-center py-20 opacity-50"
+            class="flex flex-col items-center justify-center py-20 opacity-50 glass-card"
           >
             <div
               class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin mb-4"
@@ -105,66 +105,67 @@
             <span class="text-xs font-black uppercase tracking-widest">Sincronizando...</span>
           </div>
 
-          <div
+          <BaseCard
             v-else-if="Object.keys(groupedTransactions).length === 0"
-            class="flex flex-col items-center justify-center py-20 opacity-40 text-center glass-card"
+            is-empty
+            empty-title="Nenhuma transação"
+            empty-subtitle="Você não tem movimentos registrados neste período."
+            empty-color="var(--color-primary-main)"
           >
-            <div
-              class="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
-            >
+            <template #empty-icon>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="32"
+                height="32"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
+                stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-            </div>
-            <span class="text-sm font-black uppercase tracking-widest mb-2">Nenhuma transação</span>
-            <span class="text-xs font-bold"
-              >Você não tem movimentos registrados neste período.</span
-            >
-            <BaseButton variant="ghost" class="mt-6" @click="showForm = true">
-              Adicionar Agora
-            </BaseButton>
-          </div>
+            </template>
+            <template #empty-action>
+              <BaseButton variant="primary" class="px-8 mt-4" @click="showForm = true">
+                Adicionar Agora
+              </BaseButton>
+            </template>
+          </BaseCard>
 
           <!-- Grouped by Date -->
-          <div v-else class="space-y-8">
-            <div v-for="(group, dateKey) in groupedTransactions" :key="dateKey" class="space-y-3">
+          <div v-else class="space-y-10">
+            <div v-for="(group, dateKey) in groupedTransactions" :key="dateKey" class="space-y-4">
               <!-- Date Header -->
-              <div class="flex items-center justify-between px-2 mb-4">
+              <div class="flex items-center justify-between px-1">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/5 flex flex-col items-center justify-center leading-none"
+                    class="w-12 h-12 rounded-2xl bg-surface-main dark:bg-white/5 flex flex-col items-center justify-center leading-none shadow-sm border border-black/5 dark:border-white/5"
                   >
                     <span
-                      class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                      class="text-[9px] font-black uppercase tracking-widest text-text-disabled mb-0.5"
                       >{{ formatDateMonth(dateKey) }}</span
                     >
-                    <span class="text-sm font-black">{{ dateKey.split('-')[2] }}</span>
+                    <span class="text-base font-black text-text-primary">{{ dateKey.split('-')[2] }}</span>
                   </div>
                   <div class="flex flex-col">
-                    <span class="text-sm font-black">{{ getRelativeDayLabel(dateKey) }}</span>
+                    <span class="text-sm font-black text-text-primary tracking-tight">{{ getRelativeDayLabel(dateKey) }}</span>
+                    <span class="text-[10px] font-bold text-text-disabled uppercase tracking-widest">{{ group.items.length }} {{ group.items.length === 1 ? 'transação' : 'transações' }}</span>
                   </div>
                 </div>
 
                 <div
-                  class="text-sm font-black tracking-tighter bg-bg-main dark:bg-black/20 px-3 py-1.5 rounded-lg border border-black/5 dark:border-white/5"
+                  class="text-sm font-black tracking-tighter bg-surface-main dark:bg-white/5 px-4 py-2 rounded-xl shadow-sm border border-black/5 dark:border-white/5"
                   :class="group.total >= 0 ? 'text-success-main' : 'text-error-main'"
                 >
+                  <span class="text-[10px] uppercase opacity-40 mr-1.5 font-bold">Saldo do dia:</span>
                   {{ formatCurrencySign(group.total) }}
                 </div>
               </div>
 
               <!-- Transaction Items -->
-              <div class="space-y-0.5 mt-1 px-1">
+              <div class="glass-card p-2 space-y-0.5">
                 <TransactionItem
                   v-for="t in group.items"
                   :key="t.id || t.localId"
@@ -173,6 +174,7 @@
                   :categoryColor="
                     store.categoryMap[t.category_id]?.color || 'var(--color-primary-main)'
                   "
+                  :categoryIcon="store.categoryMap[t.category_id]?.icon"
                   :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
                   showTime
                   class="rounded-xl"

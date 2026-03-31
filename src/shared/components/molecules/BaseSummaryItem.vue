@@ -1,13 +1,13 @@
 <template>
   <div
-    class="summary-item flex items-center gap-5 transition-all duration-300 group"
+    class="summary-item flex items-center gap-5 transition-all duration-300"
     :class="{ 'opacity-50 grayscale cursor-not-allowed': error }"
   >
     <!-- Icon area -->
     <BaseIconBox
       :color="error ? 'error' : color"
       size="md"
-      class="group-hover:scale-105 transition-transform duration-300"
+      class="transition-transform duration-300"
     >
       <slot name="icon">
         <svg
@@ -30,20 +30,20 @@
     </BaseIconBox>
 
     <!-- Text area -->
-    <div class="summary-text flex flex-col gap-1 min-w-0">
+    <div class="summary-text flex flex-col gap-0.5 min-w-0">
       <span
-        class="label text-[0.8125rem] font-black text-text-disabled uppercase tracking-widest leading-none truncate"
+        class="label text-[0.65rem] font-black text-text-secondary uppercase tracking-[0.15em] leading-none truncate opacity-80"
       >
         {{ error ? 'Erro de carga' : label }}
       </span>
       <strong
         v-if="!error"
-        class="value text-[1.5rem] font-extrabold text-text-primary leading-tight tracking-tight transition-colors duration-300 truncate"
+        class="value text-2xl font-black text-text-primary leading-tight tracking-tighter transition-all duration-300 truncate"
         :class="statusClass"
       >
         {{ value }}
       </strong>
-      <span v-else class="text-error-main text-xs font-bold animate-pulse-error">Indisponível</span>
+      <span v-else class="text-error-main text-xs font-black animate-pulse-error uppercase tracking-widest">Indisponível</span>
     </div>
   </div>
 </template>

@@ -12,38 +12,35 @@
       <!-- MAIN COLUMN -->
       <main class="main-column">
         <!-- Empty State -->
-        <div
+        <BaseCard
           v-if="store.loans.length === 0 && !store.isLoading"
-          class="flex flex-col items-center justify-center py-20 opacity-40 text-center glass-card"
+          is-empty
+          empty-title="Nenhum empréstimo registrado"
+          empty-subtitle="Você está livre de dívidas registradas no momento. Ótimo sinal!"
+          empty-color="var(--color-primary-main)"
         >
-          <div
-            class="w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-4"
-          >
+          <template #empty-icon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="32"
+              height="32"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
+              stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
             >
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
-          </div>
-          <span class="text-sm font-black uppercase tracking-widest mb-2"
-            >Nenhum empréstimo registrado</span
-          >
-          <p class="text-xs font-bold max-w-xs mx-auto mb-6">
-            Você está livre de dívidas registradas no momento. Ótimo sinal!
-          </p>
-          <BaseButton variant="primary" class="px-8" @click="showAddLoanModal = true">
-            Registrar Empréstimo
-          </BaseButton>
-        </div>
+          </template>
+          <template #empty-action>
+            <BaseButton variant="primary" class="px-8 mt-4" @click="showAddLoanModal = true">
+              Registrar Empréstimo
+            </BaseButton>
+          </template>
+        </BaseCard>
 
         <!-- Loading State -->
         <div v-else-if="store.isLoading" class="flex justify-center py-20">

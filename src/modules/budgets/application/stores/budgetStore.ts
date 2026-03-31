@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
-import type { IBudgetLogicService } from '../contracts/IBudgetLogicService'
+import type { IBudgetLogicService } from '../../domain/contracts/IBudgetLogicService'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 
