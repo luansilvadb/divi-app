@@ -5,11 +5,7 @@
     subtitle="Histórico de operações e auditoria do sistema em tempo real."
   >
     <template #action>
-      <BaseButton
-        variant="primary"
-        @click="handleRefresh"
-        :class="{ 'opacity-80': isRefreshing }"
-      >
+      <BaseButton variant="primary" @click="handleRefresh" :class="{ 'opacity-80': isRefreshing }">
         {{ isRefreshing ? 'Sincronizando...' : 'Atualizar' }}
       </BaseButton>
     </template>

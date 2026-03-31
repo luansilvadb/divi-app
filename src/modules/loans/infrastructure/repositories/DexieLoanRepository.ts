@@ -37,8 +37,8 @@ export class DexieLoanRepository implements ILoanRepository {
         throw new InfrastructureError('Error syncing loan deletion with Supabase', error)
       }
     } catch (err) {
-       if (err instanceof InfrastructureError) throw err
-       throw new InfrastructureError('Failed to delete loan', err)
+      if (err instanceof InfrastructureError) throw err
+      throw new InfrastructureError('Failed to delete loan', err)
     }
   }
 
@@ -69,14 +69,14 @@ export class DexieLoanRepository implements ILoanRepository {
         await db.transaction('rw', db.loans, async () => {
           const records = await db.loans.bulkGet(idsToUpdate)
           const validRecords = records.reduce((acc, record) => {
-             if (record) {
-                acc.push({ ...record, synced: true })
-             }
-             return acc
+            if (record) {
+              acc.push({ ...record, synced: true })
+            }
+            return acc
           }, [] as LocalLoan[])
 
           if (validRecords.length > 0) {
-              await db.loans.bulkPut(validRecords)
+            await db.loans.bulkPut(validRecords)
           }
         })
       }

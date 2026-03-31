@@ -1,6 +1,6 @@
 export interface Transaction {
   id: string
-  localId?: string // for Dexie
+  localId?: number // for Dexie
   title: string
   amount: number
   type: 'income' | 'expense'

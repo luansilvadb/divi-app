@@ -33,7 +33,9 @@
               <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
             </svg>
           </BaseIconBox>
-          <span class="budget-name text-lg font-bold text-text-primary tracking-tight">{{ budget.name }}</span>
+          <span class="budget-name text-lg font-bold text-text-primary tracking-tight">{{
+            budget.name
+          }}</span>
         </div>
 
         <BaseBadge :color="budget.color || 'var(--color-primary-main)'" variant="subtle">
@@ -45,12 +47,19 @@
     <div class="budget-info flex flex-col gap-5 pt-2">
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-1.5">
-          <span class="consumed text-3xl font-extrabold text-text-primary tracking-tighter" :class="{ 'text-error-main': isOverBudget }">{{
-            formatCurrency(consumed)
-          }}</span>
-          <span class="limit text-base font-medium text-text-secondary">/ {{ formatCurrency(budget.limit_value) }}</span>
+          <span
+            class="consumed text-3xl font-extrabold text-text-primary tracking-tighter"
+            :class="{ 'text-error-main': isOverBudget }"
+            >{{ formatCurrency(consumed) }}</span
+          >
+          <span class="limit text-base font-medium text-text-secondary"
+            >/ {{ formatCurrency(budget.limit_value) }}</span
+          >
         </div>
-        <div class="percentage-pill text-sm font-bold bg-black/5 dark:bg-white/10 text-text-secondary px-2.5 py-1 rounded-lg" :class="{ 'over-budget !bg-error-main/10 !text-error-main': isOverBudget }">
+        <div
+          class="percentage-pill text-sm font-bold bg-black/5 dark:bg-white/10 text-text-secondary px-2.5 py-1 rounded-lg"
+          :class="{ 'over-budget !bg-error-main/10 !text-error-main': isOverBudget }"
+        >
           {{ Math.round(percentage) }}%
         </div>
       </div>
@@ -61,14 +70,24 @@
         :is-over-budget="isOverBudget"
       />
 
-      <div class="budget-footer-details flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5">
-        <div class="cadence flex items-center gap-2 text-sm" v-if="daysRemaining > 0 && !isOverBudget">
+      <div
+        class="budget-footer-details flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5"
+      >
+        <div
+          class="cadence flex items-center gap-2 text-sm"
+          v-if="daysRemaining > 0 && !isOverBudget"
+        >
           <span class="cadence-label text-text-secondary">Sugerido por dia:</span>
-          <span class="cadence-value font-bold text-text-primary bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-md">
+          <span
+            class="cadence-value font-bold text-text-primary bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-md"
+          >
             {{ formatCurrency(dailyCadence) }}
           </span>
         </div>
-        <div class="cadence over-alert flex items-center gap-2 text-sm text-error-main font-semibold" v-else-if="isOverBudget">
+        <div
+          class="cadence over-alert flex items-center gap-2 text-sm text-error-main font-semibold"
+          v-else-if="isOverBudget"
+        >
           <span class="cadence-label">Orçamento estourado</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +106,9 @@
           </svg>
         </div>
 
-        <div class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-text-secondary bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-lg">
+        <div
+          class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-text-secondary bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-lg"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"

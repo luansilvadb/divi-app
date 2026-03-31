@@ -62,17 +62,21 @@ export const useTransactionStore = defineStore('transactions', () => {
       .slice(0, 5)
   })
 
-  watch(transactions, (newTransactions: Transaction[]) => {
-    let inc = 0
-    let exp = 0
-    for (let i = 0, len = newTransactions.length; i < len; i++) {
-      const t = newTransactions[i]!
-      if (t.type === 'income') inc += t.amount
-      else if (t.type === 'expense') exp += t.amount
-    }
-    totalIncome.value = inc
-    totalExpense.value = exp
-  }, { immediate: true })
+  watch(
+    transactions,
+    (newTransactions: Transaction[]) => {
+      let inc = 0
+      let exp = 0
+      for (let i = 0, len = newTransactions.length; i < len; i++) {
+        const t = newTransactions[i]!
+        if (t.type === 'income') inc += t.amount
+        else if (t.type === 'expense') exp += t.amount
+      }
+      totalIncome.value = inc
+      totalExpense.value = exp
+    },
+    { immediate: true },
+  )
 
   // UI Getters
   const uiTransactions = computed(() => {
@@ -110,7 +114,7 @@ export const useTransactionStore = defineStore('transactions', () => {
           groups[dateKey] = { total: 0, items: [] }
         }
         groups[dateKey].items.push(t)
-        groups[dateKey].total += (t.type === 'income' ? t.amount : -t.amount)
+        groups[dateKey].total += t.type === 'income' ? t.amount : -t.amount
       }
     }
 

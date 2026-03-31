@@ -25,14 +25,10 @@ const props = defineProps<{
 const variant = props.variant || 'primary'
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    'bg-primary-main text-white hover:opacity-90 shadow-lg shadow-primary-main/20',
-  secondary:
-    'bg-secondary-main text-white hover:opacity-90 shadow-lg shadow-secondary-main/20',
-  outline:
-    'border border-border-main bg-transparent text-text-primary hover:bg-surface-main',
+  primary: 'bg-primary-main text-white hover:opacity-90 shadow-lg shadow-primary-main/20',
+  secondary: 'bg-secondary-main text-white hover:opacity-90 shadow-lg shadow-secondary-main/20',
+  outline: 'border border-border-main bg-transparent text-text-primary hover:bg-surface-main',
   ghost: 'bg-transparent text-text-secondary hover:bg-surface-main',
-  danger:
-    'bg-error-main text-white hover:opacity-90 shadow-lg shadow-error-main/20',
+  danger: 'bg-error-main text-white hover:opacity-90 shadow-lg shadow-error-main/20',
 }
 </script>
