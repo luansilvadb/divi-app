@@ -17,4 +17,5 @@ export const DI_TOKENS = {
   SubscriptionRepository: 'ISubscriptionRepository',
   ActivityLogService: 'IActivityLogService',
   ExportService: 'ExportService',
+  AssetLoader: 'IAssetLoader',
 } as const

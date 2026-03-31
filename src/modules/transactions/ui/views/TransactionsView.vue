@@ -173,6 +173,7 @@
                   :categoryColor="
                     store.categoryMap[t.category_id]?.color || 'var(--color-primary-main)'
                   "
+                  :categoryIcon="store.categoryMap[t.category_id]?.icon"
                   :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
                   showTime
                   class="rounded-xl"

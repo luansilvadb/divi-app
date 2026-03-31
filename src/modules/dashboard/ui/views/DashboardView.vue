@@ -144,39 +144,47 @@
             >
               <BaseIconBox
                 :color="
-                  t.type === 'expense' ? 'var(--color-error-main)' : 'var(--color-success-main)'
+                  transactionStore.categoryMap[t.category_id]?.color || (t.type === 'expense' ? 'var(--color-error-main)' : 'var(--color-success-main)')
                 "
                 size="sm"
                 class="mr-4"
               >
-                <svg
-                  v-if="t.type === 'expense'"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 5v14M5 12l7 7 7-7" />
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
+                <img
+                  v-if="transactionStore.categoryMap[t.category_id]?.icon"
+                  :src="getCategoryIcon(t.category_id)"
+                  class="w-4 h-4 object-contain"
+                  @error="handleImageError"
+                />
+                <template v-else>
+                  <svg
+                    v-if="t.type === 'expense'"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 19V5M5 12l7-7 7 7" />
+                  </svg>
+                </template>
               </BaseIconBox>
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-bold text-text-primary truncate">{{ t.title }}</div>
@@ -227,9 +235,24 @@ import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
 import SummaryPanels from '@/shared/components/organisms/SummaryPanels.vue'
 import TransactionForm from '@/shared/components/organisms/TransactionForm.vue'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
+import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
 
+const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
+
+function getCategoryIcon(categoryId: string) {
+  const cat = transactionStore.categoryMap[categoryId]
+  return assetLoader.sanitize(cat?.icon)
+}
+
+function handleImageError(e: Event) {
+  const target = e.target as HTMLImageElement
+  target.src = assetLoader.getFallback('category')
+}
+
 const showTransactionForm = ref(false)
 
 const isLoading = computed(() => dashboardStore.isLoading || transactionStore.isLoading)

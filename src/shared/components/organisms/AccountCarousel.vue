@@ -13,10 +13,15 @@
             ></div>
             <div class="wallet-body flex-1 p-6 flex flex-col justify-center">
               <div class="wallet-meta flex justify-between items-center mb-2">
-                <span
-                  class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest"
-                  >{{ wallet.name }}</span
-                >
+                <div class="flex items-center gap-2">
+                  <div v-if="wallet.icon" class="w-5 h-5 flex items-center justify-center opacity-80">
+                    <img :src="getWalletIcon(wallet)" class="w-full h-full object-contain" @error="handleImageError" />
+                  </div>
+                  <span
+                    class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest"
+                    >{{ wallet.name }}</span
+                  >
+                </div>
                 <span
                   class="wallet-label text-[0.7rem] font-bold text-text-disabled uppercase opacity-80"
                   >{{ wallet.currency }}</span
@@ -89,15 +94,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import type { Wallet } from '../../../transactions/domain/entities'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
+import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+
+const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 
 const props = defineProps<{
   wallets: Wallet[]
 }>()
 
 const currentIndex = ref(0)
+
+function getWalletIcon(wallet: Wallet) {
+  return assetLoader.sanitize(wallet.icon)
+}
+
+function handleImageError(e: Event) {
+  const target = e.target as HTMLImageElement
+  target.src = assetLoader.getFallback('wallet')
+}
 
 function next() {
   if (currentIndex.value < props.wallets.length - 1) {

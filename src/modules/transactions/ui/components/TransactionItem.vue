@@ -4,8 +4,14 @@
     @click="$emit('click')"
   >
     <div class="item-left flex items-center gap-4 flex-1 min-w-0">
-      <BaseIconBox :color="iconColor" size="md" class="flex-shrink-0">
-        <component :is="iconComponent" class="w-5 h-5" />
+      <BaseIconBox :color="categoryColor" size="md" class="flex-shrink-0">
+        <img
+          v-if="categoryIcon"
+          :src="sanitizedCategoryIcon"
+          class="w-5 h-5 object-contain"
+          @error="handleImageError"
+        />
+        <component v-else :is="iconComponent" class="w-5 h-5" />
       </BaseIconBox>
 
       <div class="t-main min-w-0 flex flex-col gap-0.5">
@@ -86,16 +92,31 @@ import { computed, defineAsyncComponent, h } from 'vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
+import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+
+const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 
 const props = defineProps<{
   transaction: Transaction
   categoryName: string
   categoryColor: string
+  categoryIcon?: string
   walletName?: string
   showTime?: boolean
 }>()
 
 defineEmits(['click', 'delete'])
+
+const sanitizedCategoryIcon = computed(() => {
+  return assetLoader.sanitize(props.categoryIcon)
+})
+
+function handleImageError(e: Event) {
+  const target = e.target as HTMLImageElement
+  target.src = assetLoader.getFallback('category')
+}
 
 const iconColor = computed(() => {
   return props.transaction.type === 'income'
