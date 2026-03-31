@@ -1,5 +1,5 @@
-import type { IActivityLogService } from '../domain/contracts/IActivityLogService'
-import type { Activity } from '../domain/entities/Activity'
+import type { IActivityLogService } from '../../domain/contracts/IActivityLogService'
+import type { Activity } from '../../domain/entities/Activity'
 import { db } from '@/core/db'
 
 export class ActivityLogService implements IActivityLogService {

@@ -76,7 +76,7 @@ import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
-import type { Loan } from '../../domain/entities'
+import type { Loan } from '../../domain/entities/Loan'
 
 defineProps<{
   loan: Loan

@@ -115,7 +115,7 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import type { Budget } from '../../domain/entities'
+import type { Budget } from '../../domain/entities/Budget'
 
 const props = defineProps<{
   budget: Budget

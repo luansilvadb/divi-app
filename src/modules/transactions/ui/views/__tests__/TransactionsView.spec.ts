@@ -1,17 +1,18 @@
+import 'fake-indexeddb/auto'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TransactionsView from '../TransactionsView.vue'
 
 // Mock shared components
-vi.mock('@/shared/components/organisms/BaseViewHeader.vue', {
+vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
   default: { template: '<div><slot name="action" /></div>' }
-})
+}))
 
 // Mock StandardPageLayout
-vi.mock('@/shared/components/templates/StandardPageLayout.vue', {
+vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
   default: { template: '<div><slot name="action" /><slot /></div>' }
-})
+}))
 
 // Mock transaction store to avoid IndexedDB calls
 vi.mock('../../application/stores/transactionStore', () => ({

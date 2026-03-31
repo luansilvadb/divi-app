@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import type { Wallet } from '../../../transactions/domain/entities'
+import type { Wallet } from '../../domain/entities/Wallet'
 
 const props = defineProps<{
   wallets: Wallet[]

@@ -1,5 +1,5 @@
 import type { Goal } from '@/shared/domain/entities/Goal'
-import type { IGoalLogicService } from '../contracts/IGoalLogicService'
+import type { IGoalLogicService } from '../../domain/contracts/IGoalLogicService'
 
 export class GoalLogicService implements IGoalLogicService {
   /**
