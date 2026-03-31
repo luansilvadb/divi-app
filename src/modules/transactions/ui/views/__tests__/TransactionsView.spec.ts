@@ -13,6 +13,24 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
   default: { template: '<div><slot name="action" /><slot /></div>' }
 }))
 
+// Mock the db file specifically before it gets imported by anything else
+vi.mock('@/core/db', () => ({
+  db: {
+    wallets: { toArray: vi.fn().mockResolvedValue([]) },
+    categories: { toArray: vi.fn().mockResolvedValue([]) },
+    transactions: {
+      toArray: vi.fn().mockResolvedValue([]),
+      where: vi.fn().mockReturnValue({
+        between: vi.fn().mockReturnValue({
+          and: vi.fn().mockReturnValue({
+            toArray: vi.fn().mockResolvedValue([])
+          })
+        })
+      })
+    }
+  }
+}))
+
 // Mock transaction store to avoid IndexedDB calls
 vi.mock('../../application/stores/transactionStore', () => ({
   useTransactionStore: () => ({
@@ -28,9 +46,9 @@ vi.mock('../../application/stores/transactionStore', () => ({
     monthlyBalance: 0,
     topCategories: [],
     groupedTransactions: {},
-    fetchWallets: vi.fn(),
-    fetchCategories: vi.fn(),
-    fetchTransactionsByMonth: vi.fn(),
+    fetchWallets: vi.fn().mockResolvedValue(undefined),
+    fetchCategories: vi.fn().mockResolvedValue(undefined),
+    fetchTransactionsByMonth: vi.fn().mockResolvedValue(undefined),
   })
 }))
 
