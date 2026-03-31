@@ -1,15 +1,20 @@
 <template>
-  <div class="login-page">
+  <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-bg-main">
     <!-- Noise texture overlay -->
-    <div class="noise-overlay" aria-hidden="true"></div>
+    <div
+      class="absolute inset-0 z-10 opacity-[0.03] pointer-events-none bg-[url('/assets/noise-overlay.svg')] bg-repeat"
+      aria-hidden="true"
+    ></div>
 
     <!-- Content -->
-    <div class="login-content">
+    <div
+      class="relative z-20 flex flex-col items-center gap-8 p-6 w-full max-w-[480px] animate-fade-in"
+    >
       <!-- Glass card -->
-      <div class="login-card">
+      <div class="glass-card flex flex-col items-center gap-6 w-full p-10 sm:p-12 hover-glow">
         <!-- Logo -->
-        <div class="logo-container">
-          <div class="logo-icon">
+        <div class="flex items-center gap-3 animate-fade-in [animation-delay:150ms]">
+          <div class="shrink-0 drop-shadow-md">
             <svg
               width="44"
               height="44"
@@ -33,19 +38,29 @@
               </defs>
             </svg>
           </div>
-          <h1 class="logo-text">Divi</h1>
+          <h1
+            class="text-[2.25rem] sm:text-[2.5rem] font-extrabold tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-br from-primary-main via-secondary-main to-accent-main"
+          >
+            Divi
+          </h1>
         </div>
 
         <!-- Tagline -->
-        <p class="tagline">
+        <p
+          class="text-center text-[1.1rem] leading-relaxed text-text-secondary m-0 animate-fade-in [animation-delay:250ms]"
+        >
           Suas finanças pessoais,<br />
-          <span class="tagline-highlight">simplificadas.</span>
+          <span class="font-bold text-text-primary">simplificadas.</span>
         </p>
 
         <!-- Feature pills -->
-        <div class="feature-pills">
-          <span class="pill">
-            <svg class="pill-icon" viewBox="0 0 20 20" fill="currentColor">
+        <div
+          class="flex flex-wrap justify-center gap-2 animate-fade-in [animation-delay:350ms]"
+        >
+          <span
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
+          >
+            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -54,8 +69,10 @@
             </svg>
             Controle total
           </span>
-          <span class="pill">
-            <svg class="pill-icon" viewBox="0 0 20 20" fill="currentColor">
+          <span
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
+          >
+            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fill-rule="evenodd"
                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -64,8 +81,10 @@
             </svg>
             Seguro
           </span>
-          <span class="pill">
-            <svg class="pill-icon" viewBox="0 0 20 20" fill="currentColor">
+          <span
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
+          >
+            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path
                 d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
               />
@@ -75,18 +94,23 @@
         </div>
 
         <!-- Divider -->
-        <div class="divider">
-          <div class="divider-line"></div>
-          <span class="divider-text">comece agora</span>
-          <div class="divider-line"></div>
+        <div class="flex items-center gap-4 w-full animate-fade-in [animation-delay:450ms]">
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"></div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-text-disabled whitespace-nowrap">comece agora</span>
+          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"></div>
         </div>
 
         <!-- Google button -->
-        <button id="login-google-btn" @click="handleLogin" :disabled="isLoading" class="google-btn">
-          <div class="google-btn-content">
+        <button
+          id="login-google-btn"
+          @click="handleLogin"
+          :disabled="isLoading"
+          class="w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms]"
+        >
+          <div class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary">
             <svg
               v-if="!isLoading"
-              class="google-icon"
+              class="w-5 h-5 shrink-0"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -107,22 +131,31 @@
                 fill="#EA4335"
               />
             </svg>
-            <div v-else class="spinner"></div>
+            <div
+              v-else
+              class="w-5 h-5 border-[2.5px] border-border-main border-t-primary-main rounded-full animate-spin shrink-0"
+            ></div>
             <span>{{ isLoading ? 'Conectando...' : 'Continuar com Google' }}</span>
           </div>
         </button>
 
         <!-- Terms -->
-        <p class="terms">
+        <p class="text-center text-[0.72rem] leading-relaxed text-text-disabled m-0 animate-fade-in [animation-delay:650ms]">
           Ao continuar, você concorda com nossos<br />
-          <a href="#" class="terms-link">Termos de Uso</a> e
-          <a href="#" class="terms-link">Política de Privacidade</a>
+          <a
+            href="#"
+            class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
+          >Termos de Uso</a> e
+          <a
+            href="#"
+            class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
+          >Política de Privacidade</a>
         </p>
       </div>
 
       <!-- Footer -->
-      <div class="login-footer">
-        <span class="footer-text">Divi Finance © {{ currentYear }}</span>
+      <div class="animate-fade-in [animation-delay:750ms]">
+        <span class="text-xs text-text-disabled tracking-[0.02em]">Divi Finance © {{ currentYear }}</span>
       </div>
     </div>
   </div>
@@ -149,407 +182,3 @@ async function handleLogin() {
   }
 }
 </script>
-
-<style scoped>
-/* Page Layout */
-.login-page {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: var(--color-bg-main);
-}
-
-/* Noise Overlay */
-.noise-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  opacity: 0.03;
-  background-image: url('/assets/noise-overlay.svg');
-  background-repeat: repeat;
-  pointer-events: none;
-}
-
-/* Content Container */
-.login-content {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 1.5rem;
-  width: 100%;
-  max-width: 480px;
-  animation: content-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes content-enter {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.96);
-    filter: blur(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-}
-
-/* Glass Card */
-.login-card {
-  width: 100%;
-  padding: 2.5rem 2rem;
-  border-radius: 1.5rem;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.1),
-    0 8px 40px -12px rgba(0, 0, 0, 0.12),
-    0 24px 56px -16px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-:is(.dark) .login-card {
-  background: rgba(22, 27, 34, 0.65);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 8px 40px -12px rgba(0, 0, 0, 0.5),
-    0 24px 56px -16px rgba(0, 0, 0, 0.4);
-}
-
-/* Logo */
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  animation: logo-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
-}
-
-@keyframes logo-enter {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.logo-icon {
-  flex-shrink: 0;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
-}
-
-.logo-text {
-  font-size: 2.25rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-main) 0%,
-    var(--color-secondary-main) 50%,
-    var(--color-accent-main) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-}
-
-/* Tagline */
-.tagline {
-  text-align: center;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  margin: 0;
-  animation: tag-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
-}
-
-@keyframes tag-enter {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.tagline-highlight {
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-/* Feature Pills */
-.feature-pills {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  animation: pills-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
-}
-
-@keyframes pills-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.375rem 0.875rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-}
-
-:is(.dark) .pill {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.pill:hover {
-  background: rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
-}
-
-:is(.dark) .pill:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.pill-icon {
-  width: 14px;
-  height: 14px;
-  color: var(--color-secondary-main);
-  flex-shrink: 0;
-}
-
-/* Divider */
-.divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  width: 100%;
-  animation: divider-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
-}
-
-@keyframes divider-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.divider-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-border-main), transparent);
-}
-
-.divider-text {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-disabled);
-  white-space: nowrap;
-}
-
-/* Google Button */
-.google-btn {
-  width: 100%;
-  padding: 0.875rem 1.5rem;
-  border-radius: 0.875rem;
-  border: 1px solid var(--color-border-main);
-  background: var(--color-surface-main);
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
-  animation: btn-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.55s both;
-}
-
-@keyframes btn-enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.google-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.15);
-  border-color: var(--color-primary-main);
-}
-
-:is(.dark) .google-btn:hover:not(:disabled) {
-  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
-}
-
-.google-btn:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px -4px rgba(0, 0, 0, 0.1);
-}
-
-.google-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.google-btn-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.google-icon {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-/* Spinner */
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2.5px solid var(--color-border-main);
-  border-top-color: var(--color-primary-main);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Terms */
-.terms {
-  font-size: 0.72rem;
-  color: var(--color-text-disabled);
-  text-align: center;
-  line-height: 1.6;
-  margin: 0;
-  animation: terms-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
-}
-
-@keyframes terms-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.terms-link {
-  color: var(--color-text-secondary) !important;
-  text-decoration: underline !important;
-  text-decoration-color: rgba(0, 0, 0, 0.15) !important;
-  text-underline-offset: 2px;
-  transition:
-    color 0.2s ease,
-    text-decoration-color 0.2s ease;
-}
-
-:is(.dark) .terms-link {
-  text-decoration-color: rgba(255, 255, 255, 0.15) !important;
-}
-
-.terms-link:hover {
-  color: var(--color-primary-main) !important;
-  text-decoration-color: var(--color-primary-main) !important;
-}
-
-/* Footer */
-.login-footer {
-  animation: footer-enter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s both;
-}
-
-@keyframes footer-enter {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.footer-text {
-  font-size: 0.75rem;
-  color: var(--color-text-disabled);
-  letter-spacing: 0.02em;
-}
-
-@media (max-width: 480px) {
-  .login-card {
-    padding: 2rem 1.5rem;
-    border-radius: 1.25rem;
-  }
-
-  .logo-text {
-    font-size: 1.875rem;
-  }
-
-  .tagline {
-    font-size: 1rem;
-  }
-
-  .pill {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.7rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .login-content,
-  .logo-container,
-  .tagline,
-  .feature-pills,
-  .divider,
-  .google-btn,
-  .terms,
-  .login-footer {
-    animation: none !important;
-  }
-}
-</style>
