@@ -15,21 +15,29 @@ app.use(pinia)
 app.use(router)
 app.use(MotionPlugin)
 
-// Initialize Auth Listener
+// Initialize Auth Listener & Cleaner
 const authService = container.resolve<IAuthService>('IAuthService')
 
+// 1. Immediately check for OAuth fragments in URL (Supabase handles this automatically, but we need to stay on page)
+if (window.location.hash && (window.location.hash.includes('access_token') || window.location.hash.includes('type=recovery'))) {
+  console.debug('[Auth] OAuth fragment detected, keeping app mounted...')
+}
+
+// 2. Setup global state listener
 authService.onAuthStateChange((user) => {
-  // If we have a hash in the URL (likely from Google OAuth return), 
-  // clear it to keep the URL clean after Supabase handles the session
-  if (window.location.hash && (window.location.hash.includes('access_token') || window.location.hash.includes('type=recovery'))) {
-    // We use replaceState to avoid adding a history entry
-    window.history.replaceState(null, '', window.location.pathname + window.location.search)
+  const hash = window.location.hash
+  if (hash && (hash.includes('access_token') || hash.includes('type=recovery'))) {
+    console.debug('[Auth] Cleaning OAuth fragments from URL')
+    // Use a small timeout to let Supabase process the hash before we clear it
+    setTimeout(() => {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }, 100)
   }
   
   if (user) {
-    console.debug('[Auth] User session established:', user.email)
-  } else {
-    console.debug('[Auth] No active session')
+    console.debug('[Auth] Session active:', user.email)
+    // If we are on login but have a user, the router will handle it, 
+    // but we can trigger a re-eval if needed
   }
 })
 
