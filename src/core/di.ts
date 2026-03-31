@@ -20,10 +20,10 @@ import { AssetLoader } from '../shared/utils/asset-loader'
 import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
 import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 
-type Token<T = any> = string | (new (...args: any[]) => T)
+type Token<T = unknown> = string | (new (...args: unknown[]) => T)
 
 class Container {
-  private services = new Map<string, any>()
+  private services = new Map<string, unknown>()
 
   /**
    * Register a service by token or class reference
@@ -51,7 +51,7 @@ export const container = new Container()
 
 import { DI_TOKENS } from './di-tokens'
 
-// To maintain compatibility with existing code during migration, 
+// To maintain compatibility with existing code during migration,
 // we register both with the string from DI_TOKENS and the explicit string.
 container.register(DI_TOKENS.AuthService, new SupabaseAuthService())
 container.register(DI_TOKENS.TransactionRepository, new DexieSupabaseTransactionRepository())

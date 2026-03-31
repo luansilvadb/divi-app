@@ -168,7 +168,7 @@ async function handleLogin() {
   inset: 0;
   z-index: 1;
   opacity: 0.03;
-  background-image: url("/assets/noise-overlay.svg");
+  background-image: url('/assets/noise-overlay.svg');
   background-repeat: repeat;
   pointer-events: none;
 }

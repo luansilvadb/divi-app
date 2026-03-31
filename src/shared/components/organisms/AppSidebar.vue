@@ -134,8 +134,9 @@
       <div class="sidebar-footer-divider"></div>
 
       <!-- Theme toggle -->
-      <button 
-        @click="toggleTheme" 
+      <button
+        :aria-label="isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'"
+        @click="toggleTheme"
         class="sidebar-footer-btn"
       >
         <div class="sidebar-nav-item-icon-wrapper">
@@ -147,7 +148,11 @@
       </button>
 
       <!-- Logout -->
-      <button @click="$emit('logout')" class="sidebar-footer-btn sidebar-footer-btn--danger">
+      <button
+        aria-label="Sair"
+        @click="$emit('logout')"
+        class="sidebar-footer-btn sidebar-footer-btn--danger"
+      >
         <div class="sidebar-nav-item-icon-wrapper">
           <div class="sidebar-nav-item-icon" v-html="logoutIcon"></div>
         </div>

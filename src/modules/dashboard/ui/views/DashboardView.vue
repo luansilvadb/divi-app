@@ -342,6 +342,7 @@
               Minhas Contas
             </h2>
             <button
+              aria-label="Ver todas as contas"
               class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-accent-main hover:text-text-primary transition-all flex items-center gap-2 group"
               @click="$router.push('/wallets')"
             >
@@ -412,11 +413,13 @@
               </div>
               <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl">
                 <button
+                  aria-label="Filtrar por últimos 6 meses"
                   class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all"
                 >
                   Últimos 6 meses
                 </button>
                 <button
+                  aria-label="Filtrar por ano"
                   class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
                 >
                   Anual
@@ -448,16 +451,19 @@
           <div class="px-6 pt-6 pb-4 flex-none">
             <div class="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl">
               <button
+                aria-label="Filtrar todas as transações"
                 class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary shadow-lg transition-all"
               >
                 Todos
               </button>
               <button
+                aria-label="Filtrar por despesas"
                 class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
               >
                 Despesa
               </button>
               <button
+                aria-label="Filtrar por receitas"
                 class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
               >
                 Renda
@@ -570,6 +576,7 @@
             <!-- Footer Button - Pushed to bottom -->
             <div class="flex justify-center mt-auto pt-8 pb-4 flex-none">
               <button
+                aria-label="Ir para a página de transações"
                 class="px-8 py-2.5 rounded-full bg-surface-main/40 hover:bg-surface-main/60 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary transition-all border border-black/5 dark:border-white/5 shadow-xl hover:text-text-primary"
                 @click="$router.push('/transactions')"
               >

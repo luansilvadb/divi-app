@@ -26,7 +26,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
     // Monitoramento reativo do status da bateria se disponível
     if ('getBattery' in navigator) {
       try {
-        const battery = await (navigator as any).getBattery()
+        const battery = await (navigator as unknown).getBattery()
 
         const updateLowPowerState = async () => {
           isLowPowerMode.value = await checkIsLowPowerMode()
@@ -48,7 +48,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
     if (prefetchQueue.has(to)) return
 
     // Verificação básica de economia de dados se disponível
-    const connection = (navigator as any).connection
+    const connection = (navigator as unknown).connection
     if (connection && (connection.saveData || /2g|3g/.test(connection.effectiveType))) {
       return
     }
@@ -62,7 +62,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
 
       // Dispara o carregamento dos componentes (importação dinâmica)
       const loaders = components.map((c) => {
-        if (typeof c === 'function') return (c as () => Promise<any>)()
+        if (typeof c === 'function') return (c as () => Promise<unknown>)()
         return Promise.resolve()
       })
 

@@ -1,5 +1,7 @@
 <template>
-  <!-- Efeito removido globalmente -->
+  <div class="base-background-orbs" aria-hidden="true">
+    <!-- Efeito removido globalmente -->
+  </div>
 </template>
 
 <style scoped>

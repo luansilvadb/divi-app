@@ -6,7 +6,10 @@
         :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
       >
         <div v-for="wallet in wallets" :key="wallet.id" class="wallet-slide min-w-full p-1">
-          <BaseCard class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]" clickable>
+          <BaseCard
+            class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+            clickable
+          >
             <div
               class="wallet-accent w-1.5 h-full"
               :style="{ background: getWalletColor(wallet) }"
@@ -14,8 +17,15 @@
             <div class="wallet-body flex-1 p-6 flex flex-col justify-center">
               <div class="wallet-meta flex justify-between items-center mb-2">
                 <div class="flex items-center gap-2">
-                  <div v-if="wallet.icon" class="w-5 h-5 flex items-center justify-center opacity-80">
-                    <img :src="getWalletIcon(wallet)" class="w-full h-full object-contain" @error="handleImageError" />
+                  <div
+                    v-if="wallet.icon"
+                    class="w-5 h-5 flex items-center justify-center opacity-80"
+                  >
+                    <img
+                      :src="getWalletIcon(wallet)"
+                      class="w-full h-full object-contain"
+                      @error="handleImageError"
+                    />
                   </div>
                   <span
                     class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest"

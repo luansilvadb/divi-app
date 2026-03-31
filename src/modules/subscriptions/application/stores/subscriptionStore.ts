@@ -6,7 +6,9 @@ import type { ISubscriptionRepository } from '@/shared/domain/contracts/ISubscri
 import type { Subscription } from '@/shared/domain/entities/Subscription'
 
 export const useSubscriptionStore = defineStore('subscriptions', () => {
-  const subscriptionRepo = container.resolve<ISubscriptionRepository>(DI_TOKENS.SubscriptionRepository)
+  const subscriptionRepo = container.resolve<ISubscriptionRepository>(
+    DI_TOKENS.SubscriptionRepository,
+  )
 
   const subscriptions = ref<Subscription[]>([])
   const isLoading = ref(false)
@@ -30,10 +32,10 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
     await fetchSubscriptions()
   }
 
-  const totalMonthlyCost = computed(() => 
+  const totalMonthlyCost = computed(() =>
     subscriptions.value
-      .filter(s => s.frequency === 'monthly')
-      .reduce((sum, s) => sum + s.amount, 0)
+      .filter((s) => s.frequency === 'monthly')
+      .reduce((sum, s) => sum + s.amount, 0),
   )
 
   return {
@@ -42,6 +44,6 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
     fetchSubscriptions,
     saveSubscription,
     deleteSubscription,
-    totalMonthlyCost
+    totalMonthlyCost,
   }
 })

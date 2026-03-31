@@ -4,12 +4,7 @@ import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRep
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
-import {
-  db,
-  type LocalTransaction,
-  type LocalWallet,
-  type LocalCategory,
-} from '@/core/db'
+import { db, type LocalTransaction, type LocalWallet, type LocalCategory } from '@/core/db'
 import { supabase } from '@/core/supabase'
 import { InfrastructureError } from '../../domain/errors'
 
@@ -109,7 +104,10 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           updated_at: item.updated_at,
         }))
 
-        const { data, error } = await supabase.from('transactions').upsert(upsertPayload).select('id')
+        const { data, error } = await supabase
+          .from('transactions')
+          .upsert(upsertPayload)
+          .select('id')
 
         if (error) {
           throw new InfrastructureError('[Sync] Bulk upsert failed', error)
@@ -137,15 +135,12 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           const keysToUpdate = updates.map((u) => u.key as string)
           await db.transaction('rw', db.transactions, async () => {
             const records = await db.transactions.bulkGet(keysToUpdate)
-            const validRecords = records.reduce(
-              (acc, record, i) => {
-                if (record) {
-                  acc.push({ ...record, ...updates[i]?.changes } as LocalTransaction)
-                }
-                return acc
-              },
-              [] as LocalTransaction[],
-            )
+            const validRecords = records.reduce((acc, record, i) => {
+              if (record) {
+                acc.push({ ...record, ...updates[i]?.changes } as LocalTransaction)
+              }
+              return acc
+            }, [] as LocalTransaction[])
 
             if (validRecords.length > 0) {
               await db.transactions.bulkPut(validRecords)
@@ -159,12 +154,14 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
     }
   }
 
-  private mapToEntity(item: LocalTransaction): Transaction & { _titleLower?: string; _timestamp?: number; _dateKey?: string } {
+  private mapToEntity(
+    item: LocalTransaction,
+  ): Transaction & { _titleLower?: string; _timestamp?: number; _dateKey?: string } {
     const t = {
       ...(item as unknown as Transaction),
       synced: !!item.synced,
       deleted: !!item.deleted,
-    };
+    }
     // Pre-calculate derivations to optimize UI rendering
     return {
       ...t,

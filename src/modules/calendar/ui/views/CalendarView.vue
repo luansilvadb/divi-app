@@ -10,6 +10,7 @@
         class="flex items-center bg-bg-main dark:bg-black/20 p-1.5 rounded-2xl border border-black/5 dark:border-white/5"
       >
         <button
+          aria-label="Mês anterior"
           class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
           @click="prevMonth"
         >
@@ -38,6 +39,7 @@
           >
         </div>
         <button
+          aria-label="Próximo mês"
           class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
           @click="nextMonth"
         >

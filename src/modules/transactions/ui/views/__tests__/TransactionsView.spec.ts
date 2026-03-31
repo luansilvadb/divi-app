@@ -5,12 +5,12 @@ import TransactionsView from '../TransactionsView.vue'
 
 // Mock shared components
 vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
-  default: { template: '<div><slot name="action" /></div>' }
+  default: { template: '<div><slot name="action" /></div>' },
 }))
 
 // Mock StandardPageLayout
 vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
-  default: { template: '<div><slot name="action" /><slot /></div>' }
+  default: { template: '<div><slot name="action" /><slot /></div>' },
 }))
 
 // Mock transaction store to avoid IndexedDB calls
@@ -31,7 +31,7 @@ vi.mock('../../application/stores/transactionStore', () => ({
     fetchWallets: vi.fn(),
     fetchCategories: vi.fn(),
     fetchTransactionsByMonth: vi.fn(),
-  })
+  }),
 }))
 
 describe('TransactionsView', () => {
@@ -49,11 +49,11 @@ describe('TransactionsView', () => {
           BaseCard: true,
           BaseSummaryItem: true,
           BaseProgressBar: true,
-          StandardPageLayout: true
-        }
-      }
+          StandardPageLayout: true,
+        },
+      },
     })
-    
+
     expect(wrapper.exists()).toBe(true)
   })
 })

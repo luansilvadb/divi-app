@@ -51,7 +51,7 @@ const chartData = computed(() => {
         pointRadius: 4,
         pointHoverRadius: 6,
         fill: true,
-        backgroundColor: (context: any) => {
+        backgroundColor: (context: unknown) => {
           const chart = context.chart
           const { ctx, chartArea } = chart
           if (!chartArea) return null
@@ -86,7 +86,7 @@ const chartOptions: ChartOptions<'line'> = {
       displayColors: false,
       cornerRadius: 12,
       callbacks: {
-        label: (context: any) => {
+        label: (context: unknown) => {
           return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
@@ -105,7 +105,7 @@ const chartOptions: ChartOptions<'line'> = {
         color: '#8b949e',
         font: { size: 10, weight: 'bold' },
         padding: 10,
-        callback: (value: any) => {
+        callback: (value: unknown) => {
           if (value >= 1000) return `R$ ${(value / 1000).toFixed(1)} mil`
           return `R$ ${value}`
         },

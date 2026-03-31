@@ -33,10 +33,7 @@
             <div v-for="cat in categorySummary" :key="cat.name" class="flex flex-col gap-3">
               <div class="flex justify-between items-end">
                 <div class="flex items-center gap-3">
-                  <div
-                    class="w-3 h-3 rounded-full"
-                    :style="{ backgroundColor: cat.color }"
-                  ></div>
+                  <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: cat.color }"></div>
                   <span class="text-xs font-black uppercase tracking-widest text-text-primary">{{
                     cat.name
                   }}</span>
@@ -45,7 +42,9 @@
                   <span class="text-sm font-black text-text-primary">{{
                     formatCurrency(cat.value)
                   }}</span>
-                  <span class="text-[10px] font-bold text-text-disabled">{{ cat.percentage }}%</span>
+                  <span class="text-[10px] font-bold text-text-disabled"
+                    >{{ cat.percentage }}%</span
+                  >
                 </div>
               </div>
               <BaseProgressBar :percentage="cat.percentage" :color="cat.color" size="lg" />
@@ -79,7 +78,9 @@
               </div>
             </div>
             <!-- Flow Legend -->
-            <div class="flex community-center justify-center gap-8 border-t border-black/5 dark:border-white/5 pt-6">
+            <div
+              class="flex community-center justify-center gap-8 border-t border-black/5 dark:border-white/5 pt-6"
+            >
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-primary-main/40"></div>
                 <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"

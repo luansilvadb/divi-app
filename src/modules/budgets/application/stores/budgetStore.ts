@@ -28,13 +28,9 @@ export const useBudgetStore = defineStore('budgets', () => {
     return budgetLogic.calculateConsumption(budget, transactionStore.transactions)
   }
 
-  const totalBudgeted = computed(() => 
-    budgets.value.reduce((sum, b) => sum + b.limit_value, 0)
-  )
+  const totalBudgeted = computed(() => budgets.value.reduce((sum, b) => sum + b.limit_value, 0))
 
-  const totalConsumed = computed(() => 
-    budgets.value.reduce((sum, b) => sum + getConsumed(b), 0)
-  )
+  const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
 
   return {
     budgets,
@@ -42,6 +38,6 @@ export const useBudgetStore = defineStore('budgets', () => {
     fetchBudgets,
     getConsumed,
     totalBudgeted,
-    totalConsumed
+    totalConsumed,
   }
 })

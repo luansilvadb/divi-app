@@ -16,9 +16,9 @@
 
   /* Semantic Tokens - Sophisticated Suave */
   --color-success-main: #059669; /* Balanced Emerald */
-  --color-error-main: #e11d48;   /* Ruby Rose */
+  --color-error-main: #e11d48; /* Ruby Rose */
   --color-warning-main: #d97706; /* Polished Amber */
-  --color-info-main: #0284c7;    /* Arctic Blue */
+  --color-info-main: #0284c7; /* Arctic Blue */
 
   /* Glassmorphism Tokens - Premium Light */
   --color-glass-bg: rgba(255, 255, 255, 0.65);
