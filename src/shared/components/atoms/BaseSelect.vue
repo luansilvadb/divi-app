@@ -8,6 +8,9 @@
     <button
       type="button"
       :id="id"
+      aria-haspopup="listbox"
+      :aria-expanded="isOpen"
+      :aria-controls="`${id}-dropdown`"
       class="w-full pl-3 pr-10 py-2 rounded-md border bg-surface-main border-border-main text-text-primary text-left focus:outline-none focus:ring-2 focus:ring-primary-main/20 focus:border-primary-main transition-all cursor-pointer flex items-center justify-between relative"
       :class="{ 'text-text-disabled': !modelValue }"
       @click="isOpen = !isOpen"
@@ -43,11 +46,17 @@
     >
       <div
         v-if="isOpen"
+        :id="`${id}-dropdown`"
+        role="listbox"
+        :aria-labelledby="id"
+        tabindex="-1"
         class="absolute z-60 mt-1 w-full max-h-60 overflow-auto rounded-xl bg-surface-main/90 backdrop-blur-md border border-border-main shadow-xl py-1 focus:outline-none"
       >
         <div
           v-for="option in options"
           :key="option.value"
+          role="option"
+          :aria-selected="modelValue === option.value"
           class="relative cursor-pointer select-none py-2 px-4 text-sm font-medium transition-colors"
           :class="[
             modelValue === option.value 
