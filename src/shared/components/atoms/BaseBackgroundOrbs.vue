@@ -1,5 +1,5 @@
 <template>
-  <!-- Efeito removido globalmente -->
+  <div aria-hidden="true"></div>
 </template>
 
 <style scoped>

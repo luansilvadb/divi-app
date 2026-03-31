@@ -8,3 +8,5 @@
 
 **Aprendizado:** Descobri que componentes complexos customizados, como o dropdown (BaseSelect.vue), carecem completamente dos atributos semânticos adequados (aria-haspopup, role="listbox", role="option", aria-selected) e gerenciamento de foco (tabindex) neste design system, tornando-os invisíveis para leitores de tela em termos do seu propósito (selecionar opções).
 **Ação:** Ao encontrar qualquer componente customizado complexo (como dropdowns, modais, abas) verificar rigorosamente seus atributos WAI-ARIA para garantir que eles comuniquem corretamente seu estado, função e estrutura para as tecnologias assistivas.
+
+## 2025-03-31 - Melhoria de Acessibilidade no BaseButton **Aprendizado:** Componentes com estados de loading (ex: spinners/texto substituído) precisam informar aos leitores de tela que o botão está em uma operação através de `aria-busy="true"` e esconder elementos visuais puramente decorativos com `aria-hidden="true"`. Faltava também o outline para foco no teclado. **Ação:** Adicionar `aria-busy` dinâmico e suporte melhorado de `focus-visible` em botões customizados.

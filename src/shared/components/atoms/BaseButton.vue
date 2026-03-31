@@ -1,14 +1,15 @@
 <template>
   <button
     :class="[
-      'px-6 py-2.5 rounded-full font-bold transition-all duration-300 outline-none active:scale-95',
+      'px-6 py-2.5 rounded-full font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95',
       variantClasses[variant],
       { 'opacity-50 cursor-not-allowed active:scale-100': disabled || loading },
     ]"
     :disabled="disabled || loading"
+    :aria-busy="loading"
     v-bind="$attrs"
   >
-    <span v-if="loading" class="mr-2">...</span>
+    <span v-if="loading" class="mr-2" aria-hidden="true">...</span>
     <slot />
   </button>
 </template>
