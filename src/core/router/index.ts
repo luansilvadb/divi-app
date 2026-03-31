@@ -69,8 +69,35 @@ const router = createRouter({
 })
 
 // Auth Guard logic
+let authInitialized = false
+const authReady = new Promise<void>((resolve) => {
+  const authService = container.resolve<IAuthService>('IAuthService')
+  
+  // First, check if we already have a session (sync/async)
+  authService.getCurrentUser().then(() => {
+    authInitialized = true
+    resolve()
+  }).catch(() => {
+    authInitialized = true
+    resolve()
+  })
+
+  // Also listen for change to be sure
+  authService.onAuthStateChange(() => {
+    if (!authInitialized) {
+      authInitialized = true
+      resolve()
+    }
+  })
+})
+
 router.beforeEach(async (to, _from) => {
   try {
+    // Ensure auth state is resolved before first navigation
+    if (!authInitialized) {
+      await authReady
+    }
+
     const authService = container.resolve<IAuthService>('IAuthService')
     const user = await authService.getCurrentUser()
 
