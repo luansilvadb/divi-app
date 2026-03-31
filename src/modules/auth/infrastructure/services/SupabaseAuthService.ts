@@ -20,6 +20,14 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
+    // Garantir o parsing da sessão (vital no fluxo implícito do OAuth)
+    await supabase.auth.getSession()
+
+    // Limpar o hash da URL (proteção contra token leak)
+    if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
