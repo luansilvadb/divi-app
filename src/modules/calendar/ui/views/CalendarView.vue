@@ -30,11 +30,11 @@
         <div class="px-6 flex flex-col items-center min-w-[140px]">
           <span
             class="text-[10px] font-black uppercase tracking-widest text-text-disabled leading-none mb-1"
-            >{{ currentDate.getFullYear() }}</span
+            >{{ calendarStore.currentDate.getFullYear() }}</span
           >
           <span
             class="text-sm font-black text-text-primary tracking-tight leading-none uppercase"
-            >{{ monthName }}</span
+            >{{ calendarStore.monthName }}</span
           >
         </div>
         <button
@@ -84,16 +84,16 @@
                 day.isCurrentMonth
                   ? 'bg-white/40 dark:bg-black/10 hover:bg-white dark:hover:bg-white/10 hover:border-black/5 dark:hover:border-white/10'
                   : 'opacity-20 cursor-default',
-                isSelected(day.date)
+                calendarStore.isSelected(day.date)
                   ? 'ring-2 ring-primary-main/40 border-primary-main/20 bg-white/80 dark:bg-white/5'
                   : '',
               ]"
-              @click="day.isCurrentMonth && selectDate(day.date)"
+              @click="day.isCurrentMonth && calendarStore.selectDate(day.date)"
             >
               <span
                 class="text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-colors"
                 :class="
-                  isToday(day.date)
+                  calendarStore.isToday(day.date)
                     ? 'bg-primary-main text-white shadow-lg shadow-primary-main/20'
                     : 'text-text-primary'
                 "
@@ -106,16 +106,16 @@
                 class="mt-auto flex gap-1 flex-wrap justify-center max-w-full overflow-hidden pb-1"
               >
                 <div
-                  v-for="(t, i) in getTransactionsForDate(day.date).slice(0, 3)"
+                  v-for="(t, i) in calendarStore.getTransactionsForDate(day.date).slice(0, 3)"
                   :key="t.id || i"
                   class="w-1.5 h-1.5 rounded-full shadow-sm"
                   :class="t.type === 'income' ? 'bg-success-main' : 'bg-error-main'"
                 ></div>
                 <span
-                  v-if="getTransactionsForDate(day.date).length > 3"
+                  v-if="calendarStore.getTransactionsForDate(day.date).length > 3"
                   class="text-[8px] font-black text-text-disabled"
                 >
-                  +{{ getTransactionsForDate(day.date).length - 3 }}
+                  +{{ calendarStore.getTransactionsForDate(day.date).length - 3 }}
                 </span>
               </div>
             </div>
@@ -130,13 +130,13 @@
             <div class="flex flex-col gap-1">
               <span class="text-text-primary">Atividade do Dia</span>
               <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{
-                formatDateFull(selectedDate)
+                formatDateFull(calendarStore.selectedDate)
               }}</span>
             </div>
           </template>
 
           <div
-            v-if="selectedDateTransactions.length === 0"
+            v-if="calendarStore.selectedDateTransactions.length === 0"
             class="flex flex-col items-center justify-center py-16 opacity-40 text-center"
           >
             <svg
@@ -161,7 +161,7 @@
 
           <ul v-else class="list-none p-0 m-0 flex flex-col gap-2 pt-2">
             <li
-              v-for="t in selectedDateTransactions"
+              v-for="t in calendarStore.selectedDateTransactions"
               :key="t.id || t.localId"
               class="flex items-center gap-4 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
             >
@@ -217,18 +217,18 @@
         </BaseCard>
 
         <!-- Day Summary -->
-        <BaseCard v-if="selectedDateTransactions.length > 0">
+        <BaseCard v-if="calendarStore.selectedDateTransactions.length > 0">
           <template #header>Resumo do Dia</template>
           <div class="flex flex-col gap-6 pt-2">
             <BaseSummaryItem
               label="Entradas"
-              :value="formatCurrency(selectedDateIncome)"
+              :value="formatCurrency(calendarStore.selectedDateIncome)"
               color="var(--color-success-main)"
               status="success"
             />
             <BaseSummaryItem
               label="Saídas"
-              :value="formatCurrency(selectedDateExpense)"
+              :value="formatCurrency(calendarStore.selectedDateExpense)"
               color="var(--color-error-main)"
               status="error"
             />
@@ -243,9 +243,9 @@
               >
               <div
                 class="text-2xl font-black tracking-tight"
-                :class="selectedDateBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
+                :class="calendarStore.selectedDateBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
               >
-                {{ formatCurrency(selectedDateBalance) }}
+                {{ formatCurrency(calendarStore.selectedDateBalance) }}
               </div>
             </div>
           </div>
@@ -256,113 +256,63 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { useCalendarStore } from '@/modules/calendar/application/stores/calendarStore'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
-const store = useTransactionStore()
-
-const currentDate = ref(new Date())
-const selectedDate = ref(new Date())
-
-const currentMonth = computed(() => currentDate.value.getMonth())
-const currentYear = computed(() => currentDate.value.getFullYear())
-
-const monthName = computed(() => {
-  return currentDate.value.toLocaleString('pt-BR', { month: 'long' })
-})
+const transactionStore = useTransactionStore()
+const calendarStore = useCalendarStore()
 
 onMounted(async () => {
   await fetchMonthData()
 })
 
 const fetchMonthData = async () => {
-  await store.fetchTransactionsByMonth(currentYear.value, currentMonth.value + 1)
+  await transactionStore.fetchTransactionsByMonth(
+    calendarStore.currentYear,
+    calendarStore.currentMonth + 1
+  )
 }
 
 const prevMonth = async () => {
-  currentDate.value = new Date(currentYear.value, currentMonth.value - 1, 1)
+  calendarStore.prevMonth()
   await fetchMonthData()
 }
 
 const nextMonth = async () => {
-  currentDate.value = new Date(currentYear.value, currentMonth.value + 1, 1)
+  calendarStore.nextMonth()
   await fetchMonthData()
 }
 
-const selectDate = (date: Date) => {
-  selectedDate.value = date
-}
-
 const calendarDays = computed(() => {
-  const firstDayOfMonth = new Date(currentYear.value, currentMonth.value, 1)
-  const lastDayOfMonth = new Date(currentYear.value, currentMonth.value + 1, 0)
+  const firstDayOfMonth = new Date(calendarStore.currentYear, calendarStore.currentMonth, 1)
+  const lastDayOfMonth = new Date(calendarStore.currentYear, calendarStore.currentMonth + 1, 0)
   const days = []
 
   const startPadding = firstDayOfMonth.getDay()
   for (let i = startPadding - 1; i >= 0; i--) {
-    const d = new Date(currentYear.value, currentMonth.value, -i)
+    const d = new Date(calendarStore.currentYear, calendarStore.currentMonth, -i)
     days.push({ date: d, isCurrentMonth: false, dayNumber: d.getDate() })
   }
 
   for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
-    const d = new Date(currentYear.value, currentMonth.value, i)
-    days.push({ d: d, date: d, isCurrentMonth: true, dayNumber: i })
+    const d = new Date(calendarStore.currentYear, calendarStore.currentMonth, i)
+    days.push({ date: d, isCurrentMonth: true, dayNumber: i })
   }
 
   const endPadding = 42 - days.length
   for (let i = 1; i <= endPadding; i++) {
-    const d = new Date(currentYear.value, currentMonth.value + 1, i)
+    const d = new Date(calendarStore.currentYear, calendarStore.currentMonth + 1, i)
     days.push({ date: d, isCurrentMonth: false, dayNumber: d.getDate() })
   }
 
   return days
 })
-
-const getTransactionsForDate = (date: Date) => {
-  return store.transactions.filter((t) => {
-    const tDate = new Date(t.date)
-    return (
-      tDate.getDate() === date.getDate() &&
-      tDate.getMonth() === date.getMonth() &&
-      tDate.getFullYear() === date.getFullYear()
-    )
-  })
-}
-
-const selectedDateTransactions = computed(() => getTransactionsForDate(selectedDate.value))
-const selectedDateIncome = computed(() =>
-  selectedDateTransactions.value
-    .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0),
-)
-const selectedDateExpense = computed(() =>
-  selectedDateTransactions.value
-    .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0),
-)
-const selectedDateBalance = computed(() => selectedDateIncome.value - selectedDateExpense.value)
-
-const isToday = (date: Date) => {
-  const today = new Date()
-  return (
-    date.getDate() === today.getDate() &&
-    date.getMonth() === today.getMonth() &&
-    date.getFullYear() === today.getFullYear()
-  )
-}
-
-const isSelected = (date: Date) => {
-  return (
-    date.getDate() === selectedDate.value.getDate() &&
-    date.getMonth() === selectedDate.value.getMonth() &&
-    date.getFullYear() === selectedDate.value.getFullYear()
-  )
-}
 
 const formatDateFull = (date: Date) => {
   return date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
