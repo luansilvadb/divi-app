@@ -5,11 +5,12 @@
   >
     <!-- Left Section: Icon -->
     <div class="flex-shrink-0 relative">
-      <div 
+      <div
         class="w-14 h-14 rounded-full flex items-center justify-center shadow-inner transition-transform duration-300 group-hover:scale-105"
         :style="{
-          background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent), var(--color-bg-main)',
-          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 10px rgba(0,0,0,0.3)'
+          background:
+            'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent), var(--color-bg-main)',
+          boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 4px 10px rgba(0,0,0,0.3)',
         }"
       >
         <img
@@ -20,25 +21,53 @@
         />
         <component v-else :is="iconComponent" class="w-7 h-7 text-accent-main" />
       </div>
-      
+
       <!-- Transaction Type Indicator (Small Overlay) -->
-      <div 
+      <div
         class="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full border-2 border-surface-main z-20 flex items-center justify-center shadow-lg"
         :class="transaction.type === 'income' ? 'bg-success-main' : 'bg-error-main'"
       >
-        <svg v-if="transaction.type === 'income'" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        <svg
+          v-if="transaction.type === 'income'"
+          xmlns="http://www.w3.org/2000/svg"
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+        <svg
+          v-else
+          xmlns="http://www.w3.org/2000/svg"
+          width="10"
+          height="10"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14M5 12l7 7 7-7" />
+        </svg>
       </div>
     </div>
 
     <!-- Center Section: Title + Tags -->
     <div class="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
       <div class="flex items-center gap-2">
-        <span class="font-extrabold text-text-primary text-[1.1rem] leading-tight truncate tracking-tight">
+        <span
+          class="font-extrabold text-text-primary text-[1.1rem] leading-tight truncate tracking-tight"
+        >
           {{ transaction.title || 'Sem título' }}
         </span>
       </div>
-      
+
       <div class="flex flex-wrap items-center gap-2">
         <!-- Wallet Tag -->
         <div
@@ -47,14 +76,14 @@
         >
           {{ walletName }}
         </div>
-        
+
         <!-- Category Tag -->
         <div
           class="px-3 py-1 rounded-lg bg-black/20 dark:bg-white/5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary border border-white/5"
         >
           {{ categoryName }}
         </div>
-        
+
         <!-- Time Tag -->
         <div
           v-if="showTime"
@@ -77,14 +106,29 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0 hidden md:block">
+      <div
+        class="opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0 hidden md:block"
+      >
         <button
+          aria-label="Excluir transação"
           class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90"
           @click.stop="$emit('delete', transaction.id)"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <path
+              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+            ></path>
           </svg>
         </button>
       </div>
