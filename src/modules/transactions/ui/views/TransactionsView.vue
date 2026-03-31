@@ -332,7 +332,12 @@
     </div>
 
     <!-- Modals -->
-    <TransactionForm v-if="showForm" @close="showForm = false" @saved="refreshTransactions" />
+    <TransactionForm
+      v-if="showForm"
+      :show="showForm"
+      @close="showForm = false"
+      @saved="refreshTransactions"
+    />
   </StandardPageLayout>
 </template>
 
