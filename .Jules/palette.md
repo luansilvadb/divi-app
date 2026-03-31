@@ -10,3 +10,5 @@
 **Ação:** Ao encontrar qualquer componente customizado complexo (como dropdowns, modais, abas) verificar rigorosamente seus atributos WAI-ARIA para garantir que eles comuniquem corretamente seu estado, função e estrutura para as tecnologias assistivas.
 
 ## 2025-03-31 - Melhoria de Acessibilidade no BaseButton **Aprendizado:** Componentes com estados de loading (ex: spinners/texto substituído) precisam informar aos leitores de tela que o botão está em uma operação através de `aria-busy="true"` e esconder elementos visuais puramente decorativos com `aria-hidden="true"`. Faltava também o outline para foco no teclado. **Ação:** Adicionar `aria-busy` dinâmico e suporte melhorado de `focus-visible` em botões customizados.
+
+## 2024-05-24 - Melhoria de Acessibilidade em Modais **Aprendizado:** Modais precisam anunciar seu estado para leitores de tela usando `role="dialog"` e `aria-modal="true"`, e o fundo deve ser ignorado com `aria-hidden="true"`. A navegação por teclado (tecla `Escape`) é fundamental para fechar o modal. **Ação:** Sempre que criar um componente modal, incluir atributos ARIA correspondentes e suporte para a tecla `Escape`.
