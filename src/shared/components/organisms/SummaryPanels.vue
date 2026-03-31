@@ -1,13 +1,8 @@
 <template>
   <div class="summary-panels grid grid-cols-1 gap-5">
     <!-- Vencidos -->
-    <BaseCard class="summary-item overflow-hidden" clickable>
-      <div class="flex">
-        <div
-          class="summary-indicator w-1 h-full bg-error-main absolute left-0 top-0 bottom-0"
-        ></div>
-        <div class="summary-content flex-1 p-5">
-          <header class="summary-header flex items-center gap-3 mb-3">
+    <BaseCard class="summary-item" clickable>
+      <header class="summary-header flex items-center gap-3 mb-3">
             <BaseIconBox color="var(--color-error-main)" size="sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -40,16 +35,11 @@
               >{{ overdueCount }} transações atrasadas</span
             >
           </div>
-        </div>
-      </div>
     </BaseCard>
 
     <!-- Próximos -->
-    <BaseCard class="summary-item overflow-hidden" clickable>
-      <div class="flex">
-        <div class="summary-indicator w-1 h-full bg-info-main absolute left-0 top-0 bottom-0"></div>
-        <div class="summary-content flex-1 p-5">
-          <header class="summary-header flex items-center gap-3 mb-3">
+    <BaseCard class="summary-item" clickable>
+      <header class="summary-header flex items-center gap-3 mb-3">
             <BaseIconBox color="var(--color-info-main)" size="sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -79,8 +69,6 @@
               >Próximos 7 dias</span
             >
           </div>
-        </div>
-      </div>
     </BaseCard>
   </div>
 </template>
