@@ -25,10 +25,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   async function fetchDashboardData() {
     isLoading.value = true
     try {
-      const [walletsData, loansData] = await Promise.all([
-        walletRepo.getAll(),
-        loanRepo.getAll()
-      ])
+      const [walletsData, loansData] = await Promise.all([walletRepo.getAll(), loanRepo.getAll()])
       wallets.value = walletsData
       loans.value = loansData
     } finally {
@@ -42,6 +39,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     isLoading,
     totalBalance,
     totalDebt,
-    fetchDashboardData
+    fetchDashboardData,
   }
 })

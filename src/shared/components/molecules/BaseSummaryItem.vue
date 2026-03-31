@@ -43,7 +43,11 @@
       >
         {{ value }}
       </strong>
-      <span v-else class="text-error-main text-xs font-black animate-pulse-error uppercase tracking-widest">Indisponível</span>
+      <span
+        v-else
+        class="text-error-main text-xs font-black animate-pulse-error uppercase tracking-widest"
+        >Indisponível</span
+      >
     </div>
   </div>
 </template>

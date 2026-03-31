@@ -3,7 +3,7 @@
     <label v-if="label" :for="id" class="block text-sm font-medium mb-1 text-text-primary">{{
       label
     }}</label>
-    
+
     <!-- Trigger -->
     <button
       type="button"
@@ -16,7 +16,9 @@
       @click="isOpen = !isOpen"
     >
       <span class="truncate">{{ selectedLabel || placeholder }}</span>
-      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-disabled">
+      <div
+        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-disabled"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
@@ -59,9 +61,9 @@
           :aria-selected="modelValue === option.value"
           class="relative cursor-pointer select-none py-2 px-4 text-sm font-medium transition-colors"
           :class="[
-            modelValue === option.value 
-              ? 'bg-primary-main text-white' 
-              : 'text-text-primary hover:bg-white/5 dark:hover:bg-white/5'
+            modelValue === option.value
+              ? 'bg-primary-main text-white'
+              : 'text-text-primary hover:bg-white/5 dark:hover:bg-white/5',
           ]"
           @click="select(option)"
         >
@@ -94,7 +96,7 @@ const emit = defineEmits(['update:modelValue'])
 const isOpen = ref(false)
 
 const selectedLabel = computed(() => {
-  const option = props.options.find(opt => opt.value === props.modelValue)
+  const option = props.options.find((opt) => opt.value === props.modelValue)
   return option ? option.label : ''
 })
 
@@ -109,7 +111,10 @@ function close() {
 
 // Directive to close dropdown when clicking outside
 const vClickOutside = {
-  mounted(el: HTMLElement & { clickOutsideEvent: (event: Event) => void }, binding: { value: () => void }) {
+  mounted(
+    el: HTMLElement & { clickOutsideEvent: (event: Event) => void },
+    binding: { value: () => void },
+  ) {
     el.clickOutsideEvent = (event: Event) => {
       if (!(el === event.target || el.contains(event.target as Node))) {
         binding.value()
@@ -119,6 +124,6 @@ const vClickOutside = {
   },
   unmounted(el: HTMLElement & { clickOutsideEvent: (event: Event) => void }) {
     document.removeEventListener('click', el.clickOutsideEvent)
-  }
+  },
 }
 </script>

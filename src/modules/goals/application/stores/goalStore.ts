@@ -40,6 +40,6 @@ export const useGoalStore = defineStore('goals', () => {
     saveGoal,
     deleteGoal,
     totalSaved,
-    totalTarget
+    totalTarget,
   }
 })

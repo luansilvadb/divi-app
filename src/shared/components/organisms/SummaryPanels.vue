@@ -27,7 +27,7 @@
           >Vencidos</span
         >
       </div>
-      
+
       <div class="summary-body space-y-1">
         <h4 class="text-2xl font-black text-text-primary tracking-tighter">
           {{ formatCurrency(overdueAmount) }}

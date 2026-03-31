@@ -1,11 +1,7 @@
 <template>
   <div class="standard-page-layout min-h-screen bg-bg-main p-6 md:p-10 lg:p-14">
     <!-- View Header -->
-    <BaseViewHeader
-      :title="title"
-      :subtitle="subtitle"
-      :highlight="highlight"
-    >
+    <BaseViewHeader :title="title" :subtitle="subtitle" :highlight="highlight">
       <template #title v-if="$slots.title">
         <slot name="title" />
       </template>

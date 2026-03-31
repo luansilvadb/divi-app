@@ -8,10 +8,19 @@
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
-      class="w-full px-3 py-2 rounded-md border bg-surface-main border-border-main text-text-primary focus:outline-hidden focus:ring-2 focus:ring-primary-main/20 focus:border-primary-main transition-all placeholder:text-text-disabled"
+      :aria-invalid="!!error"
+      :aria-describedby="error ? `${id}-error` : undefined"
+      :class="[
+        'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden focus:ring-2 transition-all placeholder:text-text-disabled',
+        error
+          ? 'border-error-main focus:ring-error-main/20 focus:border-error-main'
+          : 'border-border-main focus:ring-primary-main/20 focus:border-primary-main',
+      ]"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
-    <p v-if="error" class="mt-1 text-xs text-error-main">{{ error }}</p>
+    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-error-main">
+      {{ error }}
+    </p>
   </div>
 </template>
 
