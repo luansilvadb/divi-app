@@ -21,15 +21,28 @@
             class="flex items-center bg-black/5 dark:bg-black/20 p-1.5 rounded-[1.5rem] border border-black/5 dark:border-white/5"
           >
             <button
+              aria-label="Mês anterior"
               class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
               @click="prevMonth"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polyline points="15 18 9 12 15 6"></polyline>
               </svg>
             </button>
             <div class="px-8 flex flex-col items-center min-w-[150px]">
-              <span class="text-[9px] font-black uppercase tracking-[0.2em] text-text-disabled leading-none mb-1.5">
+              <span
+                class="text-[9px] font-black uppercase tracking-[0.2em] text-text-disabled leading-none mb-1.5"
+              >
                 {{ currentDate.getFullYear() }}
               </span>
               <span class="text-sm font-black uppercase tracking-widest text-text-primary">
@@ -37,10 +50,21 @@
               </span>
             </div>
             <button
+              aria-label="Próximo mês"
               class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
               @click="nextMonth"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </button>
@@ -68,6 +92,7 @@
             <input
               v-model="searchQuery"
               type="text"
+              aria-label="Buscar transações"
               placeholder="Buscar transações..."
               class="w-full pl-12 pr-4 h-14 bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 rounded-[1.5rem] text-sm font-bold placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/20 transition-all text-text-primary"
             />
@@ -128,11 +153,18 @@
                       class="text-[9px] font-black uppercase tracking-widest text-text-disabled mb-0.5"
                       >{{ formatDateMonth(dateKey) }}</span
                     >
-                    <span class="text-base font-black text-text-primary">{{ dateKey.split('-')[2] }}</span>
+                    <span class="text-base font-black text-text-primary">{{
+                      dateKey.split('-')[2]
+                    }}</span>
                   </div>
                   <div class="flex flex-col">
-                    <span class="text-sm font-black text-text-primary tracking-tight">{{ getRelativeDayLabel(dateKey) }}</span>
-                    <span class="text-[10px] font-bold text-text-disabled uppercase tracking-widest">{{ group.items.length }} {{ group.items.length === 1 ? 'transação' : 'transações' }}</span>
+                    <span class="text-sm font-black text-text-primary tracking-tight">{{
+                      getRelativeDayLabel(dateKey)
+                    }}</span>
+                    <span class="text-[10px] font-bold text-text-disabled uppercase tracking-widest"
+                      >{{ group.items.length }}
+                      {{ group.items.length === 1 ? 'transação' : 'transações' }}</span
+                    >
                   </div>
                 </div>
 
@@ -140,7 +172,9 @@
                   class="text-sm font-black tracking-tighter bg-surface-main dark:bg-white/5 px-4 py-2 rounded-xl shadow-sm border border-black/5 dark:border-white/5"
                   :class="group.total >= 0 ? 'text-success-main' : 'text-error-main'"
                 >
-                  <span class="text-[10px] uppercase opacity-40 mr-1.5 font-bold">Saldo do dia:</span>
+                  <span class="text-[10px] uppercase opacity-40 mr-1.5 font-bold"
+                    >Saldo do dia:</span
+                  >
                   {{ formatCurrencySign(group.total) }}
                 </div>
               </div>
@@ -352,7 +386,9 @@ const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
 const searchQuery = computed({
   get: () => store.searchQuery,
-  set: (val) => { store.searchQuery = val }
+  set: (val) => {
+    store.searchQuery = val
+  },
 })
 
 // Date Labels
@@ -418,5 +454,4 @@ function formatDateMonth(dateStr: string) {
   const date = new Date(dateStr + 'T12:00:00')
   return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
 }
-
 </script>
