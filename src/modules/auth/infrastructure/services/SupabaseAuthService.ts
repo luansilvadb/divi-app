@@ -20,6 +20,8 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
+    await supabase.auth.getSession()
+
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -35,7 +37,15 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   onAuthStateChange(callback: (user: User | null) => void): void {
-    supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (
+        typeof window !== 'undefined' &&
+        (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') &&
+        window.location.hash.includes('access_token')
+      ) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search)
+      }
+
       if (!session) {
         callback(null)
         return
