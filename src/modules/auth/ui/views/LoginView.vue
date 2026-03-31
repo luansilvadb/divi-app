@@ -20,7 +20,7 @@
               height="44"
               viewBox="0 0 44 44"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
             >
               <rect width="44" height="44" rx="12" fill="url(#logoGradient)" />
               <path
@@ -103,16 +103,17 @@
         <!-- Google button -->
         <button
           id="login-google-btn"
+          :aria-busy="isLoading"
+          class="w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms]"
           @click="handleLogin"
           :disabled="isLoading"
-          class="w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms]"
         >
           <div class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary">
             <svg
               v-if="!isLoading"
               class="w-5 h-5 shrink-0"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
             >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -133,6 +134,7 @@
             </svg>
             <div
               v-else
+              aria-hidden="true"
               class="w-5 h-5 border-[2.5px] border-border-main border-t-primary-main rounded-full animate-spin shrink-0"
             ></div>
             <span>{{ isLoading ? 'Conectando...' : 'Continuar com Google' }}</span>
@@ -143,11 +145,11 @@
         <p class="text-center text-[0.72rem] leading-relaxed text-text-disabled m-0 animate-fade-in [animation-delay:650ms]">
           Ao continuar, você concorda com nossos<br />
           <a
-            href="#"
+            href="#" aria-label="Termos de Uso"
             class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
           >Termos de Uso</a> e
           <a
-            href="#"
+            href="#" aria-label="Política de Privacidade"
             class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
           >Política de Privacidade</a>
         </p>
