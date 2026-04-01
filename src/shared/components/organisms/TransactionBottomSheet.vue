@@ -1,6 +1,6 @@
 <template>
   <BottomSheet
-    v-model="internalShow"
+    ref="bottomSheetRef"
     @closed="$emit('close')"
     class="bottom-sheet-container"
     teleport-to="body"
@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, watch } from 'vue'
 import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
 import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
 import TransactionFormContent from './TransactionFormContent.vue'
@@ -80,15 +80,21 @@ const props = defineProps<{
 
 const emit = defineEmits(['close', 'saved'])
 
-const internalShow = computed({
-  get: () => props.show,
-  set: (val) => {
-    if (!val) emit('close')
-  },
-})
+const bottomSheetRef = ref<InstanceType<typeof BottomSheet>>()
+
+watch(
+  () => props.show,
+  (newVal) => {
+    if (newVal) {
+      bottomSheetRef.value?.open()
+    } else {
+      bottomSheetRef.value?.close()
+    }
+  }
+)
 
 function closeSheet() {
-  internalShow.value = false
+  emit('close')
 }
 
 function handleSaved() {
