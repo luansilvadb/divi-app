@@ -2,16 +2,16 @@
 # Created: 2026-04-01
 
 # General Rules
-!**/ .gitkeep
-\
+!**/.gitkeep
+
 # Security & Secrets
-.env*\
-\*.key
+.env*
+*.key
 *.pem
 *.p12
 secrets.json
-.credentials/\
-\
+.credentials/
+
 # Dependencies
 node_modules/
 pnpm-lock.yaml
@@ -30,19 +30,19 @@ yarn-debug.log*
 yarn-error.log*
 
 # Supabase Local Dev
-.supabase/functions/.import_map.json\
-\
+.supabase/functions/.import_map.json
+
 # OS Specifics
 .DS_Store
 Thumbs.db
 desktop.ini
 
 # IDE Specifics
-.vscode/
 .idea/
 *.swp
+.vscode/*
+!.vscode/extensions.json
 
 # Local Databases
 *.db
-*.sqlite\
-\!.vscode/extensions.json\
+*.sqlite
