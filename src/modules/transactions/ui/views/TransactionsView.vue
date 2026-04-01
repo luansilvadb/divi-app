@@ -346,12 +346,20 @@
     </div>
 
     <!-- Modals -->
-    <TransactionForm
-      v-if="showForm"
-      :show="showForm"
-      @close="showForm = false"
-      @saved="refreshTransactions"
-    />
+    <template v-if="showForm">
+      <TransactionBottomSheet
+        v-if="isMobile"
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
+      <TransactionModal
+        v-else
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
+    </template>
 
     <BaseConfirmModal
       :show="showConfirmDelete"
@@ -367,6 +375,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
@@ -374,13 +383,15 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import TransactionForm from '@/shared/components/organisms/TransactionForm.vue'
+import TransactionBottomSheet from '@/shared/components/organisms/TransactionBottomSheet.vue'
+import TransactionModal from '@/shared/components/organisms/TransactionModal.vue'
 import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const store = useTransactionStore()
 const showForm = ref(false)
+const isMobile = useMediaQuery('(max-width: 768px)')
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
