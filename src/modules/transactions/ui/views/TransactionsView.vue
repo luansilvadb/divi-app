@@ -41,7 +41,9 @@
               >
                 {{ currentDate.getFullYear() }}
               </span>
-              <span class="text-sm font-black uppercase tracking-widest text-text-primary truncate max-w-[150px] w-full text-center block">
+              <span
+                class="text-sm font-black uppercase tracking-widest text-text-primary truncate max-w-[150px] w-full text-center block"
+              >
                 {{ monthLabelOnly }}
               </span>
             </div>
@@ -340,46 +342,46 @@
         </BaseCard>
       </aside>
     </div>
+    <!-- Overlays and Modals -->
+    <Teleport to="body">
+      <TransactionBottomSheet
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
 
-    <!-- Modals -->
+      <BaseConfirmModal
+        :show="showConfirmDelete"
+        title="Excluir Transação"
+        message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+        confirm-text="Excluir"
+        cancel-text="Cancelar"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
 
-    <TransactionBottomSheet
-      :show="showForm"
-      @close="showForm = false"
-      @saved="refreshTransactions"
-    />
-
-    <BaseConfirmModal
-      :show="showConfirmDelete"
-      title="Excluir Transação"
-      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
-      confirm-text="Excluir"
-      cancel-text="Cancelar"
-      @confirm="confirmDelete"
-      @cancel="cancelDelete"
-    />
-
-    <!-- Floating Action Button (FAB) -->
-    <button
-      class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
-      @click="showForm = true"
-      aria-label="Nova Transação"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+      <!-- Floating Action Button (FAB) -->
+      <button
+        class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
+        @click="showForm = true"
+        aria-label="Nova Transação"
       >
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-      </svg>
-    </button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+    </Teleport>
   </StandardPageLayout>
 </template>
 
