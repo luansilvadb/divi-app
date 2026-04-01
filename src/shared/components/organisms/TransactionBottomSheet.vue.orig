@@ -3,11 +3,12 @@
     v-model="internalShow"
     @closed="$emit('close')"
     class="bottom-sheet-container"
+    :style="{ zIndex: 100 }"
   >
     <!-- Header Area (Premium Split) -->
-    <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]">
+    <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main">
       <div
-        class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none rounded-t-[1.5rem]"
+        class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none"
       ></div>
       <div class="flex items-center justify-between relative z-10">
         <div class="flex items-center gap-4">
@@ -59,7 +60,7 @@
     </div>
 
     <!-- Body Area -->
-    <div class="bg-surface-main dark:bg-surface-main text-text-primary h-full">
+    <div class="bg-surface-main dark:bg-surface-main text-text-primary">
       <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
     </div>
   </BottomSheet>
@@ -96,24 +97,20 @@ function handleSaved() {
 
 <style>
 /* Global override for this bottom sheet to ensure dark mode text color and higher z-index */
-:root {
-  --vsbs-background: var(--color-surface-main, #1b2234);
+.bottom-sheet-container {
+  --vsbs-background: var(--color-surface-main);
   --vsbs-border-radius: 1.5rem;
   --vsbs-backdrop-bg: rgba(0, 0, 0, 0.6);
   --vsbs-padding-x: 0;
-  --vsbs-shadow-color: rgba(0, 0, 0, 0.5);
-}
-
-[data-vsbs-wrapper] {
   z-index: 100 !important;
 }
 
-[data-vsbs-backdrop] {
+/* Ensure backdrop covers nav bar */
+.bottom-sheet-container [data-vsbs-backdrop] {
   z-index: 90 !important;
 }
 
-/* Fix bottom safe area so it doesn't overlap with bottom nav if z-index trick fails */
-.bottom-sheet-container {
-  padding-bottom: env(safe-area-inset-bottom, 20px);
+.bottom-sheet-container [data-vsbs-wrapper] {
+  z-index: 100 !important;
 }
 </style>

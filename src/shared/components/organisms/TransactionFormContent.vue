@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="p-8 space-y-8 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh]">
+  <form @submit.prevent="handleSubmit" class="p-8 space-y-8 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh] pb-24">
     <!-- Type Switcher (Premium) -->
     <div class="flex p-1.5 bg-white/5 rounded-2xl gap-1.5 border border-white/5 shadow-inner shrink-0">
       <button
@@ -8,7 +8,7 @@
         :class="
           form.type === 'expense'
             ? 'bg-error-main text-white shadow-[0_10px_25px_rgba(248,81,73,0.3)]'
-            : 'text-text-secondary hover:bg-white/5'
+            : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
         "
         @click="form.type = 'expense'"
       >
@@ -33,7 +33,7 @@
         :class="
           form.type === 'income'
             ? 'bg-success-main text-white shadow-[0_10px_25px_rgba(50,205,50,0.3)]'
-            : 'text-text-secondary hover:bg-white/5'
+            : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
         "
         @click="form.type = 'income'"
       >
@@ -101,7 +101,7 @@
       <BaseButton
         variant="ghost"
         type="button"
-        class="flex-1 !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-white/5 transition-all"
+        class="flex-1 !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
         @click="$emit('close')"
       >
         Cancelar

@@ -1,0 +1,10 @@
+--- src/shared/components/organisms/TransactionBottomSheet.vue
++++ src/shared/components/organisms/TransactionBottomSheet.vue
+@@ -3,6 +3,7 @@
+     v-model="internalShow"
+     @closed="$emit('close')"
+     class="bottom-sheet-container"
++    teleport-to="body"
+   >
+     <!-- Header Area (Premium Split) -->
+     <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main">
