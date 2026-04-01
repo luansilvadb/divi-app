@@ -1,7 +1,7 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="p-8 space-y-8 bg-black/10">
+  <form @submit.prevent="handleSubmit" class="p-8 space-y-8 bg-black/10 h-full overflow-y-auto max-h-[70vh]">
     <!-- Type Switcher (Premium) -->
-    <div class="flex p-1.5 bg-white/5 rounded-2xl gap-1.5 border border-white/5 shadow-inner">
+    <div class="flex p-1.5 bg-white/5 rounded-2xl gap-1.5 border border-white/5 shadow-inner shrink-0">
       <button
         type="button"
         class="flex-1 py-3.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex items-center gap-4 pt-4">
+    <div class="flex items-center gap-4 pt-4 shrink-0">
       <BaseButton
         variant="ghost"
         type="button"

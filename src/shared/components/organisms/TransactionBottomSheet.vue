@@ -1,9 +1,7 @@
 <template>
   <BottomSheet
-    v-if="show"
-    :visible="show"
+    v-model="internalShow"
     @closed="$emit('close')"
-    :spring-config="{ stiffness: 200, damping: 20, mass: 1 }"
     class="bottom-sheet-container z-[150] relative"
   >
     <!-- Header Area (Premium Split) -->
@@ -38,7 +36,7 @@
           </div>
         </div>
         <button
-          @click="$emit('close')"
+          @click="closeSheet"
           class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all border border-white/5 group"
         >
           <svg
@@ -61,31 +59,44 @@
     </div>
 
     <!-- Body Area -->
-    <TransactionFormContent @close="$emit('close')" @saved="$emit('saved')" />
+    <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
   </BottomSheet>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
 import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
 import TransactionFormContent from './TransactionFormContent.vue'
 
-defineProps<{
+const props = defineProps<{
   show: boolean
 }>()
 
-defineEmits(['close', 'saved'])
+const emit = defineEmits(['close', 'saved'])
+
+const internalShow = computed({
+  get: () => props.show,
+  set: (val) => {
+    if (!val) emit('close')
+  }
+})
+
+function closeSheet() {
+  internalShow.value = false
+}
+
+function handleSaved() {
+  emit('saved')
+  closeSheet()
+}
 </script>
 
 <style scoped>
-.bottom-sheet-container :deep(.bottom-sheet__content) {
-  background-color: var(--color-surface-main);
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
-  overflow: hidden;
-}
-.bottom-sheet-container :deep(.bottom-sheet__backdrop) {
-  background-color: #0e121b80;
-  backdrop-filter: blur(4px);
+.bottom-sheet-container {
+  --vsbs-background: var(--color-surface-main);
+  --vsbs-border-radius: 1.5rem;
+  --vsbs-backdrop-bg: #0e121b80;
+  --vsbs-padding-x: 0;
 }
 </style>
