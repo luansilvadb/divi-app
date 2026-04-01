@@ -1,23 +1,21 @@
 <template>
   <Teleport to="body">
-    <div
-      v-if="isOpen"
-      class="fixed inset-0 z-[100] md:hidden"
-    >
+    <div class="md:hidden">
       <!-- Backdrop -->
-      <div
-        class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
-        @click="$emit('close')"
-      ></div>
+      <Transition name="fade">
+        <div
+          v-if="isOpen"
+          class="fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm"
+          @click="$emit('close')"
+        ></div>
+      </Transition>
 
       <!-- Drawer Content -->
-      <div
-        v-motion
-        :initial="{ x: '100%' }"
-        :enter="{ x: 0, transition: { type: 'spring', stiffness: 250, damping: 30 } }"
-        :leave="{ x: '100%', transition: { duration: 250 } }"
-        class="absolute right-0 top-0 bottom-0 w-[280px] bg-bg-main shadow-2xl flex flex-col overflow-hidden"
-      >
+      <Transition name="slide-right">
+        <div
+          v-if="isOpen"
+          class="fixed right-0 top-0 bottom-0 z-[100] w-[280px] bg-bg-main shadow-2xl flex flex-col overflow-hidden"
+        >
         <!-- Header -->
         <div class="flex items-center justify-between p-4 border-b border-black/5 dark:border-white/5">
           <span class="font-bold text-lg">Mais Opções</span>
@@ -91,6 +89,7 @@
           </button>
         </div>
       </div>
+      </Transition>
     </div>
   </Teleport>
 </template>
@@ -158,6 +157,24 @@ const analysisNavItems = [
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
+
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 1rem);
 }

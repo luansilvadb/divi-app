@@ -59,8 +59,14 @@ const navItems = [
 </script>
 
 <style scoped>
+.bottom-nav-item {
+  transition: color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
 .bottom-nav-item:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
 }
 
 /* Fallback for env(safe-area-inset-bottom) */
