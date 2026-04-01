@@ -13,11 +13,26 @@
       <div class="bottom-nav-icon mb-1" v-html="item.icon"></div>
       <span class="text-[10px] font-bold tracking-wider uppercase">{{ item.label }}</span>
     </RouterLink>
+    <!-- More Button to open drawer -->
+    <button
+      class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200"
+      aria-label="Mais Opções"
+      @click="$emit('open-drawer')"
+    >
+      <div class="bottom-nav-icon mb-1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+      <span class="text-[10px] font-bold tracking-wider uppercase">Mais</span>
+    </button>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+
+defineEmits<{
+  (e: 'open-drawer'): void
+}>()
 
 const navItems = [
   {
@@ -40,17 +55,18 @@ const navItems = [
     label: 'Metas',
     icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
   },
-  {
-    to: '/loans',
-    label: 'Emprést.',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>`,
-  },
 ]
 </script>
 
 <style scoped>
+.bottom-nav-item {
+  transition: color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
 .bottom-nav-item:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
 }
 
 /* Fallback for env(safe-area-inset-bottom) */

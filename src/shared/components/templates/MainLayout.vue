@@ -9,13 +9,24 @@
     </main>
 
     <!-- Mobile Bottom Bar -->
-    <AppBottomBar />
+    <AppBottomBar @open-drawer="isMobileDrawerOpen = true" />
+
+    <!-- Mobile Drawer -->
+    <AppMobileDrawer
+      :is-open="isMobileDrawerOpen"
+      @close="isMobileDrawerOpen = false"
+      @logout="emit('logout')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import AppSidebar from '@/shared/components/organisms/AppSidebar.vue'
 import AppBottomBar from '@/shared/components/organisms/AppBottomBar.vue'
+import AppMobileDrawer from '@/shared/components/organisms/AppMobileDrawer.vue'
+import { ref } from 'vue'
+
+const isMobileDrawerOpen = ref(false)
 
 const emit = defineEmits<{
   (e: 'logout'): void
