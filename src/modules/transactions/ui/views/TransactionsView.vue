@@ -346,12 +346,20 @@
     </div>
 
     <!-- Modals -->
-    <TransactionForm
-      v-if="showForm"
-      :show="showForm"
-      @close="showForm = false"
-      @saved="refreshTransactions"
-    />
+    <template v-if="showForm">
+      <TransactionDesktopModal
+        v-if="!isMobile"
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
+      <TransactionMobileBottomSheet
+        v-else
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
+    </template>
 
     <BaseConfirmModal
       :show="showConfirmDelete"
@@ -366,7 +374,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
@@ -374,9 +382,10 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import TransactionForm from '@/shared/components/organisms/TransactionForm.vue'
 import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
 import TransactionItem from '../components/TransactionItem.vue'
+import TransactionDesktopModal from '../components/TransactionDesktopModal.vue'
+import TransactionMobileBottomSheet from '../components/TransactionMobileBottomSheet.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const store = useTransactionStore()
@@ -384,6 +393,14 @@ const showForm = ref(false)
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
+const MOBILE_BREAKPOINT_QUERY = '(max-width: 768px)'
+const mobileQuery = window.matchMedia(MOBILE_BREAKPOINT_QUERY)
+const isMobile = ref(mobileQuery.matches)
+
+function handleMobileChange(event: MediaQueryListEvent | MediaQueryList) {
+  isMobile.value = event.matches
+}
+
 const searchQuery = computed({
   get: () => store.searchQuery,
   set: (val) => {
@@ -403,9 +420,16 @@ const groupedTransactions = computed(() => store.groupedTransactions)
 
 // Initialization
 onMounted(async () => {
+  mobileQuery.addEventListener('change', handleMobileChange)
+  handleMobileChange(mobileQuery)
+
   if (store.wallets.length === 0) await store.fetchWallets()
   if (store.categories.length === 0) await store.fetchCategories()
   await refreshTransactions()
+})
+
+onBeforeUnmount(() => {
+  mobileQuery.removeEventListener('change', handleMobileChange)
 })
 
 async function refreshTransactions() {
