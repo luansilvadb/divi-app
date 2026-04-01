@@ -4,21 +4,17 @@
     highlight="Fluxo"
     subtitle="Domine seus hábitos com clareza total. Cada movimento conta uma história."
   >
-    <template #action>
-      <BaseButton variant="primary" @click="showForm = true"> Nova Transação </BaseButton>
-    </template>
-
     <!-- Content Grid (Holy Grail) -->
     <div class="view-content-grid">
       <!-- MAIN COLUMN: Actions + List -->
-      <main class="main-column">
+      <main class="main-column pb-24">
         <!-- Tools & Filtering -->
         <div
           class="p-4 flex flex-wrap items-center justify-between gap-4 glass-card bg-surface-main shadow-sm mb-8"
         >
           <!-- Month Selector -->
           <div
-            class="flex items-center bg-black/5 dark:bg-black/20 p-1.5 rounded-[1.5rem] border border-black/5 dark:border-white/5"
+            class="flex flex-1 justify-between w-full items-center bg-black/5 dark:bg-black/20 p-1.5 rounded-[1.5rem] border border-black/5 dark:border-white/5"
           >
             <button
               aria-label="Mês anterior"
@@ -45,7 +41,9 @@
               >
                 {{ currentDate.getFullYear() }}
               </span>
-              <span class="text-sm font-black uppercase tracking-widest text-text-primary">
+              <span
+                class="text-sm font-black uppercase tracking-widest text-text-primary truncate max-w-[150px] w-full text-center block"
+              >
                 {{ monthLabelOnly }}
               </span>
             </div>
@@ -344,37 +342,51 @@
         </BaseCard>
       </aside>
     </div>
+    <!-- Overlays and Modals -->
+    <Teleport to="body">
+      <TransactionBottomSheet
+        :show="showForm"
+        @close="showForm = false"
+        @saved="refreshTransactions"
+      />
 
-    <!-- Modals -->
+      <BaseConfirmModal
+        :show="showConfirmDelete"
+        title="Excluir Transação"
+        message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+        confirm-text="Excluir"
+        cancel-text="Cancelar"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
 
-    <TransactionBottomSheet
-      v-if="isMobile"
-      :show="showForm"
-      @close="showForm = false"
-      @saved="refreshTransactions"
-    />
-    <TransactionModal
-      v-else-if="showForm"
-      :show="showForm"
-      @close="showForm = false"
-      @saved="refreshTransactions"
-    />
-
-    <BaseConfirmModal
-      :show="showConfirmDelete"
-      title="Excluir Transação"
-      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
-      confirm-text="Excluir"
-      cancel-text="Cancelar"
-      @confirm="confirmDelete"
-      @cancel="cancelDelete"
-    />
+      <!-- Floating Action Button (FAB) -->
+      <button
+        class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
+        @click="showForm = true"
+        aria-label="Nova Transação"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+    </Teleport>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import { useMediaQuery } from '@vueuse/core'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
@@ -383,14 +395,12 @@ import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import TransactionBottomSheet from '@/shared/components/organisms/TransactionBottomSheet.vue'
-import TransactionModal from '@/shared/components/organisms/TransactionModal.vue'
 import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const store = useTransactionStore()
 const showForm = ref(false)
-const isMobile = useMediaQuery('(max-width: 768px)')
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())

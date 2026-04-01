@@ -5,7 +5,9 @@
     subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
   >
     <!-- Content Grid -->
-    <div class="grid grid-cols-[1fr_400px] gap-10 items-stretch">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_400px] gap-6 lg:gap-10 items-stretch"
+    >
       <!-- MAIN COLUMN -->
       <main class="flex flex-col gap-8 flex-1">
         <!-- Stats Overview -->
