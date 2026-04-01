@@ -17,7 +17,9 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "@douxcode/vue-spring-bottom-sheet": "^3.2.0",
     "@supabase/supabase-js": "^2.100.1",
+    "@vueuse/core": "^14.2.1",
     "@vueuse/motion": "^3.0.3",
     "chart.js": "^4.5.1",
     "dexie": "^4.4.1",
