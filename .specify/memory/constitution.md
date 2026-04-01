@@ -58,7 +58,7 @@ Nenhuma View ou Componente de um módulo deve acessar diretamente a lógica de o
 
 ### Stack Tecnológica Base
 
-O projeto deve utilizar obrigatoriamente: Vue 3 (Composition API), TypeScript (Strict Mode), Pinia (State Management), TailwindCSS, Supabase (Backend-as-a-Service, SDK/RPC) e Vite (Build Tool).
+O projeto deve utilizar obrigatoriamente: Vue 3 (Composition API), TypeScript (Strict Mode), Pinia (State Management), TailwindCSS, motion.dev, Supabase (Backend-as-a-Service, SDK/RPC) e Vite (Build Tool).
 **Rationale**: Define um ambiente previsível e de alto desempenho, alinhado com as melhores práticas atuais do ecossistema Vue.
 
 ---
