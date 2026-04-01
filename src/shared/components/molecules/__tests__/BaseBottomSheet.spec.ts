@@ -89,7 +89,7 @@ describe('BaseBottomSheet.vue', () => {
     })
 
     // Check if the component internal logic updated translateY
-    expect((wrapper.vm as Record<string, unknown>).translateY).toBe(50)
+    expect((wrapper.vm as unknown as Record<string, unknown>).translateY).toBe(50)
   })
 
   it('handles drag up with resistance (translateY gets 20% multiplier)', async () => {
@@ -116,7 +116,7 @@ describe('BaseBottomSheet.vue', () => {
     })
 
     // -50 * 0.2 = -10
-    expect((wrapper.vm as Record<string, unknown>).translateY).toBe(-10)
+    expect((wrapper.vm as unknown as Record<string, unknown>).translateY).toBe(-10)
   })
 
   it('snaps back when drag is below threshold', async () => {
@@ -150,7 +150,7 @@ describe('BaseBottomSheet.vue', () => {
     })
 
     // Manually force a low velocity
-    ;(wrapper.vm as Record<string, unknown>).velocity = 0;
+    ;(wrapper.vm as unknown as Record<string, unknown>).velocity = 0;
 
     await content.trigger('touchend')
 
@@ -159,7 +159,7 @@ describe('BaseBottomSheet.vue', () => {
     await nextTick()
 
     // It should snap back
-    expect((wrapper.vm as Record<string, unknown>).translateY).toBe(0)
+    expect((wrapper.vm as unknown as Record<string, unknown>).translateY).toBe(0)
     expect(wrapper.emitted('update:show')).toBeUndefined()
   })
 
@@ -193,7 +193,7 @@ describe('BaseBottomSheet.vue', () => {
     })
 
     // Mock lastTime to be far enough in the past so velocity is low
-    ;(wrapper.vm as Record<string, unknown>).lastTime = Date.now() - 1000;
+    ;(wrapper.vm as unknown as Record<string, unknown>).lastTime = Date.now() - 1000;
 
     await content.trigger('touchend')
 
