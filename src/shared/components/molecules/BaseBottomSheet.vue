@@ -26,7 +26,7 @@
           >
             <!-- Drag Handle Indicator -->
             <div
-              class="w-full flex justify-center pt-4 pb-3 shrink-0 cursor-grab active:cursor-grabbing focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main/50 rounded-t-3xl "
+              class="w-full flex justify-center pt-4 pb-3 shrink-0 cursor-grab active:cursor-grabbing focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main/50 rounded-t-3xl"
               role="button"
               aria-label="Fechar"
               tabindex="0"
@@ -100,15 +100,21 @@ function onTouchStart(e: TouchEvent) {
     return
   }
 
-  startY.value = e.touches[0].clientY
-  currentY.value = e.touches[0].clientY
+  const touch = e.touches[0]
+  if (!touch) return
+
+  startY.value = touch.clientY
+  currentY.value = touch.clientY
   isDragging.value = true
 }
 
 function onTouchMove(e: TouchEvent) {
   if (!isDragging.value) return
 
-  const y = e.touches[0].clientY
+  const touch = e.touches[0]
+  if (!touch) return
+
+  const y = touch.clientY
   const offset = y - startY.value
 
   // If user tries to scroll down inside content but we are dragging the sheet down
