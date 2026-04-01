@@ -52,6 +52,7 @@ Apply the relevant section based on your current task:
 ## 1. Using Superpowers
 
 <EXTREMELY-IMPORTANT>
+MANDATORY: Strictly follow the guidelines in `.specify/memory/constitution.md`.
 If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
 
 IF A SKILL APPLIES TO YOUR TASK, YOU DO NOT HAVE A CHOICE. YOU MUST USE IT.
@@ -109,13 +110,12 @@ Every project goes through this process. A todo list, a single-function utility,
 
 ### Checklist
 
-1. **Regras do projeto** Siga estritamente as diretrizes de .specify/memory/constitution.md.
-2. **Explore project context** — check files, docs, recent commits
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to complexity, get user approval after each section
-6. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Transition to implementation** — follow Section 3 (Writing Plans)
+1. **Explore project context** — check files, docs, recent commits
+2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
+3. **Propose 2-3 approaches** — with trade-offs and your recommendation
+4. **Present design** — in sections scaled to complexity, get user approval after each section
+5. **Write design doc** — save to `docs/plans/YYYY-MM-DD-<topic>-design.md` and commit
+6. **Transition to implementation** — follow Section 3 (Writing Plans)
 
 ### Process
 
