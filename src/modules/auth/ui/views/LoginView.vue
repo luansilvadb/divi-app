@@ -20,7 +20,8 @@
               height="44"
               viewBox="0 0 44 44"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <rect width="44" height="44" rx="12" fill="url(#logoGradient)" />
               <path
@@ -54,13 +55,15 @@
         </p>
 
         <!-- Feature pills -->
-        <div
-          class="flex flex-wrap justify-center gap-2 animate-fade-in [animation-delay:350ms]"
-        >
+        <div class="flex flex-wrap justify-center gap-2 animate-fade-in [animation-delay:350ms]">
           <span
             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
           >
-            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              class="w-3.5 h-3.5 text-secondary-main shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path
                 fill-rule="evenodd"
                 d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -72,7 +75,11 @@
           <span
             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
           >
-            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              class="w-3.5 h-3.5 text-secondary-main shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path
                 fill-rule="evenodd"
                 d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
@@ -84,7 +91,11 @@
           <span
             class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
           >
-            <svg class="w-3.5 h-3.5 text-secondary-main shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              class="w-3.5 h-3.5 text-secondary-main shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path
                 d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
               />
@@ -95,9 +106,16 @@
 
         <!-- Divider -->
         <div class="flex items-center gap-4 w-full animate-fade-in [animation-delay:450ms]">
-          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"></div>
-          <span class="text-xs font-semibold uppercase tracking-widest text-text-disabled whitespace-nowrap">comece agora</span>
-          <div class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"></div>
+          <div
+            class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"
+          ></div>
+          <span
+            class="text-xs font-semibold uppercase tracking-widest text-text-disabled whitespace-nowrap"
+            >comece agora</span
+          >
+          <div
+            class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"
+          ></div>
         </div>
 
         <!-- Google button -->
@@ -108,12 +126,15 @@
           @click="handleLogin"
           :disabled="isLoading"
         >
-          <div class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary">
+          <div
+            class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary"
+          >
             <svg
               v-if="!isLoading"
               class="w-5 h-5 shrink-0"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
@@ -142,22 +163,31 @@
         </button>
 
         <!-- Terms -->
-        <p class="text-center text-[0.72rem] leading-relaxed text-text-disabled m-0 animate-fade-in [animation-delay:650ms]">
+        <p
+          class="text-center text-[0.72rem] leading-relaxed text-text-disabled m-0 animate-fade-in [animation-delay:650ms]"
+        >
           Ao continuar, você concorda com nossos<br />
           <a
-            href="#" aria-label="Termos de Uso"
+            href="#"
+            aria-label="Termos de Uso"
             class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
-          >Termos de Uso</a> e
+            >Termos de Uso</a
+          >
+          e
           <a
-            href="#" aria-label="Política de Privacidade"
+            href="#"
+            aria-label="Política de Privacidade"
             class="text-text-secondary underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary-main hover:decoration-primary-main"
-          >Política de Privacidade</a>
+            >Política de Privacidade</a
+          >
         </p>
       </div>
 
       <!-- Footer -->
       <div class="animate-fade-in [animation-delay:750ms]">
-        <span class="text-xs text-text-disabled tracking-[0.02em]">Divi Finance © {{ currentYear }}</span>
+        <span class="text-xs text-text-disabled tracking-[0.02em]"
+          >Divi Finance © {{ currentYear }}</span
+        >
       </div>
     </div>
   </div>
