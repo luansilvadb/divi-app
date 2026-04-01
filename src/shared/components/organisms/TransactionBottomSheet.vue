@@ -2,10 +2,11 @@
   <BottomSheet
     v-model="internalShow"
     @closed="$emit('close')"
-    class="bottom-sheet-container z-[150] relative"
+    class="bottom-sheet-container"
+    :style="{ zIndex: 100 }"
   >
     <!-- Header Area (Premium Split) -->
-    <div class="bg-primary-main/10 p-5 border-b border-white/5 relative">
+    <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main">
       <div
         class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none"
       ></div>
@@ -37,7 +38,7 @@
         </div>
         <button
           @click="closeSheet"
-          class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all border border-white/5 group"
+          class="w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5 group"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +60,9 @@
     </div>
 
     <!-- Body Area -->
-    <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
+    <div class="bg-surface-main dark:bg-surface-main text-text-primary">
+      <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
+    </div>
   </BottomSheet>
 </template>
 
@@ -92,11 +95,22 @@ function handleSaved() {
 }
 </script>
 
-<style scoped>
+<style>
+/* Global override for this bottom sheet to ensure dark mode text color and higher z-index */
 .bottom-sheet-container {
   --vsbs-background: var(--color-surface-main);
   --vsbs-border-radius: 1.5rem;
-  --vsbs-backdrop-bg: #0e121b80;
+  --vsbs-backdrop-bg: rgba(0, 0, 0, 0.6);
   --vsbs-padding-x: 0;
+  z-index: 100 !important;
+}
+
+/* Ensure backdrop covers nav bar */
+.bottom-sheet-container [data-vsbs-backdrop] {
+  z-index: 90 !important;
+}
+
+.bottom-sheet-container [data-vsbs-wrapper] {
+  z-index: 100 !important;
 }
 </style>
