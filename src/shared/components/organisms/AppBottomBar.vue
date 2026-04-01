@@ -13,11 +13,26 @@
       <div class="bottom-nav-icon mb-1" v-html="item.icon"></div>
       <span class="text-[10px] font-bold tracking-wider uppercase">{{ item.label }}</span>
     </RouterLink>
+    <!-- More Button to open drawer -->
+    <button
+      class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200"
+      aria-label="Mais Opções"
+      @click="$emit('open-drawer')"
+    >
+      <div class="bottom-nav-icon mb-1">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+      </div>
+      <span class="text-[10px] font-bold tracking-wider uppercase">Mais</span>
+    </button>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+
+defineEmits<{
+  (e: 'open-drawer'): void
+}>()
 
 const navItems = [
   {
