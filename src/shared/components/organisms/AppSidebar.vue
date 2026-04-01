@@ -16,7 +16,7 @@
             mass: 0.5,
           }
     "
-    class="sidebar"
+    class="sidebar hidden md:flex"
     :class="{
       'sidebar--collapsed': isCollapsed,
       'low-power-mode': sidebarStore.isLowPowerMode,
