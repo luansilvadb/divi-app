@@ -1,0 +1,11 @@
+--- src/modules/transactions/ui/views/TransactionsView.vue
++++ src/modules/transactions/ui/views/TransactionsView.vue
+@@ -355,7 +355,7 @@
+       />
+       <TransactionModal
+-        v-else-if="showForm"
++        v-else
+         :show="showForm"
+         @close="showForm = false"
+         @saved="refreshTransactions"
+       />

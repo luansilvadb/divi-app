@@ -1,0 +1,30 @@
+--- src/modules/transactions/ui/views/TransactionsView.vue
++++ src/modules/transactions/ui/views/TransactionsView.vue
+@@ -342,12 +342,10 @@
+     </div>
+
+     <!-- Modals -->
+-    <template v-if="showForm">
+-      <TransactionBottomSheet
+-        v-if="isMobile"
++    <TransactionBottomSheet
++        v-if="isMobile"
+         :show="showForm"
+         @close="showForm = false"
+         @saved="refreshTransactions"
+       />
+-      <TransactionModal
+-        v-else
+-        :show="showForm"
+-        @close="showForm = false"
+-        @saved="refreshTransactions"
+-      />
+-    </template>
++    <TransactionModal
++      v-else-if="showForm && !isMobile"
++      :show="showForm"
++      @close="showForm = false"
++      @saved="refreshTransactions"
++    />
+
+     <BaseConfirmModal

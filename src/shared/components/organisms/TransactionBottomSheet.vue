@@ -3,6 +3,7 @@
     v-model="internalShow"
     @closed="$emit('close')"
     class="bottom-sheet-container"
+    teleport-to="body"
   >
     <!-- Header Area (Premium Split) -->
     <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]">
@@ -105,15 +106,10 @@ function handleSaved() {
 }
 
 [data-vsbs-wrapper] {
-  z-index: 100 !important;
+  z-index: 9999 !important;
 }
 
 [data-vsbs-backdrop] {
-  z-index: 90 !important;
-}
-
-/* Fix bottom safe area so it doesn't overlap with bottom nav if z-index trick fails */
-.bottom-sheet-container {
-  padding-bottom: env(safe-area-inset-bottom, 20px);
+  z-index: 9998 !important;
 }
 </style>

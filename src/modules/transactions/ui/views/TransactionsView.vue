@@ -346,20 +346,19 @@
     </div>
 
     <!-- Modals -->
-    <template v-if="showForm">
-      <TransactionBottomSheet
-        v-if="isMobile"
-        :show="showForm"
-        @close="showForm = false"
-        @saved="refreshTransactions"
-      />
-      <TransactionModal
-        v-else
-        :show="showForm"
-        @close="showForm = false"
-        @saved="refreshTransactions"
-      />
-    </template>
+
+    <TransactionBottomSheet
+      v-if="isMobile"
+      :show="showForm"
+      @close="showForm = false"
+      @saved="refreshTransactions"
+    />
+    <TransactionModal
+      v-else-if="showForm"
+      :show="showForm"
+      @close="showForm = false"
+      @saved="refreshTransactions"
+    />
 
     <BaseConfirmModal
       :show="showConfirmDelete"
