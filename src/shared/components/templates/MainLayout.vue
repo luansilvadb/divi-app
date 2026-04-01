@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
     <!-- Desktop Sidebar -->
-    <AppSidebar class="hidden md:flex" @logout="emit('logout')" />
+    <AppSidebar class="!hidden md:!flex" @logout="emit('logout')" />
 
     <!-- Main Content Area -->
     <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0">
