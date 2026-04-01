@@ -789,5 +789,4 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
     transition-duration: 0.01ms !important;
   }
 }
-
 </style>

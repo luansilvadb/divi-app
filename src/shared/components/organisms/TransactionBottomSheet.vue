@@ -6,7 +6,9 @@
     teleport-to="body"
   >
     <!-- Header Area (Premium Split) -->
-    <div class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]">
+    <div
+      class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]"
+    >
       <div
         class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none rounded-t-[1.5rem]"
       ></div>
@@ -82,7 +84,7 @@ const internalShow = computed({
   get: () => props.show,
   set: (val) => {
     if (!val) emit('close')
-  }
+  },
 })
 
 function closeSheet() {

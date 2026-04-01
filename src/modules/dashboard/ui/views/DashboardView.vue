@@ -4,33 +4,6 @@
     highlight="Financeiro"
     subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
   >
-    <template #action>
-      <BaseButton
-        variant="primary"
-        size="md"
-        class="!rounded-full shadow-lg shadow-primary-main/20 font-black tracking-tight"
-        @click="showTransactionForm = true"
-      >
-        <template #leading>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M5 12h14" />
-            <path d="M12 5v14" />
-          </svg>
-        </template>
-        Nova Transação
-      </BaseButton>
-    </template>
-
     <!-- Content Grid -->
     <div class="grid grid-cols-[1fr_400px] gap-10 items-stretch">
       <!-- MAIN COLUMN -->
@@ -580,26 +553,17 @@
         </BaseCard>
       </aside>
     </div>
-
-    <!-- Modals -->
-    <TransactionForm
-      :show="showTransactionForm"
-      @close="showTransactionForm = false"
-      @saved="refreshDashboard"
-    />
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useDashboardStore } from '../../application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
-import TransactionForm from '@/shared/components/organisms/TransactionForm.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
@@ -617,8 +581,6 @@ function handleImageError(e: Event) {
   const target = e.target as HTMLImageElement
   target.src = assetLoader.getFallback('category')
 }
-
-const showTransactionForm = ref(false)
 
 // Mock Growth Data
 const growthData = [42000, 43500, 41000, 44800, 46200, 48500]
