@@ -41,7 +41,7 @@
               >
                 {{ currentDate.getFullYear() }}
               </span>
-              <span class="text-sm font-black uppercase tracking-widest text-text-primary truncate max-w-[150px] w-full text-center block">
+              <span class="text-sm font-black uppercase tracking-widest text-text-primary">
                 {{ monthLabelOnly }}
               </span>
             </div>
