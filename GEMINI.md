@@ -1,6 +1,6 @@
 ﻿# Arquitetura Divi Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2026-03-30
+Auto-generated from all feature plans. Last updated: 2026-04-01
 
 ## Active Technologies
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite (002-refactor-color-palette)
@@ -13,6 +13,8 @@ Auto-generated from all feature plans. Last updated: 2026-03-30
 - Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS, @vueuse/motion (007-sidebar-polish-performance)
 - LocalStorage (for theme and sidebar state) (007-sidebar-polish-performance)
 - Supabase (SDK / RPC), Dexie (Local Persistence) (001-refactor-finance-vertical-slice)
+- Git 2.x + Node.js, Vue 3, Vite, Supabase (001-secure-gitignore)
+- Local file system (root directory) (001-secure-gitignore)
 
 - Vue 3 (Composition API)
 - TypeScript (Strict Mode)
@@ -50,9 +52,9 @@ src/
 - **Atomic Design**: Componentes em `src/shared/` devem ser puramente visuais e genéricos.
 
 ## Recent Changes
+- 001-secure-gitignore: Added Git 2.x + Node.js, Vue 3, Vite, Supabase
 - 002-fix-invalid-url-error: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
 - 002-fix-invalid-url-error: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite
-- 001-refactor-finance-vertical-slice: Added Vue 3 (Composition API), TypeScript (Strict Mode) + Pinia, Vite, TailwindCSS
 
 
 <!-- MANUAL ADDITIONS START -->
