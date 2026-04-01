@@ -1,52 +1,52 @@
 <template>
   <Teleport to="body">
-    <Transition name="sheet" :duration="400" @after-leave="$emit('closed')">
+    <div
+      v-if="isVisible"
+      role="dialog"
+      aria-modal="true"
+      class="fixed inset-0 z-[150] flex flex-col justify-end overflow-hidden sm:hidden"
+    >
+      <!-- Backdrop -->
       <div
-        v-if="show"
-        role="dialog"
-        aria-modal="true"
-        class="fixed inset-0 z-[150] flex flex-col justify-end overflow-hidden sm:hidden"
+        ref="backdropRef"
+        class="absolute inset-0 bg-[#0e121b80] backdrop-blur-md opacity-0"
+        aria-hidden="true"
+        @click="handleClose"
+      ></div>
+
+      <!-- Content -->
+      <div
+        ref="sheetRef"
+        class="relative w-full bg-surface-main rounded-t-3xl border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] bottom-sheet-content translate-y-full"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
       >
-        <!-- Backdrop -->
+        <!-- Drag Handle Indicator -->
         <div
-          class="absolute inset-0 bg-[#0e121b80] backdrop-blur-md backdrop-bg transition-opacity duration-300"
-          aria-hidden="true"
+          class="w-full flex justify-center pt-4 pb-3 shrink-0 cursor-grab active:cursor-grabbing focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main/50 rounded-t-3xl"
+          role="button"
+          aria-label="Fechar"
+          tabindex="0"
           @click="handleClose"
-        ></div>
-
-        <!-- Content -->
-        <div
-          class="relative w-full bg-surface-main rounded-t-3xl border-t border-white/5 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] bottom-sheet-content transition-transform duration-300"
-          :style="computedStyle"
-          @touchstart="onTouchStart"
-          @touchmove="onTouchMove"
-          @touchend="onTouchEnd"
+          @keydown.enter="handleClose"
+          @keydown.space.prevent="handleClose"
         >
-          <!-- Drag Handle Indicator -->
-          <div
-            class="w-full flex justify-center pt-4 pb-3 shrink-0 cursor-grab active:cursor-grabbing focus:outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main/50 rounded-t-3xl"
-            role="button"
-            aria-label="Fechar"
-            tabindex="0"
-            @click="handleClose"
-            @keydown.enter="handleClose"
-            @keydown.space.prevent="handleClose"
-          >
-            <div class="w-12 h-1.5 rounded-full bg-white/20 transition-colors hover:bg-white/40 active:bg-white/60 pointer-events-none"></div>
-          </div>
+          <div class="w-12 h-1.5 rounded-full bg-white/20 transition-colors hover:bg-white/40 active:bg-white/60 pointer-events-none"></div>
+        </div>
 
-          <!-- Slot Content -->
-          <div class="overflow-y-auto overflow-x-hidden flex-1 pb-safe overscroll-contain px-1">
-            <slot />
-          </div>
+        <!-- Slot Content -->
+        <div class="overflow-y-auto overflow-x-hidden flex-1 pb-safe overscroll-contain px-1">
+          <slot />
         </div>
       </div>
-    </Transition>
+    </div>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { animate, spring } from 'motion'
 
 const props = defineProps<{
   show: boolean
@@ -54,27 +54,66 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:show', 'closed'])
 
+const isVisible = ref(props.show)
+const backdropRef = ref<HTMLElement | null>(null)
+const sheetRef = ref<HTMLElement | null>(null)
+
+// Animation configs
+const springConfig = { stiffness: 400, damping: 30, mass: 1 }
+
+watch(() => props.show, async (newVal) => {
+  if (newVal) {
+    isVisible.value = true
+    await nextTick()
+
+    // Animate in
+    if (backdropRef.value) {
+      animate(backdropRef.value, { opacity: [0, 1] }, { duration: 0.3 })
+    }
+
+    if (sheetRef.value) {
+      animate(
+        sheetRef.value,
+        { y: ['100%', '0%'] },
+        { type: 'spring', ...springConfig }
+      )
+    }
+  } else {
+    // Animate out
+    const animations = []
+
+    if (backdropRef.value) {
+      animations.push(
+        animate(backdropRef.value, { opacity: 0 }, { duration: 0.3 })
+      )
+    }
+
+    if (sheetRef.value) {
+      // Use offset state if dragging
+      const currentY = parseFloat(sheetRef.value.style.transform.replace(/[^0-9.]/g, '')) || 0
+      const startPos = currentY ? `${currentY}px` : '0%'
+
+      animations.push(
+        animate(
+          sheetRef.value,
+          { y: [startPos, '100%'] },
+          { type: 'spring', stiffness: 300, damping: 35 }
+        )
+      )
+    }
+
+    // Wait for all to finish
+    await Promise.all(animations)
+    isVisible.value = false
+    emit('closed')
+  }
+})
+
 // Touch drag state
 const startY = ref(0)
 const currentY = ref(0)
 const isDragging = ref(false)
-
-const computedStyle = computed(() => {
-  const offset = currentY.value - startY.value > 0 ? currentY.value - startY.value : 0
-
-  if (!isDragging.value && offset === 0) {
-    return {
-      transform: '',
-      // Let CSS handle the transition when returning to 0 or mounting
-    }
-  }
-
-  return {
-    transform: `translate3d(0, ${offset}px, 0)`,
-    transition: isDragging.value ? 'none' : 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
-    willChange: 'transform'
-  }
-})
+let activeDragAnimation: any = null
 
 function onTouchStart(e: TouchEvent) {
   // Only start drag if we are at the top of the scrollable content
@@ -87,6 +126,11 @@ function onTouchStart(e: TouchEvent) {
 
   const touch = e.touches[0]
   if (!touch) return
+
+  // Cancel any ongoing spring animation
+  if (activeDragAnimation) {
+    activeDragAnimation.stop()
+  }
 
   startY.value = touch.clientY
   currentY.value = touch.clientY
@@ -107,6 +151,11 @@ function onTouchMove(e: TouchEvent) {
     if (target.closest('.cursor-grab')) {
        e.preventDefault()
     }
+
+    // Set direct transform for 0 latency drag
+    if (sheetRef.value) {
+      sheetRef.value.style.transform = `translateY(${offset}px)`
+    }
   }
 
   currentY.value = y
@@ -118,23 +167,30 @@ function onTouchEnd() {
   isDragging.value = false
   const offset = currentY.value - startY.value
 
+  if (!sheetRef.value) return
+
   // If dragged down more than 100px, close it
   if (offset > 100) {
     handleClose()
   } else {
-    // Spring back
-    startY.value = 0
-    currentY.value = 0
+    // Spring back to 0
+    activeDragAnimation = animate(
+      sheetRef.value,
+      { y: [`${offset}px`, '0px'] },
+      { type: 'spring', ...springConfig }
+    )
+
+    activeDragAnimation.then(() => {
+      if (sheetRef.value) {
+        sheetRef.value.style.transform = ''
+      }
+    }).catch(() => {})
   }
 }
 
 function handleClose() {
   emit('update:show', false)
-  // Ensure drag offsets are reset so next time it opens cleanly
-  setTimeout(() => {
-    startY.value = 0
-    currentY.value = 0
-  }, 300)
+  // Animation handles the rest via watch
 }
 
 function handleKeydown(e: KeyboardEvent) {
@@ -143,8 +199,14 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('keydown', handleKeydown)
+  if (props.show) {
+    isVisible.value = true
+    await nextTick()
+    if (backdropRef.value) animate(backdropRef.value, { opacity: 1 }, { duration: 0 })
+    if (sheetRef.value) animate(sheetRef.value, { y: '0%' }, { duration: 0 })
+  }
 })
 
 onUnmounted(() => {
@@ -158,32 +220,6 @@ onUnmounted(() => {
 }
 .bottom-sheet-content {
   backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Base Transition using Vue's specific transition classes */
-/* Target internal components natively so they animate in sync */
-
-.sheet-enter-active .backdrop-bg,
-.sheet-leave-active .backdrop-bg {
-  transition: opacity 0.3s ease;
-}
-
-.sheet-enter-from .backdrop-bg,
-.sheet-leave-to .backdrop-bg {
-  opacity: 0;
-}
-
-.sheet-enter-active .bottom-sheet-content {
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.sheet-leave-active .bottom-sheet-content {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sheet-enter-from .bottom-sheet-content,
-.sheet-leave-to .bottom-sheet-content {
-  transform: translate3d(0, 100%, 0);
+  will-change: transform;
 }
 </style>
