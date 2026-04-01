@@ -1,12 +1,11 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
-    <AppSidebar v-if="isLoggedIn" @logout="handleLogout" />
-    <main
-      :class="[
-        'flex-1 h-full overflow-y-auto overflow-x-hidden relative',
-        isLoginRoute ? '' : 'bg-bg-main',
-      ]"
-    >
+  <MainLayout v-if="isLoggedIn && !isLoginRoute" @logout="handleLogout">
+    <RouterView />
+  </MainLayout>
+
+  <!-- Fallback full-screen for Login and Unauthenticated paths -->
+  <div v-else class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
+    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-bg-main">
       <RouterView />
     </main>
   </div>
@@ -20,7 +19,8 @@ import { useTheme } from './core/theme'
 import { useSidebarStore } from './shared/stores/sidebarStore'
 import type { IAuthService } from './modules/auth/domain/contracts/IAuthService'
 import type { User } from './modules/auth/domain/entities/User'
-import AppSidebar from './shared/components/organisms/AppSidebar.vue'
+
+import MainLayout from './shared/components/templates/MainLayout.vue'
 
 const router = useRouter()
 const route = useRoute()
