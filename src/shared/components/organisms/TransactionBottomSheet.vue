@@ -105,7 +105,7 @@ function handleSaved() {
   --vsbs-shadow-color: rgba(0, 0, 0, 0.5);
 }
 
-[data-vsbs-wrapper] {
+[data-vsbs-sheet] {
   z-index: 9999 !important;
 }
 
