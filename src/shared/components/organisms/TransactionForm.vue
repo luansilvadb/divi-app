@@ -1,5 +1,5 @@
 <template>
-  <BaseModal :show="show" @update:show="$emit('close')">
+  <component :is="isMobile ? BaseBottomSheet : BaseModal" :show="show" @update:show="$emit('close')">
     <BaseCard
       class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-white/5 !bg-surface-main overflow-hidden flex flex-col relative"
       padding="none"
@@ -182,15 +182,17 @@
         </div>
       </form>
     </BaseCard>
-  </BaseModal>
+  </component>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import BaseModal from '@/shared/components/molecules/BaseModal.vue'
+import BaseBottomSheet from '@/shared/components/molecules/BaseBottomSheet.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
@@ -201,6 +203,8 @@ defineProps<{
 }>()
 
 const emit = defineEmits(['close', 'saved'])
+
+const isMobile = useMediaQuery('(max-width: 767px)')
 const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
 
