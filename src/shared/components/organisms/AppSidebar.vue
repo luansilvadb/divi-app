@@ -790,13 +790,4 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
   }
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 100;
-  }
-}
 </style>
