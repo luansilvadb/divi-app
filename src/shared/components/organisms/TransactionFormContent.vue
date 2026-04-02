@@ -1,7 +1,7 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-6 space-y-6 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh] pb-12"
+    class="p-5 space-y-3 bg-surface-main dark:bg-surface-main h-full  max-h-none pb-4"
   >
     <!-- Type Switcher (Premium) -->
     <div
@@ -59,7 +59,7 @@
       </button>
     </div>
 
-    <div class="space-y-4">
+    <div class="space-y-3">
       <BaseInput
         id="title"
         label="Título da Transação"
