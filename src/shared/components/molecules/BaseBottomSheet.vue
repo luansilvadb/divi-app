@@ -184,7 +184,8 @@ function physicsLoop(time: number) {
 
   while (accumulator >= FIXED_TIME_STEP) {
     // Advance physics by exactly FIXED_TIME_STEP
-    const result = springGenerator.next(FIXED_TIME_STEP)
+    if (!springGenerator) return;
+        const result = springGenerator.next(FIXED_TIME_STEP)
     position.value = result.value
 
     // Calculate instantaneous velocity roughly
