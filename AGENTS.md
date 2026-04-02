@@ -199,7 +199,7 @@ After saving plan, offer:
 
 ---
 
-## 7. Test-Driven Development
+## 4. Test-Driven Development
 
 **Use when:** Implementing any feature or bugfix, before writing implementation code.
 
@@ -372,7 +372,7 @@ Code before test. Test after implementation. Test passes immediately. Can't expl
 
 ---
 
-## 8. Systematic Debugging
+## 5. Systematic Debugging
 
 **Use when:** Any bug, test failure, or unexpected behavior — before proposing fixes.
 
@@ -474,7 +474,7 @@ If you haven't completed Phase 1, you cannot propose fixes.
 
 ---
 
-## 9. Verification Before Completion
+## 6. Verification Before Completion
 
 **Use when:** About to claim work is complete, fixed, or passing — before committing or creating PRs.
 
@@ -557,7 +557,7 @@ Before claiming ANY status:
 
 ---
 
-## 10. Code Review
+## 7. Code Review
 
 **Use when:** Completing tasks, implementing major features, before merging, or when receiving review feedback.
 
