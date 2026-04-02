@@ -17,11 +17,10 @@ Disciplined, systematic approach to AI-assisted software development. 13 integra
 
 1. **Brainstorm** — Design before implementation (Section 2)
 2. **Plan** — Write detailed implementation plan (Section 3)
-3. **Execute** — Implement with subagents or batches (Sections 4-6)
-4. **Test** — TDD throughout: RED-GREEN-REFACTOR (Section 7)
-5. **Debug** — Systematic root cause analysis when needed (Section 8)
-6. **Review** — Code review after each task (Section 10)
-7. **Finish** — Branch completion and integration (Section 12)
+3. **Test** — TDD throughout: RED-GREEN-REFACTOR (Section 7)
+4. **Debug** — Systematic root cause analysis when needed (Section 8)
+5. **Review** — Code review after each task (Section 10)
+6. **Finish** — Branch completion and integration (Section 12)
 
 ## How to Use
 
@@ -30,16 +29,11 @@ Apply the relevant section based on your current task:
 | Task | Section |
 |------|---------|
 | Starting new work | Section 2 (Brainstorming) → Section 3 (Writing Plans) |
-| Implementing a plan (this session) | Section 5 (Subagent-Driven Development) |
-| Implementing a plan (separate session) | Section 4 (Executing Plans) |
-| Multiple independent problems | Section 6 (Dispatching Parallel Agents) |
 | Writing or fixing code | Section 7 (Test-Driven Development) |
 | Bug, test failure, unexpected behavior | Section 8 (Systematic Debugging) |
 | About to claim work is done | Section 9 (Verification Before Completion) |
 | After completing work | Section 10 (Code Review) |
-| Need isolated workspace | Section 11 (Using Git Worktrees) |
 | Ready to merge/integrate | Section 12 (Finishing a Development Branch) |
-| Creating new skills | Section 13 (Writing Skills) |
 
 **Skill priority:** Process skills first (brainstorming, debugging), then implementation skills.
 
@@ -202,161 +196,6 @@ After saving plan, offer:
 **2. Parallel Session (separate)** — open new session, batch execution with checkpoints → follow Section 4
 
 **Which approach?"**
-
----
-
-## 4. Executing Plans
-
-**Use when:** You have a written implementation plan to execute in a separate session with review checkpoints.
-
-**Announce at start:** "I'm using the executing-plans skill to implement this plan."
-
-### Process
-
-1. **Load and review plan** — Read critically, raise concerns before starting. If no concerns: create task list and proceed.
-2. **Execute batch** — Default first 3 tasks. For each: mark in_progress → follow steps exactly → run verifications → mark completed
-3. **Report** — Show what was implemented, verification output. Say: "Ready for feedback."
-4. **Continue** — Apply feedback, execute next batch, repeat
-5. **Complete** — After all tasks verified, follow Section 12 (Finishing a Development Branch)
-
-### When to Stop and Ask for Help
-
-**STOP executing immediately when:**
-- Hit a blocker mid-batch (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
-- Verification fails repeatedly
-
-**Ask for clarification rather than guessing.**
-
-### When to Revisit Earlier Steps
-
-**Return to Review (Step 1) when:**
-- Partner updates the plan based on your feedback
-- Fundamental approach needs rethinking
-
-**Don't force through blockers** — stop and ask.
-
-### Rules
-
-- Follow plan steps exactly
-- Don't skip verifications
-- Between batches: report and wait
-- Stop when blocked, don't guess
-- Never start implementation on main/master without explicit consent
-
-### Integration
-
-- REQUIRED: Set up workspace with Section 11 (Git Worktrees) before starting
-- After all tasks: follow Section 12 (Finishing a Development Branch)
-
----
-
-## 5. Subagent-Driven Development
-
-**Use when:** Executing implementation plans with independent tasks in the current session. Fresh subagent per task + two-stage review.
-
-**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
-
-### Process
-
-1. **Read plan, extract all tasks** with full text and context. Create task list.
-2. **Per task:**
-   a. Dispatch implementer subagent (provide full task text + context, don't make them read plan file)
-   b. If subagent asks questions → answer clearly before proceeding
-   c. Subagent implements, tests, commits, self-reviews
-   d. Dispatch spec reviewer subagent → verify code matches spec
-   e. If issues → implementer fixes → re-review until ✅
-   f. Dispatch code quality reviewer subagent
-   g. If issues → implementer fixes → re-review until ✅
-   h. Mark task complete
-3. **After all tasks:** Dispatch final code reviewer for entire implementation
-4. **Complete:** Follow Section 12 (Finishing a Development Branch)
-
-### Implementer Subagent Prompt
-
-Provide: full task text, context (where it fits), working directory. Tell them:
-- Implement exactly what task specifies
-- Write tests (TDD if task says to)
-- If you have questions about requirements, approach, or anything unclear — **ask them now before starting**
-- Commit work
-- Self-review: completeness (all requirements?), quality (clean, maintainable?), discipline (YAGNI?), testing (real behavior, not mocks?)
-- If you find issues during self-review, fix them now before reporting
-- Report: what implemented, test results, files changed, self-review findings, concerns
-
-### Spec Reviewer Prompt
-
-Provide: full task requirements, implementer's report. Tell them:
-- **CRITICAL: Do NOT trust the implementer's report** — read actual code
-- The implementer may be incomplete, inaccurate, or optimistic
-- Check by reading code: missing requirements, extra/unneeded work, misunderstandings
-- Report: ✅ spec compliant or ❌ issues with file:line references
-
-### Code Quality Reviewer Prompt
-
-Use code review template (see Section 10). Provide: BASE_SHA, HEAD_SHA, description.
-- Only dispatch after spec compliance passes
-- Returns: Strengths, Issues (Critical/Important/Minor), Assessment
-
-### Rules
-
-- Never start on main/master without consent
-- Never skip reviews (spec OR quality)
-- Spec review BEFORE code quality review
-- Don't dispatch parallel implementation subagents (conflicts)
-- Don't move to next task with open review issues
-- If subagent fails → dispatch fix subagent, don't fix manually (context pollution)
-- Don't make subagent read plan file (provide full text instead)
-- Accept "close enough" on spec compliance → NOT acceptable (spec issues = not done)
-- **Start code quality review before spec compliance is ✅** → WRONG ORDER
-
----
-
-## 6. Dispatching Parallel Agents
-
-**Use when:** 2+ independent tasks that can be worked on without shared state or sequential dependencies.
-
-### When to Use
-
-- 3+ test files failing with different root causes
-- Multiple subsystems broken independently
-- Each problem can be understood without context from others
-- No shared state between investigations
-
-**Don't use when:**
-- Failures are related (fix one might fix others)
-- Need full system context to understand
-- Agents would interfere (editing same files, shared resources)
-- Exploratory debugging (you don't know what's broken yet)
-
-### Pattern
-
-1. **Identify independent domains** — group failures by what's broken
-2. **Create focused agent tasks** — each gets: specific scope, clear goal, constraints, expected output format
-3. **Dispatch in parallel** — one agent per domain
-4. **Review and integrate** — read summaries, verify no conflicts, run full test suite
-
-### Agent Prompt Structure
-
-Good prompts are: focused (one problem domain), self-contained (all context needed), specific about output (what to return).
-
-- ❌ Too broad: "Fix all the tests" — agent gets lost
-- ✅ Specific: "Fix agent-tool-abort.test.ts — 3 failures listed below"
-- ❌ No constraints: agent might refactor everything
-- ✅ Constrained: "Do NOT change production code" or "Fix tests only"
-- ❌ Vague output: "Fix it" — you don't know what changed
-- ✅ Specific: "Return summary of root cause and changes"
-
-### Real Example
-
-**Scenario:** 6 test failures across 3 files after major refactoring
-
-**Dispatch:**
-- Agent 1 → Fix agent-tool-abort.test.ts (3 timing issues)
-- Agent 2 → Fix batch-completion-behavior.test.ts (2 event structure bugs)
-- Agent 3 → Fix tool-approval-race-conditions.test.ts (1 async issue)
-
-**Results:** All fixes independent, no conflicts, full suite green. 3 problems solved in time of 1.
 
 ---
 
@@ -800,58 +639,6 @@ Actions speak. Just fix it.
 
 ---
 
-## 11. Using Git Worktrees
-
-**Use when:** Starting feature work that needs isolation or before executing implementation plans.
-
-**Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
-
-### Directory Selection (priority order)
-
-1. **Check existing:** `ls -d .worktrees 2>/dev/null` (preferred) or `ls -d worktrees 2>/dev/null`
-   - If found: use that directory. If both exist, `.worktrees` wins.
-2. **Check AGENTS.md:** `grep -i "worktree.*director" AGENTS.md 2>/dev/null`
-   - If preference specified: use without asking.
-3. **Ask user:** `.worktrees/` (project-local, hidden) or `~/.config/superpowers/worktrees/<project>/` (global)
-
-### Safety Verification
-
-For project-local directories: verify directory is in `.gitignore` before creating worktree.
-
-    git check-ignore -q .worktrees 2>/dev/null
-
-If NOT ignored:
-1. Add appropriate line to `.gitignore`
-2. Commit the change
-3. Proceed with worktree creation
-
-**Why critical:** Prevents accidentally committing worktree contents to repository.
-
-### Creation Steps
-
-1. **Detect project:** `project=$(basename "$(git rev-parse --show-toplevel)")`
-2. **Create worktree:** `git worktree add "$path" -b "$BRANCH_NAME"`
-3. **Run project setup** (auto-detect):
-   ```bash
-   if [ -f package.json ]; then npm install; fi
-   if [ -f Cargo.toml ]; then cargo build; fi
-   if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-   if [ -f pyproject.toml ]; then poetry install; fi
-   if [ -f go.mod ]; then go mod download; fi
-   ```
-4. **Verify clean baseline** — run tests. If tests fail: report failures, ask whether to proceed.
-5. **Report:** location, test results, ready status
-
-### Rules
-
-- Never create worktree without verifying it's ignored (project-local)
-- Never skip baseline test verification
-- Never proceed with failing tests without asking
-- Follow directory priority: existing → AGENTS.md → ask
-- Auto-detect setup commands from project files
-
----
-
 ## 12. Finishing a Development Branch
 
 **Use when:** Implementation is complete, all tests pass, ready to integrate.
@@ -895,88 +682,6 @@ If NOT ignored:
 - Require typed "discard" confirmation (option 4)
 - Don't force-push without explicit request
 - Present exactly 4 options — don't use open-ended questions
-
----
-
-## 13. Writing Skills
-
-**Use when:** Creating new skills, editing existing skills, or verifying skills work.
-
-### What is a Skill?
-
-A reusable reference guide for proven techniques, patterns, or tools. NOT narratives about how you solved a problem once.
-
-**Skills are:** Reusable techniques, patterns, tools, reference guides
-**Skills are NOT:** One-off solutions, project-specific conventions, mechanical constraints (automate those instead)
-
-### The Iron Law (Same as TDD)
-
-    NO SKILL WITHOUT A FAILING TEST FIRST
-
-Test with subagent pressure scenarios. Watch agents fail without skill (RED). Write minimal skill (GREEN). Close loopholes (REFACTOR).
-
-### SKILL.md Structure
-
-    ---
-    name: skill-name-with-hyphens
-    description: "Use when [specific triggering conditions]"
-    ---
-
-Sections: Overview → When to Use → Core Pattern → Quick Reference → Common Mistakes
-
-### Description Field (Critical for Discovery)
-
-**CRITICAL: Description = When to Use, NOT What the Skill Does**
-
-Agents read description to decide which skills to load. The description should ONLY describe triggering conditions. Do NOT summarize the skill's process or workflow.
-
-**Why:** Testing revealed that when a description summarizes workflow, agents follow the description shortcut instead of reading the full skill. A description saying "code review between tasks" caused an agent to do ONE review, even though the skill specified TWO reviews (spec + quality).
-
-```yaml
-# ❌ BAD: Summarizes workflow — agent may follow this instead of reading skill
-description: Use when executing plans - dispatches subagent per task with code review
-
-# ✅ GOOD: Just triggering conditions
-description: Use when executing implementation plans with independent tasks
-```
-
-### Naming
-
-- Verb-first, active voice: `condition-based-waiting` not `async-test-helpers`
-- Gerunds work well: `creating-skills`, `testing-skills`
-- Name by what you DO: `root-cause-tracing` not `debugging-techniques`
-
-### Key Rules
-
-- One excellent example beats many mediocre ones
-- Flowcharts only for non-obvious decisions
-- Keep inline unless reference >100 lines
-- Test BEFORE deploying. No exceptions.
-
-### Bulletproofing Against Rationalization
-
-Skills that enforce discipline need to resist rationalization:
-
-1. **Close every loophole explicitly** — Don't just state the rule; forbid specific workarounds ("Don't keep it as reference, don't adapt it, delete means delete")
-2. **Address "spirit vs letter"** — Add "Violating the letter IS violating the spirit" early
-3. **Build rationalization table** — Capture every excuse agents make, add counters
-4. **Create red flags list** — Make it easy to self-check when rationalizing
-
-### Skill Creation Checklist
-
-**RED:** Create pressure scenarios → run WITHOUT skill → document baseline failures (exact rationalizations agents use)
-**GREEN:** Write skill addressing specific failures → run WITH skill → verify compliance
-**REFACTOR:** Find new rationalizations → add counters → re-test until bulletproof
-
-### Common Rationalizations for Skipping Testing
-
-| Excuse | Reality |
-|--------|---------|
-| "Skill is obviously clear" | Clear to you ≠ clear to agents. Test it. |
-| "It's just a reference" | References can have gaps. Test retrieval. |
-| "Testing is overkill" | Untested skills always have issues. 15 min saves hours. |
-| "I'll test if problems emerge" | Problems = agents can't use skill. Test BEFORE deploying. |
-| "No time to test" | Deploying untested skill wastes more time fixing later. |
 
 ---
 name: self-improvement
