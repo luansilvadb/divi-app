@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 relative" v-click-outside="close">
+  <div class="mb-3 relative" v-click-outside="close">
     <label v-if="label" :for="id" class="block text-sm font-medium mb-1 text-text-primary">{{
       label
     }}</label>

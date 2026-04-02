@@ -1,7 +1,7 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-8 space-y-8 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh] pb-24"
+    class="p-6 space-y-6 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh] pb-12"
   >
     <!-- Type Switcher (Premium) -->
     <div
@@ -9,7 +9,7 @@
     >
       <button
         type="button"
-        class="flex-1 py-3.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+        class="flex-1 py-2.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
         :class="
           form.type === 'expense'
             ? 'bg-error-main text-white shadow-[0_10px_25px_rgba(248,81,73,0.3)]'
@@ -34,7 +34,7 @@
       </button>
       <button
         type="button"
-        class="flex-1 py-3.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
+        class="flex-1 py-2.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
         :class="
           form.type === 'income'
             ? 'bg-success-main text-white shadow-[0_10px_25px_rgba(50,205,50,0.3)]'
@@ -59,7 +59,7 @@
       </button>
     </div>
 
-    <div class="space-y-5">
+    <div class="space-y-4">
       <BaseInput
         id="title"
         label="Título da Transação"
@@ -106,7 +106,7 @@
       <BaseButton
         variant="ghost"
         type="button"
-        class="flex-1 !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
         @click="$emit('close')"
       >
         Cancelar
@@ -114,7 +114,7 @@
       <BaseButton
         type="submit"
         :loading="isSubmitting"
-        class="flex-[2] !py-4 font-black uppercase text-[0.7rem] tracking-[0.15em] shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+        class="flex-[2] !py-3 font-black uppercase text-[0.7rem] tracking-[0.15em] shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]"
         :variant="form.type === 'expense' ? 'danger' : 'primary'"
       >
         Salvar Lançamento

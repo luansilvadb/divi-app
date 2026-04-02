@@ -7,7 +7,7 @@
   >
     <!-- Header Area (Premium Split) -->
     <div
-      class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]"
+      class="bg-primary-main/10 p-4 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]"
     >
       <div
         class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none rounded-t-[1.5rem]"
@@ -15,7 +15,7 @@
       <div class="flex items-center justify-between relative z-10">
         <div class="flex items-center gap-4">
           <div
-            class="w-10 h-10 rounded-2xl bg-primary-main/20 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20"
+            class="w-9 h-9 rounded-2xl bg-primary-main/20 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
