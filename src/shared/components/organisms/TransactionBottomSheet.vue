@@ -1,65 +1,68 @@
 <template>
   <BottomSheet
     ref="bottomSheetRef"
+    v-model="isOpen"
     @closed="$emit('close')"
     class="bottom-sheet-container"
     teleport-to="body"
   >
     <!-- Header Area (Premium Split) -->
-    <div
-      class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary rounded-t-[1.5rem]"
-    >
+    <template #header>
       <div
-        class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none rounded-t-[1.5rem]"
-      ></div>
-      <div class="flex items-center justify-between relative z-10">
-        <div class="flex items-center gap-4">
-          <div
-            class="w-10 h-10 rounded-2xl bg-primary-main/20 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20"
+        class="bg-primary-main/10 p-5 border-b border-black/5 dark:border-white/5 relative bg-surface-main dark:bg-surface-main text-text-primary w-full"
+      >
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-primary-main/10 via-transparent to-transparent pointer-events-none"
+        ></div>
+        <div class="flex items-center justify-between relative z-10 w-full">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 rounded-2xl bg-primary-main/20 flex items-center justify-center text-primary-main shadow-inner border border-primary-main/20"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-black text-text-primary tracking-tight leading-tight">
+                Nova Transação
+              </h2>
+            </div>
+          </div>
+          <button
+            @click="closeSheet"
+            class="w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5 group"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
+              width="18"
+              height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2.5"
               stroke-linecap="round"
               stroke-linejoin="round"
+              class="group-hover:rotate-90 transition-transform duration-300"
             >
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
             </svg>
-          </div>
-          <div>
-            <h2 class="text-xl font-black text-text-primary tracking-tight leading-tight">
-              Nova Transação
-            </h2>
-          </div>
+          </button>
         </div>
-        <button
-          @click="closeSheet"
-          class="w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5 group"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="group-hover:rotate-90 transition-transform duration-300"
-          >
-            <path d="M18 6 6 18" />
-            <path d="m6 6 12 12" />
-          </svg>
-        </button>
       </div>
-    </div>
+    </template>
 
     <!-- Body Area -->
     <div class="bg-surface-main dark:bg-surface-main text-text-primary h-full">
@@ -70,8 +73,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
-import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
+import BottomSheet from '@/shared/components/BottomSheet.vue'
 import TransactionFormContent from './TransactionFormContent.vue'
 
 const props = defineProps<{
@@ -80,20 +82,24 @@ const props = defineProps<{
 
 const emit = defineEmits(['close', 'saved'])
 
-const bottomSheetRef = ref<InstanceType<typeof BottomSheet>>()
+const isOpen = ref(props.show)
+const bottomSheetRef = ref<InstanceType<typeof BottomSheet> | null>(null)
 
 watch(
   () => props.show,
   (newVal) => {
-    if (newVal) {
-      bottomSheetRef.value?.open()
-    } else {
-      bottomSheetRef.value?.close()
-    }
+    isOpen.value = newVal
   }
 )
 
+watch(isOpen, (newVal) => {
+  if (!newVal && props.show) {
+    emit('close')
+  }
+})
+
 function closeSheet() {
+  isOpen.value = false
   emit('close')
 }
 
