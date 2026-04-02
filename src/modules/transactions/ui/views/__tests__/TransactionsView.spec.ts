@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TransactionsView from '../TransactionsView.vue'
+import { ref, nextTick } from 'vue'
 
 // Mock shared components
 vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
@@ -11,6 +12,12 @@ vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
 // Mock StandardPageLayout
 vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
   default: { template: '<div><slot name="action" /><slot /></div>' },
+}))
+
+// Mock useIsMobile
+const isMobileMock = ref(false)
+vi.mock('@/shared/composables/useIsMobile', () => ({
+  useIsMobile: () => isMobileMock,
 }))
 
 // Mock the db file specifically before it gets imported by anything else
@@ -55,6 +62,7 @@ vi.mock('../../application/stores/transactionStore', () => ({
 describe('TransactionsView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    isMobileMock.value = false
   })
 
   it('renders correctly', () => {
@@ -63,15 +71,51 @@ describe('TransactionsView', () => {
         stubs: {
           BaseButton: true,
           TransactionItem: true,
-          TransactionForm: true,
           BaseCard: true,
           BaseSummaryItem: true,
           BaseProgressBar: true,
-          StandardPageLayout: true,
+          StandardPageLayout: false,
+          BaseConfirmBottomSheet: true,
+          BaseConfirmModal: true,
+          TransactionModal: true,
+          TransactionBottomSheet: true,
+          Teleport: true
         },
       },
     })
 
     expect(wrapper.exists()).toBe(true)
+    expect(wrapper.html()).toContain('aria-label="Nova Transação"')
+  })
+
+  it('switches between Modal and BottomSheet based on isMobile', async () => {
+    const wrapper = mount(TransactionsView, {
+      global: {
+        stubs: {
+          BaseButton: true,
+          TransactionItem: true,
+          BaseCard: true,
+          BaseSummaryItem: true,
+          BaseProgressBar: true,
+          StandardPageLayout: false,
+          BaseConfirmBottomSheet: { name: 'BaseConfirmBottomSheet', template: '<div class="sheet-stub"></div>' },
+          BaseConfirmModal: { name: 'BaseConfirmModal', template: '<div class="modal-stub"></div>' },
+          TransactionModal: { name: 'TransactionModal', template: '<div class="modal-stub"></div>' },
+          TransactionBottomSheet: { name: 'TransactionBottomSheet', template: '<div class="sheet-stub"></div>' },
+          Teleport: true
+        },
+      },
+    })
+
+    // Initial state (Desktop)
+    expect(wrapper.findComponent({ name: 'TransactionModal' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'TransactionBottomSheet' }).exists()).toBe(false)
+
+    // Mobile state
+    isMobileMock.value = true
+    await nextTick()
+
+    expect(wrapper.findComponent({ name: 'TransactionModal' }).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'TransactionBottomSheet' }).exists()).toBe(true)
   })
 })

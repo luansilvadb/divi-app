@@ -1,191 +1,75 @@
 <template>
-  <StandardPageLayout
-    title="Seu Fluxo Financeiro"
-    highlight="Fluxo"
-    subtitle="Domine seus hábitos com clareza total. Cada movimento conta uma história."
-  >
-    <!-- Content Grid (Holy Grail) -->
-    <div class="view-content-grid">
-      <!-- MAIN COLUMN: Actions + List -->
-      <main class="main-column pb-24">
-        <!-- Tools & Filtering -->
-        <div
-          class="p-4 flex flex-wrap items-center justify-between gap-4 glass-card bg-surface-main shadow-sm mb-8"
-        >
-          <!-- Month Selector -->
-          <div
-            class="flex flex-1 justify-between w-full items-center bg-black/5 dark:bg-black/20 p-1.5 rounded-[1.5rem] border border-black/5 dark:border-white/5"
+  <StandardPageLayout title="Transações" :loading="store.isLoading">
+    <!-- Header with Search & Filters -->
+    <template #action>
+      <div class="flex items-center gap-4">
+        <!-- Month Selector -->
+        <div class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5">
+          <button
+            @click="prevMonth"
+            class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
           >
-            <button
-              aria-label="Mês anterior"
-              class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
-              @click="prevMonth"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <div class="px-8 flex flex-col items-center min-w-[150px]">
-              <span
-                class="text-[9px] font-black uppercase tracking-[0.2em] text-text-disabled leading-none mb-1.5"
-              >
-                {{ currentDate.getFullYear() }}
-              </span>
-              <span
-                class="text-sm font-black uppercase tracking-widest text-text-primary truncate max-w-[150px] w-full text-center block"
-              >
-                {{ monthLabelOnly }}
-              </span>
-            </div>
-            <button
-              aria-label="Próximo mês"
-              class="h-11 w-11 flex items-center justify-center rounded-2xl hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all active:scale-95"
-              @click="nextMonth"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <div class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center">
+            {{ monthLabelOnly }}
           </div>
+          <button
+            @click="nextMonth"
+            class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </template>
 
-          <!-- Search Input -->
-          <div class="relative flex-1 min-w-[200px]">
-            <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-text-disabled"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </div>
-            <input
-              v-model="searchQuery"
-              type="text"
-              aria-label="Buscar transações"
-              placeholder="Buscar transações..."
-              class="w-full pl-12 pr-4 h-14 bg-black/5 dark:bg-black/20 border border-black/5 dark:border-white/5 rounded-[1.5rem] text-sm font-bold placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/20 transition-all text-text-primary"
-            />
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- MAIN LIST COLUMN -->
+      <main class="lg:col-span-2 space-y-8">
+        <!-- Search Bar -->
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-primary-main transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Pesquisar por título, categoria ou valor..."
+            class="w-full bg-white dark:bg-black/20 border-2 border-black/5 dark:border-white/5 rounded-3xl py-4 pl-14 pr-6 text-sm font-medium focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 outline-hidden transition-all shadow-sm"
+          />
         </div>
 
         <!-- Transactions List -->
-        <div class="space-y-6">
-          <div
-            v-if="store.isLoading"
-            class="flex flex-col items-center justify-center py-20 opacity-50 glass-card"
-          >
-            <div
-              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin mb-4"
-            ></div>
-            <span class="text-xs font-black uppercase tracking-widest">Sincronizando...</span>
+        <div v-if="Object.keys(groupedTransactions).length === 0" class="flex flex-col items-center justify-center py-20 text-center opacity-40">
+          <div class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
           </div>
+          <h3 class="text-lg font-black uppercase tracking-widest mb-2">Nenhuma transação</h3>
+          <p class="text-xs font-bold uppercase tracking-widest">Tente mudar o mês ou a pesquisa</p>
+        </div>
 
-          <BaseCard
-            v-else-if="Object.keys(groupedTransactions).length === 0"
-            is-empty
-            empty-title="Nenhuma transação"
-            empty-subtitle="Você não tem movimentos registrados neste período."
-            empty-color="var(--color-primary-main)"
-          >
-            <template #empty-icon>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-              </svg>
-            </template>
-            <template #empty-action>
-              <BaseButton variant="primary" class="px-8 mt-4" @click="showForm = true">
-                Adicionar Agora
-              </BaseButton>
-            </template>
-          </BaseCard>
-
-          <!-- Grouped by Date -->
-          <div v-else class="space-y-10">
-            <div v-for="(group, dateKey) in groupedTransactions" :key="dateKey" class="space-y-4">
-              <!-- Date Header -->
-              <div class="flex items-center justify-between px-1">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-12 h-12 rounded-2xl bg-surface-main dark:bg-white/5 flex flex-col items-center justify-center leading-none shadow-sm border border-black/5 dark:border-white/5"
-                  >
-                    <span
-                      class="text-[9px] font-black uppercase tracking-widest text-text-disabled mb-0.5"
-                      >{{ formatDateMonth(dateKey) }}</span
-                    >
-                    <span class="text-base font-black text-text-primary">{{
-                      dateKey.split('-')[2]
-                    }}</span>
-                  </div>
-                  <div class="flex flex-col">
-                    <span class="text-sm font-black text-text-primary tracking-tight">{{
-                      getRelativeDayLabel(dateKey)
-                    }}</span>
-                    <span class="text-[10px] font-bold text-text-disabled uppercase tracking-widest"
-                      >{{ group.items.length }}
-                      {{ group.items.length === 1 ? 'transação' : 'transações' }}</span
-                    >
-                  </div>
-                </div>
-
-                <div
-                  class="text-sm font-black tracking-tighter bg-surface-main dark:bg-white/5 px-4 py-2 rounded-xl shadow-sm border border-black/5 dark:border-white/5"
-                  :class="group.total >= 0 ? 'text-success-main' : 'text-error-main'"
-                >
-                  <span class="text-[10px] uppercase opacity-40 mr-1.5 font-bold"
-                    >Saldo do dia:</span
-                  >
-                  {{ formatCurrencySign(group.total) }}
+        <div v-else class="space-y-12">
+          <div v-for="(group, day) in (groupedTransactions as any)" :key="day" class="space-y-4">
+            <div class="flex items-center justify-between px-2">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl font-black tracking-tighter text-text-primary">{{ String(day).split('-')[2] }}</span>
+                <div class="flex flex-col -space-y-1">
+                  <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{ getRelativeDayLabel(String(day)) }}</span>
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-main">{{ formatDateMonth(String(day)) }}</span>
                 </div>
               </div>
+            </div>
 
-              <!-- Transaction Items -->
-              <div class="flex flex-col gap-2">
+            <div class="grid grid-cols-1 gap-3">
+              <div v-for="t in group.items" :key="t.id">
                 <TransactionItem
-                  v-for="t in group.items"
-                  :key="t.id || t.localId"
                   :transaction="t"
-                  :categoryName="store.categoryMap[t.category_id]?.name || 'Outras'"
+                  :categoryName="store.categoryMap[t.category_id]?.name || 'Outros'"
                   :categoryColor="
-                    store.categoryMap[t.category_id]?.color || 'var(--color-primary-main)'
+                    t.type === 'expense'
+                      ? (store.categoryMap[t.category_id]?.color || 'var(--color-error-main)')
+                      : 'var(--color-primary-main)'
                   "
                   :categoryIcon="store.categoryMap[t.category_id]?.icon"
                   :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
@@ -344,13 +228,17 @@
     </div>
     <!-- Overlays and Modals -->
     <Teleport to="body">
-      <TransactionBottomSheet
+      <!-- Transaction Form Overlay -->
+      <component
+        :is="isMobile ? TransactionBottomSheet : TransactionModal"
         :show="showForm"
         @close="showForm = false"
         @saved="refreshTransactions"
       />
 
-      <BaseConfirmModal
+      <!-- Delete Confirmation Overlay -->
+      <component
+        :is="isMobile ? BaseConfirmBottomSheet : BaseConfirmModal"
         :show="showConfirmDelete"
         title="Excluir Transação"
         message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
@@ -389,17 +277,21 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import TransactionBottomSheet from '@/shared/components/organisms/TransactionBottomSheet.vue'
+import TransactionModal from '@/shared/components/organisms/TransactionModal.vue'
 import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
+import BaseConfirmBottomSheet from '@/shared/components/molecules/BaseConfirmBottomSheet.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const store = useTransactionStore()
+const isMobile = useIsMobile()
 const showForm = ref(false)
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
