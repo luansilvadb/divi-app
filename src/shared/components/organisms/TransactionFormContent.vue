@@ -1,7 +1,7 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-8 space-y-8 bg-surface-main dark:bg-surface-main h-full overflow-y-auto max-h-[70vh] pb-24"
+    class="p-8 space-y-8 bg-surface-main dark:bg-surface-main h-full overflow-y-auto  pb-24"
   >
     <!-- Type Switcher (Premium) -->
     <div
