@@ -21,6 +21,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
+        <BaseButton
+          v-if="!isMobile"
+          variant="primary"
+          @click="showForm = true"
+        >
+          Adicionar
+        </BaseButton>
       </div>
     </template>
 
@@ -249,7 +256,7 @@
       />
 
       <!-- Floating Action Button (FAB) -->
-      <button
+      <button v-if="isMobile"
         class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
         @click="showForm = true"
         aria-label="Nova Transação"
