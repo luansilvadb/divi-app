@@ -1,9 +1,9 @@
 <template>
-  <BottomSheet
-    ref="bottomSheetRef"
-    @closed="$emit('close')"
+  <BaseBottomSheet
+    :modelValue="show"
+    @update:modelValue="handleModelValueUpdate"
+    @closed="handleClosed"
     class="bottom-sheet-container"
-    teleport-to="body"
   >
     <!-- Header Area (Premium Split) -->
     <div
@@ -65,33 +65,28 @@
     <div class="bg-surface-main dark:bg-surface-main text-text-primary h-full">
       <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
     </div>
-  </BottomSheet>
+  </BaseBottomSheet>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
-import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
+import BaseBottomSheet from '../molecules/BaseBottomSheet.vue'
 import TransactionFormContent from './TransactionFormContent.vue'
 
-const props = defineProps<{
+defineProps<{
   show: boolean
 }>()
 
 const emit = defineEmits(['close', 'saved'])
 
-const bottomSheetRef = ref<InstanceType<typeof BottomSheet>>()
-
-watch(
-  () => props.show,
-  (newVal) => {
-    if (newVal) {
-      bottomSheetRef.value?.open()
-    } else {
-      bottomSheetRef.value?.close()
-    }
+function handleModelValueUpdate(val: boolean) {
+  if (!val) {
+     emit('close')
   }
-)
+}
+
+function handleClosed() {
+  // emitted after fully closed
+}
 
 function closeSheet() {
   emit('close')
@@ -104,20 +99,6 @@ function handleSaved() {
 </script>
 
 <style>
-/* Global override for this bottom sheet to ensure dark mode text color and higher z-index */
-:root {
-  --vsbs-background: var(--color-surface-main, #1b2234);
-  --vsbs-border-radius: 1.5rem;
-  --vsbs-backdrop-bg: rgba(0, 0, 0, 0.6);
-  --vsbs-padding-x: 0;
-  --vsbs-shadow-color: rgba(0, 0, 0, 0.5);
-}
-
-[data-vsbs-sheet] {
-  z-index: 9999 !important;
-}
-
-[data-vsbs-backdrop] {
-  z-index: 9998 !important;
-}
+/* Global override not fully needed anymore, handled inside BaseBottomSheet styling,
+   but keeping a clean style block if needed in the future. */
 </style>
