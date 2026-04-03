@@ -1,7 +1,7 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-5 space-y-3 bg-surface-main dark:bg-surface-main h-full  max-h-none pb-4"
+    class="p-5 space-y-3 bg-surface-main dark:bg-surface-main h-full max-h-none pb-4"
   >
     <!-- Type Switcher (Premium) -->
     <div
@@ -124,13 +124,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+
+const props = defineProps<{
+  initialData?: Transaction | null
+}>()
 
 const emit = defineEmits(['close', 'saved'])
 const store = useTransactionStore()
@@ -156,6 +160,28 @@ const form = reactive<TransactionForm>({
   date: new Date().toISOString().slice(0, 10),
 })
 
+watch(
+  () => props.initialData,
+  (newData) => {
+    if (newData) {
+      form.title = newData.title
+      form.amount = newData.amount
+      form.type = newData.type
+      form.category_id = newData.category_id
+      form.wallet_id = newData.wallet_id
+      form.date = new Date(newData.date).toISOString().slice(0, 10)
+    } else {
+      form.title = ''
+      form.amount = 0
+      form.type = 'expense'
+      form.category_id = ''
+      form.wallet_id = ''
+      form.date = new Date().toISOString().slice(0, 10)
+    }
+  },
+  { immediate: true },
+)
+
 onMounted(async () => {
   if (store.wallets.length === 0) await store.fetchWallets()
   if (store.categories.length === 0) await store.fetchCategories()
@@ -172,16 +198,28 @@ async function handleSubmit() {
   if (isSubmitting.value) return
   isSubmitting.value = true
   try {
-    const transactionData = {
-      ...form,
-      id: crypto.randomUUID(),
-      user_id: '', // Will be filled by repo/service
-      synced: false,
-      deleted: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+    const isEditing = !!props.initialData?.id
+
+    if (isEditing) {
+      const transactionData = {
+        ...props.initialData,
+        ...form,
+        updated_at: new Date().toISOString(),
+      }
+      await store.saveTransaction(transactionData as Transaction)
+    } else {
+      const transactionData = {
+        ...form,
+        id: crypto.randomUUID(),
+        user_id: '', // Will be filled by repo/service
+        synced: false,
+        deleted: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+      await store.saveTransaction(transactionData as Transaction)
     }
-    await store.saveTransaction(transactionData as Transaction)
+
     emit('saved')
     emit('close')
   } catch (error) {

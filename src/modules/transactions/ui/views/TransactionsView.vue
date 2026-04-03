@@ -4,30 +4,52 @@
     <template #action>
       <div class="flex items-center gap-4">
         <!-- Month Selector -->
-        <div class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5">
+        <div
+          class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
+        >
           <button
             @click="prevMonth"
             class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
           </button>
-          <div class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center">
+          <div
+            class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center"
+          >
             {{ monthLabelOnly }}
           </div>
           <button
             @click="nextMonth"
             class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
           </button>
         </div>
-        <BaseButton
-          v-if="!isMobile"
-          variant="primary"
-          @click="showForm = true"
-        >
-          Adicionar
-        </BaseButton>
+        <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm"> Adicionar </BaseButton>
       </div>
     </template>
 
@@ -36,8 +58,23 @@
       <main class="lg:col-span-2 space-y-8">
         <!-- Search Bar -->
         <div class="relative group">
-          <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-primary-main transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <div
+            class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-primary-main transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
           </div>
           <input
             v-model="searchQuery"
@@ -48,22 +85,51 @@
         </div>
 
         <!-- Transactions List -->
-        <div v-if="Object.keys(groupedTransactions).length === 0" class="flex flex-col items-center justify-center py-20 text-center opacity-40">
-          <div class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-             <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <div
+          v-if="Object.keys(groupedTransactions).length === 0"
+          class="flex flex-col items-center justify-center py-20 text-center opacity-40"
+        >
+          <div
+            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+              />
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+              <line x1="12" y1="22.08" x2="12" y2="12" />
+            </svg>
           </div>
           <h3 class="text-lg font-black uppercase tracking-widest mb-2">Nenhuma transação</h3>
           <p class="text-xs font-bold uppercase tracking-widest">Tente mudar o mês ou a pesquisa</p>
         </div>
 
         <div v-else class="space-y-12">
-          <div v-for="(group, day) in (groupedTransactions as any)" :key="day" class="space-y-4">
+          <div v-for="(group, day) in groupedTransactions as any" :key="day" class="space-y-4">
             <div class="flex items-center justify-between px-2">
               <div class="flex items-center gap-3">
-                <span class="text-2xl font-black tracking-tighter text-text-primary">{{ String(day).split('-')[2] }}</span>
+                <span class="text-2xl font-black tracking-tighter text-text-primary">{{
+                  String(day).split('-')[2]
+                }}</span>
                 <div class="flex flex-col -space-y-1">
-                  <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{ getRelativeDayLabel(String(day)) }}</span>
-                  <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-main">{{ formatDateMonth(String(day)) }}</span>
+                  <span
+                    class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                    >{{ getRelativeDayLabel(String(day)) }}</span
+                  >
+                  <span
+                    class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-main"
+                    >{{ formatDateMonth(String(day)) }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -75,7 +141,7 @@
                   :categoryName="store.categoryMap[t.category_id]?.name || 'Outros'"
                   :categoryColor="
                     t.type === 'expense'
-                      ? (store.categoryMap[t.category_id]?.color || 'var(--color-error-main)')
+                      ? store.categoryMap[t.category_id]?.color || 'var(--color-error-main)'
                       : 'var(--color-primary-main)'
                   "
                   :categoryIcon="store.categoryMap[t.category_id]?.icon"
@@ -238,8 +304,9 @@
       <!-- Transaction Form Overlay -->
       <component
         :is="isMobile ? TransactionBottomSheet : TransactionModal"
+        :transaction="editingTransaction"
         :show="showForm"
-        @close="showForm = false"
+        @close="handleCloseForm"
         @saved="refreshTransactions"
       />
 
@@ -256,9 +323,10 @@
       />
 
       <!-- Floating Action Button (FAB) -->
-      <button v-if="isMobile"
+      <button
+        v-if="isMobile"
         class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
-        @click="showForm = true"
+        @click="openNewForm()"
         aria-label="Nova Transação"
       >
         <svg
@@ -300,6 +368,12 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 const store = useTransactionStore()
 const isMobile = useIsMobile()
 const showForm = ref(false)
+const editingTransaction = ref<Transaction | null>(null)
+const openNewForm = () => {
+  editingTransaction.value = null
+  showForm.value = true
+}
+
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
@@ -365,7 +439,15 @@ const cancelDelete = () => {
 }
 
 const handleEdit = (transaction: Transaction) => {
-  console.log('Edit', transaction)
+  editingTransaction.value = transaction
+  showForm.value = true
+}
+
+const handleCloseForm = () => {
+  showForm.value = false
+  setTimeout(() => {
+    editingTransaction.value = null
+  }, 300) // Clear after animation
 }
 
 // Formatting Helper (Day Label)

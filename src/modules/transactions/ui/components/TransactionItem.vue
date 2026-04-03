@@ -2,7 +2,7 @@
   <div
     role="button"
     tabindex="0"
-    class="transaction-item flex items-center p-4 gap-4 cursor-pointer relative transition-all duration-300 rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-surface-main hover:bg-white/80 dark:hover:bg-[#1b2234] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
+    class="transaction-item flex items-center p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer relative transition-all duration-300 rounded-[1.5rem] sm:rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-surface-main hover:bg-white/80 dark:hover:bg-[#1b2234] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
     @click="$emit('click')"
     @keydown.enter.prevent="$emit('click')"
     @keydown.space.prevent="$emit('click')"
@@ -10,7 +10,7 @@
     <!-- Left Section: Icon -->
     <div class="flex-shrink-0 relative">
       <div
-        class="w-14 h-14 rounded-full flex items-center justify-center shadow-inner transition-transform duration-300 group-hover:scale-105"
+        class="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-inner transition-transform duration-300 group-hover:scale-105"
         :style="{
           background:
             'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent), var(--color-bg-main)',
@@ -20,22 +20,21 @@
         <img
           v-if="categoryIcon"
           :src="sanitizedCategoryIcon"
-          class="w-7 h-7 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
+          class="w-5 h-5 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
           @error="handleImageError"
         />
-        <component v-else :is="iconComponent" class="w-7 h-7 text-accent-main" />
+        <component v-else :is="iconComponent" class="w-5 h-5 sm:w-7 sm:h-7 text-accent-main" />
       </div>
 
       <!-- Transaction Type Indicator (Small Overlay) -->
       <div
-        class="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full border-2 border-surface-main z-20 flex items-center justify-center shadow-lg"
+        class="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-surface-main z-20 flex items-center justify-center shadow-lg"
         :class="transaction.type === 'income' ? 'bg-success-main' : 'bg-error-main'"
       >
         <svg
           v-if="transaction.type === 'income'"
           xmlns="http://www.w3.org/2000/svg"
-          width="10"
-          height="10"
+          class="w-2.5 h-2.5 sm:w-3 sm:h-3"
           viewBox="0 0 24 24"
           fill="none"
           stroke="white"
@@ -48,8 +47,7 @@
         <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
-          width="10"
-          height="10"
+          class="w-2.5 h-2.5 sm:w-3 sm:h-3"
           viewBox="0 0 24 24"
           fill="none"
           stroke="white"
@@ -66,13 +64,30 @@
     <div class="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
       <div class="flex items-center gap-2">
         <span
-          class="font-extrabold text-text-primary text-[1.1rem] leading-tight truncate tracking-tight"
+          class="font-extrabold text-text-primary text-[0.95rem] sm:text-[1.1rem] leading-tight truncate tracking-tight"
         >
           {{ transaction.title || 'Sem título' }}
         </span>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2">
+      <!-- Mobile Tags (Inline text layout) -->
+      <div
+        class="flex sm:hidden items-center gap-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-disabled truncate"
+      >
+        <span v-if="walletName" class="truncate max-w-[65px]">{{ walletName }}</span>
+
+        <span v-if="walletName" class="text-black/20 dark:text-white/20">&bull;</span>
+
+        <span class="truncate max-w-[80px] text-text-secondary">{{ categoryName }}</span>
+
+        <template v-if="showTime">
+          <span class="text-black/20 dark:text-white/20">&bull;</span>
+          <span class="flex-shrink-0">{{ formatTime(transaction.date) }}</span>
+        </template>
+      </div>
+
+      <!-- Desktop Tags (Pill layout) -->
+      <div class="hidden sm:flex flex-wrap items-center gap-2">
         <!-- Wallet Tag -->
         <div
           v-if="walletName"
@@ -99,10 +114,10 @@
     </div>
 
     <!-- Right Section: Amount -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
       <div class="text-right">
         <span
-          class="font-black text-xl tracking-tighter transition-all duration-300"
+          class="font-black text-[1rem] sm:text-xl tracking-tighter transition-all duration-300"
           :class="transaction.type === 'expense' ? 'text-error-main' : 'text-success-main'"
         >
           {{ transaction.type === 'expense' ? '-' : '+' }} {{ formatCurrency(transaction.amount) }}

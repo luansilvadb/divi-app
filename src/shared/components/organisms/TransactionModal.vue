@@ -31,7 +31,7 @@
             </div>
             <div>
               <h2 class="text-2xl font-black text-text-primary tracking-tight leading-tight">
-                Nova Transação
+                {{ transaction ? 'Editar Transação' : 'Nova Transação' }}
               </h2>
               <p
                 class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-secondary opacity-40"
@@ -64,7 +64,11 @@
       </div>
 
       <!-- Body Area -->
-      <TransactionFormContent @close="$emit('close')" @saved="$emit('saved')" />
+      <TransactionFormContent
+        :initial-data="transaction"
+        @close="$emit('close')"
+        @saved="$emit('saved')"
+      />
     </BaseCard>
   </BaseModal>
 </template>
@@ -74,8 +78,11 @@ import BaseModal from '@/shared/components/molecules/BaseModal.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import TransactionFormContent from './TransactionFormContent.vue'
 
+import type { Transaction } from '@/shared/domain/entities/Transaction'
+
 defineProps<{
   show: boolean
+  transaction?: Transaction | null
 }>()
 
 defineEmits(['close', 'saved'])
