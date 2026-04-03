@@ -10,7 +10,7 @@
       >
         <!-- Accounts Carousel -->
         <AccountCarousel
-          :accounts="dashboardStore.wallets"
+          :wallets="dashboardStore.wallets"
           :is-loading="dashboardStore.isLoading"
         />
 

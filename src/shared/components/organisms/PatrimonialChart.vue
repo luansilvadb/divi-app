@@ -96,10 +96,11 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
       cornerRadius: 12,
       callbacks: {
         label: (context) => {
+          const val = context.parsed.y
           return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
-          }).format(context.parsed.y)
+          }).format(val || 0)
         },
       },
     },
@@ -115,7 +116,8 @@ const chartOptions = computed<ChartOptions<'line'>>(() => ({
         font: { size: isMobile.value ? 11 : 10, weight: 'bold' },
         padding: 10,
         callback: (value) => {
-          const numericValue = typeof value === 'number' ? value : parseFloat(value)
+          const numericValue = Number(value)
+          if (isNaN(numericValue)) return ''
           if (numericValue >= 1000) return `R$ ${(numericValue / 1000).toFixed(1)} mil`
           return `R$ ${numericValue}`
         },
