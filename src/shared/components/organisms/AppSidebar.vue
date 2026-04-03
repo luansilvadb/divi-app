@@ -444,8 +444,6 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 .sidebar-master-toggle:hover,
 .sidebar-master-toggle:focus-visible {
-  outline: 2px solid var(--color-primary-main);
-  outline-offset: -2px;
   background: rgba(0, 0, 0, 0.06);
   color: var(--color-text-primary);
   transform: scale(1.05);
@@ -590,11 +588,6 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 .sidebar-nav-item:hover::before,
 .sidebar-nav-item:focus-visible::before {
   opacity: 1;
-}
-
-.sidebar-nav-item:focus-visible {
-  outline: 2px solid var(--color-primary-main);
-  outline-offset: -2px;
 }
 
 .sidebar-nav-item--active {
@@ -754,10 +747,9 @@ const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 .sidebar-footer-btn:hover,
 .sidebar-footer-btn:focus-visible {
-  outline: 2px solid var(--color-primary-main);
-  outline-offset: -2px;
   background: rgba(0, 0, 0, 0.04);
   color: var(--color-text-primary);
+
 }
 
 :is(.dark) .sidebar-footer-btn:hover {
