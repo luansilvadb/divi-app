@@ -17,8 +17,9 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import type { ChartOptions } from 'chart.js'
+import type { ChartOptions, ScriptableContext } from 'chart.js'
 import { Line } from 'vue-chartjs'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 
 ChartJS.register(
   CategoryScale,
@@ -30,6 +31,8 @@ ChartJS.register(
   Legend,
   Filler,
 )
+
+const isMobile = useIsMobile()
 
 const props = defineProps<{
   data: number[]
@@ -48,13 +51,14 @@ const chartData = computed(() => {
         pointBackgroundColor: '#3D5A80',
         pointBorderColor: '#ffffff',
         pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        pointRadius: isMobile.value ? 5 : 4,
+        pointHoverRadius: isMobile.value ? 8 : 6,
+        hitRadius: isMobile.value ? 20 : 10,
         fill: true,
-        backgroundColor: (context: any) => {
+        backgroundColor: (context: ScriptableContext<'line'>) => {
           const chart = context.chart
           const { ctx, chartArea } = chart
-          if (!chartArea) return null
+          if (!chartArea) return undefined
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
           gradient.addColorStop(0, 'rgba(61, 90, 128, 0.4)')
           gradient.addColorStop(1, 'rgba(61, 90, 128, 0)')
@@ -66,9 +70,14 @@ const chartData = computed(() => {
   }
 })
 
-const chartOptions: ChartOptions<'line'> = {
+const chartOptions = computed<ChartOptions<'line'>>(() => ({
   responsive: true,
   maintainAspectRatio: false,
+  layout: {
+    padding: isMobile.value
+      ? { left: 0, right: 8, top: 10, bottom: 0 }
+      : { left: 0, right: 0, top: 0, bottom: 0 },
+  },
   plugins: {
     legend: {
       display: false,
@@ -86,7 +95,7 @@ const chartOptions: ChartOptions<'line'> = {
       displayColors: false,
       cornerRadius: 12,
       callbacks: {
-        label: (context: any) => {
+        label: (context) => {
           return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
@@ -103,11 +112,12 @@ const chartOptions: ChartOptions<'line'> = {
       border: { display: false },
       ticks: {
         color: '#8b949e',
-        font: { size: 10, weight: 'bold' },
+        font: { size: isMobile.value ? 11 : 10, weight: 'bold' },
         padding: 10,
-        callback: (value: any) => {
-          if (value >= 1000) return `R$ ${(value / 1000).toFixed(1)} mil`
-          return `R$ ${value}`
+        callback: (value) => {
+          const numericValue = typeof value === 'number' ? value : parseFloat(value)
+          if (numericValue >= 1000) return `R$ ${(numericValue / 1000).toFixed(1)} mil`
+          return `R$ ${numericValue}`
         },
       },
     },
@@ -118,17 +128,17 @@ const chartOptions: ChartOptions<'line'> = {
       border: { display: false },
       ticks: {
         color: '#8b949e',
-        font: { size: 10, weight: 'bold' },
+        font: { size: isMobile.value ? 11 : 10, weight: 'bold' },
         padding: 5,
       },
     },
   },
-}
+}))
 </script>
 
 <style scoped>
 .patrimonial-chart {
-  height: 300px;
+  height: 100%;
   width: 100%;
 }
 </style>
