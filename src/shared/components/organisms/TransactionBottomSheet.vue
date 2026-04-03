@@ -34,7 +34,7 @@
           </div>
           <div>
             <h2 class="text-xl font-black text-text-primary tracking-tight leading-tight">
-              Nova Transação
+              {{ props.transaction ? 'Editar Transação' : 'Nova Transação' }}
             </h2>
           </div>
         </div>
@@ -63,7 +63,11 @@
 
     <!-- Body Area -->
     <div class="bg-surface-main dark:bg-surface-main text-text-primary h-full">
-      <TransactionFormContent @close="closeSheet" @saved="handleSaved" />
+      <TransactionFormContent
+        :initial-data="props.transaction"
+        @close="closeSheet"
+        @saved="handleSaved"
+      />
     </div>
   </BottomSheet>
 </template>
@@ -74,8 +78,11 @@ import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
 import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
 import TransactionFormContent from './TransactionFormContent.vue'
 
+import type { Transaction } from '@/shared/domain/entities/Transaction'
+
 const props = defineProps<{
   show: boolean
+  transaction?: Transaction | null
 }>()
 
 const emit = defineEmits(['close', 'saved'])
@@ -90,7 +97,7 @@ watch(
     } else {
       bottomSheetRef.value?.close()
     }
-  }
+  },
 )
 
 function closeSheet() {
