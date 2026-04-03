@@ -128,7 +128,8 @@ const chartOptions: ChartOptions<'line'> = {
 
 <style scoped>
 .patrimonial-chart {
-  height: 300px;
+  height: 100%;
+  min-height: 250px;
   width: 100%;
 }
 </style>
