@@ -354,7 +354,7 @@
           ></div>
 
           <template #header>
-            <div class="flex items-center justify-between w-full relative z-10 px-2">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full relative z-10 px-2 gap-4">
               <div class="flex items-center gap-4">
                 <div
                   class="w-10 h-10 rounded-xl bg-primary-main/10 flex items-center justify-center text-primary-main shadow-inner"
@@ -385,14 +385,14 @@
                   </p>
                 </div>
               </div>
-              <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl">
+              <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl w-full sm:w-auto">
                 <button
-                  class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all"
+                  class="flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all text-center flex justify-center"
                 >
                   Últimos 6 meses
                 </button>
                 <button
-                  class="px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
+                  class="flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all text-center flex justify-center"
                 >
                   Anual
                 </button>
@@ -400,7 +400,7 @@
             </div>
           </template>
 
-          <div class="h-[400px] w-full pt-6 relative z-10">
+          <div class="h-[300px] sm:h-[400px] w-full pt-6 relative z-10">
             <PatrimonialChart :data="growthData" :labels="growthLabels" />
           </div>
         </BaseCard>
