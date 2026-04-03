@@ -65,7 +65,36 @@ describe('TransactionsView', () => {
     isMobileMock.value = false
   })
 
-  it('renders correctly', () => {
+  it('renders correctly on desktop', () => {
+    isMobileMock.value = false
+    const wrapper = mount(TransactionsView, {
+      global: {
+        stubs: {
+          BaseButton: {
+            template: '<button><slot /></button>'
+          },
+          TransactionItem: true,
+          BaseCard: true,
+          BaseSummaryItem: true,
+          BaseProgressBar: true,
+          StandardPageLayout: false,
+          BaseConfirmBottomSheet: true,
+          BaseConfirmModal: true,
+          TransactionModal: true,
+          TransactionBottomSheet: true,
+          Teleport: true
+        },
+      },
+    })
+
+    expect(wrapper.exists()).toBe(true)
+    // Desktop: Should have 'Adicionar' button and NO FAB
+    expect(wrapper.text()).toContain('Adicionar')
+    expect(wrapper.html()).not.toContain('aria-label="Nova Transação"')
+  })
+
+  it('renders correctly on mobile', async () => {
+    isMobileMock.value = true
     const wrapper = mount(TransactionsView, {
       global: {
         stubs: {
@@ -84,8 +113,12 @@ describe('TransactionsView', () => {
       },
     })
 
+    await nextTick()
+
     expect(wrapper.exists()).toBe(true)
+    // Mobile: Should have FAB and NO 'Adicionar' button
     expect(wrapper.html()).toContain('aria-label="Nova Transação"')
+    expect(wrapper.html()).not.toContain('Adicionar')
   })
 
   it('switches between Modal and BottomSheet based on isMobile', async () => {
