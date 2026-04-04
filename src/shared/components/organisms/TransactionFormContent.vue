@@ -3,40 +3,35 @@
     @submit.prevent="handleSubmit"
     class="p-5 space-y-4 bg-surface-main dark:bg-surface-main h-full max-h-none pb-4"
   >
-    <!-- Type Switcher (Premium) -->
-    <div
-      class="flex p-1.5 bg-white/5 rounded-2xl gap-1.5 border border-white/5 shadow-inner shrink-0"
-    >
-      <button
-        type="button"
-        class="flex-1 py-2.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
-        :class="
-          form.type === 'expense'
-            ? 'bg-error-main text-white shadow-[0_10px_25px_rgba(248,81,73,0.3)]'
-            : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
-        "
-        @click="form.type = 'expense'"
+    <!-- Type Switcher (PrimeVue SelectButton) -->
+    <div class="flex flex-col gap-2">
+      <SelectButton
+        v-model="form.type"
+        :options="typeOptions"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full"
+        :pt="{
+          root: { class: 'flex p-1.5 bg-white/5 rounded-2xl gap-1.5 border border-white/5 shadow-inner' },
+          button: ({ context }: { context: any }) => ({
+            class: [
+              'flex-1 py-2.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden border-none shadow-none focus:ring-0',
+              context.active
+                ? (form.type === 'expense'
+                    ? 'bg-error-main text-white shadow-[0_10px_25_rgba(248,81,73,0.3)]'
+                    : 'bg-success-main text-white shadow-[0_10px_25_rgba(50,205,50,0.3)]')
+                : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 bg-transparent'
+            ]
+          })
+        }"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
-        Despesa
-      </button>
-      <button
-        type="button"
-        class="flex-1 py-2.5 px-4 rounded-xl font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-3 group relative overflow-hidden"
-        :class="
-          form.type === 'income'
-            ? 'bg-success-main text-white shadow-[0_10px_25px_rgba(50,205,50,0.3)]'
-            : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
-        "
-        @click="form.type = 'income'"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M7 10l5 5 5-5z" class="rotate-180 origin-center" />
-        </svg>
-        Receita
-      </button>
+        <template #option="slotProps">
+          <div class="flex items-center gap-2">
+            <i :class="slotProps.option.icon" class="text-sm"></i>
+            <span>{{ slotProps.option.label }}</span>
+          </div>
+        </template>
+      </SelectButton>
     </div>
 
     <div class="space-y-4">
@@ -111,6 +106,7 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+import SelectButton from 'primevue/selectbutton'
 
 const props = defineProps<{
   initialData?: Transaction | null
@@ -121,6 +117,11 @@ const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
 
 const isSubmitting = ref(false)
+
+const typeOptions = [
+  { label: 'Despesa', value: 'expense', icon: 'pi pi-arrow-down' },
+  { label: 'Receita', value: 'income', icon: 'pi pi-arrow-up' }
+]
 
 interface TransactionForm {
   title: string
