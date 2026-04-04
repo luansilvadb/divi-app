@@ -1,27 +1,21 @@
 <template>
   <Button
-    :severity="primeVariant"
+    :severity="primeSeverity"
     :outlined="variant === 'outline'"
     :text="variant === 'ghost'"
     :disabled="disabled || loading"
     :loading="loading"
     v-bind="$attrs"
     :class="[
-      'rounded-full font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95',
+      'rounded-full font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
       { 'shadow-lg': !['outline', 'ghost'].includes(variant) },
-      // Custom overrides to keep the same specific brand colors overriding PrimeVue defaults if needed
-      // (PrimeVue uses its own palette unless we map the surface/primary CSS vars)
-      { 'bg-primary-main text-white shadow-primary-main/20': variant === 'primary' },
+      // Custom overrides to keep the same specific brand colors
+      { 'bg-primary-main text-white shadow-primary-main/20 border-primary-main': variant === 'primary' },
       { 'bg-secondary-main text-white shadow-secondary-main/20 border-secondary-main hover:bg-secondary-main/90': variant === 'secondary' },
       { 'bg-error-main text-white shadow-error-main/20 border-error-main hover:bg-error-main/90': variant === 'danger' },
       { 'border border-border-main text-text-primary hover:bg-surface-main': variant === 'outline' },
       { 'text-text-secondary hover:bg-surface-main': variant === 'ghost' },
     ]"
-    :pt="{
-        root: {
-            class: ['px-6 py-2.5', { 'opacity-50 cursor-not-allowed active:scale-100': disabled || loading }]
-        }
-    }"
   >
     <slot />
   </Button>
@@ -43,9 +37,10 @@ const props = withDefaults(defineProps<{
   loading: false
 })
 
-const primeVariant = computed(() => {
+const primeSeverity = computed(() => {
   if (props.variant === 'danger') return 'danger'
   if (props.variant === 'secondary') return 'secondary'
+  if (props.variant === 'ghost' || props.variant === 'outline') return 'secondary'
   return undefined // Primary is default
 })
 </script>

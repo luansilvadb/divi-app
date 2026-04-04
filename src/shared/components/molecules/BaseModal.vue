@@ -1,57 +1,44 @@
 <template>
-  <Teleport to="body">
-    <div
-      v-if="show"
-      role="dialog"
-      aria-modal="true"
-      class="modal-wrapper fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto overflow-x-hidden"
-    >
-      <!-- Backdrop -->
-      <div
-        class="modal-backdrop fixed inset-0 bg-[#0e121b80] backdrop-blur-md transition-all duration-500"
-        aria-hidden="true"
-        @click="handleClose"
-      ></div>
-
-      <!-- Content Card -->
-      <div class="modal-content relative w-full max-w-xl z-[160]">
-        <slot />
-      </div>
-    </div>
-  </Teleport>
+  <Dialog
+    :visible="show"
+    @update:visible="handleClose"
+    modal
+    dismissableMask
+    :closable="false"
+    :showHeader="false"
+    class="!bg-transparent !border-none !shadow-none w-full max-w-xl p-4 sm:p-6"
+    :pt="{
+        root: { class: 'modal-wrapper flex items-center justify-center overflow-y-auto overflow-x-hidden' },
+        mask: { class: 'modal-backdrop bg-[#0e121b80] backdrop-blur-md transition-all duration-500' },
+        content: { class: 'modal-content relative w-full z-[160] !p-0 !bg-transparent' }
+    }"
+  >
+    <slot />
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import Dialog from 'primevue/dialog'
 
-const props = defineProps<{
+defineProps<{
   show: boolean
 }>()
 
 const emit = defineEmits(['update:show', 'closed'])
 
-function handleClose() {
-  emit('update:show', false)
-  emit('closed')
-}
-
-function handleKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape' && props.show) {
-    handleClose()
+function handleClose(value: boolean) {
+  emit('update:show', value)
+  if (!value) {
+    emit('closed')
   }
 }
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeydown)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown)
-})
 </script>
 
-<style scoped>
-.modal-wrapper {
-  perspective: 1000px;
+<style>
+.p-dialog-mask {
+  z-index: 150 !important;
+}
+.p-dialog {
+  z-index: 160 !important;
 }
 </style>

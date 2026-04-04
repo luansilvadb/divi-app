@@ -15,7 +15,7 @@ type BoxSize = 'sm' | 'md' | 'lg'
 
 const props = withDefaults(
   defineProps<{
-    color?: string // Hex or CSS Variable
+    color?: string
     size?: BoxSize
   }>(),
   {
@@ -33,18 +33,14 @@ const isCssVar = computed(() => props.color?.startsWith('var('))
 
 const customStyle = computed(() => {
   if (!props.color) return {}
-
-  const colorValue = props.color
-
   return {
     backgroundColor: isCssVar.value ? `rgba(${props.color}, 0.1)` : `${props.color}15`,
-    color: colorValue,
+    color: props.color,
   }
 })
 
 const customClasses = computed(() => {
   if (props.color) return ''
-  // Default primary tint
   return 'bg-primary-main/10 text-primary-main'
 })
 </script>
