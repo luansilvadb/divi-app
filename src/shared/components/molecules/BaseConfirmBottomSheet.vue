@@ -1,10 +1,22 @@
 <template>
-  <BottomSheet
-    ref="bottomSheetRef"
-    @closed="$emit('cancel')"
-    teleport-to="body"
+  <Drawer
+    :visible="show"
+    @update:visible="$emit('cancel')"
+    position="bottom"
+    class="!bg-transparent !border-none !shadow-none !h-auto"
+    :pt="{
+      mask: { class: 'backdrop-blur-sm bg-black/40 z-[90]' },
+      root: { class: 'z-[100]' },
+      header: { class: 'p-0 border-none hidden' },
+      content: { class: 'p-0 !bg-transparent' }
+    }"
   >
-    <div class="bg-surface-main dark:bg-surface-main p-8 text-center flex flex-col items-center">
+    <div
+      class="bg-surface-main dark:bg-surface-main rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
+    >
+      <!-- Drag Handle for Visual Cue -->
+      <div class="w-12 h-1.5 bg-white/10 rounded-full mb-8 shrink-0"></div>
+
       <!-- Icon/Warning -->
       <div
         class="w-16 h-16 rounded-full bg-error-main/10 flex items-center justify-center text-error-main mb-6 border border-error-main/20 shadow-inner"
@@ -39,7 +51,7 @@
       </p>
 
       <!-- Action Buttons -->
-      <div class="w-full space-y-3 pb-8">
+      <div class="w-full space-y-3 pb-safe">
         <BaseButton
           variant="danger"
           class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-[0.15em]"
@@ -50,22 +62,20 @@
         <BaseButton
           variant="ghost"
           class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100"
-          @click="closeSheet"
+          @click="$emit('cancel')"
         >
           {{ cancelText || 'Cancelar' }}
         </BaseButton>
       </div>
     </div>
-  </BottomSheet>
+  </Drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import BottomSheet from '@douxcode/vue-spring-bottom-sheet'
-import '@douxcode/vue-spring-bottom-sheet/dist/style.css'
+import Drawer from 'primevue/drawer'
 import BaseButton from '../atoms/BaseButton.vue'
 
-const props = defineProps<{
+defineProps<{
   show: boolean
   title?: string
   message?: string
@@ -73,31 +83,11 @@ const props = defineProps<{
   cancelText?: string
 }>()
 
-const emit = defineEmits(['confirm', 'cancel'])
-
-const bottomSheetRef = ref<InstanceType<typeof BottomSheet>>()
-
-watch(
-  () => props.show,
-  (newVal) => {
-    if (newVal) {
-      bottomSheetRef.value?.open()
-    } else {
-      bottomSheetRef.value?.close()
-    }
-  }
-)
-
-function closeSheet() {
-  bottomSheetRef.value?.close()
-  emit('cancel')
-}
+defineEmits(['confirm', 'cancel'])
 </script>
 
-<style>
-:root {
-  --vsbs-background: var(--color-surface-main, #1b2234);
-  --vsbs-border-radius: 1.5rem;
-  --vsbs-backdrop-bg: rgba(0, 0, 0, 0.6);
+<style scoped>
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 2rem);
 }
 </style>

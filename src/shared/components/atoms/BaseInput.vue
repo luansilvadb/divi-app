@@ -4,50 +4,62 @@
       label
     }}</label>
 
-    <InputNumber
-      v-if="type === 'number'"
-      :id="id"
-      :modelValue="numericValue"
-      @update:modelValue="(val: number | null) => $emit('update:modelValue', val)"
-      :placeholder="placeholder"
-      :invalid="!!error"
-      :aria-describedby="error ? `${id}-error` : undefined"
-      fluid
-      :pt="{
-        root: {
-            class: [
-              'w-full',
-              error ? 'p-invalid' : ''
-            ]
-        },
-        input: {
-            class: [
-              'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden transition-all placeholder:text-text-disabled shadow-none',
-              error ? 'border-error-main focus:border-error-main focus:ring-2 focus:ring-error-main/20' : 'border-border-main focus:border-primary-main focus:ring-2 focus:ring-primary-main/20'
-            ]
-        }
-      }"
-    />
+    <IconField v-if="icon" class="w-full">
+      <InputIcon :class="icon" class="text-text-disabled" />
+      <InputNumber
+        v-if="type === 'number'"
+        :id="id"
+        :modelValue="numericValue"
+        @update:modelValue="handleUpdate"
+        :placeholder="placeholder"
+        :invalid="!!error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        fluid
+        v-bind="$attrs"
+        :pt="ptOptions"
+      />
+      <InputText
+        v-else
+        :id="id"
+        :type="type"
+        :modelValue="textValue"
+        @update:modelValue="handleUpdateText"
+        :placeholder="placeholder"
+        :invalid="!!error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        fluid
+        v-bind="$attrs"
+        :pt="ptOptions"
+      />
+    </IconField>
 
-    <InputText
-      v-else
-      :id="id"
-      :type="type"
-      :modelValue="textValue"
-      @update:modelValue="(val: string | undefined) => $emit('update:modelValue', val)"
-      :placeholder="placeholder"
-      :invalid="!!error"
-      :aria-describedby="error ? `${id}-error` : undefined"
-      fluid
-      :pt="{
-        root: {
-            class: [
-              'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden transition-all placeholder:text-text-disabled shadow-none',
-              error ? 'border-error-main focus:border-error-main focus:ring-2 focus:ring-error-main/20' : 'border-border-main focus:border-primary-main focus:ring-2 focus:ring-primary-main/20'
-            ]
-        }
-      }"
-    />
+    <template v-else>
+      <InputNumber
+        v-if="type === 'number'"
+        :id="id"
+        :modelValue="numericValue"
+        @update:modelValue="handleUpdate"
+        :placeholder="placeholder"
+        :invalid="!!error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        fluid
+        v-bind="$attrs"
+        :pt="ptOptions"
+      />
+      <InputText
+        v-else
+        :id="id"
+        :type="type"
+        :modelValue="textValue"
+        @update:modelValue="handleUpdateText"
+        :placeholder="placeholder"
+        :invalid="!!error"
+        :aria-describedby="error ? `${id}-error` : undefined"
+        fluid
+        v-bind="$attrs"
+        :pt="ptOptions"
+      />
+    </template>
 
     <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-error-main">
       {{ error }}
@@ -59,6 +71,8 @@
 import { computed } from 'vue'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 
 const props = defineProps<{
   id: string
@@ -67,19 +81,40 @@ const props = defineProps<{
   type?: string
   placeholder?: string
   error?: string
+  icon?: string
 }>()
 
-defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 const numericValue = computed(() => {
-  if (props.modelValue === null || props.modelValue === undefined || props.modelValue === '') return null;
+  if (props.modelValue === null || props.modelValue === undefined || props.modelValue === '')
+    return null
   return Number(props.modelValue)
 })
 
 const textValue = computed(() => {
-  if (props.modelValue === null || props.modelValue === undefined) return undefined;
+  if (props.modelValue === null || props.modelValue === undefined) return undefined
   return String(props.modelValue)
 })
+
+function handleUpdate(val: number | null) {
+  emit('update:modelValue', val)
+}
+
+function handleUpdateText(val: string | undefined) {
+  emit('update:modelValue', val)
+}
+
+const ptOptions = {
+  root: {
+    class: [
+      'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden transition-all placeholder:text-text-disabled shadow-none',
+      props.error
+        ? 'border-error-main focus:border-error-main focus:ring-2 focus:ring-error-main/20'
+        : 'border-border-main focus:border-primary-main focus:ring-2 focus:ring-primary-main/20',
+    ],
+  },
+}
 </script>
 
 <style scoped>
