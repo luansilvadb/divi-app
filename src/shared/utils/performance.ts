@@ -6,7 +6,7 @@ export async function checkIsLowPowerMode(): Promise<boolean> {
   // 1. Verificação via Battery Status API (Principalmente Chromium)
   if ('getBattery' in navigator) {
     try {
-      const battery = await (navigator as unknown as { getBattery: () => Promise<any> }).getBattery()
+      const battery = await (navigator as unknown as { getBattery: () => Promise<{ charging: boolean, level: number }> }).getBattery()
       // Se não estiver carregando e a bateria estiver abaixo de 20%
       if (battery.charging === false && battery.level <= 0.2) {
         return true

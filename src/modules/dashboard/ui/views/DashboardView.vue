@@ -316,10 +316,7 @@
               <span class="w-1.5 h-6 bg-accent-main rounded-full"></span>
               Minhas Contas
             </h2>
-            <button
-              class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-accent-main hover:text-text-primary transition-all flex items-center gap-2 group"
-              @click="$router.push('/wallets')"
-            >
+            <Button variant="text" class="!text-[0.7rem] !font-black !uppercase !tracking-[0.2em] !text-accent-main !p-0 hover:!text-text-primary transition-all flex items-center gap-2 group" @click="$router.push('/wallets')">
               Ver Todas
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -335,7 +332,7 @@
               >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-            </button>
+            </Button>
           </div>
           <AccountCarousel :wallets="dashboardStore.wallets" />
         </section>
@@ -386,16 +383,8 @@
                 </div>
               </div>
               <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl w-full sm:w-auto">
-                <button
-                  class="flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all text-center flex justify-center"
-                >
-                  Últimos 6 meses
-                </button>
-                <button
-                  class="flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all text-center flex justify-center"
-                >
-                  Anual
-                </button>
+                <Button variant="text" :pt="{ root: { class: 'flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all text-center flex justify-center border-none' } }">Últimos 6 meses</Button>
+                <Button variant="text" :pt="{ root: { class: 'flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all text-center flex justify-center border-none' } }">Anual</Button>
               </div>
             </div>
           </template>
@@ -422,21 +411,9 @@
           <!-- Filters / Tabs -->
           <div class="px-6 pt-6 pb-4 flex-none">
             <div class="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl">
-              <button
-                class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary shadow-lg transition-all"
-              >
-                Todos
-              </button>
-              <button
-                class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
-              >
-                Despesa
-              </button>
-              <button
-                class="flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all"
-              >
-                Renda
-              </button>
+              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary shadow-lg transition-all border-none' } }">Todos</Button>
+              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all border-none' } }">Despesa</Button>
+              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all border-none' } }">Renda</Button>
             </div>
           </div>
 
@@ -544,12 +521,7 @@
 
             <!-- Footer Button - Pushed to bottom -->
             <div class="flex justify-center mt-auto pt-8 pb-4 flex-none">
-              <button
-                class="px-8 py-2.5 rounded-full bg-surface-main/40 hover:bg-surface-main/60 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary transition-all border border-black/5 dark:border-white/5 shadow-xl hover:text-text-primary"
-                @click="$router.push('/transactions')"
-              >
-                Ver todas as transações
-              </button>
+              <BaseButton variant="ghost" class="w-full text-xs border border-black/5 dark:border-white/5" @click="$router.push('/transactions')">Ver todas as transações</BaseButton>
             </div>
           </div>
         </BaseCard>
@@ -560,6 +532,8 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+import Button from 'primevue/button'
 import { useDashboardStore } from '../../application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'

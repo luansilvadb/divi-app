@@ -26,7 +26,7 @@ export const useSidebarStore = defineStore('sidebar', () => {
     // Monitoramento reativo do status da bateria se disponível
     if ('getBattery' in navigator) {
       try {
-        const battery = await (navigator as unknown as { getBattery: () => Promise<any> }).getBattery()
+        const battery = await (navigator as unknown as { getBattery: () => Promise<{ charging: boolean, level: number, addEventListener: (event: string, callback: () => void) => void }> }).getBattery()
 
         const updateLowPowerState = async () => {
           isLowPowerMode.value = await checkIsLowPowerMode()

@@ -119,13 +119,7 @@
         </div>
 
         <!-- Google button -->
-        <button
-          id="login-google-btn"
-          :aria-busy="isLoading"
-          class="w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms]"
-          @click="handleLogin"
-          :disabled="isLoading"
-        >
+        <BaseButton variant="outline" id="login-google-btn" :aria-busy="isLoading" :pt="{ root: { class: 'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none' } }" @click="handleLogin" :disabled="isLoading" :loading="isLoading">
           <div
             class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary"
           >
@@ -160,7 +154,7 @@
             ></div>
             <span>{{ isLoading ? 'Conectando...' : 'Continuar com Google' }}</span>
           </div>
-        </button>
+        </BaseButton>
 
         <!-- Terms -->
         <p
@@ -195,6 +189,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
