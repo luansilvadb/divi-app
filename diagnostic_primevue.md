@@ -21,7 +21,7 @@ A refatoração focou na integração profunda do PrimeVue (v4) como biblioteca 
 
 ## 3. Próximos Passos (Refatoração em Curso)
 
-*   **Sincronização de Platform Rules:** Unificar a lógica de `BaseConfirmModal` e `BaseConfirmBottomSheet` sob a égide do PrimeVue `ConfirmDialog` ou `Dialog` customizado, respeitando a regra de `isMobile`.
+*   **Sincronização de Platform Rules:** Unificamos a lógica de `BaseConfirmModal` e `BaseConfirmBottomSheet` utilizando um novo componente `BaseConfirmDialog` customizado, que encapsula a regra de `isMobile` para renderizar dinamicamente o Dialog de Desktop ou o Drawer Mobile, simplificando a implementação nas views.
 *   **Refinamento de Inputs e Switchers:** Utilizar `SelectButton` para seletores de tipo (Receita/Despesa) e `IconField` para inputs com ícones, eliminando SVGs manuais e melhorando a semântica.
 
 ## 4. Conclusão

@@ -311,8 +311,7 @@
       />
 
       <!-- Delete Confirmation Overlay -->
-      <component
-        :is="isMobile ? BaseConfirmBottomSheet : BaseConfirmModal"
+      <BaseConfirmDialog
         :show="showConfirmDelete"
         title="Excluir Transação"
         message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
@@ -360,8 +359,7 @@ import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import TransactionBottomSheet from '@/shared/components/organisms/TransactionBottomSheet.vue'
 import TransactionModal from '@/shared/components/organisms/TransactionModal.vue'
-import BaseConfirmModal from '@/shared/components/molecules/BaseConfirmModal.vue'
-import BaseConfirmBottomSheet from '@/shared/components/molecules/BaseConfirmBottomSheet.vue'
+import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
