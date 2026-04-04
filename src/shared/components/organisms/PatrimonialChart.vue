@@ -17,7 +17,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import type { ChartOptions } from 'chart.js'
+import type { ChartOptions, ScriptableContext, TooltipItem, Scale } from 'chart.js'
 import { Line } from 'vue-chartjs'
 
 ChartJS.register(
