@@ -15,6 +15,7 @@
       :invalid="!!error"
       :aria-describedby="error ? `${id}-error` : undefined"
       fluid
+      appendTo="self"
       :pt="{
         root: {
             class: [
@@ -26,11 +27,14 @@
             class: 'p-0 text-left truncate',
             style: { padding: 0 }
         },
+        overlay: {
+            class: 'absolute z-60 mt-1 w-full max-h-60 overflow-auto rounded-xl bg-surface-main/90 backdrop-blur-md border border-border-main shadow-xl focus:outline-none'
+        },
         list: {
             class: 'p-1'
         },
         option: {
-            class: 'rounded-md hover:bg-black/5 dark:hover:bg-white/5 data-[p-highlight=true]:bg-primary-main data-[p-highlight=true]:text-white'
+            class: 'rounded-md py-2 px-4 text-sm font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/5 data-[p-highlight=true]:bg-primary-main data-[p-highlight=true]:text-white cursor-pointer select-none'
         }
       }"
     >
