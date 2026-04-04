@@ -17,7 +17,7 @@ import {
   Legend,
   Filler,
 } from 'chart.js'
-import type { ChartOptions, ScriptableContext, TooltipItem, Scale } from 'chart.js'
+import type { ChartOptions, ScriptableContext, TooltipItem } from 'chart.js'
 import { Line } from 'vue-chartjs'
 
 ChartJS.register(
@@ -51,10 +51,10 @@ const chartData = computed(() => {
         pointRadius: 4,
         pointHoverRadius: 6,
         fill: true,
-        backgroundColor: (context: any) => {
+        backgroundColor: (context: ScriptableContext<'line'>) => {
           const chart = context.chart
           const { ctx, chartArea } = chart
-          if (!chartArea) return null
+          if (!chartArea) return undefined
           const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
           gradient.addColorStop(0, 'rgba(61, 90, 128, 0.4)')
           gradient.addColorStop(1, 'rgba(61, 90, 128, 0)')
@@ -86,11 +86,11 @@ const chartOptions: ChartOptions<'line'> = {
       displayColors: false,
       cornerRadius: 12,
       callbacks: {
-        label: (context: any) => {
+        label: (context: TooltipItem<'line'>) => {
           return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL',
-          }).format(context.parsed.y)
+          }).format(context.parsed.y || 0)
         },
       },
     },
@@ -105,8 +105,8 @@ const chartOptions: ChartOptions<'line'> = {
         color: '#8b949e',
         font: { size: 10, weight: 'bold' },
         padding: 10,
-        callback: (value: any) => {
-          if (value >= 1000) return `R$ ${(value / 1000).toFixed(1)} mil`
+        callback: (value: string | number) => {
+          if (Number(value) >= 1000) return `R$ ${(Number(value) / 1000).toFixed(1)} mil`
           return `R$ ${value}`
         },
       },

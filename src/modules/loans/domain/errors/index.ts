@@ -1,7 +1,7 @@
 export class DomainError extends Error {
   constructor(
     message: string,
-    public readonly originalError?: any,
+    public readonly originalError?: unknown,
   ) {
     super(message)
     this.name = 'DomainError'
@@ -9,7 +9,7 @@ export class DomainError extends Error {
 }
 
 export class InfrastructureError extends DomainError {
-  constructor(message: string, originalError?: any) {
+  constructor(message: string, originalError?: unknown) {
     super(message, originalError)
     this.name = 'InfrastructureError'
   }
