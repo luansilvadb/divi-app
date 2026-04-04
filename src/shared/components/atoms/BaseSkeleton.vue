@@ -1,22 +1,19 @@
 <template>
-  <div
+  <Skeleton
+    :width="width"
+    :height="height"
+    :borderRadius="rounded ? '50%' : '8px'"
     class="relative overflow-hidden bg-black/5 dark:bg-white/5 animate-pulse"
-    :class="[rounded ? 'rounded-full' : 'rounded-lg', customClass]"
-    :style="customStyle"
+    :class="customClass"
   >
-    <!-- Shimmer effect overlay -->
     <div class="absolute inset-0 animate-shimmer"></div>
-  </div>
+  </Skeleton>
 </template>
 
 <script setup lang="ts">
-/**
- * BaseSkeleton Component
- * Reusable skeleton loader with shimmer effect (FR-010).
- */
-import { computed } from 'vue'
+import Skeleton from 'primevue/skeleton'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     width?: string
     height?: string
@@ -29,13 +26,4 @@ const props = withDefaults(
     rounded: false,
   },
 )
-
-const customStyle = computed(() => ({
-  width: props.width,
-  height: props.height,
-}))
 </script>
-
-<style scoped>
-/* Shimmer animation already defined in main.css */
-</style>

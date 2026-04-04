@@ -1,7 +1,7 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-5 space-y-3 bg-surface-main dark:bg-surface-main h-full max-h-none pb-4"
+    class="p-5 space-y-4 bg-surface-main dark:bg-surface-main h-full max-h-none pb-4"
   >
     <!-- Type Switcher (Premium) -->
     <div
@@ -17,17 +17,7 @@
         "
         @click="form.type = 'expense'"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M7 10l5 5 5-5z" />
         </svg>
         Despesa
@@ -42,24 +32,14 @@
         "
         @click="form.type = 'income'"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
           <path d="M7 10l5 5 5-5z" class="rotate-180 origin-center" />
         </svg>
         Receita
       </button>
     </div>
 
-    <div class="space-y-3">
+    <div class="space-y-4">
       <BaseInput
         id="title"
         label="Título da Transação"
@@ -78,7 +58,7 @@
         placeholder="0,00"
       />
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <BaseSelect
           id="category"
           label="Categoria"
