@@ -1,35 +1,51 @@
 <template>
-  <button
-    :class="[
-      'px-6 py-2.5 rounded-full font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95',
-      variantClasses[variant],
-      { 'opacity-50 cursor-not-allowed active:scale-100': disabled || loading },
-    ]"
+  <Button
+    :severity="primeVariant"
+    :outlined="variant === 'outline'"
+    :text="variant === 'ghost'"
     :disabled="disabled || loading"
-    :aria-busy="loading"
+    :loading="loading"
     v-bind="$attrs"
+    :class="[
+      'rounded-full font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95',
+      { 'shadow-lg': !['outline', 'ghost'].includes(variant) },
+      // Custom overrides to keep the same specific brand colors overriding PrimeVue defaults if needed
+      // (PrimeVue uses its own palette unless we map the surface/primary CSS vars)
+      { 'bg-primary-main text-white shadow-primary-main/20': variant === 'primary' },
+      { 'bg-secondary-main text-white shadow-secondary-main/20 border-secondary-main hover:bg-secondary-main/90': variant === 'secondary' },
+      { 'bg-error-main text-white shadow-error-main/20 border-error-main hover:bg-error-main/90': variant === 'danger' },
+      { 'border border-border-main text-text-primary hover:bg-surface-main': variant === 'outline' },
+      { 'text-text-secondary hover:bg-surface-main': variant === 'ghost' },
+    ]"
+    :pt="{
+        root: {
+            class: ['px-6 py-2.5', { 'opacity-50 cursor-not-allowed active:scale-100': disabled || loading }]
+        }
+    }"
   >
-    <span v-if="loading" class="mr-2" aria-hidden="true">...</span>
     <slot />
-  </button>
+  </Button>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import Button from 'primevue/button'
+
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   variant?: ButtonVariant
   disabled?: boolean
   loading?: boolean
-}>()
+}>(), {
+  variant: 'primary',
+  disabled: false,
+  loading: false
+})
 
-const variant = props.variant || 'primary'
-
-const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'bg-primary-main text-white hover:opacity-90 shadow-lg shadow-primary-main/20',
-  secondary: 'bg-secondary-main text-white hover:opacity-90 shadow-lg shadow-secondary-main/20',
-  outline: 'border border-border-main bg-transparent text-text-primary hover:bg-surface-main',
-  ghost: 'bg-transparent text-text-secondary hover:bg-surface-main',
-  danger: 'bg-error-main text-white hover:opacity-90 shadow-lg shadow-error-main/20',
-}
+const primeVariant = computed(() => {
+  if (props.variant === 'danger') return 'danger'
+  if (props.variant === 'secondary') return 'secondary'
+  return undefined // Primary is default
+})
 </script>
