@@ -302,8 +302,7 @@
     <!-- Overlays and Modals -->
     <Teleport to="body">
       <!-- Transaction Form Overlay -->
-      <component
-        :is="isMobile ? TransactionBottomSheet : TransactionModal"
+      <TransactionDialog
         :transaction="editingTransaction"
         :show="showForm"
         @close="handleCloseForm"
@@ -357,8 +356,7 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import TransactionBottomSheet from '@/shared/components/organisms/TransactionBottomSheet.vue'
-import TransactionModal from '@/shared/components/organisms/TransactionModal.vue'
+import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'

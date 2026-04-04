@@ -78,8 +78,8 @@ describe('TransactionsView', () => {
           BaseSummaryItem: true,
           BaseProgressBar: true,
           StandardPageLayout: false,
-          BaseConfirmBottomSheet: true,
-          BaseConfirmModal: true,
+
+          BaseConfirmDialog: true,
           TransactionModal: true,
           TransactionBottomSheet: true,
           Teleport: true
@@ -104,8 +104,8 @@ describe('TransactionsView', () => {
           BaseSummaryItem: true,
           BaseProgressBar: true,
           StandardPageLayout: false,
-          BaseConfirmBottomSheet: true,
-          BaseConfirmModal: true,
+
+          BaseConfirmDialog: true,
           TransactionModal: true,
           TransactionBottomSheet: true,
           Teleport: true
@@ -121,34 +121,5 @@ describe('TransactionsView', () => {
     expect(wrapper.html()).not.toContain('Adicionar')
   })
 
-  it('switches between Modal and BottomSheet based on isMobile', async () => {
-    const wrapper = mount(TransactionsView, {
-      global: {
-        stubs: {
-          BaseButton: true,
-          TransactionItem: true,
-          BaseCard: true,
-          BaseSummaryItem: true,
-          BaseProgressBar: true,
-          StandardPageLayout: false,
-          BaseConfirmBottomSheet: { name: 'BaseConfirmBottomSheet', template: '<div class="sheet-stub"></div>' },
-          BaseConfirmModal: { name: 'BaseConfirmModal', template: '<div class="modal-stub"></div>' },
-          TransactionModal: { name: 'TransactionModal', template: '<div class="modal-stub"></div>' },
-          TransactionBottomSheet: { name: 'TransactionBottomSheet', template: '<div class="sheet-stub"></div>' },
-          Teleport: true
-        },
-      },
-    })
 
-    // Initial state (Desktop)
-    expect(wrapper.findComponent({ name: 'TransactionModal' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'TransactionBottomSheet' }).exists()).toBe(false)
-
-    // Mobile state
-    isMobileMock.value = true
-    await nextTick()
-
-    expect(wrapper.findComponent({ name: 'TransactionModal' }).exists()).toBe(false)
-    expect(wrapper.findComponent({ name: 'TransactionBottomSheet' }).exists()).toBe(true)
-  })
 })

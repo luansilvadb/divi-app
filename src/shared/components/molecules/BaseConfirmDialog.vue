@@ -1,20 +1,158 @@
 <template>
   <component
-    :is="isMobile ? BaseConfirmBottomSheet : BaseConfirmModal"
-    :show="show"
-    :title="title"
-    :message="message"
-    :confirm-text="confirmText"
-    :cancel-text="cancelText"
-    @confirm="$emit('confirm')"
-    @cancel="$emit('cancel')"
-  />
+    :is="isMobile ? Drawer : Dialog"
+    :visible="show"
+    @update:visible="$emit('cancel')"
+    :position="isMobile ? 'bottom' : undefined"
+    :modal="true"
+    :dismissableMask="true"
+    :closable="false"
+    :showHeader="false"
+    :class="[
+      '!bg-transparent !border-none !shadow-none',
+      isMobile ? '!h-auto' : 'w-[95%] max-w-[400px]'
+    ]"
+    :pt="isMobile ? bottomSheetPt : modalPt"
+  >
+    <template v-if="!isMobile">
+      <BaseCard
+        class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-white/5 !bg-surface-main overflow-hidden flex flex-col relative"
+        padding="none"
+      >
+        <div class="p-8 text-center flex flex-col items-center">
+          <div
+            class="w-16 h-16 rounded-full bg-error-main/10 flex items-center justify-center text-error-main mb-6 border border-error-main/20 shadow-inner"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </div>
+
+          <h3 class="text-xl font-black text-text-primary tracking-tight mb-2">
+            {{ title || 'Tem certeza?' }}
+          </h3>
+          <p class="text-sm font-medium text-text-secondary leading-relaxed opacity-70">
+            {{
+              message ||
+              'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
+            }}
+          </p>
+        </div>
+
+        <div class="flex border-t border-white/5">
+          <button
+            type="button"
+            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-widest text-text-secondary hover:bg-white/5 transition-all border-r border-white/5"
+            @click="$emit('cancel')"
+          >
+            {{ cancelText || 'Cancelar' }}
+          </button>
+          <button
+            type="button"
+            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] text-error-main hover:bg-error-main/10 transition-all flex items-center justify-center gap-2 group"
+            @click="$emit('confirm')"
+          >
+            {{ confirmText || 'Excluir' }}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="group-hover:translate-x-0.5 transition-transform"
+            >
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+      </BaseCard>
+    </template>
+    <template v-else>
+      <div
+        class="bg-surface-main dark:bg-surface-main rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
+      >
+        <!-- Drag Handle for Visual Cue -->
+        <div class="w-12 h-1.5 bg-white/10 rounded-full mb-8 shrink-0"></div>
+
+        <!-- Icon/Warning -->
+        <div
+          class="w-16 h-16 rounded-full bg-error-main/10 flex items-center justify-center text-error-main mb-6 border border-error-main/20 shadow-inner"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 6h18"></path>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </div>
+
+        <h3 class="text-xl font-black text-text-primary tracking-tight mb-2">
+          {{ title || 'Tem certeza?' }}
+        </h3>
+        <p class="text-sm font-medium text-text-secondary leading-relaxed opacity-70 mb-8">
+          {{
+            message ||
+            'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
+          }}
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="w-full space-y-3 pb-safe">
+          <BaseButton
+            variant="danger"
+            class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-[0.15em]"
+            @click="$emit('confirm')"
+          >
+            {{ confirmText || 'Excluir' }}
+          </BaseButton>
+          <BaseButton
+            variant="ghost"
+            class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100"
+            @click="$emit('cancel')"
+          >
+            {{ cancelText || 'Cancelar' }}
+          </BaseButton>
+        </div>
+      </div>
+    </template>
+  </component>
 </template>
 
 <script setup lang="ts">
 import { useIsMobile } from '@/shared/composables/useIsMobile'
-import BaseConfirmModal from './BaseConfirmModal.vue'
-import BaseConfirmBottomSheet from './BaseConfirmBottomSheet.vue'
+import Dialog from 'primevue/dialog'
+import Drawer from 'primevue/drawer'
+import BaseCard from '../atoms/BaseCard.vue'
+import BaseButton from '../atoms/BaseButton.vue'
 
 defineProps<{
   show: boolean
@@ -27,4 +165,25 @@ defineProps<{
 defineEmits(['confirm', 'cancel'])
 
 const isMobile = useIsMobile()
+
+const modalPt = {
+  root: { class: 'modal-wrapper flex items-center justify-center overflow-hidden' },
+  mask: {
+    class: 'modal-backdrop bg-[#0e121b80] backdrop-blur-md transition-all duration-500 z-[150]',
+  },
+  content: { class: 'modal-content relative w-full z-[160] !p-0 !bg-transparent' },
+}
+
+const bottomSheetPt = {
+  mask: { class: 'backdrop-blur-sm bg-black/40 z-[90]' },
+  root: { class: 'z-[100]' },
+  header: { class: 'p-0 border-none hidden' },
+  content: { class: 'p-0 !bg-transparent' },
+}
 </script>
+
+<style scoped>
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 2rem);
+}
+</style>
