@@ -7,10 +7,7 @@
         <div
           class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
         >
-          <button
-            @click="prevMonth"
-            class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
-          >
+          <Button variant="text" @click="prevMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -24,16 +21,13 @@
             >
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
-          </button>
+          </Button>
           <div
             class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center"
           >
             {{ monthLabelOnly }}
           </div>
-          <button
-            @click="nextMonth"
-            class="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary"
-          >
+          <Button variant="text" @click="nextMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -47,7 +41,7 @@
             >
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
-          </button>
+          </Button>
         </div>
         <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm"> Adicionar </BaseButton>
       </div>
@@ -76,12 +70,7 @@
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
           </div>
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Pesquisar por título, categoria ou valor..."
-            class="w-full bg-white dark:bg-black/20 border-2 border-black/5 dark:border-white/5 rounded-3xl py-4 pl-14 pr-6 text-sm font-medium focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 outline-hidden transition-all shadow-sm"
-          />
+          <BaseInput id="search-transactions" v-model="searchQuery" placeholder="Buscar transações..." icon="pi pi-search" />
         </div>
 
         <!-- Transactions List -->
@@ -321,12 +310,7 @@
       />
 
       <!-- Floating Action Button (FAB) -->
-      <button
-        v-if="isMobile"
-        class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 rounded-full bg-primary-main text-white flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:bg-primary-dark hover:-translate-y-1 transition-all z-50 active:scale-95"
-        @click="openNewForm()"
-        aria-label="Nova Transação"
-      >
+      <BaseButton v-if="isMobile" variant="primary" :pt="{ root: { class: 'fixed bottom-24 right-6 md:bottom-10 md:right-10 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:-translate-y-1 transition-all z-50' } }" @click="openNewForm()" aria-label="Nova Transação">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -341,13 +325,15 @@
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
-      </button>
+      </BaseButton>
     </Teleport>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
+import Button from 'primevue/button'
+import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'

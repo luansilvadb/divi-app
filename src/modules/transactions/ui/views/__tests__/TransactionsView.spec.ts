@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TransactionsView from '../TransactionsView.vue'
 import { ref, nextTick } from 'vue'
+import PrimeVue from 'primevue/config'
 
 // Mock shared components
 vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
@@ -67,8 +68,11 @@ describe('TransactionsView', () => {
 
   it('renders correctly on desktop', () => {
     isMobileMock.value = false
+
     const wrapper = mount(TransactionsView, {
       global: {
+        plugins: [PrimeVue],
+
         stubs: {
           BaseButton: {
             template: '<button><slot /></button>'
@@ -95,8 +99,11 @@ describe('TransactionsView', () => {
 
   it('renders correctly on mobile', async () => {
     isMobileMock.value = true
+
     const wrapper = mount(TransactionsView, {
       global: {
+        plugins: [PrimeVue],
+
         stubs: {
           BaseButton: true,
           TransactionItem: true,
