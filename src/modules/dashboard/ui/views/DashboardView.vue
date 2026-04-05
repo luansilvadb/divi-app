@@ -497,7 +497,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, defineAsyncComponent } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import SelectButton from 'primevue/selectbutton'
 import { formatCurrency } from '@/shared/utils/formatters'
@@ -521,7 +521,11 @@ import { useTransactionStore } from '@/modules/transactions/application/stores/t
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
-import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
+
+// Lazy load chart component to reduce initial bundle
+const PatrimonialChart = defineAsyncComponent(() =>
+  import('@/shared/components/organisms/PatrimonialChart.vue')
+)
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
