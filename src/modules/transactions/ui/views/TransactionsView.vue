@@ -144,26 +144,37 @@
           </div>
         </div>
 
-        <!-- Search Bar with AutoComplete -->
-        <div class="space-y-3">
+        <!-- Search Bar with AutoComplete - Modernized -->
+        <div class="space-y-4">
           <div class="relative group">
-            <!-- Search Icon Overlay -->
-            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-text-disabled group-focus-within:text-primary-main transition-colors duration-300"
+            <!-- Enhanced Search Container with Glassmorphism -->
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-primary-main/5 via-transparent to-primary-main/5 dark:from-primary-main/10 dark:via-transparent dark:to-primary-main/10 rounded-3xl blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-500 pointer-events-none"
+            ></div>
+
+            <!-- Search Icon with Animation -->
+            <div
+              class="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10 transition-all duration-300 group-focus-within:scale-110"
+            >
+              <div
+                class="p-2 rounded-xl bg-gradient-to-br from-primary-main/10 to-primary-main/5 dark:from-primary-main/20 dark:to-primary-main/10 backdrop-blur-sm border border-primary-main/10 dark:border-primary-main/20"
               >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-primary-main"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </div>
             </div>
 
             <AutoComplete
@@ -174,30 +185,83 @@
               @clear="onSearchClear"
               placeholder="Buscar transações por título, categoria, carteira..."
               :pt="{
-                root: { class: 'w-full' },
+                root: { class: 'w-full relative' },
                 input: {
                   class:
-                    'w-full pl-12 pr-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-xl text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg',
+                    'w-full pl-20 pr-14 py-4 rounded-3xl border-2 border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-2xl text-text-primary placeholder:text-text-disabled/70 focus:outline-none focus:ring-4 focus:ring-primary-main/20 focus:border-primary-main/40 hover:border-black/10 dark:hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-xl focus:shadow-2xl text-sm font-medium',
                 },
                 dropdown: {
                   class:
-                    'rounded-r-2xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200',
+                    'absolute right-3 top-1/2 -translate-y-1/2 rounded-2xl border-0 bg-gradient-to-br from-primary-main/10 to-primary-main/5 dark:from-primary-main/20 dark:to-primary-main/10 hover:from-primary-main/20 hover:to-primary-main/10 p-2 transition-all duration-200 cursor-pointer',
                 },
               }"
               dropdown
               class="text-sm"
-            />
+            >
+              <template #dropdownicon>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-primary-main"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </template>
+            </AutoComplete>
+
+            <!-- Clear Button (appears when query exists) -->
+            <Transition
+              enter-active-class="transition-all duration-200"
+              enter-from-class="opacity-0 scale-75"
+              enter-to-class="opacity-100 scale-100"
+              leave-active-class="transition-all duration-150"
+              leave-from-class="opacity-100 scale-100"
+              leave-to-class="opacity-0 scale-75"
+            >
+              <button
+                v-if="searchQuery"
+                @click="onSearchClear"
+                class="absolute right-16 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-200 z-10"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-text-secondary"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </Transition>
           </div>
 
-          <!-- Advanced Filters Toggle -->
-          <div class="flex items-center gap-2">
+          <!-- Enhanced Advanced Filters Toggle -->
+          <div class="flex items-center justify-between px-2">
             <Button
               :icon="showAdvancedFilters ? 'pi pi-chevron-up' : 'pi pi-filter'"
               :label="showAdvancedFilters ? 'Ocultar Filtros' : 'Filtros Avançados'"
               text
               size="small"
               @click="showAdvancedFilters = !showAdvancedFilters"
-              class="text-xs transition-all duration-200 hover:scale-105"
+              class="text-xs transition-all duration-300 hover:scale-105 hover:text-primary-main"
+              :pt="{
+                label: { class: 'font-semibold' },
+                icon: { class: 'transition-transform duration-300' },
+              }"
             />
             <Button
               v-if="searchHistory.length > 0"
@@ -206,97 +270,174 @@
               text
               size="small"
               @click="handleClearSearchHistory"
-              class="text-xs text-text-disabled hover:text-text-secondary transition-colors duration-200"
+              class="text-xs text-text-disabled hover:text-error-main transition-all duration-200 hover:scale-105"
             />
           </div>
 
-          <!-- Advanced Filters Panel -->
+          <!-- Enhanced Advanced Filters Panel with Glassmorphism -->
           <Transition
             enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 -translate-y-2"
-            enter-to-class="opacity-100 translate-y-0"
+            enter-from-class="opacity-0 -translate-y-4 scale-95"
+            enter-to-class="opacity-100 translate-y-0 scale-100"
             leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 -translate-y-2"
+            leave-from-class="opacity-100 translate-y-0 scale-100"
+            leave-to-class="opacity-0 -translate-y-4 scale-95"
           >
             <div
               v-if="showAdvancedFilters"
-              class="p-5 bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-2xl space-y-4 border border-black/5 dark:border-white/5 shadow-lg"
+              class="p-6 bg-white/40 dark:bg-white/5 backdrop-blur-2xl rounded-3xl space-y-5 border border-black/5 dark:border-white/10 shadow-2xl relative overflow-hidden"
             >
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Category Filter -->
-                <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Categoria</label
-                  >
-                  <select
-                    v-model="filterCategory"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
-                  >
-                    <option value="">Todas</option>
-                    <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
-                      {{ cat.name }}
-                    </option>
-                  </select>
+              <!-- Decorative gradient overlay -->
+              <div
+                class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-main/5 to-transparent dark:from-primary-main/10 rounded-full blur-3xl pointer-events-none"
+              ></div>
+
+              <div class="relative z-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <!-- Category Filter -->
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
+                      </svg>
+                      Categoria
+                    </label>
+                    <select
+                      v-model="filterCategory"
+                      class="w-full px-4 py-3 rounded-2xl border-2 border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-4 focus:ring-primary-main/20 focus:border-primary-main/40 transition-all duration-300 hover:border-black/10 dark:hover:border-white/20 font-medium shadow-sm hover:shadow-md"
+                    >
+                      <option value="">Todas</option>
+                      <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
+                        {{ cat.name }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- Wallet Filter -->
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M21 12V7H5a2 2 0 0 1 0-4h14v4"
+                        />
+                        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                      </svg>
+                      Carteira
+                    </label>
+                    <select
+                      v-model="filterWallet"
+                      class="w-full px-4 py-3 rounded-2xl border-2 border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-4 focus:ring-primary-main/20 focus:border-primary-main/40 transition-all duration-300 hover:border-black/10 dark:hover:border-white/20 font-medium shadow-sm hover:shadow-md"
+                    >
+                      <option value="">Todas</option>
+                      <option
+                        v-for="wallet in store.wallets"
+                        :key="wallet.id"
+                        :value="wallet.id"
+                      >
+                        {{ wallet.name }}
+                      </option>
+                    </select>
+                  </div>
                 </div>
 
-                <!-- Wallet Filter -->
-                <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Carteira</label
-                  >
-                  <select
-                    v-model="filterWallet"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
-                  >
-                    <option value="">Todas</option>
-                    <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
-                      {{ wallet.name }}
-                    </option>
-                  </select>
+                <!-- Amount Range -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                      Valor Mínimo
+                    </label>
+                    <input
+                      v-model.number="filterAmountMin"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="0,00"
+                      class="w-full px-4 py-3 rounded-2xl border-2 border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled/60 focus:outline-none focus:ring-4 focus:ring-primary-main/20 focus:border-primary-main/40 transition-all duration-300 hover:border-black/10 dark:hover:border-white/20 font-medium shadow-sm hover:shadow-md"
+                    />
+                  </div>
+                  <div class="space-y-2">
+                    <label
+                      class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                      Valor Máximo
+                    </label>
+                    <input
+                      v-model.number="filterAmountMax"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      placeholder="∞"
+                      class="w-full px-4 py-3 rounded-2xl border-2 border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled/60 focus:outline-none focus:ring-4 focus:ring-primary-main/20 focus:border-primary-main/40 transition-all duration-300 hover:border-black/10 dark:hover:border-white/20 font-medium shadow-sm hover:shadow-md"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <!-- Amount Range -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Valor Mínimo</label
-                  >
-                  <input
-                    v-model.number="filterAmountMin"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="0,00"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                <!-- Clear Filters -->
+                <div class="flex justify-end pt-3">
+                  <Button
+                    label="Limpar Filtros"
+                    icon="pi pi-times"
+                    text
+                    size="small"
+                    @click="handleClearFilters"
+                    class="hover:scale-105 transition-transform duration-200 font-semibold"
                   />
                 </div>
-                <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Valor Máximo</label
-                  >
-                  <input
-                    v-model.number="filterAmountMax"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="∞"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
-                  />
-                </div>
-              </div>
-
-              <!-- Clear Filters -->
-              <div class="flex justify-end pt-2">
-                <Button
-                  label="Limpar Filtros"
-                  icon="pi pi-times"
-                  text
-                  size="small"
-                  @click="handleClearFilters"
-                  class="hover:scale-105 transition-transform duration-200"
-                />
               </div>
             </div>
           </Transition>
