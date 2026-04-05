@@ -6,3 +6,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Fix UI/UX bugs and optimize performance**
       _Link: [../archive/stability_20260405/](../archive/stability_20260405/)_
+
+---
+
+- [ ] **Track: Improve the transactions searchbar component**
+      _Link: [./tracks/initial/searchbar_20260405/](./tracks/initial/searchbar_20260405/)_
