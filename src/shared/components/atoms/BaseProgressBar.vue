@@ -4,18 +4,7 @@
       :value="percentage"
       :showValue="false"
       class="h-2.5 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 shadow-inner"
-      :pt="{
-        value: {
-          class: ['h-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] rounded-full relative',
-            statusClass,
-            { 'animate-pulse-error': isOverBudget || status === 'error' }
-          ],
-          style: {
-            backgroundColor: color || undefined,
-            width: `${Math.min(percentage, 100)}%`
-          }
-        }
-      }"
+
     >
       <template #default>
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer opacity-30"></div>

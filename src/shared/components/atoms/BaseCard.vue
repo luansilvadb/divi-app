@@ -1,5 +1,6 @@
 <template>
   <Card
+
     v-bind="$attrs"
     class="glass-card overflow-hidden transition-all duration-300"
     :class="{
@@ -11,11 +12,7 @@
     :tabindex="clickable ? 0 : undefined"
     @keydown.enter="clickable && $emit('click')"
     @keydown.space.prevent="clickable && $emit('click')"
-    :pt="{
-      root: { class: '!p-0' },
-      content: { class: '!p-0 h-full flex flex-col' },
-      body: { class: '!p-0 h-full flex flex-col' }
-    }"
+
   >
     <template #header v-if="$slots.header">
       <div

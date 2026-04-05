@@ -130,6 +130,7 @@ import Drawer from 'primevue/drawer'
 import BaseCard from '../atoms/BaseCard.vue'
 import TransactionFormContent from './TransactionFormContent.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
+import { useOverlayPt } from '@/shared/composables/usePrimeOverlay'
 
 defineProps<{
   show: boolean
@@ -151,18 +152,7 @@ function handleSaved() {
   emit('close')
 }
 
-const modalPt = {
-  root: { class: 'modal-wrapper flex items-center justify-center overflow-y-auto overflow-x-hidden' },
-  mask: { class: 'modal-backdrop bg-[#0e121b80] backdrop-blur-md transition-all duration-500 z-[150]' },
-  content: { class: 'modal-content relative w-full z-[160] !p-0 !bg-transparent' }
-}
-
-const bottomSheetPt = {
-  mask: { class: 'backdrop-blur-sm bg-black/40 z-[90]' },
-  root: { class: 'z-[100]' },
-  header: { class: 'p-0 border-none hidden' },
-  content: { class: 'p-0 !bg-transparent' }
-}
+const { modalPt, bottomSheetPt } = useOverlayPt()
 </script>
 
 <style scoped>

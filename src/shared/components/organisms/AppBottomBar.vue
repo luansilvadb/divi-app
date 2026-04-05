@@ -1,85 +1,48 @@
 <template>
-  <nav
-    class="app-bottom-bar flex md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-main border-t border-black/5 dark:border-white/5 justify-around items-center h-[4.5rem] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.02)]"
-  >
-    <RouterLink
-      v-for="item in navItems"
-      :key="item.to"
-      :to="item.to"
-      class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200"
-      active-class="!text-primary-main"
-      :aria-label="item.label"
-    >
-      <div class="bottom-nav-icon mb-1" v-html="item.icon"></div>
-      <span class="text-[10px] font-bold tracking-wider uppercase">{{ item.label }}</span>
-    </RouterLink>
-    <!-- More Button to open drawer -->
-    <button
-      class="bottom-nav-item flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200"
-      aria-label="Mais Opções"
-      @click="$emit('open-drawer')"
-    >
-      <div class="bottom-nav-icon mb-1">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.85"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="1" />
-          <circle cx="19" cy="12" r="1" />
-          <circle cx="5" cy="12" r="1" />
-        </svg>
-      </div>
-      <span class="text-[10px] font-bold tracking-wider uppercase">Mais</span>
-    </button>
-  </nav>
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-main border-t border-black/5 dark:border-white/5 pb-safe">
+    <Dock :model="items" position="bottom" :pt="{
+        root: { class: 'w-full justify-around h-[4.5rem] bg-transparent !border-none' },
+        container: { class: 'w-full justify-around' },
+        item: { class: 'w-full h-full flex justify-center items-center' },
+        itemLink: { class: 'flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200' }
+    }">
+        <template #item="{ item, props }">
+            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive, isExactActive }" :to="item.route" custom>
+                <a :href="href" v-bind="props.action" @click="navigate" :class="[
+                  'flex flex-col items-center justify-center w-full h-full transition-colors duration-200 cursor-pointer',
+                  isActive ? 'text-primary-main' : 'text-text-disabled'
+                ]">
+                    <span :class="item.icon" class="text-xl mb-1"></span>
+                    <span class="text-[10px] font-bold tracking-wider uppercase">{{ item.label }}</span>
+                </a>
+            </RouterLink>
+            <a v-else-if="item.action" v-bind="props.action" @click="item.action" class="flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200 cursor-pointer">
+                <span :class="item.icon" class="text-xl mb-1"></span>
+                <span class="text-[10px] font-bold tracking-wider uppercase">{{ item.label }}</span>
+            </a>
+        </template>
+    </Dock>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import Dock from 'primevue/dock'
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'open-drawer'): void
 }>()
 
-const navItems = [
-  {
-    to: '/',
-    label: 'Dashboard',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="14" y="10" width="7" height="11" rx="1.5"/><rect x="3" y="13" width="7" height="8" rx="1.5"/></svg>`,
-  },
-  {
-    to: '/transactions',
-    label: 'Transações',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M2 17l3-3h14"/><path d="M22 7l-3 3H5"/><polyline points="17 12 19 14 17 16"/><polyline points="7 8 5 10 7 12"/></svg>`,
-  },
-  {
-    to: '/budgets',
-    label: 'Orçamentos',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v12"/><path d="M8 10c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2s-.9 2-2 2h-4c-1.1 0-2 .9-2 2s.9 2 2 2h4c1.1 0 2-.9 2-2"/></svg>`,
-  },
-]
+const items = computed(() => [
+  { label: 'Dashboard', icon: 'pi pi-th-large', route: '/' },
+  { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left', route: '/transactions' },
+  { label: 'Orçamentos', icon: 'pi pi-dollar', route: '/budgets' },
+  { label: 'Mais', icon: 'pi pi-ellipsis-h', action: () => emit('open-drawer') }
+])
 </script>
 
 <style scoped>
-.bottom-nav-item {
-  transition:
-    color 0.2s ease,
-    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-}
-
-.bottom-nav-item:active {
-  transform: scale(0.92);
-  transition: transform 0.1s ease;
-}
-
-/* Fallback for env(safe-area-inset-bottom) */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
