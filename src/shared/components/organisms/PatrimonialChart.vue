@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Chart from 'primevue/chart'
-import type { ChartOptions, ScriptableContext, TooltipItem } from 'chart.js'
+import type { ScriptableContext, TooltipItem } from 'chart.js'
 
 const props = defineProps<{
   data: number[]
