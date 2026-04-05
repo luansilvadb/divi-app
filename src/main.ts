@@ -6,6 +6,7 @@ import DiviPreset from './core/theme/diviPreset'
 import Ripple from 'primevue/ripple'
 import Tooltip from 'primevue/tooltip'
 import AnimateOnScroll from 'primevue/animateonscroll'
+import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css'
 
 
@@ -32,5 +33,6 @@ app.use(PrimeVue, {
     }
   }
 })
+app.use(ToastService)
 
 app.mount('#app')

@@ -29,17 +29,15 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import Dock from 'primevue/dock'
+import { createMobileBottomNav } from '../../config/navigation'
 
 const emit = defineEmits<{
   (e: 'open-drawer'): void
 }>()
 
-const items = computed(() => [
-  { label: 'Dashboard', icon: 'pi pi-th-large', route: '/' },
-  { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left', route: '/transactions' },
-  { label: 'Orçamentos', icon: 'pi pi-dollar', route: '/budgets' },
-  { label: 'Mais', icon: 'pi pi-ellipsis-h', action: () => emit('open-drawer') }
-])
+const items = computed(() =>
+  createMobileBottomNav({ onOpenDrawer: () => emit('open-drawer') })
+)
 </script>
 
 <style scoped>

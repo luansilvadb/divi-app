@@ -42,6 +42,7 @@
         placeholder="Ex: Netflix, Supermercado..."
         class="premium-input-group"
         @input="handleTitleInput"
+        :error="errors.title"
       />
 
       <BaseInput
@@ -51,6 +52,7 @@
         step="0.01"
         v-model="form.amount"
         placeholder="0,00"
+        :error="errors.amount"
       />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -61,6 +63,7 @@
           :options="store.categories.map((cat) => ({ label: cat.name, value: cat.id }))"
           placeholder="Selecionar Categoria"
           class="!mb-0"
+          :error="errors.category_id"
         />
 
         <BaseSelect
@@ -70,10 +73,11 @@
           :options="store.wallets.map((w) => ({ label: w.name, value: w.id }))"
           placeholder="Selecionar Conta"
           class="!mb-0"
+          :error="errors.wallet_id"
         />
       </div>
 
-      <BaseInput id="date" label="Data do Lançamento" type="date" v-model="form.date" />
+      <BaseInput id="date" label="Data do Lançamento" type="date" v-model="form.date" :error="errors.date" />
     </div>
 
     <!-- Action Buttons -->
@@ -117,6 +121,7 @@ const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
 
 const isSubmitting = ref(false)
+const errors = reactive<Record<string, string>>({})
 
 const typeOptions = [
   { label: 'Despesa', value: 'expense', icon: 'pi pi-arrow-down' },
@@ -125,7 +130,7 @@ const typeOptions = [
 
 interface TransactionForm {
   title: string
-  amount: number
+  amount: number | null
   type: 'income' | 'expense'
   category_id: string
   wallet_id: string
@@ -134,12 +139,38 @@ interface TransactionForm {
 
 const form = reactive<TransactionForm>({
   title: '',
-  amount: 0,
+  amount: null,
   type: 'expense' as 'income' | 'expense',
   category_id: '',
   wallet_id: '',
   date: new Date().toISOString().slice(0, 10),
 })
+
+function validateForm(): boolean {
+  Object.keys(errors).forEach(key => delete errors[key])
+  
+  if (!form.title.trim()) {
+    errors.title = 'O título é obrigatório'
+  }
+  
+  if (form.amount === null || form.amount <= 0) {
+    errors.amount = 'O valor deve ser maior que zero'
+  }
+  
+  if (!form.category_id) {
+    errors.category_id = 'A categoria é obrigatória'
+  }
+  
+  if (!form.wallet_id) {
+    errors.wallet_id = 'A conta é obrigatória'
+  }
+  
+  if (!form.date) {
+    errors.date = 'A data é obrigatória'
+  }
+  
+  return Object.keys(errors).length === 0
+}
 
 watch(
   () => props.initialData,
@@ -153,12 +184,13 @@ watch(
       form.date = new Date(newData.date).toISOString().slice(0, 10)
     } else {
       form.title = ''
-      form.amount = 0
+      form.amount = null
       form.type = 'expense'
       form.category_id = ''
       form.wallet_id = ''
       form.date = new Date().toISOString().slice(0, 10)
     }
+    Object.keys(errors).forEach(key => delete errors[key])
   },
   { immediate: true },
 )
@@ -169,14 +201,18 @@ onMounted(async () => {
 })
 
 function handleTitleInput() {
+  if (errors.title) delete errors.title
   const suggestion = autoCatService.suggestCategory(form.title, store.categories)
   if (suggestion) {
     form.category_id = suggestion.id
+    if (errors.category_id) delete errors.category_id
   }
 }
 
 async function handleSubmit() {
   if (isSubmitting.value) return
+  if (!validateForm()) return
+  
   isSubmitting.value = true
   try {
     const isEditing = !!props.initialData?.id

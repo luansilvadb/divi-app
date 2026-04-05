@@ -31,16 +31,17 @@
             <template #item="{ item, props }">
                 <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                     <a :href="href" v-bind="props.action" @click="(e) => { navigate(e); $emit('close'); }" :class="[
-                      'flex items-center gap-3 px-3 py-3 rounded-xl transition-colors cursor-pointer',
-                      isActive ? 'text-primary-main bg-primary-main/5' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                      'flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 cursor-pointer mx-1 mb-1 group',
+                      isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
                     ]">
-                        <span :class="item.icon" class="text-currentColor w-5 h-5 flex items-center justify-center text-lg"></span>
-                        <span class="font-medium">{{ item.label }}</span>
+                        <span :class="[item.icon, isActive ? 'scale-110' : 'group-hover:scale-110']" class="text-xl transition-transform duration-300"></span>
+                        <span class="font-medium text-base">{{ item.label }}</span>
+                        <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                     </a>
                 </RouterLink>
             </template>
             <template #submenuheader="{ item }">
-                <span class="block text-xs font-bold uppercase tracking-wider text-text-disabled mb-3 mt-4">
+                <span class="block text-[10px] font-black uppercase tracking-[0.2em] text-text-disabled mb-2 mt-4 ml-4">
                     {{ item.label }}
                 </span>
             </template>
@@ -48,15 +49,30 @@
     </nav>
 
     <!-- Footer Actions -->
-    <div class="p-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between pb-safe mt-auto">
-      <ThemeToggle />
-      <button
-        @click="handleLogout"
-        class="flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors cursor-pointer"
-      >
-        <span class="font-medium">Sair</span>
-        <span class="pi pi-sign-out w-5 h-5 flex items-center justify-center text-lg"></span>
-      </button>
+    <div class="p-4 border-t border-black/5 dark:border-white/5 flex flex-col gap-4 pb-safe mt-auto">
+      <div v-if="user" class="user-profile p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 flex items-center gap-3">
+        <div class="user-avatar min-w-[40px] h-[40px] rounded-full overflow-hidden flex-shrink-0 border-2 border-primary-main/20">
+            <img v-if="user.avatar_url" :src="user.avatar_url" :alt="user.name || user.email" class="w-full h-full object-cover">
+            <div v-else class="w-full h-full bg-primary-main text-white flex items-center justify-center font-bold text-lg uppercase">
+                {{ (user.name || user.email).charAt(0) }}
+            </div>
+        </div>
+        <div class="user-info flex flex-col overflow-hidden">
+            <span class="text-sm font-bold truncate">{{ user.name || 'Usuário' }}</span>
+            <span class="text-xs text-text-secondary truncate">{{ user.email }}</span>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <ThemeToggle />
+        <button
+          @click="handleLogout"
+          class="flex items-center gap-3 px-4 py-2 rounded-xl text-error-main font-bold hover:bg-error-main/10 transition-colors cursor-pointer border border-error-main/20"
+        >
+          <span>Sair</span>
+          <span class="pi pi-sign-out text-lg"></span>
+        </button>
+      </div>
     </div>
   </Drawer>
 </template>
@@ -67,9 +83,12 @@ import { RouterLink } from 'vue-router'
 import Drawer from 'primevue/drawer'
 import Menu from 'primevue/menu'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
+import { createMainNavigation } from '../../config/navigation'
+import type { User } from '../../../modules/auth/domain/entities/User'
 
 defineProps<{
   isOpen: boolean
+  user?: User | null
 }>()
 
 const emit = defineEmits<{
@@ -82,24 +101,9 @@ function handleLogout() {
   emit('logout')
 }
 
-const menuItems = computed(() => [
-    {
-        label: 'Principal',
-        items: [
-            { label: 'Metas', icon: 'pi pi-bullseye', route: '/goals' },
-            { label: 'Empréstimos', icon: 'pi pi-credit-card', route: '/loans' },
-            { label: 'Assinaturas', icon: 'pi pi-history', route: '/subscriptions' }
-        ]
-    },
-    {
-        label: 'Análise',
-        items: [
-            { label: 'Calendário', icon: 'pi pi-calendar', route: '/calendar' },
-            { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
-            { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
-        ]
-    }
-])
+const menuItems = computed(() =>
+  createMainNavigation({ onLogout: handleLogout }).slice(0, 2) // Only main groups, no logout section
+)
 </script>
 
 <style scoped>
