@@ -9,5 +9,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Improve the transactions searchbar component**
+- [x] **Track: Improve the transactions searchbar component**
       _Link: [./tracks/initial/searchbar_20260405/](./tracks/initial/searchbar_20260405/)_
