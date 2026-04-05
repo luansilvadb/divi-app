@@ -2,7 +2,7 @@
   <StandardPageLayout title="Transações" :loading="store.isLoading">
     <!-- Header with Search & Filters -->
     <template #action>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-4 flex-wrap">
         <!-- Month Selector -->
         <div
           class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
@@ -43,6 +43,52 @@
             </svg>
           </Button>
         </div>
+
+        <!-- Filter Presets -->
+        <div class="flex items-center gap-2">
+          <Button
+            :label="'Todas'"
+            :severity="activeFilter === 'all' ? 'primary' : 'secondary'"
+            :text="activeFilter !== 'all'"
+            @click="activeFilter = 'all'"
+            class="text-xs"
+          />
+          <Button
+            :label="'Entradas'"
+            :severity="activeFilter === 'income' ? 'success' : 'secondary'"
+            :text="activeFilter !== 'income'"
+            @click="activeFilter = 'income'"
+            class="text-xs"
+          />
+          <Button
+            :label="'Saídas'"
+            :severity="activeFilter === 'expense' ? 'danger' : 'secondary'"
+            :text="activeFilter !== 'expense'"
+            @click="activeFilter = 'expense'"
+            class="text-xs"
+          />
+        </div>
+
+        <!-- Bulk Mode Toggle & Export -->
+        <div class="flex items-center gap-2">
+          <Button
+            :icon="isBulkMode ? 'pi pi-times' : 'pi pi-check-square'"
+            :label="isBulkMode ? 'Cancelar' : 'Selecionar'"
+            :severity="isBulkMode ? 'danger' : 'secondary'"
+            :text="!isBulkMode"
+            @click="toggleBulkMode"
+            class="text-xs"
+          />
+          <Button
+            icon="pi pi-download"
+            label="Exportar CSV"
+            severity="secondary"
+            text
+            @click="exportToCSV"
+            class="text-xs"
+          />
+        </div>
+
         <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm"> Adicionar </BaseButton>
       </div>
     </template>
@@ -50,6 +96,38 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- MAIN LIST COLUMN -->
       <main class="lg:col-span-2 space-y-8">
+        <!-- Bulk Actions Bar -->
+        <div v-if="isBulkMode" class="flex items-center justify-between p-4 bg-primary-main/5 dark:bg-primary-main/10 rounded-2xl border border-primary-main/20">
+          <div class="flex items-center gap-3">
+            <Button
+              label="Selecionar Todas"
+              icon="pi pi-check-square"
+              text
+              size="small"
+              @click="selectAll"
+            />
+            <span class="text-sm font-bold text-text-secondary">
+              {{ selectedTransactions.size }} selecionada(s)
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <Button
+              label="Excluir Selecionadas"
+              icon="pi pi-trash"
+              severity="danger"
+              size="small"
+              :disabled="selectedTransactions.size === 0"
+              @click="bulkDelete"
+            />
+            <Button
+              icon="pi pi-times"
+              text
+              size="small"
+              @click="toggleBulkMode"
+            />
+          </div>
+        </div>
+
         <!-- Search Bar -->
         <div class="relative group">
           <div
@@ -75,7 +153,7 @@
 
         <!-- Transactions List -->
         <div
-          v-if="Object.keys(groupedTransactions).length === 0"
+          v-if="Object.keys(filteredGroupedTransactions).length === 0"
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
@@ -104,7 +182,7 @@
         </div>
 
         <div v-else class="space-y-12">
-          <div v-for="(group, day) in groupedTransactions as any" :key="day" class="space-y-4">
+          <div v-for="(group, day) in filteredGroupedTransactions as any" :key="day" class="space-y-4">
             <div class="flex items-center justify-between px-2">
               <div class="flex items-center gap-3">
                 <span class="text-2xl font-black tracking-tighter text-text-primary">{{
@@ -124,7 +202,15 @@
             </div>
 
             <div class="grid grid-cols-1 gap-3">
-              <div v-for="t in group.items" :key="t.id">
+              <div v-for="t in group.items" :key="t.id" class="relative">
+                <!-- Checkbox for bulk selection -->
+                <div v-if="isBulkMode" class="absolute left-2 top-1/2 -translate-y-1/2 z-10">
+                  <Checkbox
+                    :modelValue="selectedTransactions.has(t.id)"
+                    @update:modelValue="toggleTransactionSelection(t.id)"
+                    :binary="true"
+                  />
+                </div>
                 <TransactionItem
                   :transaction="t"
                   :categoryName="store.categoryMap[t.category_id]?.name || 'Outros'"
@@ -135,9 +221,10 @@
                   "
                   :categoryIcon="store.categoryMap[t.category_id]?.icon"
                   :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
+                  :class="{ 'ml-10': isBulkMode }"
                   showTime
                   @delete="handleDelete"
-                  @click="handleEdit(t)"
+                  @click="isBulkMode ? toggleTransactionSelection(t.id) : handleEdit(t)"
                 />
               </div>
             </div>
@@ -309,6 +396,9 @@
         @cancel="cancelDelete"
       />
 
+      <!-- Toast Notifications -->
+      <Toast />
+
       <!-- Floating Action Button (FAB) -->
       <BaseButton v-if="isMobile" variant="primary" :pt="{ root: { class: 'fixed bottom-24 right-6 md:bottom-10 md:right-10 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:-translate-y-1 transition-all z-50' } }" @click="openNewForm()" aria-label="Nova Transação">
         <svg
@@ -345,8 +435,13 @@ import TransactionDialog from '@/shared/components/organisms/TransactionDialog.v
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
+import Checkbox from 'primevue/checkbox'
+import Button from 'primevue/button'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 
 const store = useTransactionStore()
+const toast = useToast()
 const isMobile = useIsMobile()
 const showForm = ref(false)
 const editingTransaction = ref<Transaction | null>(null)
@@ -358,6 +453,14 @@ const openNewForm = () => {
 const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
+
+// Bulk selection state
+const selectedTransactions = ref<Set<string>>(new Set())
+const isBulkMode = ref(false)
+
+// Filter presets state
+const activeFilter = ref<'all' | 'income' | 'expense'>('all')
+
 const searchQuery = computed({
   get: () => store.searchQuery,
   set: (val) => {
@@ -372,6 +475,108 @@ const monthLabelOnly = computed(() => {
 
 // Grouping Logic: Moved to store for performance
 const groupedTransactions = computed(() => store.groupedTransactions)
+
+// Filtered transactions based on active filter
+const filteredGroupedTransactions = computed(() => {
+  if (activeFilter.value === 'all') return groupedTransactions.value
+
+  const filtered: Record<string, { items: Transaction[] }> = {}
+  for (const [day, group] of Object.entries(groupedTransactions.value as Record<string, { items: Transaction[] }>)) {
+    const filteredItems = group.items.filter((t) =>
+      activeFilter.value === 'income' ? t.type === 'income' : t.type === 'expense',
+    )
+    if (filteredItems.length > 0) {
+      filtered[day] = { items: filteredItems }
+    }
+  }
+  return filtered
+})
+
+// Bulk actions
+function toggleBulkMode() {
+  isBulkMode.value = !isBulkMode.value
+  if (!isBulkMode.value) {
+    selectedTransactions.value.clear()
+  }
+}
+
+function toggleTransactionSelection(id: string) {
+  if (selectedTransactions.value.has(id)) {
+    selectedTransactions.value.delete(id)
+  } else {
+    selectedTransactions.value.add(id)
+  }
+}
+
+function selectAll() {
+  const allIds = Object.values(groupedTransactions.value as Record<string, { items: Transaction[] }>)
+    .flatMap((group) => group.items.map((t) => t.id))
+  selectedTransactions.value = new Set(allIds)
+}
+
+function clearSelection() {
+  selectedTransactions.value.clear()
+}
+
+async function bulkDelete() {
+  if (selectedTransactions.value.size === 0) return
+
+  for (const id of selectedTransactions.value) {
+    await store.deleteTransaction(id)
+  }
+
+  toast.add({
+    severity: 'success',
+    summary: 'Transações excluídas',
+    detail: `${selectedTransactions.value.size} transações foram excluídas`,
+    life: 3000,
+  })
+
+  selectedTransactions.value.clear()
+  isBulkMode.value = false
+}
+
+// CSV Export
+function exportToCSV() {
+  const allTransactions = Object.values(groupedTransactions.value as Record<string, { items: Transaction[] }>)
+    .flatMap((group) => group.items)
+
+  if (allTransactions.length === 0) {
+    toast.add({
+      severity: 'warn',
+      summary: 'Sem dados',
+      detail: 'Não há transações para exportar',
+      life: 3000,
+    })
+    return
+  }
+
+  const headers = ['Data', 'Título', 'Categoria', 'Carteira', 'Tipo', 'Valor']
+  const rows = allTransactions.map((t) => [
+    new Date(t.date).toLocaleDateString('pt-BR'),
+    t.title || 'Sem título',
+    store.categoryMap[t.category_id]?.name || 'Outros',
+    store.walletMap[t.wallet_id]?.name || 'Carteira',
+    t.type === 'income' ? 'Entrada' : 'Saída',
+    t.amount.toFixed(2),
+  ])
+
+  const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n')
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `transacoes_${currentDate.value.getFullYear()}-${String(currentDate.value.getMonth() + 1).padStart(2, '0')}.csv`
+  link.click()
+  URL.revokeObjectURL(url)
+
+  toast.add({
+    severity: 'success',
+    summary: 'Exportação concluída',
+    detail: `Arquivo CSV gerado com ${allTransactions.length} transações`,
+    life: 3000,
+  })
+}
 
 // Initialization
 onMounted(async () => {
