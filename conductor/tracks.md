@@ -16,3 +16,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Modernize search bar UI with contemporary design**
       _Link: [./tracks/initial/searchbar-ui-modernization_20260405/](./tracks/initial/searchbar-ui-modernization_20260405/)_
+
+---
+
+- [ ] **Track: Melhore a SearchBar - Redesenho minimalista e moderno**
+      _Link: [./tracks/searchbar-modernization_20260405/](./tracks/searchbar-modernization_20260405/)_
