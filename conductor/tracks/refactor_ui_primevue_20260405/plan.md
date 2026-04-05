@@ -2,10 +2,11 @@
 
 ## Phase 1: Shared Components & Atoms
 ### Goal: Refactor shared components and atoms to use PrimeVue exclusively.
-- [ ] Task: Audit `src/shared/components/atoms/` and identify non-PrimeVue components.
-- [ ] Task: Refactor `BaseButton.vue` to use PrimeVue Button.
-    - [ ] Write tests for `BaseButton.vue`.
-    - [ ] Implement `BaseButton.vue` using PrimeVue.
+- [x] Task: Audit `src/shared/components/atoms/` and identify non-PrimeVue components. [checkpoint: audit_done]
+    - Result: Most components already use PrimeVue. `BaseIconBox.vue` is custom and needs refactoring or replacement.
+- [x] Task: Refactor `BaseButton.vue` to use PrimeVue Button (already using, but needs review/tests). [checkpoint: base_button_done]
+    - [x] Write tests for `BaseButton.vue`.
+    - [x] Implement `BaseButton.vue` using PrimeVue.
 - [ ] Task: Refactor `BaseInput.vue` to use PrimeVue InputText.
     - [ ] Write tests for `BaseInput.vue`.
     - [ ] Implement `BaseInput.vue` using PrimeVue.
