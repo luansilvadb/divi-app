@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
     <!-- Desktop Sidebar -->
-    <AppSidebar class="!hidden md:!flex" @logout="emit('logout')" />
+    <AppSidebar class="!hidden md:!flex" :user="user" @logout="emit('logout')" />
 
     <!-- Main Content Area -->
     <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0">
@@ -14,6 +14,7 @@
     <!-- Mobile Drawer -->
     <AppMobileDrawer
       :is-open="isMobileDrawerOpen"
+      :user="user"
       @close="isMobileDrawerOpen = false"
       @logout="emit('logout')"
     />
@@ -25,6 +26,11 @@ import AppSidebar from '@/shared/components/organisms/AppSidebar.vue'
 import AppBottomBar from '@/shared/components/organisms/AppBottomBar.vue'
 import AppMobileDrawer from '@/shared/components/organisms/AppMobileDrawer.vue'
 import { ref } from 'vue'
+import type { User } from '@/modules/auth/domain/entities/User'
+
+const props = defineProps<{
+  user?: User | null
+}>()
 
 const isMobileDrawerOpen = ref(false)
 

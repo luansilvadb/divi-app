@@ -1,5 +1,5 @@
 <template>
-  <MainLayout v-if="isLoggedIn && !isLoginRoute" @logout="handleLogout">
+  <MainLayout v-if="isLoggedIn && !isLoginRoute" :user="user" @logout="handleLogout">
     <RouterView />
   </MainLayout>
 
