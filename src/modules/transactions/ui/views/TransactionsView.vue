@@ -149,22 +149,25 @@
           <!-- Main Search Container -->
           <div class="relative group/search-container">
             <!-- Animated gradient border effect -->
-            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-main/50 via-purple-500/30 to-primary-main/50 rounded-2xl opacity-0 group-focus-within/search-container:opacity-100 blur transition-opacity duration-500"></div>
+            <div class="absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl opacity-0 group-focus-within/search-container:opacity-100 blur-sm transition-all duration-500"></div>
             
-            <div class="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/20 group-focus-within/search-container:shadow-xl group-focus-within/search-container:shadow-primary-main/10 transition-all duration-300">
+            <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/30 group-focus-within/search-container:shadow-xl group-focus-within/search-container:shadow-indigo-500/10 dark:group-focus-within/search-container:shadow-purple-500/20 transition-all duration-300 overflow-hidden">
+              <!-- Subtle top border highlight -->
+              <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-50"></div>
+              
               <!-- Search Icon -->
-              <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+              <div class="absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
+                  width="22"
+                  height="22"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2.5"
+                  stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="text-text-secondary/60 group-focus-within/search-container:text-primary-main transition-all duration-300 group-focus-within/search-container:scale-110"
+                  class="text-gray-400 dark:text-gray-500 group-focus-within/search-container:text-indigo-500 dark:group-focus-within/search-container:text-purple-400 transition-all duration-300"
                 >
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.3-4.3" />
@@ -177,32 +180,32 @@
                 @complete="searchSuggestionsHandler"
                 @option-select="onSearchSelect"
                 @clear="onSearchClear"
-                placeholder="Buscar transações..."
+                placeholder="Buscar transações por nome, categoria, carteira..."
                 optionLabel="label"
                 :pt="{
                   root: { class: 'w-full' },
                   input: {
                     class:
-                      'w-full pl-12 pr-24 py-4 bg-transparent border-0 rounded-2xl text-text-primary text-base font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-0 transition-all duration-300',
+                      'w-full pl-14 pr-32 py-4 bg-transparent border-0 text-gray-900 dark:text-gray-100 text-[15px] font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 transition-all duration-300',
                   },
                   dropdown: {
                     class:
-                      'absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 p-2 transition-all duration-200',
+                      'absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border-0 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 p-2.5 transition-all duration-200',
                   },
                   panel: {
                     class:
-                      'mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/30 border border-black/5 dark:border-white/10 overflow-hidden',
+                      'mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-200 dark:border-gray-700 overflow-hidden',
                   },
                   list: {
                     class: 'p-2',
                   },
                   option: {
                     class:
-                      'px-4 py-3 rounded-lg cursor-pointer hover:bg-primary-main/10 dark:hover:bg-primary-main/20 text-text-primary font-medium transition-all duration-200 flex items-center gap-3',
+                      'px-4 py-3 rounded-lg cursor-pointer hover:bg-indigo-50 dark:hover:bg-purple-500/10 text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 flex items-center gap-3',
                   },
                   optionGroup: {
                     class:
-                      'px-4 py-2 text-xs font-bold uppercase tracking-wider text-text-secondary/70 bg-black/5 dark:bg-white/5',
+                      'px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50',
                   },
                 }"
                 dropdown
@@ -221,7 +224,7 @@
                       fill="none"
                       stroke="currentColor"
                       stroke-width="2"
-                      class="text-text-secondary/50 flex-shrink-0"
+                      class="text-gray-400 flex-shrink-0"
                     >
                       <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
                       <path d="M3 3v5h5" />
@@ -237,7 +240,7 @@
                       fill="none"
                       stroke="currentColor"
                       stroke-width="2"
-                      class="text-primary-main/70 flex-shrink-0"
+                      class="text-indigo-500 dark:text-purple-400 flex-shrink-0"
                     >
                       <circle cx="11" cy="11" r="8" />
                       <path d="m21 21-4.3-4.3" />
@@ -248,12 +251,12 @@
               </AutoComplete>
 
               <!-- Quick action buttons overlay -->
-              <div class="absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+              <div class="absolute right-16 top-1/2 -translate-y-1/2 flex items-center gap-1.5 z-10">
                 <!-- Clear button -->
                 <button
                   v-if="searchQuery"
                   @click="searchQuery = ''; onSearchClear()"
-                  class="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200"
+                  class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -279,36 +282,34 @@
             <button
               @click="showAdvancedFilters = !showAdvancedFilters"
               :class="[
-                'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105',
+                'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 flex items-center gap-2',
                 showAdvancedFilters
-                  ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
-                  : 'bg-white/50 dark:bg-white/10 text-text-secondary hover:bg-white/80 dark:hover:bg-white/20 border border-black/5 dark:border-white/10'
+                  ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/30'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
               ]"
             >
-              <span class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 21v-7"/>
-                  <path d="M4 10V3"/>
-                  <path d="M12 21v-9"/>
-                  <path d="M12 8V3"/>
-                  <path d="M20 21v-5"/>
-                  <path d="M20 12V3"/>
-                  <path d="M1 14h6"/>
-                  <path d="M9 8h6"/>
-                  <path d="M17 16h6"/>
-                </svg>
-                Filtros
-              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 21v-7"/>
+                <path d="M4 10V3"/>
+                <path d="M12 21v-9"/>
+                <path d="M12 8V3"/>
+                <path d="M20 21v-5"/>
+                <path d="M20 12V3"/>
+                <path d="M1 14h6"/>
+                <path d="M9 8h6"/>
+                <path d="M17 16h6"/>
+              </svg>
+              Filtros
             </button>
 
             <!-- Clear History Button -->
             <button
               v-if="searchHistory.length > 0"
               @click="handleClearSearchHistory"
-              class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200"
+              class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 transition-all duration-200"
               title="Limpar histórico"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                 <path d="M3 3v5h5"/>
                 <path d="M12 7v5l4 2"/>
@@ -1073,23 +1074,23 @@ function formatDateMonth(dateStr: string) {
 <style scoped>
 /* Enhanced AutoComplete Dropdown Styling */
 .search-autocomplete .p-autocomplete-panel {
-  animation: dropdownSlideIn 0.2s ease-out;
+  animation: dropdownSlideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes dropdownSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-12px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 /* Custom scrollbar for dropdown */
 .search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-track {
@@ -1097,17 +1098,12 @@ function formatDateMonth(dateStr: string) {
 }
 
 .search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
 }
 
 .search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-}
-
-/* Enhanced focus states */
-.group-focus-within\/search-container .p-autocomplete-input {
-  background: linear-gradient(to right, rgba(var(--primary-main-rgb, 99, 102, 241), 0.05), transparent);
+  background: rgba(0, 0, 0, 0.25);
 }
 
 /* Smooth transitions for all interactive elements */
@@ -1120,21 +1116,21 @@ input {
 /* Mobile optimizations */
 @media (max-width: 640px) {
   .search-autocomplete .p-autocomplete-input {
-    padding-left: 2.5rem;
+    padding-left: 3rem;
     padding-right: 5rem;
-    padding-top: 0.875rem;
-    padding-bottom: 0.875rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     font-size: 0.9375rem;
   }
 }
 
 /* Dark mode enhancements */
 :deep(.dark) .search-autocomplete .p-autocomplete-panel {
-  background: rgba(17, 24, 39, 0.98);
+  background: rgb(31, 41, 55);
 }
 
 :deep(.dark) .search-autocomplete .p-autocomplete-panel .p-autocomplete-list .p-autocomplete-option:hover {
-  background: rgba(99, 102, 241, 0.15);
+  background: rgba(168, 85, 247, 0.1);
 }
 
 /* Gradient animation for focus border */
@@ -1152,12 +1148,12 @@ input {
   animation: gradientShift 3s ease infinite;
 }
 
-/* Improved chip animations */
-button[class*="rounded-full"] {
+/* Button hover effects */
+button {
   will-change: transform;
 }
 
-/* Search icon pulse animation on focus */
+/* Search icon subtle pulse on focus */
 @keyframes iconPulse {
   0%, 100% {
     transform: translateY(-50%) scale(1);

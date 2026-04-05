@@ -393,7 +393,6 @@ var __VLS_directives;
 /** @type {__VLS_StyleScopedClasses['p-autocomplete-panel']} */ ;
 /** @type {__VLS_StyleScopedClasses['p-autocomplete-list']} */ ;
 /** @type {__VLS_StyleScopedClasses['search-autocomplete']} */ ;
-/** @type {__VLS_StyleScopedClasses['p-autocomplete-input']} */ ;
 /** @type {__VLS_StyleScopedClasses['search-autocomplete']} */ ;
 /** @type {__VLS_StyleScopedClasses['p-autocomplete-panel']} */ ;
 /** @type {__VLS_StyleScopedClasses['dark']} */ ;
@@ -694,45 +693,58 @@ __VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign(
 __VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "relative group/search-container" }));
 /** @type {__VLS_StyleScopedClasses['relative']} */ ;
 /** @type {__VLS_StyleScopedClasses['group/search-container']} */ ;
-__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute -inset-0.5 bg-gradient-to-r from-primary-main/50 via-purple-500/30 to-primary-main/50 rounded-2xl opacity-0 group-focus-within/search-container:opacity-100 blur transition-opacity duration-500" }));
+__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute -inset-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl opacity-0 group-focus-within/search-container:opacity-100 blur-sm transition-all duration-500" }));
 /** @type {__VLS_StyleScopedClasses['absolute']} */ ;
-/** @type {__VLS_StyleScopedClasses['-inset-0.5']} */ ;
+/** @type {__VLS_StyleScopedClasses['-inset-[2px]']} */ ;
 /** @type {__VLS_StyleScopedClasses['bg-gradient-to-r']} */ ;
-/** @type {__VLS_StyleScopedClasses['from-primary-main/50']} */ ;
-/** @type {__VLS_StyleScopedClasses['via-purple-500/30']} */ ;
-/** @type {__VLS_StyleScopedClasses['to-primary-main/50']} */ ;
+/** @type {__VLS_StyleScopedClasses['from-indigo-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['via-purple-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['to-pink-500']} */ ;
 /** @type {__VLS_StyleScopedClasses['rounded-2xl']} */ ;
 /** @type {__VLS_StyleScopedClasses['opacity-0']} */ ;
 /** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:opacity-100']} */ ;
-/** @type {__VLS_StyleScopedClasses['blur']} */ ;
-/** @type {__VLS_StyleScopedClasses['transition-opacity']} */ ;
+/** @type {__VLS_StyleScopedClasses['blur-sm']} */ ;
+/** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
 /** @type {__VLS_StyleScopedClasses['duration-500']} */ ;
-__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/20 group-focus-within/search-container:shadow-xl group-focus-within/search-container:shadow-primary-main/10 transition-all duration-300" }));
+__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/30 group-focus-within/search-container:shadow-xl group-focus-within/search-container:shadow-indigo-500/10 dark:group-focus-within/search-container:shadow-purple-500/20 transition-all duration-300 overflow-hidden" }));
 /** @type {__VLS_StyleScopedClasses['relative']} */ ;
-/** @type {__VLS_StyleScopedClasses['bg-white/60']} */ ;
-/** @type {__VLS_StyleScopedClasses['dark:bg-gray-900/60']} */ ;
-/** @type {__VLS_StyleScopedClasses['backdrop-blur-2xl']} */ ;
+/** @type {__VLS_StyleScopedClasses['bg-white']} */ ;
+/** @type {__VLS_StyleScopedClasses['dark:bg-gray-800']} */ ;
 /** @type {__VLS_StyleScopedClasses['rounded-2xl']} */ ;
 /** @type {__VLS_StyleScopedClasses['shadow-lg']} */ ;
 /** @type {__VLS_StyleScopedClasses['shadow-black/5']} */ ;
-/** @type {__VLS_StyleScopedClasses['dark:shadow-black/20']} */ ;
+/** @type {__VLS_StyleScopedClasses['dark:shadow-black/30']} */ ;
 /** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:shadow-xl']} */ ;
-/** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:shadow-primary-main/10']} */ ;
+/** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:shadow-indigo-500/10']} */ ;
+/** @type {__VLS_StyleScopedClasses['dark:group-focus-within/search-container:shadow-purple-500/20']} */ ;
 /** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
 /** @type {__VLS_StyleScopedClasses['duration-300']} */ ;
-__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10" }));
+/** @type {__VLS_StyleScopedClasses['overflow-hidden']} */ ;
+__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-50" }));
 /** @type {__VLS_StyleScopedClasses['absolute']} */ ;
-/** @type {__VLS_StyleScopedClasses['left-4']} */ ;
+/** @type {__VLS_StyleScopedClasses['top-0']} */ ;
+/** @type {__VLS_StyleScopedClasses['left-0']} */ ;
+/** @type {__VLS_StyleScopedClasses['right-0']} */ ;
+/** @type {__VLS_StyleScopedClasses['h-[2px]']} */ ;
+/** @type {__VLS_StyleScopedClasses['bg-gradient-to-r']} */ ;
+/** @type {__VLS_StyleScopedClasses['from-indigo-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['via-purple-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['to-pink-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['opacity-50']} */ ;
+__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none z-10" }));
+/** @type {__VLS_StyleScopedClasses['absolute']} */ ;
+/** @type {__VLS_StyleScopedClasses['left-5']} */ ;
 /** @type {__VLS_StyleScopedClasses['top-1/2']} */ ;
 /** @type {__VLS_StyleScopedClasses['-translate-y-1/2']} */ ;
 /** @type {__VLS_StyleScopedClasses['pointer-events-none']} */ ;
 /** @type {__VLS_StyleScopedClasses['z-10']} */ ;
-__VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2.5", 'stroke-linecap': "round", 'stroke-linejoin': "round" }, { class: "text-text-secondary/60 group-focus-within/search-container:text-primary-main transition-all duration-300 group-focus-within/search-container:scale-110" }));
-/** @type {__VLS_StyleScopedClasses['text-text-secondary/60']} */ ;
-/** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:text-primary-main']} */ ;
+__VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "22", height: "22", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2", 'stroke-linecap': "round", 'stroke-linejoin': "round" }, { class: "text-gray-400 dark:text-gray-500 group-focus-within/search-container:text-indigo-500 dark:group-focus-within/search-container:text-purple-400 transition-all duration-300" }));
+/** @type {__VLS_StyleScopedClasses['text-gray-400']} */ ;
+/** @type {__VLS_StyleScopedClasses['dark:text-gray-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:text-indigo-500']} */ ;
+/** @type {__VLS_StyleScopedClasses['dark:group-focus-within/search-container:text-purple-400']} */ ;
 /** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
 /** @type {__VLS_StyleScopedClasses['duration-300']} */ ;
-/** @type {__VLS_StyleScopedClasses['group-focus-within/search-container:scale-110']} */ ;
 __VLS_asFunctionalElement1(__VLS_intrinsics.circle)({
     cx: "11",
     cy: "11",
@@ -745,46 +757,46 @@ var __VLS_88;
 /** @ts-ignore @type {typeof __VLS_components.AutoComplete | typeof __VLS_components.AutoComplete} */
 autocomplete_1.default;
 // @ts-ignore
-var __VLS_89 = __VLS_asFunctionalComponent1(__VLS_88, new __VLS_88(__assign(__assign(__assign(__assign({ 'onComplete': {} }, { 'onOptionSelect': {} }), { 'onClear': {} }), { modelValue: (__VLS_ctx.searchQuery), suggestions: (__VLS_ctx.searchSuggestions), placeholder: "Buscar transações...", optionLabel: "label", pt: ({
+var __VLS_89 = __VLS_asFunctionalComponent1(__VLS_88, new __VLS_88(__assign(__assign(__assign(__assign({ 'onComplete': {} }, { 'onOptionSelect': {} }), { 'onClear': {} }), { modelValue: (__VLS_ctx.searchQuery), suggestions: (__VLS_ctx.searchSuggestions), placeholder: "Buscar transações por nome, categoria, carteira...", optionLabel: "label", pt: ({
         root: { class: 'w-full' },
         input: {
-            class: 'w-full pl-12 pr-24 py-4 bg-transparent border-0 rounded-2xl text-text-primary text-base font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-0 transition-all duration-300',
+            class: 'w-full pl-14 pr-32 py-4 bg-transparent border-0 text-gray-900 dark:text-gray-100 text-[15px] font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 transition-all duration-300',
         },
         dropdown: {
-            class: 'absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 p-2 transition-all duration-200',
+            class: 'absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border-0 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 p-2.5 transition-all duration-200',
         },
         panel: {
-            class: 'mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/30 border border-black/5 dark:border-white/10 overflow-hidden',
+            class: 'mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-200 dark:border-gray-700 overflow-hidden',
         },
         list: {
             class: 'p-2',
         },
         option: {
-            class: 'px-4 py-3 rounded-lg cursor-pointer hover:bg-primary-main/10 dark:hover:bg-primary-main/20 text-text-primary font-medium transition-all duration-200 flex items-center gap-3',
+            class: 'px-4 py-3 rounded-lg cursor-pointer hover:bg-indigo-50 dark:hover:bg-purple-500/10 text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 flex items-center gap-3',
         },
         optionGroup: {
-            class: 'px-4 py-2 text-xs font-bold uppercase tracking-wider text-text-secondary/70 bg-black/5 dark:bg-white/5',
+            class: 'px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50',
         },
     }), dropdown: true }), { class: "search-autocomplete" })));
-var __VLS_90 = __VLS_89.apply(void 0, __spreadArray([__assign(__assign(__assign(__assign({ 'onComplete': {} }, { 'onOptionSelect': {} }), { 'onClear': {} }), { modelValue: (__VLS_ctx.searchQuery), suggestions: (__VLS_ctx.searchSuggestions), placeholder: "Buscar transações...", optionLabel: "label", pt: ({
+var __VLS_90 = __VLS_89.apply(void 0, __spreadArray([__assign(__assign(__assign(__assign({ 'onComplete': {} }, { 'onOptionSelect': {} }), { 'onClear': {} }), { modelValue: (__VLS_ctx.searchQuery), suggestions: (__VLS_ctx.searchSuggestions), placeholder: "Buscar transações por nome, categoria, carteira...", optionLabel: "label", pt: ({
             root: { class: 'w-full' },
             input: {
-                class: 'w-full pl-12 pr-24 py-4 bg-transparent border-0 rounded-2xl text-text-primary text-base font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-0 transition-all duration-300',
+                class: 'w-full pl-14 pr-32 py-4 bg-transparent border-0 text-gray-900 dark:text-gray-100 text-[15px] font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 transition-all duration-300',
             },
             dropdown: {
-                class: 'absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 p-2 transition-all duration-200',
+                class: 'absolute right-3 top-1/2 -translate-y-1/2 rounded-lg border-0 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 p-2.5 transition-all duration-200',
             },
             panel: {
-                class: 'mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/30 border border-black/5 dark:border-white/10 overflow-hidden',
+                class: 'mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-gray-200 dark:border-gray-700 overflow-hidden',
             },
             list: {
                 class: 'p-2',
             },
             option: {
-                class: 'px-4 py-3 rounded-lg cursor-pointer hover:bg-primary-main/10 dark:hover:bg-primary-main/20 text-text-primary font-medium transition-all duration-200 flex items-center gap-3',
+                class: 'px-4 py-3 rounded-lg cursor-pointer hover:bg-indigo-50 dark:hover:bg-purple-500/10 text-gray-700 dark:text-gray-200 font-medium transition-all duration-200 flex items-center gap-3',
             },
             optionGroup: {
-                class: 'px-4 py-2 text-xs font-bold uppercase tracking-wider text-text-secondary/70 bg-black/5 dark:bg-white/5',
+                class: 'px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50',
             },
         }), dropdown: true }), { class: "search-autocomplete" })], __VLS_functionalComponentArgsRest(__VLS_89), false));
 var __VLS_93;
@@ -804,8 +816,8 @@ var __VLS_97 = __VLS_91.slots.default;
     /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
     /** @type {__VLS_StyleScopedClasses['gap-3']} */ ;
     if (__VLS_ctx.searchHistory.includes(slotProps.option)) {
-        __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2" }, { class: "text-text-secondary/50 flex-shrink-0" }));
-        /** @type {__VLS_StyleScopedClasses['text-text-secondary/50']} */ ;
+        __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2" }, { class: "text-gray-400 flex-shrink-0" }));
+        /** @type {__VLS_StyleScopedClasses['text-gray-400']} */ ;
         /** @type {__VLS_StyleScopedClasses['flex-shrink-0']} */ ;
         __VLS_asFunctionalElement1(__VLS_intrinsics.path)({
             d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8",
@@ -818,8 +830,9 @@ var __VLS_97 = __VLS_91.slots.default;
         });
     }
     else {
-        __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2" }, { class: "text-primary-main/70 flex-shrink-0" }));
-        /** @type {__VLS_StyleScopedClasses['text-primary-main/70']} */ ;
+        __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2" }, { class: "text-indigo-500 dark:text-purple-400 flex-shrink-0" }));
+        /** @type {__VLS_StyleScopedClasses['text-indigo-500']} */ ;
+        /** @type {__VLS_StyleScopedClasses['dark:text-purple-400']} */ ;
         /** @type {__VLS_StyleScopedClasses['flex-shrink-0']} */ ;
         __VLS_asFunctionalElement1(__VLS_intrinsics.circle)({
             cx: "11",
@@ -840,14 +853,14 @@ var __VLS_97 = __VLS_91.slots.default;
 [];
 var __VLS_91;
 var __VLS_92;
-__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10" }));
+__VLS_asFunctionalElement1(__VLS_intrinsics.div, __VLS_intrinsics.div)(__assign({ class: "absolute right-16 top-1/2 -translate-y-1/2 flex items-center gap-1.5 z-10" }));
 /** @type {__VLS_StyleScopedClasses['absolute']} */ ;
-/** @type {__VLS_StyleScopedClasses['right-14']} */ ;
+/** @type {__VLS_StyleScopedClasses['right-16']} */ ;
 /** @type {__VLS_StyleScopedClasses['top-1/2']} */ ;
 /** @type {__VLS_StyleScopedClasses['-translate-y-1/2']} */ ;
 /** @type {__VLS_StyleScopedClasses['flex']} */ ;
 /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
-/** @type {__VLS_StyleScopedClasses['gap-1']} */ ;
+/** @type {__VLS_StyleScopedClasses['gap-1.5']} */ ;
 /** @type {__VLS_StyleScopedClasses['z-10']} */ ;
 if (__VLS_ctx.searchQuery) {
     __VLS_asFunctionalElement1(__VLS_intrinsics.button, __VLS_intrinsics.button)(__assign({ onClick: function () {
@@ -862,13 +875,14 @@ if (__VLS_ctx.searchQuery) {
             __VLS_ctx.onSearchClear();
             // @ts-ignore
             [searchQuery, searchQuery, onSearchClear,];
-        } }, { class: "p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200" }));
-    /** @type {__VLS_StyleScopedClasses['p-1.5']} */ ;
+        } }, { class: "p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-all duration-200" }));
+    /** @type {__VLS_StyleScopedClasses['p-2']} */ ;
     /** @type {__VLS_StyleScopedClasses['rounded-lg']} */ ;
-    /** @type {__VLS_StyleScopedClasses['hover:bg-black/5']} */ ;
-    /** @type {__VLS_StyleScopedClasses['dark:hover:bg-white/10']} */ ;
-    /** @type {__VLS_StyleScopedClasses['text-text-secondary/50']} */ ;
-    /** @type {__VLS_StyleScopedClasses['hover:text-text-secondary']} */ ;
+    /** @type {__VLS_StyleScopedClasses['hover:bg-gray-100']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:hover:bg-gray-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['text-gray-400']} */ ;
+    /** @type {__VLS_StyleScopedClasses['hover:text-gray-600']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:hover:text-gray-300']} */ ;
     /** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
     /** @type {__VLS_StyleScopedClasses['duration-200']} */ ;
     __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)(__assign({ xmlns: "http://www.w3.org/2000/svg", width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", 'stroke-width': "2" }, { class: "transition-transform duration-200 hover:rotate-90" }));
@@ -897,28 +911,27 @@ __VLS_asFunctionalElement1(__VLS_intrinsics.button, __VLS_intrinsics.button)(__a
         // @ts-ignore
         [showAdvancedFilters, showAdvancedFilters,];
     } }, { class: ([
-        'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105',
+        'px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 flex items-center gap-2',
         __VLS_ctx.showAdvancedFilters
-            ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
-            : 'bg-white/50 dark:bg-white/10 text-text-secondary hover:bg-white/80 dark:hover:bg-white/20 border border-black/5 dark:border-white/10'
+            ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/30'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
     ]) }));
 /** @type {__VLS_StyleScopedClasses['px-4']} */ ;
-/** @type {__VLS_StyleScopedClasses['py-2']} */ ;
-/** @type {__VLS_StyleScopedClasses['rounded-full']} */ ;
+/** @type {__VLS_StyleScopedClasses['py-2.5']} */ ;
+/** @type {__VLS_StyleScopedClasses['rounded-xl']} */ ;
 /** @type {__VLS_StyleScopedClasses['text-sm']} */ ;
 /** @type {__VLS_StyleScopedClasses['font-semibold']} */ ;
 /** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
 /** @type {__VLS_StyleScopedClasses['duration-300']} */ ;
 /** @type {__VLS_StyleScopedClasses['transform']} */ ;
 /** @type {__VLS_StyleScopedClasses['hover:scale-105']} */ ;
-__VLS_asFunctionalElement1(__VLS_intrinsics.span, __VLS_intrinsics.span)(__assign({ class: "flex items-center gap-1.5" }));
 /** @type {__VLS_StyleScopedClasses['flex']} */ ;
 /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
-/** @type {__VLS_StyleScopedClasses['gap-1.5']} */ ;
+/** @type {__VLS_StyleScopedClasses['gap-2']} */ ;
 __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)({
     xmlns: "http://www.w3.org/2000/svg",
-    width: "14",
-    height: "14",
+    width: "15",
+    height: "15",
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
@@ -952,19 +965,26 @@ __VLS_asFunctionalElement1(__VLS_intrinsics.path)({
     d: "M17 16h6",
 });
 if (__VLS_ctx.searchHistory.length > 0) {
-    __VLS_asFunctionalElement1(__VLS_intrinsics.button, __VLS_intrinsics.button)(__assign(__assign({ onClick: (__VLS_ctx.handleClearSearchHistory) }, { class: "p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200" }), { title: "Limpar histórico" }));
-    /** @type {__VLS_StyleScopedClasses['p-2']} */ ;
-    /** @type {__VLS_StyleScopedClasses['rounded-full']} */ ;
-    /** @type {__VLS_StyleScopedClasses['hover:bg-black/5']} */ ;
-    /** @type {__VLS_StyleScopedClasses['dark:hover:bg-white/10']} */ ;
-    /** @type {__VLS_StyleScopedClasses['text-text-secondary/50']} */ ;
-    /** @type {__VLS_StyleScopedClasses['hover:text-text-secondary']} */ ;
+    __VLS_asFunctionalElement1(__VLS_intrinsics.button, __VLS_intrinsics.button)(__assign(__assign({ onClick: (__VLS_ctx.handleClearSearchHistory) }, { class: "p-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 transition-all duration-200" }), { title: "Limpar histórico" }));
+    /** @type {__VLS_StyleScopedClasses['p-2.5']} */ ;
+    /** @type {__VLS_StyleScopedClasses['rounded-xl']} */ ;
+    /** @type {__VLS_StyleScopedClasses['bg-gray-100']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:bg-gray-800']} */ ;
+    /** @type {__VLS_StyleScopedClasses['hover:bg-gray-200']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:hover:bg-gray-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['text-gray-500']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:text-gray-400']} */ ;
+    /** @type {__VLS_StyleScopedClasses['hover:text-gray-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:hover:text-gray-200']} */ ;
+    /** @type {__VLS_StyleScopedClasses['border']} */ ;
+    /** @type {__VLS_StyleScopedClasses['border-gray-200']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:border-gray-700']} */ ;
     /** @type {__VLS_StyleScopedClasses['transition-all']} */ ;
     /** @type {__VLS_StyleScopedClasses['duration-200']} */ ;
     __VLS_asFunctionalElement1(__VLS_intrinsics.svg, __VLS_intrinsics.svg)({
         xmlns: "http://www.w3.org/2000/svg",
-        width: "16",
-        height: "16",
+        width: "15",
+        height: "15",
         viewBox: "0 0 24 24",
         fill: "none",
         stroke: "currentColor",
