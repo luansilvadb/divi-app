@@ -10,7 +10,6 @@
     }"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"
-    @click="clickable && $emit('click')"
     @keydown.enter="clickable && $emit('click')"
     @keydown.space.prevent="clickable && $emit('click')"
 

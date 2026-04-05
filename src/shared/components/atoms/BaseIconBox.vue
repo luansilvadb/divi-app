@@ -1,16 +1,15 @@
 <template>
-  <Avatar
-    class="flex items-center justify-center transition-all duration-300 !rounded-xl"
+  <div
+    class="rounded-xl flex items-center justify-center transition-all duration-300"
     :class="[sizeClasses[size], customClasses]"
     :style="customStyle"
   >
     <slot />
-  </Avatar>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import Avatar from 'primevue/avatar'
 
 type BoxSize = 'sm' | 'md' | 'lg'
 
