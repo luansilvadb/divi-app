@@ -37,7 +37,7 @@ describe('PatrimonialChart.vue', () => {
     })
 
     const chartMock = wrapper.find('.chart-mock')
-    let options = JSON.parse(chartMock.attributes('data-options'))
+    let options = JSON.parse(chartMock.attributes('data-options')!)
 
     // Expecting light mode colors (e.g., surface-600)
     // Now it should be #475569
@@ -47,7 +47,7 @@ describe('PatrimonialChart.vue', () => {
     themeStore.isDark = true
     await wrapper.vm.$nextTick()
 
-    options = JSON.parse(wrapper.find('.chart-mock').attributes('data-options'))
+    options = JSON.parse(wrapper.find('.chart-mock').attributes('data-options')!)
     expect(options.scales.y.ticks.color).toBe('#94a3b8')
   })
 })
