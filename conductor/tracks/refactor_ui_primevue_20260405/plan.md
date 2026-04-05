@@ -7,7 +7,7 @@
 - [x] Task: Refactor `BaseButton.vue` to use PrimeVue Button (already using, but needs review/tests). [checkpoint: base_button_done] e26e1fc
     - [x] Write tests for `BaseButton.vue`.
     - [x] Implement `BaseButton.vue` using PrimeVue.
-- [x] Task: Refactor `BaseInput.vue` to use PrimeVue InputText. [checkpoint: base_input_done] 132b00f
+- [x] Task: Refactor `BaseInput.vue` to use PrimeVue InputText. [checkpoint: base_input_done]
     - [x] Write tests for `BaseInput.vue`.
     - [x] Implement `BaseInput.vue` using PrimeVue.
 - [ ] Task: Refactor `BaseSelect.vue` to use PrimeVue Select.
