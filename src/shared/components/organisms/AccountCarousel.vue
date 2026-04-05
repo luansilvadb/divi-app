@@ -63,6 +63,7 @@ import type { Wallet } from '../../domain/entities/Wallet'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import { formatCurrency } from '@/shared/utils/formatters'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 
@@ -72,17 +73,7 @@ defineProps<{
 
 const responsiveOptions = ref([
     {
-        breakpoint: '1024px',
-        numVisible: 1,
-        numScroll: 1
-    },
-    {
-        breakpoint: '768px',
-        numVisible: 1,
-        numScroll: 1
-    },
-    {
-        breakpoint: '560px',
+        breakpoint: '1400px',
         numVisible: 1,
         numScroll: 1
     }
@@ -109,9 +100,5 @@ function getWalletColor(wallet: Wallet) {
     hash = wallet.name.charCodeAt(i) + ((hash << 5) - hash)
   }
   return colors[Math.abs(hash) % colors.length]
-}
-
-function formatCurrency(amount: number) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)
 }
 </script>

@@ -334,7 +334,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
-import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
+import { formatCurrency, formatCurrencySign, getRelativeDayLabel, formatMonthLong, formatMonthShort } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
@@ -367,9 +367,7 @@ const searchQuery = computed({
 
 // Date Labels
 const monthLabelOnly = computed(() => {
-  return currentDate.value
-    .toLocaleString('pt-BR', { month: 'long' })
-    .replace(/^\w/, (c) => c.toUpperCase())
+  return formatMonthLong(currentDate.value)
 })
 
 // Grouping Logic: Moved to store for performance
@@ -434,6 +432,6 @@ const handleCloseForm = () => {
 // Formatting Helper (Day Label)
 function formatDateMonth(dateStr: string) {
   const date = new Date(dateStr + 'T12:00:00')
-  return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
+  return formatMonthShort(date)
 }
 </script>
