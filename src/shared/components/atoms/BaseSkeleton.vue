@@ -3,10 +3,10 @@
     :width="width"
     :height="height"
     :borderRadius="rounded ? '50%' : '8px'"
-    class="relative overflow-hidden bg-black/5 dark:bg-white/5 animate-pulse"
+    class="relative overflow-hidden bg-black/5 dark:bg-white/5"
     :class="customClass"
   >
-    <div class="absolute inset-0 animate-shimmer"></div>
+
   </Skeleton>
 </template>
 

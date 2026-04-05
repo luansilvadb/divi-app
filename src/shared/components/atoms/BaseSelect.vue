@@ -15,24 +15,7 @@
       :invalid="!!error"
       :aria-describedby="error ? `${id}-error` : undefined"
       fluid
-      :pt="{
-        root: {
-            class: [
-              'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden transition-all shadow-none',
-              error ? 'border-error-main focus:border-error-main focus:ring-2 focus:ring-error-main/20' : 'border-border-main focus:border-primary-main focus:ring-2 focus:ring-primary-main/20'
-            ]
-        },
-        label: {
-            class: 'p-0 text-left truncate',
-            style: { padding: 0 }
-        },
-        list: {
-            class: 'p-1'
-        },
-        option: {
-            class: 'rounded-md hover:bg-black/5 dark:hover:bg-white/5 data-[p-highlight=true]:bg-primary-main data-[p-highlight=true]:text-white'
-        }
-      }"
+
     >
       <template #empty>
         <div class="py-2 px-4 text-sm text-text-disabled italic">

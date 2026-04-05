@@ -21,80 +21,47 @@
         class="p-2 -mr-2 text-text-secondary hover:text-text-primary rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
         aria-label="Fechar menu"
       >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+        <i class="pi pi-times"></i>
       </button>
     </div>
 
     <!-- Scrollable Navigation -->
-    <nav class="flex-1 p-4 space-y-6 overflow-y-auto">
-      <!-- Main Menu extras -->
-      <div>
-        <span class="block text-xs font-bold uppercase tracking-wider text-text-disabled mb-3"
-          >Principal</span
-        >
-        <div class="space-y-1">
-          <RouterLink
-            v-for="item in mainNavItems"
-            :key="item.to"
-            :to="item.to"
-            class="flex items-center gap-3 px-3 py-3 rounded-xl text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            active-class="!text-primary-main bg-primary-main/5"
-            @click="$emit('close')"
-          >
-            <div class="text-currentColor w-5 h-5" v-html="item.icon"></div>
-            <span class="font-medium">{{ item.label }}</span>
-          </RouterLink>
-        </div>
-      </div>
-
-      <!-- Analysis -->
-      <div>
-        <span class="block text-xs font-bold uppercase tracking-wider text-text-disabled mb-3"
-          >Análise</span
-        >
-        <div class="space-y-1">
-          <RouterLink
-            v-for="item in analysisNavItems"
-            :key="item.to"
-            :to="item.to"
-            class="flex items-center gap-3 px-3 py-3 rounded-xl text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            active-class="!text-primary-main bg-primary-main/5"
-            @click="$emit('close')"
-          >
-            <div class="text-currentColor w-5 h-5" v-html="item.icon"></div>
-            <span class="font-medium">{{ item.label }}</span>
-          </RouterLink>
-        </div>
-      </div>
+    <nav class="flex-1 p-4 overflow-y-auto">
+        <Menu :model="menuItems" class="border-none bg-transparent w-full">
+            <template #item="{ item, props }">
+                <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive, isExactActive }" :to="item.route" custom>
+                    <a :href="href" v-bind="props.action" @click="(e) => { navigate(e); $emit('close'); }" :class="[
+                      'flex items-center gap-3 px-3 py-3 rounded-xl transition-colors cursor-pointer',
+                      isActive ? 'text-primary-main bg-primary-main/5' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                    ]">
+                        <span :class="item.icon" class="text-currentColor w-5 h-5 flex items-center justify-center text-lg"></span>
+                        <span class="font-medium">{{ item.label }}</span>
+                    </a>
+                </RouterLink>
+            </template>
+            <template #submenuheader="{ item }">
+                <span class="block text-xs font-bold uppercase tracking-wider text-text-disabled mb-3 mt-4">
+                    {{ item.label }}
+                </span>
+            </template>
+        </Menu>
     </nav>
 
     <!-- Footer Actions -->
     <div class="p-4 border-t border-black/5 dark:border-white/5 space-y-2 pb-safe mt-auto">
       <button
         @click="handleThemeToggle"
-        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
       >
-        <div class="w-5 h-5" v-html="isDark ? sunIcon : moonIcon"></div>
+        <span :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="w-5 h-5 flex items-center justify-center text-lg"></span>
         <span class="font-medium">{{ isDark ? 'Modo Claro' : 'Modo Escuro' }}</span>
       </button>
 
       <button
         @click="handleLogout"
-        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors"
+        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors cursor-pointer"
       >
-        <div class="w-5 h-5" v-html="logoutIcon"></div>
+        <span class="pi pi-sign-out w-5 h-5 flex items-center justify-center text-lg"></span>
         <span class="font-medium">Sair</span>
       </button>
     </div>
@@ -102,9 +69,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTheme } from '@/core/theme'
 import { RouterLink } from 'vue-router'
 import Drawer from 'primevue/drawer'
+import Menu from 'primevue/menu'
 
 defineProps<{
   isOpen: boolean
@@ -126,47 +95,24 @@ function handleLogout() {
   emit('logout')
 }
 
-// Icons for footer
-const moonIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
-const sunIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`
-const logoutIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>`
-
-// Missing Items from bottom bar
-const mainNavItems = [
-  {
-    to: '/goals',
-    label: 'Metas',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
-  },
-  {
-    to: '/loans',
-    label: 'Empréstimos',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>`,
-  },
-  {
-    to: '/subscriptions',
-    label: 'Assinaturas',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 3"/></svg>`,
-  },
-]
-
-const analysisNavItems = [
-  {
-    to: '/calendar',
-    label: 'Calendário',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="8" y="14" width="3" height="3" rx="0.5"/></svg>`,
-  },
-  {
-    to: '/reports',
-    label: 'Relatórios',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 5-9"/></svg>`,
-  },
-  {
-    to: '/activity-log',
-    label: 'Atividades',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>`,
-  },
-]
+const menuItems = computed(() => [
+    {
+        label: 'Principal',
+        items: [
+            { label: 'Metas', icon: 'pi pi-bullseye', route: '/goals' },
+            { label: 'Empréstimos', icon: 'pi pi-credit-card', route: '/loans' },
+            { label: 'Assinaturas', icon: 'pi pi-history', route: '/subscriptions' }
+        ]
+    },
+    {
+        label: 'Análise',
+        items: [
+            { label: 'Calendário', icon: 'pi pi-calendar', route: '/calendar' },
+            { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
+            { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
+        ]
+    }
+])
 </script>
 
 <style scoped>

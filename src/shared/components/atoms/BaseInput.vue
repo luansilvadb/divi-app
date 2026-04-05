@@ -16,7 +16,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :pt="ptOptions"
+
       />
       <InputText
         v-else
@@ -29,7 +29,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :pt="ptOptions"
+
       />
     </IconField>
 
@@ -44,7 +44,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :pt="ptOptions"
+
       />
       <InputText
         v-else
@@ -57,7 +57,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :pt="ptOptions"
+
       />
     </template>
 
@@ -105,16 +105,7 @@ function handleUpdateText(val: string | undefined) {
   emit('update:modelValue', val)
 }
 
-const ptOptions = {
-  root: {
-    class: [
-      'w-full px-3 py-2 rounded-md border bg-surface-main text-text-primary focus:outline-hidden transition-all placeholder:text-text-disabled shadow-none',
-      props.error
-        ? 'border-error-main focus:border-error-main focus:ring-2 focus:ring-error-main/20'
-        : 'border-border-main focus:border-primary-main focus:ring-2 focus:ring-primary-main/20',
-    ],
-  },
-}
+
 </script>
 
 <style scoped>

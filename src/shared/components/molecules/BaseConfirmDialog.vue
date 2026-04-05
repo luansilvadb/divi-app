@@ -153,6 +153,7 @@ import Dialog from 'primevue/dialog'
 import Drawer from 'primevue/drawer'
 import BaseCard from '../atoms/BaseCard.vue'
 import BaseButton from '../atoms/BaseButton.vue'
+import { useOverlayPt } from '@/shared/composables/usePrimeOverlay'
 
 defineProps<{
   show: boolean
@@ -166,20 +167,7 @@ defineEmits(['confirm', 'cancel'])
 
 const isMobile = useIsMobile()
 
-const modalPt = {
-  root: { class: 'modal-wrapper flex items-center justify-center overflow-hidden' },
-  mask: {
-    class: 'modal-backdrop bg-[#0e121b80] backdrop-blur-md transition-all duration-500 z-[150]',
-  },
-  content: { class: 'modal-content relative w-full z-[160] !p-0 !bg-transparent' },
-}
-
-const bottomSheetPt = {
-  mask: { class: 'backdrop-blur-sm bg-black/40 z-[90]' },
-  root: { class: 'z-[100]' },
-  header: { class: 'p-0 border-none hidden' },
-  content: { class: 'p-0 !bg-transparent' },
-}
+const { modalPt, bottomSheetPt } = useOverlayPt()
 </script>
 
 <style scoped>
