@@ -48,21 +48,14 @@
     </nav>
 
     <!-- Footer Actions -->
-    <div class="p-4 border-t border-black/5 dark:border-white/5 space-y-2 pb-safe mt-auto">
-      <button
-        @click="handleThemeToggle"
-        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-text-secondary hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
-      >
-        <span :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="w-5 h-5 flex items-center justify-center text-lg"></span>
-        <span class="font-medium">{{ isDark ? 'Modo Claro' : 'Modo Escuro' }}</span>
-      </button>
-
+    <div class="p-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between pb-safe mt-auto">
+      <ThemeToggle />
       <button
         @click="handleLogout"
-        class="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors cursor-pointer"
+        class="flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors cursor-pointer"
       >
-        <span class="pi pi-sign-out w-5 h-5 flex items-center justify-center text-lg"></span>
         <span class="font-medium">Sair</span>
+        <span class="pi pi-sign-out w-5 h-5 flex items-center justify-center text-lg"></span>
       </button>
     </div>
   </Drawer>
@@ -70,10 +63,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useTheme } from '@/core/theme'
 import { RouterLink } from 'vue-router'
 import Drawer from 'primevue/drawer'
 import Menu from 'primevue/menu'
+import ThemeToggle from '../molecules/ThemeToggle.vue'
 
 defineProps<{
   isOpen: boolean
@@ -83,12 +76,6 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'logout'): void
 }>()
-
-const { isDark, toggle: toggleTheme } = useTheme()
-
-function handleThemeToggle() {
-  toggleTheme()
-}
 
 function handleLogout() {
   emit('close')
