@@ -1,6 +1,6 @@
 # Implementation Plan - Refactor UI/UX to Exclusively Use PrimeVue
 
-## Phase 1: Shared Components & Atoms
+## Phase 1: Shared Components & Atoms [checkpoint: afd6ee4]
 ### Goal: Refactor shared components and atoms to use PrimeVue exclusively.
 - [x] Task: Audit `src/shared/components/atoms/` and identify non-PrimeVue components. [checkpoint: audit_done]
     - Result: Most components already use PrimeVue. `BaseIconBox.vue` is custom and needs refactoring or replacement.
@@ -13,8 +13,8 @@
 - [x] Task: Refactor `BaseSelect.vue` to use PrimeVue Select. [checkpoint: base_select_done] 9a12b5c
     - [x] Write tests for `BaseSelect.vue`.
     - [x] Implement `BaseSelect.vue` using PrimeVue.
-- [x] Task: Refactor `BaseBadge.vue`, `BaseCard.vue`, `BaseIconBox.vue`, `BaseProgressBar.vue`, `BaseSkeleton.vue`. [checkpoint: remaining_atoms_done]
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Shared Atoms' (Protocol in workflow.md)
+- [x] Task: Refactor `BaseBadge.vue`, `BaseCard.vue`, `BaseIconBox.vue`, `BaseProgressBar.vue`, `BaseSkeleton.vue`. [checkpoint: remaining_atoms_done] 814b92d
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Shared Atoms' (Protocol in workflow.md)
 
 ## Phase 2: Core Layout & Navigation
 ### Goal: Refactor the main application layout and navigation components.
