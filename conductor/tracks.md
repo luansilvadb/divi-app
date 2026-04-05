@@ -19,5 +19,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Melhore a SearchBar - Redesenho minimalista e moderno**
+- [x] **Track: Melhore a SearchBar - Redesenho minimalista e moderno**
       _Link: [./tracks/searchbar-modernization_20260405/](./tracks/searchbar-modernization_20260405/)_
