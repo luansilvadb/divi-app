@@ -1,4 +1,4 @@
-# SYSTEM DIRECTIVE: AGENTIC SDLC (SUPERPOWERS)
+# SYSTEM DIRECTIVE: AGENTIC SDLC
 
 **MANDATORY CORE AXIOM:** Strictly follow `.Jules/constitution.md`.
 **MANDATORY CORE AXIOM:** Strictly follow `conductor/workflow.md`.
