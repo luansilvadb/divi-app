@@ -10,22 +10,7 @@
       class="transition-transform duration-300"
     >
       <slot name="icon">
-        <svg
-          v-if="error"
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
+        <i v-if="error" class="pi pi-exclamation-circle text-xl"></i>
       </slot>
     </BaseIconBox>
 

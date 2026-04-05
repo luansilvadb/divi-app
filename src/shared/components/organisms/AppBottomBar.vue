@@ -7,7 +7,7 @@
         itemLink: { class: 'flex flex-col items-center justify-center w-full h-full text-text-disabled transition-colors duration-200' }
     }">
         <template #item="{ item, props }">
-            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive, isExactActive }" :to="item.route" custom>
+            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                 <a :href="href" v-bind="props.action" @click="navigate" :class="[
                   'flex flex-col items-center justify-center w-full h-full transition-colors duration-200 cursor-pointer',
                   isActive ? 'text-primary-main' : 'text-text-disabled'

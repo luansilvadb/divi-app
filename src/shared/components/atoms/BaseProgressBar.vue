@@ -14,11 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import ProgressBar from 'primevue/progressbar'
 import type { UIStatus } from '@/shared/types/ui'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     percentage: number
     color?: string
@@ -32,14 +31,4 @@ const props = withDefaults(
   },
 )
 
-const statusClass = computed(() => {
-  if (props.color) return ''
-  switch (props.status) {
-    case 'success': return 'bg-success-main'
-    case 'error': return 'bg-error-main'
-    case 'warning': return 'bg-warning-main'
-    case 'info': return 'bg-primary-main'
-    default: return 'bg-primary-main'
-  }
-})
 </script>

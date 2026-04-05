@@ -14,9 +14,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- INCOME CARD -->
           <BaseCard
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 400 } }"
+            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -111,9 +109,7 @@
 
           <!-- EXPENSE CARD -->
           <BaseCard
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 500 } }"
+            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -208,9 +204,7 @@
 
           <!-- BALANCE CARD -->
           <BaseCard
-            v-motion
-            :initial="{ opacity: 0, y: 20 }"
-            :enter="{ opacity: 1, y: 0, transition: { delay: 600 } }"
+            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -307,9 +301,7 @@
         <!-- Accounts (Carousel) -->
         <section
           class="flex flex-col gap-6"
-          v-motion
-          :initial="{ opacity: 0, y: 20 }"
-          :enter="{ opacity: 1, y: 0, transition: { delay: 700 } }"
+          v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
         >
           <div class="flex items-center justify-between px-2">
             <h2 class="text-xl font-black text-text-primary tracking-tight flex items-center gap-3">
@@ -339,9 +331,7 @@
 
         <!-- Chart Section -->
         <BaseCard
-          v-motion
-          :initial="{ opacity: 0, y: 20 }"
-          :enter="{ opacity: 1, y: 0, transition: { delay: 800 } }"
+          v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
           class="flex-1 bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl relative overflow-hidden group !p-4 h-full transition-all duration-300"
           h-full
         >
@@ -382,10 +372,7 @@
                   </p>
                 </div>
               </div>
-              <div class="flex items-center bg-black/5 dark:bg-white/5 p-1 rounded-xl w-full sm:w-auto">
-                <Button variant="text" :pt="{ root: { class: 'flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary dark:text-white shadow-lg transition-all text-center flex justify-center border-none' } }">Últimos 6 meses</Button>
-                <Button variant="text" :pt="{ root: { class: 'flex-1 sm:flex-none px-4 py-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all text-center flex justify-center border-none' } }">Anual</Button>
-              </div>
+              <SelectButton v-model="chartRange" :options="chartRangeOptions" optionLabel="label" optionValue="value" class="w-full sm:w-auto text-[0.6rem] font-black uppercase tracking-widest" />
             </div>
           </template>
 
@@ -398,9 +385,7 @@
       <!-- SIDEBAR COLUMN -->
       <aside
         class="flex flex-col gap-6 h-full"
-        v-motion
-        :initial="{ opacity: 0, x: 20 }"
-        :enter="{ opacity: 1, x: 0, transition: { delay: 800 } }"
+        v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
       >
         <!-- Recent Activity -->
         <BaseCard
@@ -410,11 +395,7 @@
         >
           <!-- Filters / Tabs -->
           <div class="px-6 pt-6 pb-4 flex-none">
-            <div class="flex bg-black/5 dark:bg-white/5 p-1 rounded-xl">
-              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest rounded-lg bg-white dark:bg-white/10 text-text-primary shadow-lg transition-all border-none' } }">Todos</Button>
-              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all border-none' } }">Despesa</Button>
-              <Button variant="text" :pt="{ root: { class: 'flex-1 py-1.5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary opacity-40 hover:opacity-100 transition-all border-none' } }">Renda</Button>
-            </div>
+            <SelectButton v-model="transactionFilter" :options="transactionFilterOptions" optionLabel="label" optionValue="value" class="w-full text-[0.65rem] font-black uppercase tracking-widest" />
           </div>
 
           <div
@@ -533,7 +514,22 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import Button from 'primevue/button'
+import SelectButton from 'primevue/selectbutton'
+
+import { ref } from 'vue'
+const chartRange = ref('6m')
+const chartRangeOptions = [
+  { label: 'Últimos 6 meses', value: '6m' },
+  { label: 'Anual', value: '1y' }
+]
+
+const transactionFilter = ref('all')
+const transactionFilterOptions = [
+  { label: 'Todos', value: 'all' },
+  { label: 'Despesa', value: 'expense' },
+  { label: 'Renda', value: 'income' }
+]
+
 import { useDashboardStore } from '../../application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'

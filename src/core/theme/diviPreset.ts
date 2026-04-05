@@ -65,14 +65,13 @@ const DiviPreset = definePreset(Aura, {
   },
   components: {
     drawer: {
-      // @ts-ignore
+      // @ts-expect-error Types in primevue theme might be incomplete
       root: { borderRadius: '0' },
     },
     card: {
       root: { borderRadius: '2rem', shadow: 'none' },
-      // @ts-ignore
       body: { padding: '0' },
-      // @ts-ignore
+      // @ts-expect-error Types in primevue theme might be incomplete
       content: { padding: '1.5rem' },
     },
     button: {
@@ -95,6 +94,13 @@ const DiviPreset = definePreset(Aura, {
     },
     badge: {
       root: { borderRadius: '9999px', fontWeight: '900', fontSize: '0.7rem' },
+    },
+    carousel: {
+      // @ts-expect-error Types in primevue theme might be incomplete
+      root: { borderRadius: '1.25rem' }
+    },
+    selectbutton: {
+      root: { borderRadius: '0.5rem' }
     },
     menu: {
       root: { borderRadius: '1rem' },

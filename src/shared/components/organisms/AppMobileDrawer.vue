@@ -29,7 +29,7 @@
     <nav class="flex-1 p-4 overflow-y-auto">
         <Menu :model="menuItems" class="border-none bg-transparent w-full">
             <template #item="{ item, props }">
-                <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive, isExactActive }" :to="item.route" custom>
+                <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                     <a :href="href" v-bind="props.action" @click="(e) => { navigate(e); $emit('close'); }" :class="[
                       'flex items-center gap-3 px-3 py-3 rounded-xl transition-colors cursor-pointer',
                       isActive ? 'text-primary-main bg-primary-main/5' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
