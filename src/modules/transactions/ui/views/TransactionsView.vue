@@ -294,12 +294,7 @@
                   icon="pi pi-times"
                   text
                   size="small"
-                  @click="
-                    filterCategory = ''
-                    filterWallet = ''
-                    filterAmountMin = null
-                    filterAmountMax = null
-                  "
+                  @click="handleClearFilters"
                   class="hover:scale-105 transition-transform duration-200"
                 />
               </div>
@@ -693,6 +688,13 @@ function onSearchClear() {
 function handleClearSearchHistory() {
   clearSearchHistory()
   searchHistory.value = []
+}
+
+function handleClearFilters() {
+  filterCategory.value = ''
+  filterWallet.value = ''
+  filterAmountMin.value = null
+  filterAmountMax.value = null
 }
 
 // Date Labels
