@@ -13,7 +13,7 @@
 - [x] Task: Refactor `BaseSelect.vue` to use PrimeVue Select. [checkpoint: base_select_done] 9a12b5c
     - [x] Write tests for `BaseSelect.vue`.
     - [x] Implement `BaseSelect.vue` using PrimeVue.
-- [ ] Task: Refactor `BaseBadge.vue`, `BaseCard.vue`, `BaseIconBox.vue`, `BaseProgressBar.vue`, `BaseSkeleton.vue`.
+- [x] Task: Refactor `BaseBadge.vue`, `BaseCard.vue`, `BaseIconBox.vue`, `BaseProgressBar.vue`, `BaseSkeleton.vue`. [checkpoint: remaining_atoms_done]
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Shared Atoms' (Protocol in workflow.md)
 
 ## Phase 2: Core Layout & Navigation
