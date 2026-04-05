@@ -128,27 +128,117 @@
           </div>
         </div>
 
-        <!-- Search Bar -->
-        <div class="relative group">
-          <div
-            class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-primary-main transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+        <!-- Search Bar with AutoComplete -->
+        <div class="space-y-3">
+          <div class="relative">
+            <AutoComplete
+              v-model="searchQuery"
+              :suggestions="searchSuggestions"
+              @complete="searchSuggestionsHandler"
+              @option-select="onSearchSelect"
+              @clear="onSearchClear"
+              placeholder="Buscar transações por título, categoria, carteira..."
+              :pt="{
+                root: { class: 'w-full' },
+                input: {
+                  class: 'w-full px-4 py-2.5 rounded-xl border border-black/5 dark:border-white/5 bg-bg-main text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all'
+                }
+              }"
+              dropdown
+              class="text-sm"
+            />
           </div>
-          <BaseInput id="search-transactions" v-model="searchQuery" placeholder="Buscar transações..." icon="pi pi-search" />
+
+          <!-- Advanced Filters Toggle -->
+          <div class="flex items-center gap-2">
+            <Button
+              :icon="showAdvancedFilters ? 'pi pi-chevron-up' : 'pi pi-filter'"
+              :label="showAdvancedFilters ? 'Ocultar Filtros' : 'Filtros Avançados'"
+              text
+              size="small"
+              @click="showAdvancedFilters = !showAdvancedFilters"
+              class="text-xs"
+            />
+            <Button
+              v-if="searchHistory.length > 0"
+              icon="pi pi-history"
+              label="Limpar Histórico"
+              text
+              size="small"
+              @click="clearSearchHistory(); searchHistory = []"
+              class="text-xs text-text-disabled"
+            />
+          </div>
+
+          <!-- Advanced Filters Panel -->
+          <div v-if="showAdvancedFilters" class="p-4 bg-black/5 dark:bg-white/5 rounded-2xl space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Category Filter -->
+              <div>
+                <label class="text-xs font-bold text-text-secondary mb-1 block">Categoria</label>
+                <select
+                  v-model="filterCategory"
+                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
+                >
+                  <option value="">Todas</option>
+                  <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
+                    {{ cat.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Wallet Filter -->
+              <div>
+                <label class="text-xs font-bold text-text-secondary mb-1 block">Carteira</label>
+                <select
+                  v-model="filterWallet"
+                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
+                >
+                  <option value="">Todas</option>
+                  <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
+                    {{ wallet.name }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Amount Range -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs font-bold text-text-secondary mb-1 block">Valor Mínimo</label>
+                <input
+                  v-model.number="filterAmountMin"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0,00"
+                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
+                />
+              </div>
+              <div>
+                <label class="text-xs font-bold text-text-secondary mb-1 block">Valor Máximo</label>
+                <input
+                  v-model.number="filterAmountMax"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="∞"
+                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
+                />
+              </div>
+            </div>
+
+            <!-- Clear Filters -->
+            <div class="flex justify-end">
+              <Button
+                label="Limpar Filtros"
+                icon="pi pi-times"
+                text
+                size="small"
+                @click="filterCategory = ''; filterWallet = ''; filterAmountMin = null; filterAmountMax = null"
+              />
+            </div>
+          </div>
         </div>
 
         <!-- Transactions List -->
@@ -422,7 +512,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel, formatMonthLong, formatMonthShort } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
@@ -438,7 +527,10 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
+import AutoComplete from 'primevue/autocomplete'
 import { useToast } from 'primevue/usetoast'
+import { searchTransactions, getSearchSuggestions } from '../../utils/search'
+import { getSearchHistory, addToSearchHistory, clearSearchHistory } from '../../utils/searchHistory'
 
 const store = useTransactionStore()
 const toast = useToast()
@@ -454,6 +546,11 @@ const showConfirmDelete = ref(false)
 const transactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
 
+// Search state
+const searchQuery = ref('')
+const searchSuggestions = ref<string[]>([])
+const searchHistory = ref<string[]>(getSearchHistory())
+
 // Bulk selection state
 const selectedTransactions = ref<Set<string>>(new Set())
 const isBulkMode = ref(false)
@@ -461,12 +558,50 @@ const isBulkMode = ref(false)
 // Filter presets state
 const activeFilter = ref<'all' | 'income' | 'expense'>('all')
 
-const searchQuery = computed({
-  get: () => store.searchQuery,
-  set: (val) => {
-    store.searchQuery = val
-  },
-})
+// Advanced filters state
+const showAdvancedFilters = ref(false)
+const filterCategory = ref<string | undefined>('')
+const filterWallet = ref<string | undefined>('')
+const filterAmountMin = ref<number | null>(null)
+const filterAmountMax = ref<number | null>(null)
+
+// Search context for multi-field search
+const searchContext = computed(() => ({
+  transactions: store.transactions || [],
+  categoryMap: store.categoryMap || {},
+  walletMap: store.walletMap || {},
+}))
+
+// Search suggestions for AutoComplete
+function searchSuggestionsHandler(event: { query: string }) {
+  const query = event.query
+
+  if (!query || query.trim().length < 2) {
+    // Show search history when query is empty
+    searchSuggestions.value = [...searchHistory.value]
+    return
+  }
+
+  // Get suggestions from search utility
+  const suggestions = getSearchSuggestions(query, searchContext.value)
+
+  // Add matching history entries
+  const historyMatches = searchHistory.value.filter((h) =>
+    h.toLowerCase().includes(query.toLowerCase())
+  )
+
+  searchSuggestions.value = [...new Set([...suggestions, ...historyMatches])].slice(0, 10)
+}
+
+function onSearchSelect(event: { value: string }) {
+  searchQuery.value = event.value
+  addToSearchHistory(event.value)
+}
+
+function onSearchClear() {
+  searchQuery.value = ''
+  searchSuggestions.value = []
+}
 
 // Date Labels
 const monthLabelOnly = computed(() => {
@@ -476,20 +611,59 @@ const monthLabelOnly = computed(() => {
 // Grouping Logic: Moved to store for performance
 const groupedTransactions = computed(() => store.groupedTransactions)
 
-// Filtered transactions based on active filter
+// Apply search and filters to grouped transactions
 const filteredGroupedTransactions = computed(() => {
-  if (activeFilter.value === 'all') return groupedTransactions.value
+  let transactions = store.transactions
 
-  const filtered: Record<string, { items: Transaction[] }> = {}
-  for (const [day, group] of Object.entries(groupedTransactions.value as Record<string, { items: Transaction[] }>)) {
-    const filteredItems = group.items.filter((t) =>
+  // Apply type filter
+  if (activeFilter.value !== 'all') {
+    transactions = transactions.filter((t) =>
       activeFilter.value === 'income' ? t.type === 'income' : t.type === 'expense',
     )
-    if (filteredItems.length > 0) {
-      filtered[day] = { items: filteredItems }
-    }
   }
-  return filtered
+
+  // Apply advanced filters
+  if (filterCategory.value && filterCategory.value !== '') {
+    transactions = transactions.filter((t) => t.category_id === filterCategory.value)
+  }
+
+  if (filterWallet.value && filterWallet.value !== '') {
+    transactions = transactions.filter((t) => {
+      if (!t.wallet_id) return false
+      return t.wallet_id === filterWallet.value
+    })
+  }
+
+  if (filterAmountMin.value !== null) {
+    transactions = transactions.filter((t) => t.amount >= filterAmountMin.value!)
+  }
+
+  if (filterAmountMax.value !== null) {
+    transactions = transactions.filter((t) => t.amount <= filterAmountMax.value!)
+  }
+
+  // Apply search using utility
+  if (searchQuery.value && searchQuery.value.trim()) {
+    const searchResult = searchTransactions(searchQuery.value, {
+      transactions,
+      categoryMap: store.categoryMap || {},
+      walletMap: store.walletMap || {},
+    })
+    transactions = searchResult
+  }
+
+  // Re-group filtered transactions
+  const grouped: Record<string, { items: Transaction[] }> = {}
+  for (const t of transactions) {
+    if (!t.date) continue
+    const dateKey = new Date(t.date + 'T12:00:00').toISOString().split('T')[0] as string
+    if (!grouped[dateKey]) {
+      grouped[dateKey] = { items: [] }
+    }
+    grouped[dateKey].items.push(t)
+  }
+
+  return grouped
 })
 
 // Bulk actions
