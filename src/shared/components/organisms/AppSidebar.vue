@@ -61,6 +61,7 @@
                     <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                 </a>
             </RouterLink>
+            <component :is="item.component" v-else-if="item.component" v-bind="item.props" />
             <a v-else-if="item.action" v-bind="props.action" @click="item.action" :class="[
                   'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2 text-text-secondary hover:bg-black/5 dark:hover:bg-white/5',
                   item.class
@@ -75,6 +76,11 @@
             </div>
         </template>
     </Menu>
+
+    <!-- Theme Toggle Area -->
+    <div class="mt-auto p-4 flex justify-center mb-4">
+      <ThemeToggle />
+    </div>
   </aside>
 </template>
 
@@ -85,11 +91,12 @@ import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
 import Menu from 'primevue/menu'
 import Badge from 'primevue/badge'
+import ThemeToggle from '../molecules/ThemeToggle.vue'
 
 const emit = defineEmits(['logout'])
 
 const sidebarStore = useSidebarStore()
-const { isDark, toggle: toggleTheme } = useTheme()
+useTheme()
 
 const isCollapsed = computed({
   get: () => !sidebarStore.isExpanded,
@@ -138,11 +145,6 @@ const menuItems = computed(() => [
     },
     {
         separator: true
-    },
-    {
-        label: isDark.value ? 'Modo Claro' : 'Modo Escuro',
-        icon: isDark.value ? 'pi pi-sun' : 'pi pi-moon',
-        action: toggleTheme
     },
     {
         label: 'Sair',
