@@ -1,8 +1,0 @@
-{
-  "track_id": "dark_mode_20260405",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-04-05T00:00:00Z",
-  "updated_at": "2026-04-05T00:00:00Z",
-  "description": "Implement dark mode support and theme toggling"
-}
