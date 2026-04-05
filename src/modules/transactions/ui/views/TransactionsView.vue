@@ -145,95 +145,236 @@
         </div>
 
         <!-- Search Bar with AutoComplete -->
-        <div class="space-y-3">
-          <div class="relative group">
-            <!-- Search Icon Overlay -->
-            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-text-disabled group-focus-within:text-primary-main transition-colors duration-300"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
-            </div>
+        <div class="space-y-4">
+          <!-- Main Search Container -->
+          <div class="relative group/search-container">
+            <!-- Animated gradient border effect -->
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-main/50 via-purple-500/30 to-primary-main/50 rounded-2xl opacity-0 group-focus-within/search-container:opacity-100 blur transition-opacity duration-500"></div>
+            
+            <div class="relative bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-2xl shadow-lg shadow-black/5 dark:shadow-black/20 group-focus-within/search-container:shadow-xl group-focus-within/search-container:shadow-primary-main/10 transition-all duration-300">
+              <!-- Search Icon -->
+              <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-text-secondary/60 group-focus-within/search-container:text-primary-main transition-all duration-300 group-focus-within/search-container:scale-110"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </div>
 
-            <AutoComplete
-              v-model="searchQuery"
-              :suggestions="searchSuggestions"
-              @complete="searchSuggestionsHandler"
-              @option-select="onSearchSelect"
-              @clear="onSearchClear"
-              placeholder="Buscar transações por título, categoria, carteira..."
-              :pt="{
-                root: { class: 'w-full' },
-                input: {
-                  class:
-                    'w-full pl-12 pr-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-xl text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg',
-                },
-                dropdown: {
-                  class:
-                    'rounded-r-2xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200',
-                },
-              }"
-              dropdown
-              class="text-sm"
-            />
+              <AutoComplete
+                v-model="searchQuery"
+                :suggestions="searchSuggestions"
+                @complete="searchSuggestionsHandler"
+                @option-select="onSearchSelect"
+                @clear="onSearchClear"
+                placeholder="Buscar transações..."
+                optionLabel="label"
+                :pt="{
+                  root: { class: 'w-full' },
+                  input: {
+                    class:
+                      'w-full pl-12 pr-24 py-4 bg-transparent border-0 rounded-2xl text-text-primary text-base font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-0 transition-all duration-300',
+                  },
+                  dropdown: {
+                    class:
+                      'absolute right-2 top-1/2 -translate-y-1/2 rounded-xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 p-2 transition-all duration-200',
+                  },
+                  panel: {
+                    class:
+                      'mt-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/30 border border-black/5 dark:border-white/10 overflow-hidden',
+                  },
+                  list: {
+                    class: 'p-2',
+                  },
+                  option: {
+                    class:
+                      'px-4 py-3 rounded-lg cursor-pointer hover:bg-primary-main/10 dark:hover:bg-primary-main/20 text-text-primary font-medium transition-all duration-200 flex items-center gap-3',
+                  },
+                  optionGroup: {
+                    class:
+                      'px-4 py-2 text-xs font-bold uppercase tracking-wider text-text-secondary/70 bg-black/5 dark:bg-white/5',
+                  },
+                }"
+                dropdown
+                class="search-autocomplete"
+              >
+                <!-- Custom dropdown template for suggestions -->
+                <template #option="slotProps">
+                  <div class="flex items-center gap-3">
+                    <!-- History icon for history items -->
+                    <svg
+                      v-if="searchHistory.includes(slotProps.option)"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      class="text-text-secondary/50 flex-shrink-0"
+                    >
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                      <path d="M3 3v5h5" />
+                      <path d="M12 7v5l4 2" />
+                    </svg>
+                    <!-- Search icon for suggestions -->
+                    <svg
+                      v-else
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      class="text-primary-main/70 flex-shrink-0"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                    <span class="truncate">{{ slotProps.option }}</span>
+                  </div>
+                </template>
+              </AutoComplete>
+
+              <!-- Quick action buttons overlay -->
+              <div class="absolute right-14 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                <!-- Clear button -->
+                <button
+                  v-if="searchQuery"
+                  @click="searchQuery = ''; onSearchClear()"
+                  class="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    class="transition-transform duration-200 hover:rotate-90"
+                  >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Advanced Filters Toggle -->
-          <div class="flex items-center gap-2">
-            <Button
-              :icon="showAdvancedFilters ? 'pi pi-chevron-up' : 'pi pi-filter'"
-              :label="showAdvancedFilters ? 'Ocultar Filtros' : 'Filtros Avançados'"
-              text
-              size="small"
+          <!-- Quick Actions Bar -->
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Advanced Filters Toggle -->
+            <button
               @click="showAdvancedFilters = !showAdvancedFilters"
-              class="text-xs transition-all duration-200 hover:scale-105"
-            />
-            <Button
+              :class="[
+                'px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 transform hover:scale-105',
+                showAdvancedFilters
+                  ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
+                  : 'bg-white/50 dark:bg-white/10 text-text-secondary hover:bg-white/80 dark:hover:bg-white/20 border border-black/5 dark:border-white/10'
+              ]"
+            >
+              <span class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 21v-7"/>
+                  <path d="M4 10V3"/>
+                  <path d="M12 21v-9"/>
+                  <path d="M12 8V3"/>
+                  <path d="M20 21v-5"/>
+                  <path d="M20 12V3"/>
+                  <path d="M1 14h6"/>
+                  <path d="M9 8h6"/>
+                  <path d="M17 16h6"/>
+                </svg>
+                Filtros
+              </span>
+            </button>
+
+            <!-- Clear History Button -->
+            <button
               v-if="searchHistory.length > 0"
-              icon="pi pi-history"
-              label="Limpar Histórico"
-              text
-              size="small"
               @click="handleClearSearchHistory"
-              class="text-xs text-text-disabled hover:text-text-secondary transition-colors duration-200"
-            />
+              class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/50 hover:text-text-secondary transition-all duration-200"
+              title="Limpar histórico"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M12 7v5l4 2"/>
+              </svg>
+            </button>
           </div>
 
           <!-- Advanced Filters Panel -->
           <Transition
             enter-active-class="transition-all duration-300 ease-out"
-            enter-from-class="opacity-0 -translate-y-2"
-            enter-to-class="opacity-100 translate-y-0"
+            enter-from-class="opacity-0 -translate-y-3 scale-95"
+            enter-to-class="opacity-100 translate-y-0 scale-100"
             leave-active-class="transition-all duration-200 ease-in"
-            leave-from-class="opacity-100 translate-y-0"
-            leave-to-class="opacity-0 -translate-y-2"
+            leave-from-class="opacity-100 translate-y-0 scale-100"
+            leave-to-class="opacity-0 -translate-y-3 scale-95"
           >
             <div
               v-if="showAdvancedFilters"
-              class="p-5 bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-2xl space-y-4 border border-black/5 dark:border-white/5 shadow-lg"
+              class="p-6 bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-2xl space-y-5 border border-black/5 dark:border-white/10 shadow-xl shadow-black/5 dark:shadow-black/20"
             >
+              <!-- Filter Header -->
+              <div class="flex items-center justify-between pb-4 border-b border-black/5 dark:border-white/10">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-text-secondary flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M4 21v-7"/>
+                    <path d="M4 10V3"/>
+                    <path d="M12 21v-9"/>
+                    <path d="M12 8V3"/>
+                    <path d="M20 21v-5"/>
+                    <path d="M20 12V3"/>
+                    <path d="M1 14h6"/>
+                    <path d="M9 8h6"/>
+                    <path d="M17 16h6"/>
+                  </svg>
+                  Filtros Avançados
+                </h3>
+                <button
+                  @click="showAdvancedFilters = false"
+                  class="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 text-text-secondary/70 hover:text-text-secondary transition-all duration-200"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Category Filter -->
                 <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Categoria</label
-                  >
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m7.5 4.27 9 16.86"/>
+                      <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                      <path d="M9 10h.01"/>
+                      <path d="M15 14h.01"/>
+                      <path d="M9 14h.01"/>
+                      <path d="M15 10h.01"/>
+                    </svg>
+                    Categoria
+                  </label>
                   <select
                     v-model="filterCategory"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                    class="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20 shadow-sm hover:shadow-md"
                   >
-                    <option value="">Todas</option>
+                    <option value="">Todas as Categorias</option>
                     <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
                       {{ cat.name }}
                     </option>
@@ -242,14 +383,19 @@
 
                 <!-- Wallet Filter -->
                 <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Carteira</label
-                  >
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                      <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                      <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                    </svg>
+                    Carteira
+                  </label>
                   <select
                     v-model="filterWallet"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                    class="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20 shadow-sm hover:shadow-md"
                   >
-                    <option value="">Todas</option>
+                    <option value="">Todas as Carteiras</option>
                     <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
                       {{ wallet.name }}
                     </option>
@@ -260,43 +406,56 @@
               <!-- Amount Range -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Valor Mínimo</label
-                  >
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v20"/>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Valor Mínimo
+                  </label>
                   <input
                     v-model.number="filterAmountMin"
                     type="number"
                     min="0"
                     step="0.01"
                     placeholder="0,00"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                    class="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20 shadow-sm hover:shadow-md"
                   />
                 </div>
                 <div class="space-y-2">
-                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
-                    >Valor Máximo</label
-                  >
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v20"/>
+                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    Valor Máximo
+                  </label>
                   <input
                     v-model.number="filterAmountMax"
                     type="number"
                     min="0"
                     step="0.01"
-                    placeholder="∞"
-                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                    placeholder="Sem limite"
+                    class="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm font-medium placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20 shadow-sm hover:shadow-md"
                   />
                 </div>
               </div>
 
               <!-- Clear Filters -->
-              <div class="flex justify-end pt-2">
-                <Button
-                  label="Limpar Filtros"
-                  icon="pi pi-times"
-                  text
-                  size="small"
+              <div class="flex justify-end pt-2 border-t border-black/5 dark:border-white/10">
+                <button
                   @click="handleClearFilters"
-                  class="hover:scale-105 transition-transform duration-200"
-                />
+                  class="px-5 py-2.5 rounded-xl text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-rose-500/20"
+                >
+                  <span class="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M3 6h18"/>
+                      <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                      <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                    Limpar Filtros
+                  </span>
+                </button>
               </div>
             </div>
           </Transition>
@@ -910,3 +1069,105 @@ function formatDateMonth(dateStr: string) {
   return formatMonthShort(date)
 }
 </script>
+
+<style scoped>
+/* Enhanced AutoComplete Dropdown Styling */
+.search-autocomplete .p-autocomplete-panel {
+  animation: dropdownSlideIn 0.2s ease-out;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom scrollbar for dropdown */
+.search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.search-autocomplete .p-autocomplete-panel .p-autocomplete-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Enhanced focus states */
+.group-focus-within\/search-container .p-autocomplete-input {
+  background: linear-gradient(to right, rgba(var(--primary-main-rgb, 99, 102, 241), 0.05), transparent);
+}
+
+/* Smooth transitions for all interactive elements */
+button,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .search-autocomplete .p-autocomplete-input {
+    padding-left: 2.5rem;
+    padding-right: 5rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Dark mode enhancements */
+:deep(.dark) .search-autocomplete .p-autocomplete-panel {
+  background: rgba(17, 24, 39, 0.98);
+}
+
+:deep(.dark) .search-autocomplete .p-autocomplete-panel .p-autocomplete-list .p-autocomplete-option:hover {
+  background: rgba(99, 102, 241, 0.15);
+}
+
+/* Gradient animation for focus border */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.group-focus-within\/search-container > div:first-child {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* Improved chip animations */
+button[class*="rounded-full"] {
+  will-change: transform;
+}
+
+/* Search icon pulse animation on focus */
+@keyframes iconPulse {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.05);
+  }
+}
+
+.group-focus-within\/search-container svg {
+  animation: iconPulse 2s ease-in-out infinite;
+}
+</style>
