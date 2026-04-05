@@ -1,4 +1,5 @@
-<template>
+const fs = require('fs');
+const content = `<template>
   <Drawer
     :visible="isOpen"
     @update:visible="$emit('close')"
@@ -99,3 +100,5 @@ const menuItems = computed(() => [
   padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
 </style>
+`;
+fs.writeFileSync('src/shared/components/organisms/AppMobileDrawer.vue', content);

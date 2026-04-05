@@ -1,4 +1,5 @@
-<template>
+const fs = require('fs');
+const content = `<template>
   <!-- Using Drawer with mask hidden and explicit visible true for static desktop layout -->
   <Drawer
     :visible="true"
@@ -170,3 +171,5 @@ const menuItems = computed(() => [
 <style scoped>
 @reference "../../../core/styles/main.css";
 </style>
+`;
+fs.writeFileSync('src/shared/components/organisms/AppSidebar.vue', content);
