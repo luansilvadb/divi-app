@@ -205,10 +205,7 @@
               label="Limpar Histórico"
               text
               size="small"
-              @click="
-                clearSearchHistory()
-                searchHistory = []
-              "
+              @click="handleClearSearchHistory"
               class="text-xs text-text-disabled hover:text-text-secondary transition-colors duration-200"
             />
           </div>
@@ -691,6 +688,11 @@ function onSearchSelect(event: { value: string }) {
 function onSearchClear() {
   searchQuery.value = ''
   searchSuggestions.value = []
+}
+
+function handleClearSearchHistory() {
+  clearSearchHistory()
+  searchHistory.value = []
 }
 
 // Date Labels
