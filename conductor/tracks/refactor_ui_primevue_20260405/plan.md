@@ -10,7 +10,7 @@
 - [x] Task: Refactor `BaseInput.vue` to use PrimeVue InputText. [checkpoint: base_input_done] 132b00f
     - [x] Write tests for `BaseInput.vue`.
     - [x] Implement `BaseInput.vue` using PrimeVue.
-- [x] Task: Refactor `BaseSelect.vue` to use PrimeVue Select. [checkpoint: base_select_done] 9a12b5c
+- [x] Task: Refactor `BaseSelect.vue` to use PrimeVue Select. [checkpoint: base_select_done]
     - [x] Write tests for `BaseSelect.vue`.
     - [x] Implement `BaseSelect.vue` using PrimeVue.
 - [ ] Task: Refactor `BaseBadge.vue`, `BaseCard.vue`, `BaseIconBox.vue`, `BaseProgressBar.vue`, `BaseSkeleton.vue`.
