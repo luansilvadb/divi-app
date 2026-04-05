@@ -32,7 +32,7 @@
                 <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                     <a :href="href" v-bind="props.action" @click="(e) => { navigate(e); $emit('close'); }" :class="[
                       'flex items-center gap-3 px-3 py-3 rounded-xl transition-colors cursor-pointer',
-                      isActive ? 'text-primary-main bg-primary-main/5' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                      isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
                     ]">
                         <span :class="item.icon" class="text-currentColor w-5 h-5 flex items-center justify-center text-lg"></span>
                         <span class="font-medium">{{ item.label }}</span>
@@ -67,6 +67,7 @@ import { RouterLink } from 'vue-router'
 import Drawer from 'primevue/drawer'
 import Menu from 'primevue/menu'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
+import { createMainNavigation } from '../../config/navigation'
 
 defineProps<{
   isOpen: boolean
@@ -82,24 +83,9 @@ function handleLogout() {
   emit('logout')
 }
 
-const menuItems = computed(() => [
-    {
-        label: 'Principal',
-        items: [
-            { label: 'Metas', icon: 'pi pi-bullseye', route: '/goals' },
-            { label: 'Empréstimos', icon: 'pi pi-credit-card', route: '/loans' },
-            { label: 'Assinaturas', icon: 'pi pi-history', route: '/subscriptions' }
-        ]
-    },
-    {
-        label: 'Análise',
-        items: [
-            { label: 'Calendário', icon: 'pi pi-calendar', route: '/calendar' },
-            { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
-            { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
-        ]
-    }
-])
+const menuItems = computed(() =>
+  createMainNavigation({ onLogout: handleLogout }).slice(0, 2) // Only main groups, no logout section
+)
 </script>
 
 <style scoped>

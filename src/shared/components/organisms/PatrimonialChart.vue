@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Chart from 'primevue/chart'
 import type { ScriptableContext, TooltipItem } from 'chart.js'
 import { useTheme } from '@/core/theme'
@@ -17,16 +17,47 @@ const props = defineProps<{
 
 const { isDark } = useTheme()
 
-// Memoized formatter for better performance
+// Memoized formatters for better performance
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'BRL',
 })
 
-const chartData = computed(() => {
-  const primaryColor = isDark.value ? '#4a6fa5' : '#3d5b87'
+const thousandsFormatter = new Intl.NumberFormat('pt-BR', {
+  style: 'currency',
+  currency: 'BRL',
+  notation: 'compact',
+  compactDisplay: 'short',
+})
+
+// Cache gradient to avoid recreation on every render
+const gradientCache = ref<{ dark: boolean; gradient: any } | null>(null)
+
+const getGradient = (context: ScriptableContext<'line'>) => {
+  const chart = context.chart
+  const { ctx, chartArea } = chart
+  if (!chartArea) return undefined
+
+  // Return cached gradient if theme hasn't changed
+  if (gradientCache.value && gradientCache.value.dark === isDark.value) {
+    return gradientCache.value.gradient
+  }
+
   const stopColorStart = isDark.value ? 'rgba(74, 111, 165, 0.4)' : 'rgba(61, 91, 135, 0.4)'
   const stopColorEnd = isDark.value ? 'rgba(74, 111, 165, 0)' : 'rgba(61, 91, 135, 0)'
+
+  const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
+  gradient.addColorStop(0, stopColorStart)
+  gradient.addColorStop(1, stopColorEnd)
+
+  // Update cache
+  gradientCache.value = { dark: isDark.value, gradient }
+
+  return gradient
+}
+
+const chartData = computed(() => {
+  const primaryColor = isDark.value ? '#4a6fa5' : '#3d5b87'
 
   return {
     labels: props.labels,
@@ -42,15 +73,7 @@ const chartData = computed(() => {
         pointRadius: 4,
         pointHoverRadius: 6,
         fill: true,
-        backgroundColor: (context: ScriptableContext<'line'>) => {
-          const chart = context.chart
-          const { ctx, chartArea } = chart
-          if (!chartArea) return undefined
-          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-          gradient.addColorStop(0, stopColorStart)
-          gradient.addColorStop(1, stopColorEnd)
-          return gradient
-        },
+        backgroundColor: getGradient,
         tension: 0.4,
       },
     ],
@@ -101,8 +124,11 @@ const chartOptions = computed(() => {
           font: { size: 10, weight: 'bold' },
           padding: 10,
           callback: (value: string | number) => {
-            if (Number(value) >= 1000) return `R$ ${(Number(value) / 1000).toFixed(1)} mil`
-            return `R$ ${value}`
+            const numValue = Number(value)
+            if (numValue >= 1000) {
+              return thousandsFormatter.format(numValue)
+            }
+            return currencyFormatter.format(numValue)
           },
         },
       },
