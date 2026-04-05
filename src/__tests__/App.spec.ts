@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import App from '../App.vue'
 import { createPinia } from 'pinia'
 import router from '../core/router'
-import { MotionPlugin } from '@vueuse/motion'
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -25,7 +24,7 @@ describe('App', () => {
     const pinia = createPinia()
     const wrapper = mount(App, {
       global: {
-        plugins: [pinia, router, MotionPlugin],
+        plugins: [pinia, router],
       },
     })
 

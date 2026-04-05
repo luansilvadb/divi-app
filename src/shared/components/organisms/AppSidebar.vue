@@ -1,22 +1,6 @@
 <template>
   <aside
-    v-motion
-    :variants="{
-      expanded: { width: '260px' },
-      collapsed: { width: '80px' },
-    }"
-    :animate="isCollapsed ? 'collapsed' : 'expanded'"
-    :transition="
-      sidebarStore.isLowPowerMode
-        ? { duration: 0 }
-        : {
-            type: 'spring',
-            stiffness: 250,
-            damping: 25,
-            mass: 0.5,
-          }
-    "
-    class="sidebar !hidden md:!flex"
+    class="sidebar !hidden md:!flex transition-all duration-300 ease-in-out"
     :class="{
       'sidebar--collapsed': isCollapsed,
       'low-power-mode': sidebarStore.isLowPowerMode,
@@ -67,7 +51,7 @@
     <!-- Navigation Menu -->
     <Menu :model="menuItems" class="border-none bg-transparent w-full">
         <template #item="{ item, props }">
-            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive, isExactActive }" :to="item.route" custom>
+            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                 <a :href="href" v-bind="props.action" @click="navigate" :class="[
                   'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2',
                   isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
@@ -196,7 +180,7 @@ const menuItems = computed(() => [
   z-index: 50;
   will-change: transform, width;
   contain: paint;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, width var(--transition-speed) var(--transition-timing);
 }
 
 :is(.dark) .sidebar {
@@ -207,6 +191,10 @@ const menuItems = computed(() => [
 
 .sidebar--collapsed {
   width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.low-power-mode {
+  transition: none;
 }
 
 /* ===== Header (Logo & Toggle) ===== */

@@ -1,35 +1,13 @@
 <template>
   <div class="patrimonial-chart">
-    <Line :data="chartData" :options="chartOptions" />
+    <Chart type="line" :data="chartData" :options="chartOptions" class="h-full w-full" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from 'chart.js'
+import Chart from 'primevue/chart'
 import type { ChartOptions, ScriptableContext, TooltipItem } from 'chart.js'
-import { Line } from 'vue-chartjs'
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-)
 
 const props = defineProps<{
   data: number[]
@@ -66,7 +44,7 @@ const chartData = computed(() => {
   }
 })
 
-const chartOptions: ChartOptions<'line'> = {
+const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
   plugins: {

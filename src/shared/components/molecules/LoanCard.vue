@@ -3,17 +3,7 @@
     <div class="card-top flex justify-between items-start">
       <div class="loan-identity flex gap-4 items-center">
         <BaseIconBox color="var(--color-secondary-main)" size="lg">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            width="24"
-            height="24"
-          >
-            <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-          </svg>
+          <i class="pi pi-briefcase text-2xl"></i>
         </BaseIconBox>
         <div class="flex flex-col gap-0.5">
           <h3 class="loan-name text-lg font-bold text-text-primary tracking-tight leading-tight">
