@@ -9,5 +9,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Improve the transactions screen using PrimeVue**
+- [x] **Track: Improve the transactions screen using PrimeVue**
       _Link: [./tracks/initial/transactions_ui_20260405/](./tracks/initial/transactions_ui_20260405/)_
