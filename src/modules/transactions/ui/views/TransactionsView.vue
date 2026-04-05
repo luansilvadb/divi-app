@@ -7,7 +7,16 @@
         <div
           class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
         >
-          <Button variant="text" @click="prevMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
+          <Button
+            variant="text"
+            @click="prevMonth"
+            :pt="{
+              root: {
+                class:
+                  'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none',
+              },
+            }"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -27,7 +36,16 @@
           >
             {{ monthLabelOnly }}
           </div>
-          <Button variant="text" @click="nextMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
+          <Button
+            variant="text"
+            @click="nextMonth"
+            :pt="{
+              root: {
+                class:
+                  'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none',
+              },
+            }"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -97,7 +115,10 @@
       <!-- MAIN LIST COLUMN -->
       <main class="lg:col-span-2 space-y-8">
         <!-- Bulk Actions Bar -->
-        <div v-if="isBulkMode" class="flex items-center justify-between p-4 bg-primary-main/5 dark:bg-primary-main/10 rounded-2xl border border-primary-main/20">
+        <div
+          v-if="isBulkMode"
+          class="flex items-center justify-between p-4 bg-primary-main/5 dark:bg-primary-main/10 rounded-2xl border border-primary-main/20"
+        >
           <div class="flex items-center gap-3">
             <Button
               label="Selecionar Todas"
@@ -119,18 +140,32 @@
               :disabled="selectedTransactions.size === 0"
               @click="bulkDelete"
             />
-            <Button
-              icon="pi pi-times"
-              text
-              size="small"
-              @click="toggleBulkMode"
-            />
+            <Button icon="pi pi-times" text size="small" @click="toggleBulkMode" />
           </div>
         </div>
 
         <!-- Search Bar with AutoComplete -->
         <div class="space-y-3">
-          <div class="relative">
+          <div class="relative group">
+            <!-- Search Icon Overlay -->
+            <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none z-10">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-text-disabled group-focus-within:text-primary-main transition-colors duration-300"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
+            </div>
+
             <AutoComplete
               v-model="searchQuery"
               :suggestions="searchSuggestions"
@@ -141,8 +176,13 @@
               :pt="{
                 root: { class: 'w-full' },
                 input: {
-                  class: 'w-full px-4 py-2.5 rounded-xl border border-black/5 dark:border-white/5 bg-bg-main text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/50 transition-all'
-                }
+                  class:
+                    'w-full pl-12 pr-4 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-xl text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 hover:border-black/20 dark:hover:border-white/20 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg',
+                },
+                dropdown: {
+                  class:
+                    'rounded-r-2xl border-0 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-200',
+                },
               }"
               dropdown
               class="text-sm"
@@ -157,7 +197,7 @@
               text
               size="small"
               @click="showAdvancedFilters = !showAdvancedFilters"
-              class="text-xs"
+              class="text-xs transition-all duration-200 hover:scale-105"
             />
             <Button
               v-if="searchHistory.length > 0"
@@ -165,80 +205,109 @@
               label="Limpar Histórico"
               text
               size="small"
-              @click="clearSearchHistory(); searchHistory = []"
-              class="text-xs text-text-disabled"
+              @click="
+                clearSearchHistory()
+                searchHistory = []
+              "
+              class="text-xs text-text-disabled hover:text-text-secondary transition-colors duration-200"
             />
           </div>
 
           <!-- Advanced Filters Panel -->
-          <div v-if="showAdvancedFilters" class="p-4 bg-black/5 dark:bg-white/5 rounded-2xl space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Category Filter -->
-              <div>
-                <label class="text-xs font-bold text-text-secondary mb-1 block">Categoria</label>
-                <select
-                  v-model="filterCategory"
-                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
-                >
-                  <option value="">Todas</option>
-                  <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
-                    {{ cat.name }}
-                  </option>
-                </select>
+          <Transition
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 -translate-y-2"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 -translate-y-2"
+          >
+            <div
+              v-if="showAdvancedFilters"
+              class="p-5 bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-2xl space-y-4 border border-black/5 dark:border-white/5 shadow-lg"
+            >
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Category Filter -->
+                <div class="space-y-2">
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
+                    >Categoria</label
+                  >
+                  <select
+                    v-model="filterCategory"
+                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                  >
+                    <option value="">Todas</option>
+                    <option v-for="cat in store.categories" :key="cat.id" :value="cat.id">
+                      {{ cat.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Wallet Filter -->
+                <div class="space-y-2">
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
+                    >Carteira</label
+                  >
+                  <select
+                    v-model="filterWallet"
+                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                  >
+                    <option value="">Todas</option>
+                    <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
+                      {{ wallet.name }}
+                    </option>
+                  </select>
+                </div>
               </div>
 
-              <!-- Wallet Filter -->
-              <div>
-                <label class="text-xs font-bold text-text-secondary mb-1 block">Carteira</label>
-                <select
-                  v-model="filterWallet"
-                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
-                >
-                  <option value="">Todas</option>
-                  <option v-for="wallet in store.wallets" :key="wallet.id" :value="wallet.id">
-                    {{ wallet.name }}
-                  </option>
-                </select>
+              <!-- Amount Range -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
+                    >Valor Mínimo</label
+                  >
+                  <input
+                    v-model.number="filterAmountMin"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0,00"
+                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                  />
+                </div>
+                <div class="space-y-2">
+                  <label class="text-xs font-bold text-text-secondary uppercase tracking-wider"
+                    >Valor Máximo</label
+                  >
+                  <input
+                    v-model.number="filterAmountMax"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="∞"
+                    class="w-full px-4 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/10 text-text-primary text-sm placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-primary-main/30 focus:border-primary-main/50 transition-all duration-200 hover:border-black/20 dark:hover:border-white/20"
+                  />
+                </div>
               </div>
-            </div>
 
-            <!-- Amount Range -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="text-xs font-bold text-text-secondary mb-1 block">Valor Mínimo</label>
-                <input
-                  v-model.number="filterAmountMin"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0,00"
-                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
+              <!-- Clear Filters -->
+              <div class="flex justify-end pt-2">
+                <Button
+                  label="Limpar Filtros"
+                  icon="pi pi-times"
+                  text
+                  size="small"
+                  @click="
+                    filterCategory = ''
+                    filterWallet = ''
+                    filterAmountMin = null
+                    filterAmountMax = null
+                  "
+                  class="hover:scale-105 transition-transform duration-200"
                 />
               </div>
-              <div>
-                <label class="text-xs font-bold text-text-secondary mb-1 block">Valor Máximo</label>
-                <input
-                  v-model.number="filterAmountMax"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="∞"
-                  class="w-full px-3 py-2 rounded-lg border border-black/5 dark:border-white/5 bg-bg-main text-text-primary text-sm"
-                />
-              </div>
             </div>
-
-            <!-- Clear Filters -->
-            <div class="flex justify-end">
-              <Button
-                label="Limpar Filtros"
-                icon="pi pi-times"
-                text
-                size="small"
-                @click="filterCategory = ''; filterWallet = ''; filterAmountMin = null; filterAmountMax = null"
-              />
-            </div>
-          </div>
+          </Transition>
         </div>
 
         <!-- Transactions List -->
@@ -272,7 +341,11 @@
         </div>
 
         <div v-else class="space-y-12">
-          <div v-for="(group, day) in filteredGroupedTransactions as any" :key="day" class="space-y-4">
+          <div
+            v-for="(group, day) in filteredGroupedTransactions as any"
+            :key="day"
+            class="space-y-4"
+          >
             <div class="flex items-center justify-between px-2">
               <div class="flex items-center gap-3">
                 <span class="text-2xl font-black tracking-tighter text-text-primary">{{
@@ -490,7 +563,18 @@
       <Toast />
 
       <!-- Floating Action Button (FAB) -->
-      <BaseButton v-if="isMobile" variant="primary" :pt="{ root: { class: 'fixed bottom-24 right-6 md:bottom-10 md:right-10 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:-translate-y-1 transition-all z-50' } }" @click="openNewForm()" aria-label="Nova Transação">
+      <BaseButton
+        v-if="isMobile"
+        variant="primary"
+        :pt="{
+          root: {
+            class:
+              'fixed bottom-24 right-6 md:bottom-10 md:right-10 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:-translate-y-1 transition-all z-50',
+          },
+        }"
+        @click="openNewForm()"
+        aria-label="Nova Transação"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -513,7 +597,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
-import { formatCurrency, formatCurrencySign, getRelativeDayLabel, formatMonthLong, formatMonthShort } from '@/shared/utils/formatters'
+import {
+  formatCurrency,
+  formatCurrencySign,
+  getRelativeDayLabel,
+  formatMonthLong,
+  formatMonthShort,
+} from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
@@ -587,7 +677,7 @@ function searchSuggestionsHandler(event: { query: string }) {
 
   // Add matching history entries
   const historyMatches = searchHistory.value.filter((h) =>
-    h.toLowerCase().includes(query.toLowerCase())
+    h.toLowerCase().includes(query.toLowerCase()),
   )
 
   searchSuggestions.value = [...new Set([...suggestions, ...historyMatches])].slice(0, 10)
@@ -683,8 +773,9 @@ function toggleTransactionSelection(id: string) {
 }
 
 function selectAll() {
-  const allIds = Object.values(groupedTransactions.value as Record<string, { items: Transaction[] }>)
-    .flatMap((group) => group.items.map((t) => t.id))
+  const allIds = Object.values(
+    groupedTransactions.value as Record<string, { items: Transaction[] }>,
+  ).flatMap((group) => group.items.map((t) => t.id))
   selectedTransactions.value = new Set(allIds)
 }
 
@@ -712,8 +803,9 @@ async function bulkDelete() {
 
 // CSV Export
 function exportToCSV() {
-  const allTransactions = Object.values(groupedTransactions.value as Record<string, { items: Transaction[] }>)
-    .flatMap((group) => group.items)
+  const allTransactions = Object.values(
+    groupedTransactions.value as Record<string, { items: Transaction[] }>,
+  ).flatMap((group) => group.items)
 
   if (allTransactions.length === 0) {
     toast.add({
