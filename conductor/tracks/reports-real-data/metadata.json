@@ -1,0 +1,8 @@
+{
+  "id": "reports-real-data",
+  "title": "TICKET-001: Integrar dados reais no Módulo de Relatórios",
+  "status": "pending",
+  "description": "Substituir os dados mockados no componente ReportsView.vue por dados reais provenientes do transactionStore e budgetStore.",
+  "priority": "high",
+  "tags": ["reports", "analytics", "real-data"]
+}

@@ -92,9 +92,8 @@ describe('TransactionsView', () => {
     })
 
     expect(wrapper.exists()).toBe(true)
-    // Desktop: Should have 'Adicionar' button and NO FAB
+    // Desktop: Should have 'Adicionar' button
     expect(wrapper.text()).toContain('Adicionar')
-    expect(wrapper.html()).not.toContain('aria-label="Nova Transação"')
   })
 
   it('renders correctly on mobile', async () => {
@@ -123,8 +122,7 @@ describe('TransactionsView', () => {
     await nextTick()
 
     expect(wrapper.exists()).toBe(true)
-    // Mobile: Should have FAB and NO 'Adicionar' button
-    expect(wrapper.html()).toContain('aria-label="Nova Transação"')
+    // Mobile: Should NOT have 'Adicionar' button in the header (it's in the global FAB in MainLayout)
     expect(wrapper.html()).not.toContain('Adicionar')
   })
 

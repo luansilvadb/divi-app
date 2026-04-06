@@ -1,0 +1,25 @@
+{
+  "project": "divi",
+  "version": "1.0.0",
+  "architecture": {
+    "frontend": "Vue 3 (Composition API)",
+    "build_tool": "Vite",
+    "styling": "Tailwind CSS + PrimeVue (PrimeUI)",
+    "state_management": "Pinia",
+    "database": {
+      "remote": "Supabase (PostgreSQL)",
+      "local": "Dexie (IndexedDB)"
+    },
+    "pattern": "Module-Based Clean Architecture (application, domain, infrastructure, ui)"
+  },
+  "technical_debt": [
+    "ReportsView.vue still uses mock data",
+    "ActivityLogView.vue uses mock/static descriptions in sidebar",
+    "Need to standardize all empty states across modules",
+    "Incomplete test coverage in some UI modules"
+  ],
+  "global_variables": {
+    "currency": "BRL",
+    "locale": "pt-BR"
+  }
+}

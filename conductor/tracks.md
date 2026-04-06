@@ -6,6 +6,11 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
+### [ ] Track: TICKET-001: Integrar dados reais no Módulo de Relatórios (Active 2024-04-10)
+
+Substituir os dados mockados no componente ReportsView.vue por dados reais provenientes do transactionStore e budgetStore.
+Link: [./tracks/reports-real-data/](./tracks/reports-real-data/)
+
 ---
 
 ## Archived Tracks

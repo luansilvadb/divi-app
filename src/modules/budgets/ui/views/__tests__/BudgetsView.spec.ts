@@ -21,7 +21,7 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
 }))
 
 describe('BudgetsView', () => {
-  let storeMock: any
+  let storeMock: Record<string, unknown>
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -34,7 +34,7 @@ describe('BudgetsView', () => {
       getConsumed: vi.fn().mockReturnValue(0),
       fetchBudgets: vi.fn(),
     }
-    ;(useBudgetStore as any).mockReturnValue(storeMock)
+    ;(useBudgetStore as unknown as { mockReturnValue: (v: unknown) => void }).mockReturnValue(storeMock)
   })
 
   it('exposes searchEmptySubtitle computed property', () => {
@@ -53,6 +53,6 @@ describe('BudgetsView', () => {
     })
 
     // This should fail initially because searchEmptySubtitle is not defined in the component
-    expect((wrapper.vm as any).searchEmptySubtitle).toBe('Não encontramos orçamentos para "Viagem"')
+    expect((wrapper.vm as unknown as Record<string, unknown>).searchEmptySubtitle).toBe('Não encontramos orçamentos para "Viagem"')
   })
 })

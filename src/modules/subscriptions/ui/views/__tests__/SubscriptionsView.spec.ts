@@ -14,7 +14,7 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
 }))
 
 describe('SubscriptionsView', () => {
-  let storeMock: any
+  let storeMock: Record<string, unknown>
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -25,7 +25,7 @@ describe('SubscriptionsView', () => {
       totalMonthlyCost: 0,
       fetchSubscriptions: vi.fn(),
     }
-    ;(useSubscriptionStore as any).mockReturnValue(storeMock)
+    ;(useSubscriptionStore as unknown as { mockReturnValue: (v: unknown) => void }).mockReturnValue(storeMock)
   })
 
   it('exposes searchEmptySubtitle computed property', () => {
@@ -45,6 +45,6 @@ describe('SubscriptionsView', () => {
     })
 
     // This should fail initially because searchEmptySubtitle is not defined in the component
-    expect((wrapper.vm as any).searchEmptySubtitle).toBe('Não encontramos assinaturas para "Netflix"')
+    expect((wrapper.vm as unknown as Record<string, unknown>).searchEmptySubtitle).toBe('Não encontramos assinaturas para "Netflix"')
   })
 })
