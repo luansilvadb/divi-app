@@ -6,7 +6,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
-- [ ] **Track: Fix malformed attribute error in Search Empty States**
+- [x] **Track: Fix malformed attribute error in Search Empty States**
 *Link: [./tracks/attribute-name-fix_20260406/](./tracks/attribute-name-fix_20260406/)*
 
 ---
