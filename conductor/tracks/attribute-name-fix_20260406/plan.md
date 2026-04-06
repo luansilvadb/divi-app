@@ -18,14 +18,14 @@
     - [x] Update template to use the new computed property
 - [x] Task: Conductor - User Manual Verification 'Phase 2' [23d5882]
 
-## Phase 3: LoansView.vue Refactor
+## Phase 3: LoansView.vue Refactor [checkpoint: 18e364b]
 - [x] Task: Write Tests for LoansView search empty state [70f78fd]
     - [x] Create `src/modules/loans/ui/views/__tests__/LoansView.spec.ts`
     - [x] Add unit tests for the `searchEmptySubtitle` computed property
 - [x] Task: Implement computed property in LoansView.vue [70f78fd]
     - [x] Define `searchEmptySubtitle` computed property
     - [x] Update template to use the new computed property
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' [18e364b]
 
 ## Phase 4: SubscriptionsView.vue Refactor
 - [ ] Task: Write Tests for SubscriptionsView search empty state
