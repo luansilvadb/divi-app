@@ -51,11 +51,7 @@
     <!-- Navigation Menu -->
     <Menu :model="menuItems" class="border-none bg-transparent w-full">
         <template #item="{ item, props }">
-            <!-- Separator -->
-            <div v-if="item.separator" class="my-2 mx-4 border-t border-black/5 dark:border-white/5" :class="{ 'hidden': isCollapsed }"></div>
-
-            <!-- Router Link Item -->
-            <RouterLink v-else-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
+            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                 <a :href="href" v-bind="props.action" @click="navigate" :class="[
                   'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2',
                   isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
@@ -65,22 +61,10 @@
                     <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
                 </a>
             </RouterLink>
-
-            <!-- Action Item (e.g., Logout) -->
-            <a v-else-if="item.action" v-bind="props.action" @click="item.action" :class="[
-                  'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2',
-                  item.class || 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
-                ]">
-                <span :class="item.icon" class="text-xl" v-tooltip.right="isCollapsed ? item.label : undefined"></span>
-                <span class="ml-3 truncate transition-opacity duration-300" :class="{ 'opacity-0 w-0 hidden': isCollapsed }">{{ item.label }}</span>
-            </a>
-
-            <!-- Dynamic Component -->
             <component :is="item.component" v-else-if="item.component" v-bind="item.props" />
-
-            <!-- Plain Link -->
-            <a v-else :class="[
-                  'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2 text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+            <a v-else-if="item.action" v-bind="props.action" @click="item.action" :class="[
+                  'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2 text-text-secondary hover:bg-black/5 dark:hover:bg-white/5',
+                  item.class
                 ]">
                 <span :class="item.icon" class="text-xl" v-tooltip.right="isCollapsed ? item.label : undefined"></span>
                 <span class="ml-3 truncate transition-opacity duration-300" :class="{ 'opacity-0 w-0 hidden': isCollapsed }">{{ item.label }}</span>
@@ -105,7 +89,6 @@ import { computed, onMounted, onBeforeUnmount } from 'vue'
 
 import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
-import { createMainNavigation } from '../../config/navigation'
 import Menu from 'primevue/menu'
 import Badge from 'primevue/badge'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
@@ -119,10 +102,6 @@ const isCollapsed = computed({
   get: () => !sidebarStore.isExpanded,
   set: (val: boolean) => sidebarStore.setExpanded(!val),
 })
-
-const menuItems = computed(() =>
-  createMainNavigation({ onLogout: () => emit('logout') })
-)
 
 const lgQuery = window.matchMedia('(max-width: 1024px)')
 
@@ -143,6 +122,37 @@ onMounted(() => {
 onBeforeUnmount(() => {
   lgQuery.removeEventListener('change', handleBreakpointChange)
 })
+
+const menuItems = computed(() => [
+    {
+        label: 'Menu Principal',
+        items: [
+            { label: 'Dashboard', icon: 'pi pi-th-large', route: '/' },
+            { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left', route: '/transactions' },
+            { label: 'Orçamentos', icon: 'pi pi-dollar', route: '/budgets' },
+            { label: 'Metas', icon: 'pi pi-bullseye', route: '/goals' },
+            { label: 'Empréstimos', icon: 'pi pi-credit-card', route: '/loans' },
+            { label: 'Assinaturas', icon: 'pi pi-history', route: '/subscriptions' }
+        ]
+    },
+    {
+        label: 'Análise',
+        items: [
+            { label: 'Calendário', icon: 'pi pi-calendar', route: '/calendar' },
+            { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
+            { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
+        ]
+    },
+    {
+        separator: true
+    },
+    {
+        label: 'Sair',
+        icon: 'pi pi-sign-out',
+        class: 'text-error-main hover:bg-error-main/10',
+        action: () => emit('logout')
+    }
+])
 </script>
 
 <style scoped>
@@ -165,22 +175,20 @@ onBeforeUnmount(() => {
   width: var(--sidebar-width);
   height: 100vh;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.8);
-  /* Optimized: use lighter blur for better performance */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(40px) saturate(1.6);
   border-right: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 4px 0 32px -4px rgba(0, 0, 0, 0.04);
+  box-shadow: 1px 0 0 0 rgba(255, 255, 255, 0.4), 4px 0 32px -4px rgba(0, 0, 0, 0.04);
   z-index: 50;
-  will-change: width;
+  will-change: transform, width;
   contain: paint;
-  transition: width var(--transition-speed) var(--transition-timing);
+  transition: background-color 0.3s ease, width var(--transition-speed) var(--transition-timing);
 }
 
 :is(.dark) .sidebar {
-  background: rgba(19, 24, 36, 0.85);
+  background: rgba(19, 24, 36, 0.7);
   border-right-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 8px 0 40px -8px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 0 0 0 rgba(255, 255, 255, 0.02), 8px 0 40px -8px rgba(0, 0, 0, 0.4);
 }
 
 .sidebar--collapsed {

@@ -3,61 +3,25 @@
  * All functions follow Brazilian (pt-BR) standards.
  */
 
-// Reusable formatters for better performance
-const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-})
-
-const currencySignFormatter = new Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'BRL',
-  signDisplay: 'always',
-})
-
-const dateFormatter = new Intl.DateTimeFormat('pt-BR')
-
-const monthShortFormatter = new Intl.DateTimeFormat('pt-BR', { month: 'short' })
-
-const monthLongFormatter = new Intl.DateTimeFormat('pt-BR', { month: 'long' })
-
-const timeFormatter = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
-
-/**
- * Formats a date to long month name (e.g., "Janeiro")
- */
-export function formatMonthLong(date: Date): string {
-  return monthLongFormatter.format(date).replace(/^\w/, (c) => c.toUpperCase())
-}
-
-/**
- * Formats a date string to time (HH:MM)
- */
-export function formatTime(dateStr: string): string {
-  if (!dateStr) return ''
-  const date = new Date(dateStr)
-  return timeFormatter.format(date)
-}
-
-/**
- * Formats a date to short month name (e.g., "JAN")
- */
-export function formatMonthShort(date: Date): string {
-  return monthShortFormatter.format(date).replace('.', '').toUpperCase()
-}
-
 /**
  * Formats a number as BRL currency (R$ 1.000,00)
  */
 export function formatCurrency(value: number): string {
-  return currencyFormatter.format(value)
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(value)
 }
 
 /**
  * Formats a number as BRL currency with sign always displayed (+R$ 1,00 or -R$ 1,00)
  */
 export function formatCurrencySign(value: number): string {
-  return currencySignFormatter.format(value)
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    signDisplay: 'always',
+  }).format(value)
 }
 
 /**
@@ -66,7 +30,7 @@ export function formatCurrencySign(value: number): string {
 export function formatDate(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr)
-  return dateFormatter.format(date)
+  return date.toLocaleDateString('pt-BR')
 }
 
 /**
@@ -76,7 +40,7 @@ export function formatDateShort(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr + (dateStr.includes('T') ? '' : 'T12:00:00'))
   const day = date.getDate().toString().padStart(2, '0')
-  const month = monthShortFormatter.format(date).replace('.', '').toUpperCase()
+  const month = date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
   return `${day} ${month}`
 }
 

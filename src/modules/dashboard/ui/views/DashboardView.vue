@@ -33,7 +33,12 @@
                   <div
                     class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
                   >
-                    {{ formatCurrency(transactionStore.totalIncome) }}
+                    <span class="text-lg opacity-50 font-bold">R$</span>
+                    {{
+                      transactionStore.totalIncome.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
                 <div
@@ -123,7 +128,12 @@
                   <div
                     class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
                   >
-                    {{ formatCurrency(transactionStore.totalExpense) }}
+                    <span class="text-lg opacity-50 font-bold">R$</span>
+                    {{
+                      transactionStore.totalExpense.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
                 <div
@@ -213,7 +223,12 @@
                   <div
                     class="text-3xl font-black text-text-primary tracking-tighter flex items-baseline gap-1"
                   >
-                    {{ formatCurrency(dashboardStore.totalBalance) }}
+                    <span class="text-lg opacity-50 font-bold">R$</span>
+                    {{
+                      dashboardStore.totalBalance.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                      })
+                    }}
                   </div>
                 </div>
                 <div
@@ -480,7 +495,7 @@
                   >
                     <path d="M7 10l5 5 5-5z" />
                   </svg>
-                  {{ t.type === 'expense' ? '-' : '+' }} {{ formatCurrency(t.amount) }}
+                  {{ t.type === 'expense' ? '-' : '+' }} R$ {{ t.amount.toLocaleString('pt-BR') }}
                 </div>
               </div>
             </div>
@@ -497,10 +512,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, defineAsyncComponent } from 'vue'
+import { onMounted } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import SelectButton from 'primevue/selectbutton'
-import { formatCurrency } from '@/shared/utils/formatters'
 
 import { ref } from 'vue'
 const chartRange = ref('6m')
@@ -521,11 +535,7 @@ import { useTransactionStore } from '@/modules/transactions/application/stores/t
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
-
-// Lazy load chart component to reduce initial bundle
-const PatrimonialChart = defineAsyncComponent(() =>
-  import('@/shared/components/organisms/PatrimonialChart.vue')
-)
+import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'

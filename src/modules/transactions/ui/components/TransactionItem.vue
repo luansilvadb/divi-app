@@ -161,7 +161,6 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
-import { formatCurrency, formatTime } from '@/shared/utils/formatters'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 
@@ -230,4 +229,12 @@ const iconComponent = computed(() => {
         }),
       )
 })
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)
+}
+
+function formatTime(dateStr: string) {
+  return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+}
 </script>
