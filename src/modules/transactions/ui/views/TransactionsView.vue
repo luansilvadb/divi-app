@@ -53,24 +53,35 @@
         <!-- Search Bar -->
         <div class="relative group">
           <div
-            class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-primary-main transition-colors"
+            class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-emerald-400 transition-all duration-300 z-10"
+            :class="{ 'scale-110 !text-emerald-400': searchQuery.length > 0 }"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <i class="pi pi-search text-lg" />
           </div>
-          <BaseInput id="search-transactions" v-model="searchQuery" placeholder="Buscar transações..." icon="pi pi-search" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="block w-full pl-14 pr-12 py-4 bg-white/5 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-3xl text-base placeholder:text-text-disabled/40 focus:bg-white/10 dark:focus:bg-white/10 focus:border-emerald-500/30 dark:focus:border-emerald-500/30 focus:ring-8 focus:ring-emerald-500/5 focus:shadow-[0_0_20px_-12px_rgba(16,185,129,0.3)] outline-none transition-all duration-500 shadow-sm"
+            placeholder="Buscar transações..."
+          />
+          <!-- Clear Button -->
+          <transition
+            enter-active-class="transform transition duration-300 ease-out"
+            enter-from-class="opacity-0 translate-x-2"
+            enter-to-class="opacity-100 translate-x-0"
+            leave-active-class="transform transition duration-200 ease-in"
+            leave-from-class="opacity-100 translate-x-0"
+            leave-to-class="opacity-0 translate-x-2"
+          >
+            <button
+              v-if="searchQuery"
+              @click="searchQuery = ''"
+              class="absolute inset-y-0 right-4 flex items-center text-text-disabled hover:text-emerald-400 transition-colors z-10 p-2"
+              aria-label="Limpar busca"
+            >
+              <i class="pi pi-times" />
+            </button>
+          </transition>
         </div>
 
         <!-- Transactions List -->
@@ -332,7 +343,6 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
