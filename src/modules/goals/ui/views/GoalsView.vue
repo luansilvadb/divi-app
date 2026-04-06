@@ -11,9 +11,19 @@
     <div class="view-content-grid">
       <!-- MAIN COLUMN -->
       <main class="main-column">
-        <!-- Empty State -->
+        <!-- Search Bar -->
+        <div v-if="store.goals.length > 0 || store.searchQuery" class="mb-4">
+          <BaseSearchInput
+            v-model="store.searchQuery"
+            placeholder="Buscar por nome da meta..."
+            :debounce="300"
+            :loading="store.isLoading"
+          />
+        </div>
+
+        <!-- Empty State (No goals at all) -->
         <BaseCard
-          v-if="store.goals.length === 0 && !store.isLoading"
+          v-if="store.goals.length === 0 && !store.isLoading && !store.searchQuery"
           is-empty
           empty-title="Sem metas ativas"
           empty-subtitle="Você ainda não definiu nenhum objetivo financeiro. Que tal começar a poupar hoje?"
@@ -41,6 +51,37 @@
           </template>
         </BaseCard>
 
+        <!-- Search Empty State -->
+        <BaseCard
+          v-else-if="filteredGoals.length === 0 && !store.isLoading && store.searchQuery"
+          is-empty
+          empty-title="Nenhum resultado"
+          :empty-subtitle="searchEmptySubtitle"
+          empty-color="var(--color-primary-main)"
+        >
+          <template #empty-icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </template>
+          <template #empty-action>
+            <BaseButton variant="secondary" class="px-8 mt-4" @click="store.searchQuery = ''">
+              Limpar Busca
+            </BaseButton>
+          </template>
+        </BaseCard>
+
         <!-- Loading State -->
         <div v-else-if="store.isLoading" class="flex justify-center py-20">
           <div
@@ -49,8 +90,11 @@
         </div>
 
         <!-- Goals Grid -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
-          <GoalCard v-for="goal in store.goals" :key="goal.id" :goal="goal" />
+        <div
+          v-else-if="filteredGoals.length > 0"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6"
+        >
+          <GoalCard v-for="goal in filteredGoals" :key="goal.id" :goal="goal" />
         </div>
       </main>
 
@@ -173,12 +217,23 @@ import { formatCurrency } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import GoalCard from '@/shared/components/molecules/GoalCard.vue'
 
 const store = useGoalStore()
 const showAddGoalModal = ref(false)
+
+const filteredGoals = computed(() => {
+  if (!store.searchQuery) return store.goals
+  const query = store.searchQuery.toLowerCase()
+  return store.goals.filter((g) => g.name.toLowerCase().includes(query))
+})
+
+const searchEmptySubtitle = computed(() => {
+  return `Não encontramos metas para "${store.searchQuery}"`
+})
 
 const globalProgress = computed(() => {
   if (store.totalTarget <= 0) return 0
