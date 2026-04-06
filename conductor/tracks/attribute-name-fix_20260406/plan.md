@@ -9,14 +9,14 @@
     - [x] Update the template to use `:empty-subtitle="searchEmptySubtitle"`
 - [x] Task: Conductor - User Manual Verification 'Phase 1' [9446f36]
 
-## Phase 2: GoalsView.vue Refactor
-- [ ] Task: Write Tests for GoalsView search empty state
-    - [ ] Create `src/modules/goals/ui/views/__tests__/GoalsView.spec.ts`
-    - [ ] Add unit tests for the `searchEmptySubtitle` computed property
-- [ ] Task: Implement computed property in GoalsView.vue
-    - [ ] Define `searchEmptySubtitle` computed property
-    - [ ] Update template to use the new computed property
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+## Phase 2: GoalsView.vue Refactor [checkpoint: 23d5882]
+- [x] Task: Write Tests for GoalsView search empty state [2294e73]
+    - [x] Create `src/modules/goals/ui/views/__tests__/GoalsView.spec.ts`
+    - [x] Add unit tests for the `searchEmptySubtitle` computed property
+- [x] Task: Implement computed property in GoalsView.vue [2294e73]
+    - [x] Define `searchEmptySubtitle` computed property
+    - [x] Update template to use the new computed property
+- [x] Task: Conductor - User Manual Verification 'Phase 2' [23d5882]
 
 ## Phase 3: LoansView.vue Refactor
 - [ ] Task: Write Tests for LoansView search empty state
