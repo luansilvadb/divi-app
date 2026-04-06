@@ -24,10 +24,10 @@
   - [x] Write unit tests for the updated UI.
 
 ## Phase 4: Miscellaneous & Final Polishing
-- [ ] **Task: Refactor Remaining Modules (Loans, Subscriptions, Calendar, Reports)**
-  - [ ] Methodically update the UI of the remaining modules.
-  - [ ] Write unit tests for each.
-- [ ] **Task: Final UI/UX Audit and Polish**
+- [x] **Task: Refactor Remaining Modules (Loans, Subscriptions, Calendar, Reports)** `08e96d8`
+  - [x] Methodically update the UI of the remaining modules.
+  - [x] Write unit tests for each.
+- [~] **Task: Final UI/UX Audit and Polish**
   - [ ] Conduct a thorough review of the entire application for visual consistency and responsiveness.
   - [ ] Fix any minor UI/UX issues.
 
