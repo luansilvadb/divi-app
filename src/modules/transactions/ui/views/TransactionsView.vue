@@ -7,7 +7,7 @@
         <div
           class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
         >
-          <Button variant="text" @click="prevMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
+          <BaseButton variant="ghost" @click="prevMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl text-text-secondary border-none' } }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -21,13 +21,13 @@
             >
               <polyline points="15 18 9 12 15 6"></polyline>
             </svg>
-          </Button>
+          </BaseButton>
           <div
             class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center"
           >
             {{ monthLabelOnly }}
           </div>
-          <Button variant="text" @click="nextMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition-colors text-text-secondary border-none' } }">
+          <BaseButton variant="ghost" @click="nextMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl text-text-secondary border-none' } }">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -41,7 +41,7 @@
             >
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
-          </Button>
+          </BaseButton>
         </div>
         <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm"> Adicionar </BaseButton>
       </div>

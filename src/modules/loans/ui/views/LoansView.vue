@@ -110,7 +110,18 @@
       </aside>
     </div>
 
-    <!-- Future: LoanForm Modal -->
+    <!-- Delete Confirmation Overlay -->
+    <Teleport to="body">
+      <BaseConfirmDialog
+        :show="showConfirmDelete"
+        title="Excluir Empréstimo"
+        message="Deseja realmente remover este registro? Esta ação não pode ser desfeita."
+        confirm-text="Excluir"
+        cancel-text="Cancelar"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
+      />
+    </Teleport>
   </StandardPageLayout>
 </template>
 
@@ -123,17 +134,32 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import LoanCard from '@/shared/components/molecules/LoanCard.vue'
+import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 
 const store = useLoanStore()
 const showAddLoanModal = ref(false)
+const showConfirmDelete = ref(false)
+const loanToDelete = ref<string | null>(null)
 
 onMounted(async () => {
   await store.fetchLoans()
 })
 
-const handleDelete = async (id: string) => {
-  if (confirm('Deseja realmente remover este registro? Esta ação não pode ser desfeita.')) {
-    await store.deleteLoan(id)
+const handleDelete = (id: string) => {
+  loanToDelete.value = id
+  showConfirmDelete.value = true
+}
+
+const confirmDelete = async () => {
+  if (loanToDelete.value) {
+    await store.deleteLoan(loanToDelete.value)
+    showConfirmDelete.value = false
+    loanToDelete.value = null
   }
+}
+
+const cancelDelete = () => {
+  showConfirmDelete.value = false
+  loanToDelete.value = null
 }
 </script>

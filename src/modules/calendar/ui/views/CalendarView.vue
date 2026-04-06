@@ -9,10 +9,7 @@
       <div
         class="flex items-center bg-bg-main dark:bg-black/20 p-1.5 rounded-2xl border border-black/5 dark:border-white/5"
       >
-        <button
-          class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
-          @click="prevMonth"
-        >
+        <BaseButton variant="ghost" @click="prevMonth" :pt="{ root: { class: 'h-10 w-10 !p-0 flex items-center justify-center rounded-xl text-text-secondary border-none' } }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -26,7 +23,7 @@
           >
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
-        </button>
+        </BaseButton>
         <div class="px-6 flex flex-col items-center min-w-[140px]">
           <span
             class="text-[10px] font-black uppercase tracking-widest text-text-disabled leading-none mb-1"
@@ -37,10 +34,7 @@
             >{{ monthName }}</span
           >
         </div>
-        <button
-          class="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white dark:hover:bg-white/10 text-text-secondary transition-all active:scale-95"
-          @click="nextMonth"
-        >
+        <BaseButton variant="ghost" @click="nextMonth" :pt="{ root: { class: 'h-10 w-10 !p-0 flex items-center justify-center rounded-xl text-text-secondary border-none' } }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -54,7 +48,7 @@
           >
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
-        </button>
+        </BaseButton>
       </div>
     </template>
 
@@ -259,6 +253,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { formatCurrency } from '@/shared/utils/formatters'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'

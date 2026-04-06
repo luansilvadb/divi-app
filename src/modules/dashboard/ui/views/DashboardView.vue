@@ -308,7 +308,7 @@
               <span class="w-1.5 h-6 bg-accent-main rounded-full"></span>
               Minhas Contas
             </h2>
-            <Button variant="text" class="!text-[0.7rem] !font-black !uppercase !tracking-[0.2em] !text-accent-main !p-0 hover:!text-text-primary transition-all flex items-center gap-2 group" @click="$router.push('/wallets')">
+            <BaseButton variant="ghost" class="!text-[0.7rem] !font-black !uppercase !tracking-[0.2em] !text-accent-main !p-0 hover:!text-text-primary transition-all flex items-center gap-2 group" @click="$router.push('/wallets')">
               Ver Todas
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -324,7 +324,7 @@
               >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
-            </Button>
+            </BaseButton>
           </div>
           <AccountCarousel :wallets="dashboardStore.wallets" />
         </section>

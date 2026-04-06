@@ -5,21 +5,7 @@
     subtitle="Descubra para onde seu dinheiro está indo com insights baseados em seus dados."
   >
     <template #action>
-      <div class="flex gap-2">
-        <button
-          v-for="filter in ['Mês', 'Trimestre', 'Ano']"
-          :key="filter"
-          class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
-          :class="
-            activeFilter === filter
-              ? 'bg-primary-main text-white shadow-lg shadow-primary-main/20'
-              : 'bg-bg-main text-text-disabled border border-black/5 dark:border-white/5 hover:text-text-primary'
-          "
-          @click="activeFilter = filter"
-        >
-          {{ filter }}
-        </button>
-      </div>
+      <SelectButton v-model="activeFilter" :options="filterOptions" optionLabel="label" optionValue="value" class="text-[0.6rem] font-black uppercase tracking-widest" />
     </template>
 
     <!-- Content Area (Unified Layout) -->
@@ -214,8 +200,14 @@ import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import SelectButton from 'primevue/selectbutton'
 
-const activeFilter = ref('Mês')
+const activeFilter = ref('month')
+const filterOptions = [
+  { label: 'Mês', value: 'month' },
+  { label: 'Trimestre', value: 'quarter' },
+  { label: 'Ano', value: 'year' }
+]
 
 // Mock analytics data
 const dailyAverage = ref(115.0)
