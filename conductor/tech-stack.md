@@ -3,9 +3,9 @@
 ## Core Technologies
 - **Vue 3:** Reactive and performant frontend framework.
 - **Vite:** High-speed build tool and development server.
-- **PrimeVue:** Comprehensive UI component library for Vue 3.
+- **PrimeVue (Exclusive UI Library):** Comprehensive UI component library for Vue 3.
 - **Supabase:** Backend-as-a-service for authentication, real-time database (PostgreSQL), and storage.
-- **Tailwind CSS:** Utility-first CSS framework for rapid and consistent styling.
+- **Tailwind CSS 4:** Utility-first CSS framework for rapid and consistent styling.
 - **TypeScript:** Type-safe development to catch errors early and improve maintainability.
 - **Pinia:** Modern state management for Vue 3.
 - **Vue Router:** Official router for Vue.js applications.
