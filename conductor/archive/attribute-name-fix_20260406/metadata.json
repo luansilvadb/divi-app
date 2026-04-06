@@ -1,0 +1,8 @@
+{
+  "track_id": "attribute-name-fix_20260406",
+  "type": "bug",
+  "status": "new",
+  "created_at": "2026-04-06T13:45:00Z",
+  "updated_at": "2026-04-06T13:45:00Z",
+  "description": "[vite] Internal server error: Attribute name cannot contain U+0022 (\"), U+0027 ('), and U+003C (<). Plugin: vite-plugin-vue-inspector File: D:/software/divi/divi-app/src/modules/budgets/ui/views/BudgetsView.vue"
+}

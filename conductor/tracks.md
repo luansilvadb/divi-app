@@ -6,12 +6,16 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
-- [x] **Track: Fix malformed attribute error in Search Empty States**
-*Link: [./tracks/attribute-name-fix_20260406/](./tracks/attribute-name-fix_20260406/)*
-
 ---
 
 ## Archived Tracks
+
+### [x] Track: Fix malformed attribute error in Search Empty States (Archived 2026-04-06)
+
+Fix malformed attribute name/value structure in templates that caused compiler errors and stabilize the database schema.
+Link: [./archive/attribute-name-fix_20260406/](./archive/attribute-name-fix_20260406/)
+
+---
 
 ### [x] Track: Search System Harmonization (Archived 2026-04-06)
 
