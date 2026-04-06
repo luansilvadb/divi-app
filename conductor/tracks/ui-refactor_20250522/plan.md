@@ -1,11 +1,11 @@
 # Implementation Plan: UI/UX Refactor to PrimeVue
 
 ## Phase 1: Foundation & Theming
-- [ ] **Task: Setup PrimeVue Theme and Configuration**
-  - [ ] Configure PrimeVue in `main.ts` with the selected theme.
-  - [ ] Ensure Tailwind CSS and PrimeVue are correctly integrated.
-- [ ] **Task: Create Shared UI Components Wrapper (Low Coupling)**
-  - [ ] Create wrapper components for common UI elements (Buttons, Inputs, Dialogs) to decouple from direct PrimeVue dependency where appropriate.
+- [x] **Task: Setup PrimeVue Theme and Configuration**
+  - [x] Configure PrimeVue in `main.ts` with the selected theme.
+  - [x] Ensure Tailwind CSS and PrimeVue are correctly integrated.
+- [x] **Task: Create Shared UI Components Wrapper (Low Coupling)**
+  - [x] Create wrapper components for common UI elements (Buttons, Inputs, Dialogs) to decouple from direct PrimeVue dependency where appropriate.
 
 ## Phase 2: Core Module Refactor
 - [ ] **Task: Refactor Auth Module UI**
