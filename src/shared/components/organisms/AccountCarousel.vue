@@ -1,6 +1,8 @@
 <template>
   <div class="account-carousel">
+    <!-- Exibe o Carrossel do PrimeVue apenas se tivermos contas na lista -->
     <Carousel
+      v-if="wallets && wallets.length > 0"
       :value="wallets"
       :numVisible="1"
       :numScroll="1"
@@ -52,6 +54,17 @@
         </div>
       </template>
     </Carousel>
+
+    <!-- Nosso próprio design para quando não houver contas e remover aquela mensagem padrão -->
+    <BaseCard
+      v-else
+      class="!p-0 h-[140px] flex flex-col items-center justify-center overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl mx-1 my-1 text-center"
+    >
+      <span class="text-2xl mb-3 opacity-50">🏦</span>
+      <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-secondary opacity-60">
+        Nenhuma conta cadastrada
+      </p>
+    </BaseCard>
   </div>
 </template>
 

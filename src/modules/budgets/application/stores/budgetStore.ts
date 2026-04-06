@@ -14,6 +14,7 @@ export const useBudgetStore = defineStore('budgets', () => {
 
   const budgets = ref<Budget[]>([])
   const isLoading = ref(false)
+  const searchQuery = ref('')
 
   const fetchBudgets = async () => {
     isLoading.value = true
@@ -35,6 +36,7 @@ export const useBudgetStore = defineStore('budgets', () => {
   return {
     budgets,
     isLoading,
+    searchQuery,
     fetchBudgets,
     getConsumed,
     totalBudgeted,

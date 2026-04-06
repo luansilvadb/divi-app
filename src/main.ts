@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import PrimeVue from '@primevue/core/config'
+import PrimeVue from 'primevue/config'
 import DiviPreset from './core/theme/diviPreset'
 import Ripple from 'primevue/ripple'
 import Tooltip from 'primevue/tooltip'
@@ -30,6 +30,49 @@ app.use(PrimeVue, {
         order: 'primevue, tailwind',
       },
     }
+  },
+  locale: {
+    startsWith: 'Começa com',
+    contains: 'Contém',
+    notContains: 'Não contém',
+    endsWith: 'Termina com',
+    equals: 'Igual a',
+    notEquals: 'Diferente de',
+    noFilter: 'Sem filtro',
+    lt: 'Menor que',
+    lte: 'Menor ou igual a',
+    gt: 'Maior que',
+    gte: 'Maior ou igual a',
+    dateIs: 'Data é',
+    dateIsNot: 'Data não é',
+    dateBefore: 'Data é anterior a',
+    dateAfter: 'Data é posterior a',
+    clear: 'Limpar',
+    apply: 'Aplicar',
+    matchAll: 'Corresponde a todos',
+    matchAny: 'Corresponde a qualquer',
+    addRule: 'Adicionar regra',
+    removeRule: 'Remover regra',
+    accept: 'Sim',
+    reject: 'Não',
+    choose: 'Escolher',
+    upload: 'Upload',
+    cancel: 'Cancelar',
+    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    today: 'Hoje',
+    weekHeader: 'Sem',
+    firstDayOfWeek: 0,
+    dateFormat: 'dd/mm/yy',
+    weak: 'Fraco',
+    medium: 'Médio',
+    strong: 'Forte',
+    passwordPrompt: 'Digite a senha',
+    emptyMessage: 'Nenhuma opção disponível',
+    emptyFilterMessage: 'Nenhuma opção disponível',
   }
 })
 

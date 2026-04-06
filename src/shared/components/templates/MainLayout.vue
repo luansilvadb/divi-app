@@ -17,6 +17,27 @@
       @close="isMobileDrawerOpen = false"
       @logout="emit('logout')"
     />
+
+    <!-- Global Floating Action Button (FAB) - Desktop and Mobile Strategy -->
+    <BaseButton
+      v-if="isMobile"
+      variant="primary"
+      :pt="{
+        root: {
+          class: 'fixed bottom-[5.5rem] right-6 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center !bg-[#2A2F3E] !text-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/5 hover:!bg-[#353b4d] active:scale-90 transition-all z-[110]'
+        }
+      }"
+      @click="isTransactionDialogOpen = true"
+      aria-label="Nova Transação"
+    >
+      <i class="pi pi-plus text-xl"></i>
+    </BaseButton>
+
+    <!-- Global Transaction Dialog -->
+    <TransactionDialog
+      :show="isTransactionDialogOpen"
+      @close="isTransactionDialogOpen = false"
+    />
   </div>
 </template>
 
@@ -24,9 +45,14 @@
 import AppSidebar from '@/shared/components/organisms/AppSidebar.vue'
 import AppBottomBar from '@/shared/components/organisms/AppBottomBar.vue'
 import AppMobileDrawer from '@/shared/components/organisms/AppMobileDrawer.vue'
+import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import { ref } from 'vue'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 
+const isMobile = useIsMobile()
 const isMobileDrawerOpen = ref(false)
+const isTransactionDialogOpen = ref(false)
 
 const emit = defineEmits<{
   (e: 'logout'): void

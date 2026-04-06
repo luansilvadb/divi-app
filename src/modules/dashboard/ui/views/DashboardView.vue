@@ -14,7 +14,6 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <!-- INCOME CARD -->
           <BaseCard
-            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -109,7 +108,6 @@
 
           <!-- EXPENSE CARD -->
           <BaseCard
-            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -204,7 +202,6 @@
 
           <!-- BALANCE CARD -->
           <BaseCard
-            v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
             padding="none"
             class="overflow-hidden border border-black/5 dark:border-white/5 bg-surface-main shadow-2xl flex flex-col group transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
           >
@@ -301,7 +298,6 @@
         <!-- Accounts (Carousel) -->
         <section
           class="flex flex-col gap-6"
-          v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
         >
           <div class="flex items-center justify-between px-2">
             <h2 class="text-xl font-black text-text-primary tracking-tight flex items-center gap-3">
@@ -331,7 +327,6 @@
 
         <!-- Chart Section -->
         <BaseCard
-          v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
           class="flex-1 bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl relative overflow-hidden group !p-4 h-full transition-all duration-300"
           h-full
         >
@@ -385,7 +380,6 @@
       <!-- SIDEBAR COLUMN -->
       <aside
         class="flex flex-col gap-6 h-full"
-        v-animateonscroll="{ enterClass: 'animate-fadeinup' }"
       >
         <!-- Recent Activity -->
         <BaseCard
@@ -393,24 +387,40 @@
           padding="none"
           class="bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl relative overflow-hidden group flex flex-col"
         >
-          <!-- Filters / Tabs -->
-          <div class="px-6 pt-6 pb-4 flex-none">
-            <SelectButton v-model="transactionFilter" :options="transactionFilterOptions" optionLabel="label" optionValue="value" class="w-full text-[0.65rem] font-black uppercase tracking-widest" />
+          <!-- Segmented Control (Pill Design) -->
+          <div class="px-6 pt-6 pb-2 flex-none">
+            <div
+              class="w-full bg-black/20 dark:bg-white/5 p-1 rounded-2xl flex border border-black/5 dark:border-white/5 transition-all duration-500"
+            >
+              <button
+                v-for="opt in transactionFilterOptions"
+                :key="opt.value"
+                class="flex-1 py-2.5 rounded-xl text-[0.65rem] font-black uppercase tracking-[0.15em] transition-all duration-300 relative"
+                :class="
+                  transactionFilter === opt.value
+                    ? 'bg-black/40 dark:bg-white/10 text-text-primary shadow-lg ring-1 ring-white/5'
+                    : 'text-text-secondary/40 hover:text-text-secondary/60'
+                "
+                @click="transactionFilter = opt.value"
+              >
+                {{ opt.label }}
+              </button>
+            </div>
           </div>
 
           <div
-            v-if="transactionStore.transactions.length === 0"
+            v-if="filteredTransactions.length === 0"
             class="flex flex-col items-center justify-center flex-1 opacity-50 text-center"
           >
             <div class="text-4xl mb-4">☕</div>
             <p class="text-[0.65rem] font-black uppercase tracking-widest text-text-secondary">
-              Sem movimentações
+              {{ transactionFilter === 'all' ? 'Sem movimentações' : 'Nenhuma ' + (transactionFilter === 'expense' ? 'despesa' : 'renda') }}
             </p>
           </div>
 
           <div v-else class="flex flex-col px-4 pb-6 space-y-2 relative z-10 flex-1">
             <div
-              v-for="t in transactionStore.transactions.slice(0, 25)"
+              v-for="t in filteredTransactions"
               :key="t.id || t.localId"
               class="flex items-center p-3 rounded-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] group border border-transparent hover:border-black/5 dark:hover:border-white/5 shadow-sm hover:shadow-md"
             >
@@ -530,8 +540,17 @@ const transactionFilterOptions = [
   { label: 'Renda', value: 'income' }
 ]
 
+const filteredTransactions = computed(() => {
+  const transactions = transactionStore.transactions
+  if (transactionFilter.value === 'all') return transactions.slice(0, 25)
+  return transactions
+    .filter((t) => t.type === transactionFilter.value)
+    .slice(0, 25)
+})
+
 import { useDashboardStore } from '../../application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'

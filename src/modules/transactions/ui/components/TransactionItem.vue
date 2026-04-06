@@ -2,7 +2,7 @@
   <div
     role="button"
     tabindex="0"
-    class="transaction-item flex items-center p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer relative transition-all duration-300 rounded-[1.5rem] sm:rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-surface-main hover:bg-white/80 dark:hover:bg-[#1b2234] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
+    class="transaction-item flex items-center p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer relative transition-all duration-300 rounded-[1.5rem] sm:rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-[#161D2C] hover:bg-white/80 dark:hover:bg-[#1F242F] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
     @click="$emit('click')"
     @keydown.enter.prevent="$emit('click')"
     @keydown.space.prevent="$emit('click')"
@@ -10,7 +10,7 @@
     <!-- Left Section: Icon -->
     <div class="flex-shrink-0 relative">
       <div
-        class="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-inner transition-transform duration-300 group-hover:scale-105"
+        class="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-inner transition-transform duration-300"
         :style="{
           background:
             'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05), transparent), var(--color-bg-main)',
@@ -130,7 +130,7 @@
       >
         <button
           aria-label="Excluir transação"
-          class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main"
+          class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main cursor-pointer"
           @click.stop="$emit('delete', transaction.id)"
         >
           <svg

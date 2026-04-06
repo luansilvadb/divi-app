@@ -164,7 +164,8 @@ export const useTransactionStore = defineStore('transactions', () => {
         const timeB = (b as UITransaction)._timestamp
         return timeB - timeA
       })
-      transactions.value = raw
+      // Ensure reactivity by assigning a new reference
+      transactions.value = [...raw]
     } finally {
       isLoading.value = false
     }

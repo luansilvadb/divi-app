@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggleTheme"
-    class="theme-toggle flex items-center justify-center p-2 rounded-full transition-colors cursor-pointer text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5"
+    class="theme-toggle flex items-center justify-center p-2 rounded-lg transition-colors cursor-pointer text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5"
     :aria-label="isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
     :title="isDark ? 'Tema Claro' : 'Tema Escuro'"
   >

@@ -5,24 +5,33 @@
     position="right"
     class="!bg-bg-main !w-[280px] shadow-2xl !border-none"
     :pt="{
-      mask: { class: 'backdrop-blur-sm bg-black/40 z-[90]' },
+      mask: { class: 'z-[90]' },
       root: { class: 'flex flex-col overflow-hidden z-[100]' },
       header: { class: 'p-0 border-none hidden' },
       content: { class: 'p-0 flex-1 overflow-y-auto flex flex-col' }
     }"
   >
-    <!-- Custom Header -->
-    <div
-      class="flex items-center justify-between p-4 border-b border-black/5 dark:border-white/5 shrink-0"
-    >
-      <span class="font-bold text-lg text-text-primary">Mais Opções</span>
-      <button
-        @click="$emit('close')"
-        class="p-2 -mr-2 text-text-secondary hover:text-text-primary rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-        aria-label="Fechar menu"
-      >
-        <i class="pi pi-times"></i>
-      </button>
+    <!-- Custom Luxury Header -->
+    <div class="relative overflow-hidden bg-surface-main border-b border-black/5 dark:border-white/5">
+      <!-- Subtle Brand Accent Overlay -->
+      <div class="absolute inset-0 bg-primary-main/[0.04] pointer-events-none"></div>
+
+      <div class="relative z-10 flex items-center justify-between px-6 py-5">
+        <div class="flex flex-col">
+          <span class="text-xl font-black text-text-primary tracking-tighter leading-none mb-1">Mais Opções</span>
+          <div class="flex items-center opacity-50">
+            <span class="text-[0.6rem] font-bold uppercase tracking-[0.15em] text-text-secondary">EXPLORE O SISTEMA</span>
+          </div>
+        </div>
+
+        <button
+          @click="$emit('close')"
+          class="w-10 h-10 flex items-center justify-center text-text-secondary hover:text-text-primary rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-95"
+          aria-label="Fechar menu"
+        >
+          <i class="pi pi-times text-xl"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Scrollable Navigation -->

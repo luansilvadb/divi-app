@@ -8,8 +8,9 @@
     :loading="loading"
     v-bind="$attrs"
     :class="[
-      'font-bold transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
+      'font-bold rounded-xl transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
       { 'shadow-lg': !['outline', 'ghost'].includes(variant) },
+      { '!bg-[#161D2C] hover:!bg-[#1e273a] !text-white !border-none': variant === 'primary' }
     ]"
   >
     <slot />

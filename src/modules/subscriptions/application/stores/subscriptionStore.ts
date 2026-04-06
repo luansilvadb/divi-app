@@ -12,6 +12,7 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
 
   const subscriptions = ref<Subscription[]>([])
   const isLoading = ref(false)
+  const searchQuery = ref('')
 
   const fetchSubscriptions = async () => {
     isLoading.value = true
@@ -41,6 +42,7 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
   return {
     subscriptions,
     isLoading,
+    searchQuery,
     fetchSubscriptions,
     saveSubscription,
     deleteSubscription,

@@ -4,8 +4,8 @@
       label
     }}</label>
 
-    <IconField v-if="icon" class="w-full">
-      <InputIcon :class="icon" class="text-text-disabled" />
+    <IconField v-if="icon" class="w-full relative">
+      <InputIcon :class="icon" class="absolute left-4 top-1/2 -translate-y-1/2 text-text-disabled z-10" />
       <InputNumber
         v-if="type === 'number'"
         :id="id"
@@ -16,7 +16,8 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-
+        class="w-full"
+        :inputClass="['w-full bg-black/5 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-xl text-text-primary text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 pr-4 pl-10', 'hover:border-primary-main/30', 'focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 focus:bg-black/10 dark:focus:bg-black/60', 'placeholder:text-text-disabled/60']"
       />
       <InputText
         v-else
@@ -29,7 +30,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-
+        :class="['w-full bg-black/5 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-xl text-text-primary text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 pr-4 pl-10', 'hover:border-primary-main/30', 'focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 focus:bg-black/10 dark:focus:bg-black/60', 'placeholder:text-text-disabled/60']"
       />
     </IconField>
 
@@ -44,7 +45,8 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-
+        class="w-full"
+        :inputClass="['w-full bg-black/5 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-xl text-text-primary text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 px-4', 'hover:border-primary-main/30', 'focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 focus:bg-black/10 dark:focus:bg-black/60', 'placeholder:text-text-disabled/60']"
       />
       <InputText
         v-else
@@ -57,7 +59,7 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-
+        :class="['w-full bg-black/5 dark:bg-black/40 border border-black/5 dark:border-white/5 rounded-xl text-text-primary text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 px-4', 'hover:border-primary-main/30', 'focus:border-primary-main focus:ring-4 focus:ring-primary-main/10 focus:bg-black/10 dark:focus:bg-black/60', 'placeholder:text-text-disabled/60']"
       />
     </template>
 

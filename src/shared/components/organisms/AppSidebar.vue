@@ -3,7 +3,6 @@
     class="sidebar !hidden md:!flex transition-all duration-300 ease-in-out"
     :class="{
       'sidebar--collapsed': isCollapsed,
-      'low-power-mode': sidebarStore.isLowPowerMode,
     }"
   >
     <div class="sidebar-noise" aria-hidden="true"></div>
@@ -48,41 +47,100 @@
       </button>
     </div>
 
-    <!-- Navigation Menu -->
-    <Menu :model="menuItems" class="border-none bg-transparent w-full">
-        <template #item="{ item, props }">
-            <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
-                <a :href="href" v-bind="props.action" @click="navigate" :class="[
-                  'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2',
-                  isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
-                ]">
-                    <span :class="item.icon" class="text-xl" v-tooltip.right="isCollapsed ? item.label : undefined"></span>
-                    <span class="ml-3 truncate transition-opacity duration-300" :class="{ 'opacity-0 w-0 hidden': isCollapsed }">{{ item.label }}</span>
-                    <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
-                </a>
-            </RouterLink>
-            <component :is="item.component" v-else-if="item.component" v-bind="item.props" />
-            <a v-else-if="item.action" v-bind="props.action" @click="item.action" :class="[
-                  'flex items-center px-4 py-3 cursor-pointer rounded-xl transition-colors mx-2 text-text-secondary hover:bg-black/5 dark:hover:bg-white/5',
-                  item.class
-                ]">
-                <span :class="item.icon" class="text-xl" v-tooltip.right="isCollapsed ? item.label : undefined"></span>
-                <span class="ml-3 truncate transition-opacity duration-300" :class="{ 'opacity-0 w-0 hidden': isCollapsed }">{{ item.label }}</span>
-            </a>
-        </template>
-        <template #submenuheader="{ item }">
-            <div class="px-6 py-2 text-xs font-bold uppercase tracking-wider text-text-disabled mt-2" :class="{ 'opacity-0 h-0 p-0 hidden': isCollapsed }">
-                {{ item.label }}
-            </div>
-        </template>
-    </Menu>
+    <!-- Navigation Menu (Scrollable) -->
+    <div class="flex-1 overflow-y-auto overflow-x-hidden pt-2 pb-6 custom-scrollbar">
+      <Menu :model="menuItems" class="border-none bg-transparent w-full">
+          <template #item="{ item, props }">
+              <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
+                  <a :href="href" v-bind="props.action" @click="navigate" :class="[
+                    'flex items-center px-4 py-3 cursor-pointer rounded-xl mx-2 mb-1 group',
+                    isActive ? 'bg-primary-main/10 text-primary-main font-bold shadow-sm' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                  ]">
+                      <span :class="item.icon" class="text-xl group-hover:scale-110" v-tooltip.right="isCollapsed ? item.label : undefined"></span>
+                      <span class="ml-3 truncate font-bold text-[0.95rem]" :class="{ 'opacity-0 w-0 hidden': isCollapsed }">{{ item.label }}</span>
+                      <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
+                  </a>
+              </RouterLink>
+              <component :is="item.component" v-else-if="item.component" v-bind="item.props" />
+          </template>
+          <template #submenuheader="{ item }">
+              <div class="px-6 py-2 text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-disabled/50 mt-4 mb-2" :class="{ 'opacity-0 h-0 p-0 hidden': isCollapsed }">
+                  {{ item.label }}
+              </div>
+          </template>
+      </Menu>
+    </div>
 
-    <!-- Theme Toggle Area -->
-    <div class="mt-auto p-4 flex justify-center mb-4">
-      <ThemeToggle />
+    <!-- Sidebar Footer Actions (Menu-style) -->
+    <div class="sidebar-footer mt-auto flex flex-col pt-4 border-t border-black/5 dark:border-white/5">
+      <div class="flex flex-col gap-1 px-2 mb-4">
+        <!-- Logout Item -->
+        <button 
+          @click="emit('logout')"
+          class="flex items-center px-4 py-3 cursor-pointer rounded-xl group text-error-main/60 hover:bg-error-main/10 hover:text-error-main"
+          :class="{ 'justify-center px-0': isCollapsed }"
+          v-tooltip.right="isCollapsed ? 'Sair do Sistema' : undefined"
+        >
+          <i class="pi pi-sign-out text-xl group-hover:scale-110"></i>
+          <span 
+            class="ml-3 truncate font-bold text-[0.95rem]"
+            :class="{ 'opacity-0 w-0 hidden': isCollapsed }"
+          >
+            Sair do App
+          </span>
+        </button>
+
+        <!-- Theme Toggle Item (Standardized with Nav Items) -->
+        <div 
+          @click="toggleTheme"
+          class="flex items-center px-4 py-3 cursor-pointer rounded-xl group text-text-secondary hover:bg-black/5 dark:hover:bg-white/5"
+          :class="{ 'justify-center px-0': isCollapsed }"
+          v-tooltip.right="isCollapsed ? 'Mudar Tema' : undefined"
+        >
+          <i 
+            :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" 
+            class="text-xl group-hover:scale-110"
+          ></i>
+          <span 
+            class="ml-3 truncate font-bold text-[0.95rem]"
+            :class="{ 'opacity-0 w-0 hidden': isCollapsed }"
+          >
+            Mudar Tema
+          </span>
+        </div>
+      </div>
+
+      <!-- Main User Profile (Compact) -->
+      <div 
+        class="group/user relative flex items-center p-2 mx-2 mb-6 rounded-xl transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/5 cursor-default select-none"
+        :class="{ 'justify-center mx-0': isCollapsed }"
+      >
+        <!-- Avatar Area -->
+        <div class="relative flex-none">
+          <div class="w-10 h-10 rounded-full bg-surface-main flex items-center justify-center overflow-hidden border border-black/10 dark:border-white/10 shadow-sm transition-transform duration-500 group-hover/user:scale-110">
+             <span class="text-[0.7rem] font-black text-primary-main">LS</span>
+          </div>
+          <div class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-surface-main bg-success-main shadow-sm"></div>
+        </div>
+
+        <!-- User Info -->
+        <div 
+          class="ml-3 flex-1 min-w-0 transition-opacity duration-300"
+          :class="{ 'opacity-0 w-0 hidden': isCollapsed }"
+        >
+          <div class="text-[0.8rem] font-bold text-text-primary truncate tracking-tight">Luan Silva</div>
+          <div class="text-[0.6rem] font-medium text-text-secondary/40 truncate tracking-tight uppercase">luan@divi.app</div>
+        </div>
+
+        <i 
+          v-if="!isCollapsed" 
+          class="pi pi-chevron-up text-[0.6rem] text-text-secondary/20 transition-transform duration-300 group-hover/user:translate-y-[-2px]"
+        ></i>
+      </div>
     </div>
   </aside>
 </template>
+te>
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount } from 'vue'
@@ -91,12 +149,11 @@ import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
 import Menu from 'primevue/menu'
 import Badge from 'primevue/badge'
-import ThemeToggle from '../molecules/ThemeToggle.vue'
 
 const emit = defineEmits(['logout'])
 
 const sidebarStore = useSidebarStore()
-useTheme()
+const { isDark, toggle: toggleTheme } = useTheme()
 
 const isCollapsed = computed({
   get: () => !sidebarStore.isExpanded,
@@ -142,21 +199,24 @@ const menuItems = computed(() => [
             { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
             { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
         ]
-    },
-    {
-        separator: true
-    },
-    {
-        label: 'Sair',
-        icon: 'pi pi-sign-out',
-        class: 'text-error-main hover:bg-error-main/10',
-        action: () => emit('logout')
     }
 ])
 </script>
 
 <style scoped>
 @reference "../../../core/styles/main.css";
+
+/* Custom Scrollbar for premium feel */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+:is(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.05);
+}
 
 /* ===== Variables & Design Tokens ===== */
 :is(.sidebar) {

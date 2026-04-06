@@ -1,49 +1,23 @@
 <template>
-  <StandardPageLayout title="Transações" :loading="store.isLoading">
+  <StandardPageLayout
+    title="Transações"
+    highlight="Histórico"
+    subtitle="Acompanhe e gerencie todas as suas movimentações financeiras em um só lugar."
+    :loading="store.isLoading"
+  >
     <!-- Header with Search & Filters -->
     <template #action>
-      <div class="flex items-center gap-4">
-        <!-- Month Selector -->
-        <div
-          class="flex items-center bg-black/5 dark:bg-white/5 rounded-2xl p-1 border border-black/5 dark:border-white/5"
-        >
-          <BaseButton variant="ghost" @click="prevMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl text-text-secondary border-none' } }">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </BaseButton>
-          <div
-            class="px-3 text-[0.7rem] font-black uppercase tracking-widest text-text-primary min-w-[100px] text-center"
-          >
-            {{ monthLabelOnly }}
-          </div>
-          <BaseButton variant="ghost" @click="nextMonth" :pt="{ root: { class: 'p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl text-text-secondary border-none' } }">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </BaseButton>
-        </div>
-        <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm"> Adicionar </BaseButton>
+      <div class="flex items-center justify-end gap-3 w-full lg:min-w-[420px]">
+        <!-- Month Selector (Standardized) -->
+        <BaseMonthSwitcher
+          :month="monthLabelOnly"
+          class="!max-w-none"
+          @prev="prevMonth"
+          @next="nextMonth"
+        />
+        <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm" class="!rounded-xl px-6 h-10">
+          Adicionar
+        </BaseButton>
       </div>
     </template>
 
@@ -51,38 +25,10 @@
       <!-- MAIN LIST COLUMN -->
       <main class="lg:col-span-2 space-y-8">
         <!-- Search Bar -->
-        <div class="relative group">
-          <div
-            class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-text-disabled group-focus-within:text-emerald-400 transition-all duration-300 z-10"
-            :class="{ 'scale-110 !text-emerald-400': searchQuery.length > 0 }"
-          >
-            <i class="pi pi-search text-lg" />
-          </div>
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="block w-full pl-14 pr-12 py-4 bg-white/5 dark:bg-white/5 border border-transparent dark:border-white/5 rounded-3xl text-base placeholder:text-text-disabled/40 focus:bg-white/10 dark:focus:bg-white/10 focus:border-emerald-500/30 dark:focus:border-emerald-500/30 focus:ring-8 focus:ring-emerald-500/5 focus:shadow-[0_0_20px_-12px_rgba(16,185,129,0.3)] outline-none transition-all duration-500 shadow-sm"
-            placeholder="Buscar transações..."
-          />
-          <!-- Clear Button -->
-          <transition
-            enter-active-class="transform transition duration-300 ease-out"
-            enter-from-class="opacity-0 translate-x-2"
-            enter-to-class="opacity-100 translate-x-0"
-            leave-active-class="transform transition duration-200 ease-in"
-            leave-from-class="opacity-100 translate-x-0"
-            leave-to-class="opacity-0 translate-x-2"
-          >
-            <button
-              v-if="searchQuery"
-              @click="searchQuery = ''"
-              class="absolute inset-y-0 right-4 flex items-center text-text-disabled hover:text-emerald-400 transition-colors z-10 p-2"
-              aria-label="Limpar busca"
-            >
-              <i class="pi pi-times" />
-            </button>
-          </transition>
-        </div>
+        <BaseSearchInput
+          v-model="searchQuery"
+          placeholder="Buscar transações..."
+        />
 
         <!-- Transactions List -->
         <div
@@ -299,45 +245,22 @@
         </BaseCard>
       </aside>
     </div>
-    <!-- Overlays and Modals -->
-    <Teleport to="body">
-      <!-- Transaction Form Overlay -->
-      <TransactionDialog
-        :transaction="editingTransaction"
-        :show="showForm"
-        @close="handleCloseForm"
-        @saved="refreshTransactions"
-      />
+    <TransactionDialog
+      :transaction="editingTransaction"
+      :show="showForm"
+      @close="handleCloseForm"
+      @saved="refreshTransactions"
+    />
 
-      <!-- Delete Confirmation Overlay -->
-      <BaseConfirmDialog
-        :show="showConfirmDelete"
-        title="Excluir Transação"
-        message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
-        confirm-text="Excluir"
-        cancel-text="Cancelar"
-        @confirm="confirmDelete"
-        @cancel="cancelDelete"
-      />
-
-      <!-- Floating Action Button (FAB) -->
-      <BaseButton v-if="isMobile" variant="primary" :pt="{ root: { class: 'fixed bottom-24 right-6 md:bottom-10 md:right-10 !w-14 !h-14 !rounded-full !p-0 flex items-center justify-center shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:-translate-y-1 transition-all z-50' } }" @click="openNewForm()" aria-label="Nova Transação">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-      </BaseButton>
-    </Teleport>
+    <BaseConfirmDialog
+      :show="showConfirmDelete"
+      title="Excluir Transação"
+      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+      confirm-text="Excluir"
+      cancel-text="Cancelar"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </StandardPageLayout>
 </template>
 
@@ -353,6 +276,8 @@ import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
+import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
+import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import TransactionItem from '../components/TransactionItem.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 

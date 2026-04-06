@@ -10,6 +10,7 @@ export const useGoalStore = defineStore('goals', () => {
 
   const goals = ref<Goal[]>([])
   const isLoading = ref(false)
+  const searchQuery = ref('')
 
   const fetchGoals = async () => {
     isLoading.value = true
@@ -36,6 +37,7 @@ export const useGoalStore = defineStore('goals', () => {
   return {
     goals,
     isLoading,
+    searchQuery,
     fetchGoals,
     saveGoal,
     deleteGoal,

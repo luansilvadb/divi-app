@@ -5,7 +5,14 @@
     subtitle="Descubra para onde seu dinheiro está indo com insights baseados em seus dados."
   >
     <template #action>
-      <SelectButton v-model="activeFilter" :options="filterOptions" optionLabel="label" optionValue="value" class="text-[0.6rem] font-black uppercase tracking-widest" />
+      <div class="flex items-center justify-end w-full lg:min-w-[420px]">
+        <!-- Month Switcher Molecule -->
+        <BaseMonthSwitcher
+          :month="currentMonth"
+          @prev="prevMonth"
+          @next="nextMonth"
+        />
+      </div>
     </template>
 
     <!-- Content Area (Unified Layout) -->
@@ -87,7 +94,7 @@
       <!-- SIDEBAR COLUMN: Metrics -->
       <aside class="side-column">
         <!-- Daily Average -->
-        <BaseCard clickable>
+        <BaseCard>
           <div class="flex items-center gap-4 mb-4">
             <BaseIconBox color="var(--color-primary-main)" size="sm">
               <svg
@@ -131,7 +138,7 @@
         </BaseCard>
 
         <!-- Max Expense -->
-        <BaseCard clickable>
+        <BaseCard>
           <div class="flex items-center gap-4 mb-4">
             <BaseIconBox color="var(--color-warning-main)" size="sm">
               <svg
@@ -161,7 +168,7 @@
         </BaseCard>
 
         <!-- Potential Savings -->
-        <BaseCard clickable>
+        <BaseCard>
           <div class="flex items-center gap-4 mb-4">
             <BaseIconBox color="var(--color-success-main)" size="sm">
               <svg
@@ -194,20 +201,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import SelectButton from 'primevue/selectbutton'
 
-const activeFilter = ref('month')
-const filterOptions = [
-  { label: 'Mês', value: 'month' },
-  { label: 'Trimestre', value: 'quarter' },
-  { label: 'Ano', value: 'year' }
-]
+const activeDate = ref(new Date())
+
+const currentMonth = computed(() => {
+  return activeDate.value
+    .toLocaleString('pt-BR', { month: 'long' })
+    .toUpperCase()
+})
+
+function prevMonth() {
+  activeDate.value = new Date(activeDate.value.getFullYear(), activeDate.value.getMonth() - 1, 1)
+}
+
+function nextMonth() {
+  activeDate.value = new Date(activeDate.value.getFullYear(), activeDate.value.getMonth() + 1, 1)
+}
 
 // Mock analytics data
 const dailyAverage = ref(115.0)

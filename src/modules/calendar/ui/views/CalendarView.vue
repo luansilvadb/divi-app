@@ -5,51 +5,12 @@
     subtitle="Visualize seus compromissos e transações em uma linha do tempo mensal."
   >
     <template #action>
-      <!-- Month Navigation -->
-      <div
-        class="flex items-center bg-bg-main dark:bg-black/20 p-1.5 rounded-2xl border border-black/5 dark:border-white/5"
-      >
-        <BaseButton variant="ghost" @click="prevMonth" :pt="{ root: { class: 'h-10 w-10 !p-0 flex items-center justify-center rounded-xl text-text-secondary border-none' } }">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </BaseButton>
-        <div class="px-6 flex flex-col items-center min-w-[140px]">
-          <span
-            class="text-[10px] font-black uppercase tracking-widest text-text-disabled leading-none mb-1"
-            >{{ currentDate.getFullYear() }}</span
-          >
-          <span
-            class="text-sm font-black text-text-primary tracking-tight leading-none uppercase"
-            >{{ monthName }}</span
-          >
-        </div>
-        <BaseButton variant="ghost" @click="nextMonth" :pt="{ root: { class: 'h-10 w-10 !p-0 flex items-center justify-center rounded-xl text-text-secondary border-none' } }">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </BaseButton>
-      </div>
+        <!-- Standardized Month Switcher -->
+        <BaseMonthSwitcher
+          :month="monthName"
+          @prev="prevMonth"
+          @next="nextMonth"
+        />
     </template>
 
     <!-- Content Grid (Holy Grail) -->
@@ -253,10 +214,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { formatCurrency } from '@/shared/utils/formatters'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
+import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
 const store = useTransactionStore()

@@ -10,6 +10,7 @@ export const useLoanStore = defineStore('loans', () => {
 
   const loans = ref<Loan[]>([])
   const isLoading = ref(false)
+  const searchQuery = ref('')
 
   const fetchLoans = async () => {
     isLoading.value = true
@@ -35,9 +36,10 @@ export const useLoanStore = defineStore('loans', () => {
   return {
     loans,
     isLoading,
+    searchQuery,
     fetchLoans,
     saveLoan,
     deleteLoan,
     totalDebt,
   }
-})
+  })
