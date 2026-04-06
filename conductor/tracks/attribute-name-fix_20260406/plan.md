@@ -27,11 +27,11 @@
     - [x] Update template to use the new computed property
 - [x] Task: Conductor - User Manual Verification 'Phase 3' [18e364b]
 
-## Phase 4: SubscriptionsView.vue Refactor
+## Phase 4: SubscriptionsView.vue Refactor [checkpoint: bc49738]
 - [x] Task: Write Tests for SubscriptionsView search empty state [96bdd9b]
     - [x] Create `src/modules/subscriptions/ui/views/__tests__/SubscriptionsView.spec.ts`
     - [x] Add unit tests for the `searchEmptySubtitle` computed property
 - [x] Task: Implement computed property in SubscriptionsView.vue [96bdd9b]
     - [x] Define `searchEmptySubtitle` computed property
     - [x] Update template to use the new computed property
-- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4' [bc49738]
