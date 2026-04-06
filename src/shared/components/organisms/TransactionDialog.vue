@@ -36,9 +36,9 @@
                 </p>
               </div>
             </div>
-            <button @click="$emit('close')" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 transition-all border border-white/5 group">
+            <BaseButton variant="ghost" @click="$emit('close')" :pt="{ root: { class: 'w-10 h-10 !rounded-xl !p-0 bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 border border-white/5 group' } }">
               <i class="pi pi-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
-            </button>
+            </BaseButton>
           </div>
         </div>
 
@@ -71,12 +71,13 @@
               </h2>
             </div>
           </div>
-          <button
+          <BaseButton
+            variant="ghost"
             @click="$emit('close')"
-            class="w-8 h-8 rounded-xl bg-black/5 dark:bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-black/10 dark:hover:bg-white/10 transition-all border border-black/5 dark:border-white/5 group"
+            :pt="{ root: { class: 'w-8 h-8 !rounded-xl !p-0 bg-black/5 dark:bg-white/5 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-black/10 dark:hover:bg-white/10 border border-black/5 dark:border-white/5 group' } }"
           >
             <i class="pi pi-times text-lg group-hover:rotate-90 transition-transform duration-300"></i>
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -96,6 +97,7 @@
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import Dialog from 'primevue/dialog'
 import Drawer from 'primevue/drawer'
+import BaseButton from '../atoms/BaseButton.vue'
 import BaseCard from '../atoms/BaseCard.vue'
 import TransactionFormContent from './TransactionFormContent.vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
