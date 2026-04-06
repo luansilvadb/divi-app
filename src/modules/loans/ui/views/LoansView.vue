@@ -11,9 +11,19 @@
     <div class="view-content-grid">
       <!-- MAIN COLUMN -->
       <main class="main-column">
-        <!-- Empty State -->
+        <!-- Search Bar -->
+        <div v-if="store.loans.length > 0 || store.searchQuery" class="mb-4">
+          <BaseSearchInput
+            v-model="store.searchQuery"
+            placeholder="Buscar por nome do empréstimo..."
+            :debounce="300"
+            :loading="store.isLoading"
+          />
+        </div>
+
+        <!-- Empty State (No loans at all) -->
         <BaseCard
-          v-if="store.loans.length === 0 && !store.isLoading"
+          v-if="store.loans.length === 0 && !store.isLoading && !store.searchQuery"
           is-empty
           empty-title="Nenhum empréstimo registrado"
           empty-subtitle="Você está livre de dívidas registradas no momento. Ótimo sinal!"
@@ -42,6 +52,37 @@
           </template>
         </BaseCard>
 
+        <!-- Search Empty State -->
+        <BaseCard
+          v-else-if="filteredLoans.length === 0 && !store.isLoading && store.searchQuery"
+          is-empty
+          empty-title="Nenhum resultado"
+          :empty-subtitle="searchEmptySubtitle"
+          empty-color="var(--color-primary-main)"
+        >
+          <template #empty-icon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </template>
+          <template #empty-action>
+            <BaseButton variant="secondary" class="px-8 mt-4" @click="store.searchQuery = ''">
+              Limpar Busca
+            </BaseButton>
+          </template>
+        </BaseCard>
+
         <!-- Loading State -->
         <div v-else-if="store.isLoading" class="flex justify-center py-20">
           <div
@@ -50,9 +91,12 @@
         </div>
 
         <!-- Loans Grid -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          v-else-if="filteredLoans.length > 0"
+          class="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           <LoanCard
-            v-for="loan in store.loans"
+            v-for="loan in filteredLoans"
             :key="loan.id"
             :loan="loan"
             @delete="handleDelete"
@@ -126,11 +170,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useLoanStore } from '../../application/stores/loanStore'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
+import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import LoanCard from '@/shared/components/molecules/LoanCard.vue'
@@ -140,6 +185,16 @@ const store = useLoanStore()
 const showAddLoanModal = ref(false)
 const showConfirmDelete = ref(false)
 const loanToDelete = ref<string | null>(null)
+
+const filteredLoans = computed(() => {
+  if (!store.searchQuery) return store.loans
+  const query = store.searchQuery.toLowerCase()
+  return store.loans.filter((l) => l.name.toLowerCase().includes(query))
+})
+
+const searchEmptySubtitle = computed(() => {
+  return `Não encontramos empréstimos para "${store.searchQuery}"`
+})
 
 onMounted(async () => {
   await store.fetchLoans()
