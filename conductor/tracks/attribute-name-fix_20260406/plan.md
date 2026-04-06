@@ -1,13 +1,13 @@
 # Implementation Plan: Fix Malformed Attribute Error in Search Empty States
 
-## Phase 1: BudgetsView.vue Refactor
+## Phase 1: BudgetsView.vue Refactor [checkpoint: 9446f36]
 - [x] Task: Write Tests for BudgetsView search empty state [0555582]
     - [x] Create `src/modules/budgets/ui/views/__tests__/BudgetsView.spec.ts` (if it doesn't exist)
     - [x] Add unit tests for the new computed property (e.g., `searchEmptySubtitle`)
 - [x] Task: Implement computed property in BudgetsView.vue [0555582]
     - [x] Define `searchEmptySubtitle` computed property in the script section
     - [x] Update the template to use `:empty-subtitle="searchEmptySubtitle"`
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1' [9446f36]
 
 ## Phase 2: GoalsView.vue Refactor
 - [ ] Task: Write Tests for GoalsView search empty state
