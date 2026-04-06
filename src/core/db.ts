@@ -75,6 +75,32 @@ export interface LocalActivity {
   type: 'info' | 'success' | 'warning' | 'error'
 }
 
+export interface LocalBudget {
+  id: string
+  user_id: string
+  name: string
+  type: 'spending' | 'saving'
+  limit_value: number
+  period_start: string
+  period_end: string
+  color?: string
+  categories?: string[]
+  wallets?: string[]
+  created_at?: string
+}
+
+export interface LocalGoal {
+  id: string
+  user_id: string
+  name: string
+  target_value: number
+  current_value: number
+  type: 'saving' | 'debt'
+  color?: string
+  icon?: string
+  created_at?: string
+}
+
 export class DiviDatabase extends Dexie {
   transactions!: Table<LocalTransaction>
   wallets!: Table<LocalWallet>
@@ -83,10 +109,12 @@ export class DiviDatabase extends Dexie {
   loans!: Table<LocalLoan>
   subscriptions!: Table<LocalSubscription>
   activities!: Table<LocalActivity>
+  budgets!: Table<LocalBudget>
+  goals!: Table<LocalGoal>
 
   constructor() {
     super('DiviDB')
-    this.version(1).stores({
+    this.version(2).stores({
       transactions: '++localId, id, date, synced, deleted',
       wallets: '++id, name, synced',
       categories: '++id, name, synced',
@@ -94,6 +122,8 @@ export class DiviDatabase extends Dexie {
       loans: 'id, name, synced',
       subscriptions: 'id, name, synced',
       activities: 'id, timestamp',
+      budgets: 'id, name, type',
+      goals: 'id, name, type',
     })
   }
 }
