@@ -8,20 +8,20 @@
   - [x] Create wrapper components for common UI elements (Buttons, Inputs, Dialogs) to decouple from direct PrimeVue dependency where appropriate.
 
 ## Phase 2: Core Module Refactor
-- [ ] **Task: Refactor Auth Module UI**
-  - [ ] Update Login, Register, and Password Reset pages to use PrimeVue components.
-  - [ ] Write unit tests for the updated Auth UI.
-- [ ] **Task: Refactor Dashboard Module UI**
-  - [ ] Update the Dashboard overview and charts to use PrimeVue and its integrated Chart.js support.
-  - [ ] Write unit tests for the updated Dashboard UI.
+- [x] **Task: Refactor Auth Module UI**
+  - [x] Update Login, Register, and Password Reset pages to use PrimeVue components.
+  - [x] Write unit tests for the updated Auth UI.
+- [x] **Task: Refactor Dashboard Module UI**
+  - [x] Update the Dashboard overview and charts to use PrimeVue and its integrated Chart.js support.
+  - [x] Write unit tests for the updated Dashboard UI.
 
 ## Phase 3: Financial Modules Refactor
-- [ ] **Task: Refactor Transactions Module UI**
-  - [ ] Update transaction lists, filters, and forms to use PrimeVue DataTable and Input components.
-  - [ ] Write unit tests for the updated Transactions UI.
-- [ ] **Task: Refactor Budgets and Goals Modules UI**
-  - [ ] Update budgeting and goal-tracking interfaces.
-  - [ ] Write unit tests for the updated UI.
+- [x] **Task: Refactor Transactions Module UI**
+  - [x] Update transaction lists, filters, and forms to use PrimeVue DataTable and Input components.
+  - [x] Write unit tests for the updated Transactions UI.
+- [x] **Task: Refactor Budgets and Goals Modules UI**
+  - [x] Update budgeting and goal-tracking interfaces.
+  - [x] Write unit tests for the updated UI.
 
 ## Phase 4: Miscellaneous & Final Polishing
 - [ ] **Task: Refactor Remaining Modules (Loans, Subscriptions, Calendar, Reports)**
