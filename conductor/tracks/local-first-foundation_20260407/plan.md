@@ -8,7 +8,7 @@
     - [x] Implement `src/infrastructure/db/DexieDB.ts` with `TransactionEntity` schema.
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Dexie.js Setup and Database Infrastructure' (d398b99)
 
-## Phase 2: Domain and Application Layers
+## Phase 2: Domain and Application Layers [checkpoint: 7918087]
 - [x] Task: Implement Domain Contracts (a27f721)
     - [x] Write unit tests for the `Transaction` domain model if applicable.
     - [x] Create `src/modules/transactions/domain/Transaction.ts`.
@@ -17,7 +17,7 @@
 - [x] Task: Implement `DexieTransactionRepository` (2c57880)
     - [x] Write integration tests for the repository adapter.
     - [x] Implement `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, handling UUID generation (v7), timestamps, and sync status.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Domain and Application Layers' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Domain and Application Layers' (7918087)
 
 ## Phase 3: Vue Dashboard Reactivity and UI
 - [ ] Task: Build Dashboard Empty State
