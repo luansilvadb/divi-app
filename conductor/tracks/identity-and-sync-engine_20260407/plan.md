@@ -1,0 +1,31 @@
+# Implementation Plan: Identidade e Sync Engine
+
+## Phase 1: Setup da Identidade e Supabase Auth
+- [ ] Task: Instalar dependências necessárias para autenticação (`@supabase/supabase-js`, etc).
+- [ ] Task: Configurar conexão com o Supabase Auth em `src/modules/auth/infrastructure/SupabaseAuth.ts`.
+- [ ] Task: Criar o store no Pinia para gerenciar o estado da sessão e os dados do usuário atual.
+- [ ] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout.
+- [ ] Task: Implementar a integração com autenticação via Google OAuth.
+- [ ] Task: Desenvolver a UI (Página/Componente) de Login, Registro e feedback visual (sucesso/falha).
+- [ ] Task: Atualizar o roteador (vue-router) para implementar guardas nas rotas protegidas.
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup da Identidade e Supabase Auth' (Protocol in workflow.md)
+
+## Phase 2: Estrutura Base do Sync Engine
+- [ ] Task: Atualizar o esquema do banco local (Dexie) adicionando a propriedade `syncStatus` ('synced', 'pending', 'failed') nas entidades monitoradas.
+- [ ] Task: Desenvolver o módulo central do Sync Engine responsável por consultar o Dexie atrás de registros `pending` ou `failed`.
+- [ ] Task: Integrar hooks no Dexie ou Pinia para acionar o processo de sincronização local ao efetuar uma alteração (On Local Write).
+- [ ] Task: Configurar listener de eventos do navegador sobre estado da rede (`online`/`offline`) para retomar ou pausar a sincronização.
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: Estrutura Base do Sync Engine' (Protocol in workflow.md)
+
+## Phase 3: Comunicação e Lógica Inteligente (CRDT)
+- [ ] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase.
+- [ ] Task: Configurar estratégia primária para a sincronização inteligente (CRDT ou last-write-wins baseado em timestamp `updated_at`).
+- [ ] Task: Validar as respostas do Supabase e retornar a confirmação para atualizar o status do item local para `synced`.
+- [ ] Task: Lidar apropriadamente com erros (falhas de conexão ou timeouts) mantendo os registros como `failed` ou `pending` no banco local.
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: Comunicação e Lógica Inteligente (CRDT)' (Protocol in workflow.md)
+
+## Phase 4: Sincronização na Interface (UI Feedback)
+- [ ] Task: Criar componente de Indicador Global na navbar informando o status global da rede e do Sync Engine.
+- [ ] Task: Adicionar pequeno indicador visual para os dados em Nível do Item nas listagens da aplicação (Ex: ícone de nuvem sincronizada ou pendente).
+- [ ] Task: Construir a seção ou painel de logs de Sync no Perfil/Configurações do usuário mostrando tentativas passadas e status atual.
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: Sincronização na Interface (UI Feedback)' (Protocol in workflow.md)
