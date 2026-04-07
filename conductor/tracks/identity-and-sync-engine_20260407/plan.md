@@ -3,7 +3,7 @@
 ## Phase 1: Setup da Identidade e Supabase Auth
 - [x] Task: Instalar dependências necessárias para autenticação (`@supabase/supabase-js`, etc). f8f7fd6
 - [x] Task: Configurar conexão com o Supabase Auth em `src/modules/auth/infrastructure/SupabaseAuth.ts`. cd30fbe
-- [ ] Task: Criar o store no Pinia para gerenciar o estado da sessão e os dados do usuário atual.
+- [x] Task: Criar o store no Pinia para gerenciar o estado da sessão e os dados do usuário atual. edbbfbd
 - [ ] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout.
 - [ ] Task: Implementar a integração com autenticação via Google OAuth.
 - [ ] Task: Desenvolver a UI (Página/Componente) de Login, Registro e feedback visual (sucesso/falha).
