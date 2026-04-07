@@ -21,6 +21,37 @@
       </div>
     </template>
 
+    <!-- FAB for Mobile (Harmonized) -->
+    <Teleport to="body">
+      <BaseButton
+        v-if="isMobile"
+        variant="primary"
+        class="fixed bottom-24 right-6 !w-16 !h-16 !rounded-full shadow-[0_20px_50px_rgba(61,90,128,0.4)] flex items-center justify-center z-50 border-none transition-all duration-300 active:scale-95 group overflow-hidden"
+        aria-label="Nova Transação"
+        @click="openNewForm"
+      >
+        <!-- Animated Background Pulse -->
+        <div class="absolute inset-0 bg-white/20 scale-0 group-hover:scale-150 transition-transform duration-700 rounded-full pointer-events-none"></div>
+        <div class="absolute inset-0 bg-primary-main/30 animate-ping opacity-20 rounded-full pointer-events-none"></div>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="relative z-10 transition-transform duration-300 group-hover:rotate-90"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      </BaseButton>
+    </Teleport>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- MAIN LIST COLUMN -->
       <main class="lg:col-span-2 space-y-8">
