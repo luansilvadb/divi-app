@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import BaseSearchInput from '../BaseSearchInput.vue'
 import PrimeVue from 'primevue/config'
 
-const mountWithPrimeVue = (component: any, options = {}) => {
+const mountWithPrimeVue = (component: unknown, options = {}) => {
   return mount(component, {
     global: {
       plugins: [PrimeVue],

@@ -21,7 +21,7 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
 }))
 
 describe('BudgetsView', () => {
-  let storeMock: any
+  let storeMock: unknown
 
   beforeEach(() => {
     setActivePinia(createPinia())

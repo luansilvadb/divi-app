@@ -14,7 +14,7 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
 }))
 
 describe('GoalsView', () => {
-  let storeMock: any
+  let storeMock: unknown
 
   beforeEach(() => {
     setActivePinia(createPinia())
