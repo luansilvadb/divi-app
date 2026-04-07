@@ -4,7 +4,7 @@ import type { TransactionEntity } from './entities/TransactionEntity'
 export class DiviDatabase extends Dexie {
   transactions!: Table<TransactionEntity>
 
-  constructor(databaseName = 'DiviDB') {
+  constructor(databaseName = 'DiviLocalDB') {
     super(databaseName)
     this.version(1).stores({
       transactions: 'id, date, syncStatus, deleted'

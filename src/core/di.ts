@@ -22,6 +22,8 @@ import { AssetLoader } from '../shared/utils/asset-loader'
 import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
 import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 
+import { DI_TOKENS } from './di-tokens'
+
 type Token<T = unknown> = string | (new (...args: unknown[]) => T)
 
 class Container {
@@ -49,8 +51,6 @@ class Container {
 }
 
 export const container = new Container()
-
-import { DI_TOKENS } from './di-tokens'
 
 // To maintain compatibility with existing code during migration,
 // we register both with the string from DI_TOKENS and the explicit string.
