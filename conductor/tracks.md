@@ -8,7 +8,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)**
+- [~] **Track: SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)**
 *Link: [./tracks/local-first-foundation_20260407/](./tracks/local-first-foundation_20260407/)*
 
 ---
