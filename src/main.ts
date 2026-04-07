@@ -23,7 +23,7 @@ app.use(router)
 
 // Initialize Database
 db.open().catch((err) => {
-  console.error('Failed to open Dexie DB:', err)
+  console.error('[Database] Failed to initialize local-first foundation:', err)
   const dashboardStore = useDashboardStore(pinia)
   dashboardStore.initializationError = true
 })

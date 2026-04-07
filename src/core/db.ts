@@ -113,7 +113,7 @@ export class DiviDatabase extends Dexie {
   goals!: Table<LocalGoal>
 
   constructor() {
-    super('DiviDB')
+    super('DiviDB_Legacy')
     this.version(2).stores({
       transactions: '++localId, id, date, synced, deleted',
       wallets: '++id, name, synced',
