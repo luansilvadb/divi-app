@@ -1,7 +1,7 @@
 # Implementation Plan: Identidade e Sync Engine
 
 ## Phase 1: Setup da Identidade e Supabase Auth
-- [ ] Task: Instalar dependências necessárias para autenticação (`@supabase/supabase-js`, etc).
+- [x] Task: Instalar dependências necessárias para autenticação (`@supabase/supabase-js`, etc). f8f7fd6
 - [ ] Task: Configurar conexão com o Supabase Auth em `src/modules/auth/infrastructure/SupabaseAuth.ts`.
 - [ ] Task: Criar o store no Pinia para gerenciar o estado da sessão e os dados do usuário atual.
 - [ ] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout.
