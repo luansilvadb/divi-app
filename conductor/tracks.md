@@ -20,6 +20,13 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Archived Tracks
 
+### [x] Track: SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First) (Archived 2026-04-07)
+
+SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)
+Link: [./archive/local-first-foundation_20260407/](./archive/local-first-foundation_20260407/)
+
+---
+
 ### [x] Track: Fix malformed attribute error in Search Empty States (Archived 2026-04-06)
 
 Fix malformed attribute name/value structure in templates that caused compiler errors and stabilize the database schema.
