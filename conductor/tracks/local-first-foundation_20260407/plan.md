@@ -14,9 +14,9 @@
     - [x] Create `src/modules/transactions/domain/Transaction.ts`.
 - [x] Task: Implement Application Contracts (29c57c9)
     - [x] Create `src/modules/transactions/application/TransactionRepositoryPort.ts`.
-- [ ] Task: Implement `DexieTransactionRepository`
-    - [ ] Write integration tests for the repository adapter.
-    - [ ] Implement `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, handling UUID generation (v7), timestamps, and sync status.
+- [x] Task: Implement `DexieTransactionRepository` (2c57880)
+    - [x] Write integration tests for the repository adapter.
+    - [x] Implement `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, handling UUID generation (v7), timestamps, and sync status.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Domain and Application Layers' (Protocol in workflow.md)
 
 ## Phase 3: Vue Dashboard Reactivity and UI
