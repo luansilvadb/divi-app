@@ -73,4 +73,30 @@ describe('DashboardView', () => {
     const ctaButton = wrapper.findAll('button').find(b => b.text().includes('Começar'))
     expect(ctaButton).toBeDefined()
   })
+
+  it('should display an error banner if IndexedDB fails to initialize', async () => {
+    const wrapper = mount(DashboardView, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            createSpy: vi.fn,
+            initialState: {
+              transactions: { transactions: [], categoryMap: {}, walletMap: {} },
+              dashboard: { initializationError: true }
+            }
+          })
+        ],
+        stubs: {
+          StandardPageLayout: { template: '<div><slot /></div>' },
+          BaseCard: { template: '<div><slot /></div>' },
+          BaseButton: true,
+          AccountCarousel: true,
+          PatrimonialChart: true,
+          SelectButton: true
+        }
+      }
+    })
+
+    expect(wrapper.text()).toContain('O modo anônimo pode limitar algumas funcionalidades')
+  })
 })
