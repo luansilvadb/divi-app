@@ -11,6 +11,6 @@ export interface TransactionEntity {
   notes?: string
   syncStatus: 'pending' | 'synced'
   deleted: boolean
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }

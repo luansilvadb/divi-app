@@ -10,8 +10,8 @@ export interface Transaction {
   date: string
   notes?: string
   deleted: boolean
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
 }
 
 export function createTransaction(data: Transaction): Transaction {

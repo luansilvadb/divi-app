@@ -13,8 +13,8 @@ describe('Transaction Domain Model', () => {
       wallet_id: 'wallet-1',
       date: '2026-04-07T12:00:00Z',
       deleted: false,
-      createdAt: '2026-04-07T12:00:00Z',
-      updatedAt: '2026-04-07T12:00:00Z'
+      created_at: '2026-04-07T12:00:00Z',
+      updated_at: '2026-04-07T12:00:00Z'
     }
 
     const transaction = createTransaction(transactionData)
@@ -33,8 +33,8 @@ describe('Transaction Domain Model', () => {
       wallet_id: 'wallet-1',
       date: '2026-04-07T12:00:00Z',
       deleted: false,
-      createdAt: '2026-04-07T12:00:00Z',
-      updatedAt: '2026-04-07T12:00:00Z'
+      created_at: '2026-04-07T12:00:00Z',
+      updated_at: '2026-04-07T12:00:00Z'
     }
 
     expect(() => createTransaction(transactionData)).toThrow('Amount must be positive')
