@@ -9,9 +9,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Dexie.js Setup and Database Infrastructure' (d398b99)
 
 ## Phase 2: Domain and Application Layers
-- [ ] Task: Implement Domain Contracts
-    - [ ] Write unit tests for the `Transaction` domain model if applicable.
-    - [ ] Create `src/modules/transactions/domain/Transaction.ts`.
+- [x] Task: Implement Domain Contracts (a27f721)
+    - [x] Write unit tests for the `Transaction` domain model if applicable.
+    - [x] Create `src/modules/transactions/domain/Transaction.ts`.
 - [ ] Task: Implement Application Contracts
     - [ ] Create `src/modules/transactions/application/TransactionRepositoryPort.ts`.
 - [ ] Task: Implement `DexieTransactionRepository`
