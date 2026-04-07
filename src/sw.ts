@@ -11,7 +11,7 @@ precacheAndRoute(self.__WB_MANIFEST)
 
 // Logic for generating transactions from subscriptions
 async function processSubscriptions() {
-  console.log('[SW] Checking for due subscriptions...')
+  console.log('[SW] Checking for due subscriptions')
   try {
     const subscriptions = await db.table('subscriptions').toArray()
     const today = new Date()
