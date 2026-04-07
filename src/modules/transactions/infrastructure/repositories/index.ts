@@ -40,7 +40,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
       const now = new Date().toISOString()
       const localData: LocalTransaction = {
         ...transaction,
-        synced: false,
+        syncStatus: 'pending',
         updated_at: now,
       }
 
@@ -60,7 +60,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
   async delete(id: string): Promise<void> {
     try {
       // Soft delete locally
-      await db.transactions.where('id').equals(id).modify({ deleted: true, synced: false })
+      await db.transactions.where('id').equals(id).modify({ deleted: true, syncStatus: 'pending' })
       this.sync().catch((err) => console.error('[TransactionSync] Background sync error', err))
     } catch (err) {
       throw new InfrastructureError('Failed to delete transaction', err)
@@ -69,7 +69,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
 
   async sync(): Promise<void> {
     try {
-      const unsynced = await db.transactions.where('synced').equals(0).toArray()
+      const unsynced = await db.transactions.where('syncStatus').equals('pending').toArray()
       if (unsynced.length === 0) return
 
       const toDelete: LocalTransaction[] = []
@@ -130,7 +130,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
           for (let i = 0, len = toUpsert.length; i < len; i++) {
             const item = toUpsert[i]!
             if (remoteIds.has(item.id as string)) {
-              item.synced = true
+              item.syncStatus = 'synced'
               recordsToUpdate.push(item)
             }
           }
@@ -151,7 +151,7 @@ export class DexieSupabaseTransactionRepository implements ITransactionRepositor
   ): Transaction & { _titleLower: string; _timestamp: number; _dateKey: string } {
     const t = {
       ...(item as unknown as Transaction),
-      synced: !!item.synced,
+      syncStatus: item.syncStatus,
       deleted: !!item.deleted,
     }
     // Pre-calculate derivations to optimize UI rendering
@@ -176,7 +176,7 @@ export class DexieWalletRepository implements IWalletRepository {
 
   async save(wallet: Wallet): Promise<void> {
     try {
-      await db.wallets.put({ ...wallet, synced: false } as LocalWallet)
+      await db.wallets.put({ ...wallet, syncStatus: 'pending' } as LocalWallet)
     } catch (err) {
       throw new InfrastructureError('Failed to save wallet to local DB', err)
     }
@@ -204,9 +204,10 @@ export class DexieCategoryRepository implements ICategoryRepository {
 
   async save(category: Category): Promise<void> {
     try {
-      await db.categories.put({ ...category, synced: false } as LocalCategory)
+      await db.categories.put({ ...category, syncStatus: 'pending' } as LocalCategory)
     } catch (err) {
       throw new InfrastructureError('Failed to save category to local DB', err)
     }
   }
 }
+

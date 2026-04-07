@@ -9,7 +9,7 @@ export interface TransactionEntity {
   payee_id?: string
   date: string
   notes?: string
-  syncStatus: 'pending' | 'synced'
+  syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   created_at: string
   updated_at: string

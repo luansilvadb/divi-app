@@ -18,7 +18,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
     try {
       const data: LocalSubscription = {
         ...subscription,
-        synced: false,
+        syncStatus: 'pending',
       }
       await db.subscriptions.put(data)
 
@@ -44,7 +44,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async sync(): Promise<void> {
     try {
-      const unsynced = await db.subscriptions.where('synced').equals(0).toArray()
+      const unsynced = await db.subscriptions.where('syncStatus').equals('pending').toArray()
       if (unsynced.length === 0) return
 
       const upsertPayload = unsynced.map((item) => ({
@@ -75,7 +75,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
           const records = await db.subscriptions.bulkGet(idsToUpdate)
           const validRecords = records.reduce((acc, record) => {
             if (record) {
-              acc.push({ ...record, synced: true })
+              acc.push({ ...record, syncStatus: 'synced' })
             }
             return acc
           }, [] as LocalSubscription[])

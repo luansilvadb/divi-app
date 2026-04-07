@@ -38,7 +38,7 @@ async function processSubscriptions() {
             category_id: sub.category_id,
             wallet_id: sub.wallet_id,
             date: today.toISOString(),
-            synced: false,
+            syncStatus: 'pending',
             deleted: false,
             updated_at: today.toISOString(),
           })
@@ -46,7 +46,7 @@ async function processSubscriptions() {
           // Update subscription last billed date
           await db.table('subscriptions').update(sub.id, {
             last_billed_at: today.toISOString(),
-            synced: false,
+            syncStatus: 'pending',
           })
         }
       }
@@ -73,3 +73,4 @@ self.addEventListener('activate', () => {
 })
 
 console.log('Divi Service Worker Initialized.')
+

@@ -212,7 +212,7 @@ async function handleSubmit() {
         ...form,
         id: crypto.randomUUID(),
         user_id: '', // Will be filled by repo/service
-        synced: false,
+        syncStatus: 'pending',
         deleted: false,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -272,3 +272,4 @@ async function handleSubmit() {
   pointer-events: none;
 }
 </style>
+

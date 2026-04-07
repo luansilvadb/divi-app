@@ -10,8 +10,9 @@ export interface Transaction {
   payee_id?: string
   user_id: string
   notes?: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   created_at: string
   updated_at: string
 }
+

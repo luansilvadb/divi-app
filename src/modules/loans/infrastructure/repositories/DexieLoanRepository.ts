@@ -18,7 +18,7 @@ export class DexieLoanRepository implements ILoanRepository {
     try {
       const data: LocalLoan = {
         ...loan,
-        synced: false,
+        syncStatus: 'pending',
       }
       await db.loans.put(data)
 
@@ -44,7 +44,7 @@ export class DexieLoanRepository implements ILoanRepository {
 
   async sync(): Promise<void> {
     try {
-      const unsynced = await db.loans.where('synced').equals(0).toArray()
+      const unsynced = await db.loans.where('syncStatus').equals('pending').toArray()
       if (unsynced.length === 0) return
 
       const upsertPayload = unsynced.map((item) => ({
@@ -70,7 +70,7 @@ export class DexieLoanRepository implements ILoanRepository {
           const records = await db.loans.bulkGet(idsToUpdate)
           const validRecords = records.reduce((acc, record) => {
             if (record) {
-              acc.push({ ...record, synced: true })
+              acc.push({ ...record, syncStatus: 'synced' })
             }
             return acc
           }, [] as LocalLoan[])

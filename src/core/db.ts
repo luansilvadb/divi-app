@@ -12,7 +12,7 @@ export interface LocalTransaction {
   payee_id?: string
   date: string
   notes?: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
 }
@@ -23,7 +23,7 @@ export interface LocalWallet {
   name: string
   balance: number
   currency: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
 }
 
 export interface LocalCategory {
@@ -31,14 +31,14 @@ export interface LocalCategory {
   name: string
   icon?: string
   color?: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
 }
 
 export interface LocalPayee {
   id?: string
   name: string
   user_id: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
 }
 
 export interface LocalLoan {
@@ -49,7 +49,7 @@ export interface LocalLoan {
   remaining_value: number
   interest_rate?: number
   due_date: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }
 
@@ -63,7 +63,7 @@ export interface LocalSubscription {
   billing_day: number
   frequency: 'monthly' | 'yearly'
   last_billed_at?: string
-  synced: boolean
+  syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }
 
@@ -114,13 +114,13 @@ export class DiviDatabase extends Dexie {
 
   constructor() {
     super('DiviDB_Legacy')
-    this.version(2).stores({
-      transactions: '++localId, id, date, synced, deleted',
-      wallets: '++id, name, synced',
-      categories: '++id, name, synced',
-      payees: '++id, name, synced',
-      loans: 'id, name, synced',
-      subscriptions: 'id, name, synced',
+    this.version(3).stores({
+      transactions: '++localId, id, date, syncStatus, deleted',
+      wallets: '++id, name, syncStatus',
+      categories: '++id, name, syncStatus',
+      payees: '++id, name, syncStatus',
+      loans: 'id, name, syncStatus',
+      subscriptions: 'id, name, syncStatus',
       activities: 'id, timestamp',
       budgets: 'id, name, type',
       goals: 'id, name, type',
@@ -129,3 +129,5 @@ export class DiviDatabase extends Dexie {
 }
 
 export const db = new DiviDatabase()
+
+

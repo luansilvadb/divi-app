@@ -610,7 +610,7 @@ async function simulateAddTransaction() {
     category_id: 'default-cat',
     wallet_id: 'default-wallet',
     date: now.toISOString(),
-    synced: false,
+    syncStatus: 'pending',
     deleted: false,
     created_at: now.toISOString(),
     updated_at: now.toISOString(),
