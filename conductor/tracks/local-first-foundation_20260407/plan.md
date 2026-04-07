@@ -1,8 +1,8 @@
 # Implementation Plan: Epic 1 - Fundação e Núcleo Local-First
 
 ## Phase 1: Dexie.js Setup and Database Infrastructure
-- [ ] Task: Project Setup & Dependencies
-    - [ ] Install `dexie`, `uuid`, and `@types/uuid`.
+- [x] Task: Project Setup & Dependencies (e3f6fc4)
+    - [x] Install `dexie`, `uuid`, and `@types/uuid`.
 - [ ] Task: Implement `DiviDatabase`
     - [ ] Write tests for Dexie initialization and schema validation.
     - [ ] Implement `src/infrastructure/db/DexieDB.ts` with `TransactionEntity` schema.
