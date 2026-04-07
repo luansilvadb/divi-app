@@ -23,9 +23,9 @@
 - [x] Task: Build Dashboard Empty State (041d731)
     - [x] Write component tests for `DashboardView.vue` empty state.
     - [x] Implement "Nenhuma transação registrada..." empty state with CTA button.
-- [ ] Task: Handle Incognito Mode Failures
-    - [ ] Write tests to simulate IndexedDB failure.
-    - [ ] Implement the top Inline Banner for initialization errors.
+- [x] Task: Handle Incognito Mode Failures (0bbb824)
+    - [x] Write tests to simulate IndexedDB failure.
+    - [x] Implement the top Inline Banner for initialization errors.
 - [ ] Task: Integrate VueUse `useObservable`
     - [ ] Write tests verifying reactive updates when a transaction is added.
     - [ ] Bind `DashboardView` to `DexieTransactionRepository` using `useObservable`.
