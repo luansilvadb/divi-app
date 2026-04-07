@@ -7,7 +7,7 @@
 - [x] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout. 2366d67
 - [x] Task: Implementar a integração com autenticação via Google OAuth. 2366d67
 - [x] Task: Desenvolver a UI (Página/Componente) de Login, Registro e feedback visual (sucesso/falha). 073b4e3f912a6e1023810267770e2d2622b64719
-- [ ] Task: Atualizar o roteador (vue-router) para implementar guardas nas rotas protegidas.
+- [x] Task: Atualizar o roteador (vue-router) para implementar guardas nas rotas protegidas. 8c2a895
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Setup da Identidade e Supabase Auth' (Protocol in workflow.md)
 
 ## Phase 2: Estrutura Base do Sync Engine
