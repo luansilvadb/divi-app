@@ -19,7 +19,7 @@
     - [x] Implement `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, handling UUID generation (v7), timestamps, and sync status.
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Domain and Application Layers' (7918087)
 
-## Phase 3: Vue Dashboard Reactivity and UI
+## Phase 3: Vue Dashboard Reactivity and UI [checkpoint: a893e30]
 - [x] Task: Build Dashboard Empty State (041d731)
     - [x] Write component tests for `DashboardView.vue` empty state.
     - [x] Implement "Nenhuma transação registrada..." empty state with CTA button.
@@ -30,4 +30,4 @@
     - [x] Write tests verifying reactive updates when a transaction is added.
     - [x] Bind `DashboardView` to `DexieTransactionRepository` using `useObservable`.
     - [x] Connect the CTA button to inject a simulated transaction and verify real-time updates.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Vue Dashboard Reactivity and UI' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Vue Dashboard Reactivity and UI' (a893e30)
