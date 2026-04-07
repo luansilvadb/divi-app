@@ -26,8 +26,8 @@
 - [x] Task: Handle Incognito Mode Failures (0bbb824)
     - [x] Write tests to simulate IndexedDB failure.
     - [x] Implement the top Inline Banner for initialization errors.
-- [ ] Task: Integrate VueUse `useObservable`
-    - [ ] Write tests verifying reactive updates when a transaction is added.
-    - [ ] Bind `DashboardView` to `DexieTransactionRepository` using `useObservable`.
-    - [ ] Connect the CTA button to inject a simulated transaction and verify real-time updates.
+- [x] Task: Integrate VueUse `useObservable` (869cc74)
+    - [x] Write tests verifying reactive updates when a transaction is added.
+    - [x] Bind `DashboardView` to `DexieTransactionRepository` using `useObservable`.
+    - [x] Connect the CTA button to inject a simulated transaction and verify real-time updates.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Vue Dashboard Reactivity and UI' (Protocol in workflow.md)
