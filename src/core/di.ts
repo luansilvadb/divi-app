@@ -4,12 +4,13 @@
  */
 
 import { SupabaseAuthService } from '../modules/auth/infrastructure/services/SupabaseAuthService'
+import { DexieTransactionRepository } from '../modules/transactions/infrastructure/DexieTransactionRepository'
+import { db as newDb } from '../infrastructure/db/DexieDB'
 import {
-  DexieSupabaseTransactionRepository,
   DexieWalletRepository,
   DexieCategoryRepository,
 } from '../modules/transactions/infrastructure/repositories/index'
-import { DexiePayeeRepository } from '../modules/transactions/infrastructure/repositories/PayeeRepository'
+import { db } from './db'
 import { DexieLoanRepository } from '../modules/loans/infrastructure/repositories/DexieLoanRepository'
 import { DexieBudgetRepository } from '../modules/budgets/infrastructure/repositories/DexieBudgetRepository'
 import { DexieGoalRepository } from '../modules/goals/infrastructure/repositories/DexieGoalRepository'
@@ -53,7 +54,7 @@ import { DI_TOKENS } from './di-tokens'
 // To maintain compatibility with existing code during migration,
 // we register both with the string from DI_TOKENS and the explicit string.
 container.register(DI_TOKENS.AuthService, new SupabaseAuthService())
-container.register(DI_TOKENS.TransactionRepository, new DexieSupabaseTransactionRepository())
+container.register(DI_TOKENS.TransactionRepository, new DexieTransactionRepository(newDb))
 container.register(DI_TOKENS.WalletRepository, new DexieWalletRepository())
 container.register(DI_TOKENS.CategoryRepository, new DexieCategoryRepository())
 container.register(DI_TOKENS.PayeeRepository, new DexiePayeeRepository())

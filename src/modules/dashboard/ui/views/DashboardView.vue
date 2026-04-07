@@ -553,11 +553,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import SelectButton from 'primevue/selectbutton'
-
-import { ref } from 'vue'
 const chartRange = ref('6m')
 const chartRangeOptions = [
   { label: 'Últimos 6 meses', value: '6m' },
@@ -571,29 +566,37 @@ const transactionFilterOptions = [
   { label: 'Renda', value: 'income' }
 ]
 
-const filteredTransactions = computed(() => {
-  const transactions = transactionStore.transactions
-  if (transactionFilter.value === 'all') return transactions.slice(0, 25)
-  return transactions
-    .filter((t) => t.type === transactionFilter.value)
-    .slice(0, 25)
-})
-
-import { useDashboardStore } from '../../application/stores/dashboardStore'
+import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { v7 as uuidv7 } from 'uuid'
+import { useObservable } from '@vueuse/rxjs'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+import SelectButton from 'primevue/selectbutton'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import type { TransactionRepositoryPort } from '@/modules/transactions/application/TransactionRepositoryPort'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
+const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
+
+// Reactive binding to Dexie via useObservable
+const liveTransactions = useObservable(transactionRepo.watchAll() as any)
+
+const filteredTransactions = computed(() => {
+  const transactions = liveTransactions.value || []
+  if (transactionFilter.value === 'all') return transactions.slice(0, 25)
+  return transactions
+    .filter((t: any) => t.type === transactionFilter.value)
+    .slice(0, 25)
+})
 
 async function simulateAddTransaction() {
   const now = new Date()
@@ -607,8 +610,8 @@ async function simulateAddTransaction() {
     wallet_id: 'default-wallet',
     date: now.toISOString(),
     deleted: false,
-    createdAt: now.toISOString(),
-    updatedAt: now.toISOString(),
+    created_at: now.toISOString(),
+    updated_at: now.toISOString(),
   })
 }
 

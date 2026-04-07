@@ -32,8 +32,8 @@ describe('DexieTransactionRepository', () => {
       wallet_id: 'wallet-1',
       date: '2026-04-07T10:00:00Z',
       deleted: false,
-      createdAt: '2026-04-07T10:00:00Z',
-      updatedAt: '2026-04-07T10:00:00Z'
+      created_at: '2026-04-07T10:00:00Z',
+      updated_at: '2026-04-07T10:00:00Z'
     }
 
     await repository.save(transaction)
@@ -55,8 +55,8 @@ describe('DexieTransactionRepository', () => {
       wallet_id: 'w1',
       date: '2026-04-07T10:00:00Z',
       deleted: false,
-      createdAt: '2026-04-07T10:00:00Z',
-      updatedAt: '2026-04-07T10:00:00Z'
+      created_at: '2026-04-07T10:00:00Z',
+      updated_at: '2026-04-07T10:00:00Z'
     }
     const t2: Transaction = {
       id: '018ebb00-0000-7000-8000-000000000002',
@@ -68,8 +68,8 @@ describe('DexieTransactionRepository', () => {
       wallet_id: 'w2',
       date: '2026-04-07T11:00:00Z',
       deleted: false,
-      createdAt: '2026-04-07T11:00:00Z',
-      updatedAt: '2026-04-07T11:00:00Z'
+      created_at: '2026-04-07T11:00:00Z',
+      updated_at: '2026-04-07T11:00:00Z'
     }
 
     await repository.save(t1)
