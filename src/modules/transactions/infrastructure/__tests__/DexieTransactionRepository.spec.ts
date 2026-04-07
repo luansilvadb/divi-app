@@ -40,8 +40,8 @@ describe('DexieTransactionRepository', () => {
 
     const all = await repository.getAll()
     expect(all).toHaveLength(1)
-    expect(all[0].id).toBe(transaction.id)
-    expect(all[0].title).toBe('Coffee')
+    expect(all[0]!.id).toBe(transaction.id)
+    expect(all[0]!.title).toBe('Coffee')
   })
 
   it('should handle multiple transactions', async () => {

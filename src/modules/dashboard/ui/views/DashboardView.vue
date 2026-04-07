@@ -581,6 +581,7 @@ import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
 import type { TransactionRepositoryPort } from '@/modules/transactions/application/TransactionRepositoryPort'
+import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
@@ -588,13 +589,13 @@ const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
 
 // Reactive binding to Dexie via useObservable
-const liveTransactions = useObservable(transactionRepo.watchAll() as any)
+const liveTransactions = useObservable(transactionRepo.watchAll() as any) as any as { value: Transaction[] | undefined }
 
 const filteredTransactions = computed(() => {
   const transactions = liveTransactions.value || []
   if (transactionFilter.value === 'all') return transactions.slice(0, 25)
   return transactions
-    .filter((t: any) => t.type === transactionFilter.value)
+    .filter((t: Transaction) => t.type === transactionFilter.value)
     .slice(0, 25)
 })
 
@@ -609,6 +610,7 @@ async function simulateAddTransaction() {
     category_id: 'default-cat',
     wallet_id: 'default-wallet',
     date: now.toISOString(),
+    synced: false,
     deleted: false,
     created_at: now.toISOString(),
     updated_at: now.toISOString(),

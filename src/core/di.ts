@@ -10,6 +10,7 @@ import {
   DexieWalletRepository,
   DexieCategoryRepository,
 } from '../modules/transactions/infrastructure/repositories/index'
+import { DexiePayeeRepository } from '../modules/transactions/infrastructure/repositories/PayeeRepository'
 import { db } from './db'
 import { DexieLoanRepository } from '../modules/loans/infrastructure/repositories/DexieLoanRepository'
 import { DexieBudgetRepository } from '../modules/budgets/infrastructure/repositories/DexieBudgetRepository'
