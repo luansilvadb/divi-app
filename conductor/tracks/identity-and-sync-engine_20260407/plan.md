@@ -4,7 +4,7 @@
 - [x] Task: Instalar dependências necessárias para autenticação (`@supabase/supabase-js`, etc). f8f7fd6
 - [x] Task: Configurar conexão com o Supabase Auth em `src/modules/auth/infrastructure/SupabaseAuth.ts`. cd30fbe
 - [x] Task: Criar o store no Pinia para gerenciar o estado da sessão e os dados do usuário atual. edbbfbd
-- [ ] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout.
+- [x] Task: Implementar a lógica de registro, login (Email/Senha), e funcionalidade de logout. 2366d67
 - [ ] Task: Implementar a integração com autenticação via Google OAuth.
 - [ ] Task: Desenvolver a UI (Página/Componente) de Login, Registro e feedback visual (sucesso/falha).
 - [ ] Task: Atualizar o roteador (vue-router) para implementar guardas nas rotas protegidas.
