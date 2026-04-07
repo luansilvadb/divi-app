@@ -81,4 +81,52 @@ describe('SyncEngine', () => {
     expect(pendingRecords[0].table).toBe('categories')
     expect(pendingRecords[0].data.syncStatus).toBe('failed')
   })
+
+  it('should trigger sync when a pending record is added', async () => {
+    const syncSpy = vi.spyOn(syncEngine, 'sync')
+
+    await db.transactions.add({
+      user_id: 'u1',
+      title: 'Auto Sync',
+      amount: 50,
+      type: 'expense',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: '2026-04-07',
+      syncStatus: 'pending',
+      deleted: false,
+      updated_at: new Date().toISOString()
+    })
+
+    // Wait for the debounced sync (1000ms in SyncEngine)
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    
+    expect(syncSpy).toHaveBeenCalled()
+  })
+
+  it('should trigger sync when a record is updated to pending', async () => {
+    // Add synced record
+    const id = await db.transactions.add({
+      user_id: 'u1',
+      title: 'Synced',
+      amount: 50,
+      type: 'expense',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: '2026-04-07',
+      syncStatus: 'synced',
+      deleted: false,
+      updated_at: new Date().toISOString()
+    })
+
+    const syncSpy = vi.spyOn(syncEngine, 'sync')
+
+    // Update to pending
+    await db.transactions.update(id, { syncStatus: 'pending' })
+
+    // Wait for the debounced sync
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    
+    expect(syncSpy).toHaveBeenCalled()
+  })
 })

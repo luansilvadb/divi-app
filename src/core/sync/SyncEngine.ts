@@ -15,6 +15,37 @@ export class SyncEngine {
     'subscriptions'
   ] as const
 
+  private isSyncing = false
+
+  constructor() {
+    this.registerHooks()
+  }
+
+  private registerHooks() {
+    for (const tableName of this.monitoredTables) {
+      const table = (db as any)[tableName]
+      
+      table.hook('creating', (_primKey: any, obj: any) => {
+        if (obj.syncStatus !== 'synced') {
+          this.triggerSync()
+        }
+      })
+
+      table.hook('updating', (mods: any, _primKey: any, _obj: any) => {
+        if (mods.syncStatus === 'pending' || mods.syncStatus === 'failed') {
+          this.triggerSync()
+        }
+      })
+    }
+  }
+
+  private triggerSync() {
+    // Debounced sync call
+    setTimeout(() => {
+      this.sync().catch(err => console.error('[SyncEngine] Sync failed', err))
+    }, 1000)
+  }
+
   /**
    * Scans all monitored tables for records that are pending or failed to sync.
    */
@@ -38,5 +69,23 @@ export class SyncEngine {
     }
 
     return results
+  }
+
+  /**
+   * Main sync logic (to be implemented in Phase 3)
+   */
+  async sync(): Promise<void> {
+    if (this.isSyncing) return
+    
+    const pending = await this.getPendingRecords()
+    if (pending.length === 0) return
+
+    this.isSyncing = true
+    try {
+      console.log(`[SyncEngine] Starting sync for ${pending.length} records...`)
+      // Phase 3 implementation will go here
+    } finally {
+      this.isSyncing = false
+    }
   }
 }
