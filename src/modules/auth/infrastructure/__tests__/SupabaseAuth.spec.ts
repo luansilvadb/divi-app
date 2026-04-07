@@ -6,6 +6,8 @@ vi.mock('@/core/supabase', () => ({
   supabase: {
     auth: {
       signInWithOAuth: vi.fn(),
+      signInWithPassword: vi.fn(),
+      signUp: vi.fn(),
       signOut: vi.fn(),
       getUser: vi.fn(),
       onAuthStateChange: vi.fn()
@@ -19,6 +21,44 @@ describe('SupabaseAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     authService = new SupabaseAuth()
+  })
+
+  it('should call signInWithPassword when signInWithEmail is called', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ data: {}, error: null } as any)
+    await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
+    expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123'
+    })
+  })
+
+  it('should throw error when signInWithEmail fails', async () => {
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ 
+      data: { user: null, session: null }, 
+      error: new Error('Invalid credentials') 
+    } as any)
+    
+    await expect(authService.signInWithEmail({ email: 'test@example.com', password: 'password123' }))
+      .rejects.toThrow('Invalid credentials')
+  })
+
+  it('should call signUp when registerWithEmail is called', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ data: {}, error: null } as any)
+    await authService.registerWithEmail({ email: 'test@example.com', password: 'password123' })
+    expect(supabase.auth.signUp).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123'
+    })
+  })
+
+  it('should throw error when registerWithEmail fails', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ 
+      data: { user: null, session: null }, 
+      error: new Error('Email already exists') 
+    } as any)
+    
+    await expect(authService.registerWithEmail({ email: 'test@example.com', password: 'password123' }))
+      .rejects.toThrow('Email already exists')
   })
 
   it('should call signInWithOAuth when signInWithGoogle is called', async () => {
