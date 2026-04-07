@@ -33,7 +33,7 @@ app.use(PrimeVue, {
   },
   locale: {
     startsWith: 'Começa com',
-    contains: 'Contém',
+    contains: 'Contém.',
     notContains: 'Não contém',
     endsWith: 'Termina com',
     equals: 'Igual a',
