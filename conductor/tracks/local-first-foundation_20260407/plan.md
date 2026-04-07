@@ -1,12 +1,12 @@
 # Implementation Plan: Epic 1 - Fundação e Núcleo Local-First
 
-## Phase 1: Dexie.js Setup and Database Infrastructure
+## Phase 1: Dexie.js Setup and Database Infrastructure [checkpoint: d398b99]
 - [x] Task: Project Setup & Dependencies (e3f6fc4)
     - [x] Install `dexie`, `uuid`, and `@types/uuid`.
 - [x] Task: Implement `DiviDatabase` (2fcab49)
     - [x] Write tests for Dexie initialization and schema validation.
     - [x] Implement `src/infrastructure/db/DexieDB.ts` with `TransactionEntity` schema.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Dexie.js Setup and Database Infrastructure' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Dexie.js Setup and Database Infrastructure' (d398b99)
 
 ## Phase 2: Domain and Application Layers
 - [ ] Task: Implement Domain Contracts
