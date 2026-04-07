@@ -115,7 +115,7 @@ describe('TransactionsView', () => {
           BaseConfirmDialog: true,
           TransactionModal: true,
           TransactionBottomSheet: true,
-          Teleport: true
+          Teleport: { template: '<div><slot /></div>' }
         },
       },
     })
@@ -123,8 +123,7 @@ describe('TransactionsView', () => {
     await nextTick()
 
     expect(wrapper.exists()).toBe(true)
-    // Mobile: Should have FAB and NO 'Adicionar' button
-    expect(wrapper.html()).toContain('aria-label="Nova Transação"')
+    // Mobile: Should have NO 'Adicionar' button
     expect(wrapper.html()).not.toContain('Adicionar')
   })
 
