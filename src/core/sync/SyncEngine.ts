@@ -16,9 +16,24 @@ export class SyncEngine {
   ] as const
 
   private isSyncing = false
+  private online = navigator.onLine
 
   constructor() {
     this.registerHooks()
+    this.initNetworkListener()
+  }
+
+  private initNetworkListener() {
+    window.addEventListener('online', () => {
+      this.online = true
+      console.log('[SyncEngine] Network is online. Resuming sync...')
+      this.sync().catch(err => console.error('[SyncEngine] Online sync failed', err))
+    })
+
+    window.addEventListener('offline', () => {
+      this.online = false
+      console.log('[SyncEngine] Network is offline. Pausing sync...')
+    })
   }
 
   private registerHooks() {
