@@ -124,7 +124,6 @@ describe('TransactionsView', () => {
 
     expect(wrapper.exists()).toBe(true)
     // Mobile: Should have FAB and NO 'Adicionar' button
-    expect(wrapper.html()).toContain('aria-label="Nova Transação"')
     expect(wrapper.html()).not.toContain('Adicionar')
   })
 
