@@ -43,6 +43,10 @@ desktop.ini
 .vscode/*
 !.vscode/extensions.json
 
+# Linters & Cache
+.eslintcache
+.oxlintrc.json
+
 # Local Databases
 *.db
 *.sqlite

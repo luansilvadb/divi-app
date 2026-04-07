@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useGoalStore } from '../goalStore'
-import { container } from '@/core/di'
 
 // Mocking container and DI
 vi.mock('@/core/di', () => ({
