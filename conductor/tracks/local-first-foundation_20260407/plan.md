@@ -20,9 +20,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Domain and Application Layers' (7918087)
 
 ## Phase 3: Vue Dashboard Reactivity and UI
-- [ ] Task: Build Dashboard Empty State
-    - [ ] Write component tests for `DashboardView.vue` empty state.
-    - [ ] Implement "Nenhuma transação registrada..." empty state with CTA button.
+- [x] Task: Build Dashboard Empty State (041d731)
+    - [x] Write component tests for `DashboardView.vue` empty state.
+    - [x] Implement "Nenhuma transação registrada..." empty state with CTA button.
 - [ ] Task: Handle Incognito Mode Failures
     - [ ] Write tests to simulate IndexedDB failure.
     - [ ] Implement the top Inline Banner for initialization errors.
