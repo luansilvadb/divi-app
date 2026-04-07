@@ -12,8 +12,8 @@
 - [x] Task: Implement Domain Contracts (a27f721)
     - [x] Write unit tests for the `Transaction` domain model if applicable.
     - [x] Create `src/modules/transactions/domain/Transaction.ts`.
-- [ ] Task: Implement Application Contracts
-    - [ ] Create `src/modules/transactions/application/TransactionRepositoryPort.ts`.
+- [x] Task: Implement Application Contracts (29c57c9)
+    - [x] Create `src/modules/transactions/application/TransactionRepositoryPort.ts`.
 - [ ] Task: Implement `DexieTransactionRepository`
     - [ ] Write integration tests for the repository adapter.
     - [ ] Implement `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, handling UUID generation (v7), timestamps, and sync status.
