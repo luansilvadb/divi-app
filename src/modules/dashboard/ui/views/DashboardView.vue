@@ -410,12 +410,24 @@
 
           <div
             v-if="filteredTransactions.length === 0"
-            class="flex flex-col items-center justify-center flex-1 opacity-50 text-center"
+            class="flex flex-col items-center justify-center flex-1 py-10 px-6 text-center"
           >
-            <div class="text-4xl mb-4">☕</div>
-            <p class="text-[0.65rem] font-black uppercase tracking-widest text-text-secondary">
-              {{ transactionFilter === 'all' ? 'Sem movimentações' : 'Nenhuma ' + (transactionFilter === 'expense' ? 'despesa' : 'renda') }}
+            <div class="text-5xl mb-6 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700">✨</div>
+            <h3 class="text-sm font-black text-text-primary uppercase tracking-widest mb-2">Nenhuma transação registrada</h3>
+
+            <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-secondary opacity-40 mb-8 leading-relaxed">
+              Sua jornada financeira começa com o primeiro lançamento. <br>Que tal começar agora?
             </p>
+            <BaseButton
+              variant="primary"
+              class="group/btn relative overflow-hidden !rounded-xl !px-8 !py-3 shadow-2xl hover:shadow-primary-main/20 transition-all duration-300"
+              @click="simulateAddTransaction"
+            >
+              <span class="relative z-10 flex items-center gap-2 text-[0.65rem] font-black uppercase tracking-widest">
+                Começar
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover/btn:translate-x-1"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </span>
+            </BaseButton>
           </div>
 
           <div v-else class="flex flex-col px-4 pb-6 space-y-2 relative z-10 flex-1">
@@ -551,6 +563,7 @@ const filteredTransactions = computed(() => {
 import { useDashboardStore } from '../../application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { computed } from 'vue'
+import { v7 as uuidv7 } from 'uuid'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
@@ -562,6 +575,23 @@ import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
+
+async function simulateAddTransaction() {
+  const now = new Date()
+  await transactionStore.saveTransaction({
+    id: uuidv7(),
+    user_id: 'default-user',
+    title: 'Transação Inicial ✨',
+    amount: 100,
+    type: 'income',
+    category_id: 'default-cat',
+    wallet_id: 'default-wallet',
+    date: now.toISOString(),
+    deleted: false,
+    createdAt: now.toISOString(),
+    updatedAt: now.toISOString(),
+  })
+}
 
 function getCategoryIcon(categoryId: string) {
   const cat = transactionStore.categoryMap[categoryId]
