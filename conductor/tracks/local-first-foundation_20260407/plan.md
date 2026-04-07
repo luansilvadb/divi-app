@@ -3,9 +3,9 @@
 ## Phase 1: Dexie.js Setup and Database Infrastructure
 - [x] Task: Project Setup & Dependencies (e3f6fc4)
     - [x] Install `dexie`, `uuid`, and `@types/uuid`.
-- [ ] Task: Implement `DiviDatabase`
-    - [ ] Write tests for Dexie initialization and schema validation.
-    - [ ] Implement `src/infrastructure/db/DexieDB.ts` with `TransactionEntity` schema.
+- [x] Task: Implement `DiviDatabase` (2fcab49)
+    - [x] Write tests for Dexie initialization and schema validation.
+    - [x] Implement `src/infrastructure/db/DexieDB.ts` with `TransactionEntity` schema.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Dexie.js Setup and Database Infrastructure' (Protocol in workflow.md)
 
 ## Phase 2: Domain and Application Layers
