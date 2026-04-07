@@ -4,6 +4,25 @@
     highlight="Financeiro"
     subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
   >
+    <!-- Initialization Error Banner (Incognito Mode) -->
+    <div
+      v-if="dashboardStore.initializationError"
+      class="mb-8 p-4 rounded-2xl bg-error-main/10 border border-error-main/20 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500"
+    >
+      <div class="w-10 h-10 rounded-xl bg-error-main/10 flex items-center justify-center text-error-main shrink-0 shadow-inner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-error-main mb-1">Limitação de Sistema Detectada</h4>
+        <p class="text-xs font-bold text-text-primary/70 leading-relaxed">
+          O modo anônimo pode limitar algumas funcionalidades locais. Recomendamos o uso do modo padrão para uma experiência completa e persistente.
+        </p>
+      </div>
+      <BaseButton variant="ghost" class="!px-4 !py-2 text-[0.6rem] font-black uppercase tracking-widest text-error-main hover:bg-error-main/10" @click="dashboardStore.initializationError = false">
+        Entendi
+      </BaseButton>
+    </div>
+
     <!-- Content Grid -->
     <div
       class="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_400px] gap-6 lg:gap-10 items-stretch"
@@ -410,12 +429,24 @@
 
           <div
             v-if="filteredTransactions.length === 0"
-            class="flex flex-col items-center justify-center flex-1 opacity-50 text-center"
+            class="flex flex-col items-center justify-center flex-1 py-10 px-6 text-center"
           >
-            <div class="text-4xl mb-4">☕</div>
-            <p class="text-[0.65rem] font-black uppercase tracking-widest text-text-secondary">
-              {{ transactionFilter === 'all' ? 'Sem movimentações' : 'Nenhuma ' + (transactionFilter === 'expense' ? 'despesa' : 'renda') }}
+            <div class="text-5xl mb-6 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700">✨</div>
+            <h3 class="text-sm font-black text-text-primary uppercase tracking-widest mb-2">Nenhuma transação registrada</h3>
+
+            <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-secondary opacity-40 mb-8 leading-relaxed">
+              Sua jornada financeira começa com o primeiro lançamento. <br>Que tal começar agora?
             </p>
+            <BaseButton
+              variant="primary"
+              class="group/btn relative overflow-hidden !rounded-xl !px-8 !py-3 shadow-2xl hover:shadow-primary-main/20 transition-all duration-300"
+              @click="simulateAddTransaction"
+            >
+              <span class="relative z-10 flex items-center gap-2 text-[0.65rem] font-black uppercase tracking-widest">
+                Começar
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover/btn:translate-x-1"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+              </span>
+            </BaseButton>
           </div>
 
           <div v-else class="flex flex-col px-4 pb-6 space-y-2 relative z-10 flex-1">
@@ -522,11 +553,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import SelectButton from 'primevue/selectbutton'
-
-import { ref } from 'vue'
 const chartRange = ref('6m')
 const chartRangeOptions = [
   { label: 'Últimos 6 meses', value: '6m' },
@@ -540,28 +566,56 @@ const transactionFilterOptions = [
   { label: 'Renda', value: 'income' }
 ]
 
-const filteredTransactions = computed(() => {
-  const transactions = transactionStore.transactions
-  if (transactionFilter.value === 'all') return transactions.slice(0, 25)
-  return transactions
-    .filter((t) => t.type === transactionFilter.value)
-    .slice(0, 25)
-})
-
-import { useDashboardStore } from '../../application/stores/dashboardStore'
+import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { v7 as uuidv7 } from 'uuid'
+import { useObservable } from '@vueuse/rxjs'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
+import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+import SelectButton from 'primevue/selectbutton'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import type { TransactionRepositoryPort } from '@/modules/transactions/application/TransactionRepositoryPort'
+import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
+const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
+
+// Reactive binding to Dexie via useObservable
+const liveTransactions = useObservable(transactionRepo.watchAll() as any) as any as { value: Transaction[] | undefined }
+
+const filteredTransactions = computed(() => {
+  const transactions = liveTransactions.value || []
+  if (transactionFilter.value === 'all') return transactions.slice(0, 25)
+  return transactions
+    .filter((t: Transaction) => t.type === transactionFilter.value)
+    .slice(0, 25)
+})
+
+async function simulateAddTransaction() {
+  const now = new Date()
+  await transactionStore.saveTransaction({
+    id: uuidv7(),
+    user_id: 'default-user',
+    title: 'Transação Inicial ✨',
+    amount: 100,
+    type: 'income',
+    category_id: 'default-cat',
+    wallet_id: 'default-wallet',
+    date: now.toISOString(),
+    synced: false,
+    deleted: false,
+    created_at: now.toISOString(),
+    updated_at: now.toISOString(),
+  })
+}
 
 function getCategoryIcon(categoryId: string) {
   const cat = transactionStore.categoryMap[categoryId]

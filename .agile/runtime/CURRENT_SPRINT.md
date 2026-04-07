@@ -1,4 +1,5 @@
 # SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)
+
 **Meta:** v0.2.0
 **Status:** Aguardando Execução
 **Tech Lead:** Usuário
@@ -11,15 +12,18 @@
 ## MICRO-RFC: O Motor Local-First
 
 ### Tarefa 1: Instalação e Configuração do Dexie
-- [ ] Instalar as dependências necessárias: `npm install dexie` e `npm install uuid` (para geração segura do UUID universal das entidades).
-- [ ] Instalar definições de tipos para o uuid: `npm install -D @types/uuid`
-- [ ] Criar o arquivo `src/infrastructure/db/DexieDB.ts` implementando o modelo `DiviDatabase` conforme seção 2.1 da Especificação.
+
+- [x] Instalar as dependências necessárias: `npm install dexie` e `npm install uuid` (para geração segura do UUID universal das entidades).
+- [x] Instalar definições de tipos para o uuid: `npm install -D @types/uuid`
+- [x] Criar o arquivo `src/infrastructure/db/DexieDB.ts` implementando o modelo `DiviDatabase` conforme seção 2.1 da Especificação.
 
 ### Tarefa 2: Implementação da Camada de Domínio e Aplicação
-- [ ] Criar a interface de domínio em `src/modules/transactions/domain/Transaction.ts` (Sec 3.1).
-- [ ] Criar a porta do repositório em `src/modules/transactions/application/TransactionRepositoryPort.ts` (Sec 3.2).
-- [ ] Implementar o adapter Dexie em `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, que injeta valores defaults sistêmicos (`syncStatus`, datas) e salva no Dexie.
+
+- [x] Criar a interface de domínio em `src/modules/transactions/domain/Transaction.ts` (Sec 3.1).
+- [x] Criar a porta do repositório em `src/modules/transactions/application/TransactionRepositoryPort.ts` (Sec 3.2).
+- [x] Implementar o adapter Dexie em `src/modules/transactions/infrastructure/DexieTransactionRepository.ts`, que injeta valores defaults sistêmicos (`syncStatus`, datas) e salva no Dexie.
 
 ### Tarefa 3: Configuração da Reatividade e Dashboard
-- [ ] Modificar ou criar a View `src/modules/transactions/ui/views/DashboardView.vue` que atuará como root (`/`).
-- [ ] Implementar a ligação (binding) reativa entre a listagem de transações no Dashboard e as queries locais do Dexie, exibindo o estado vazio adequadamente conforme os Critérios BDD (Sec 4.1).
+
+- [x] Modificar ou criar a View `src/modules/transactions/ui/views/DashboardView.vue` que atuará como root (`/`).
+- [x] Implementar a ligação (binding) reativa entre a listagem de transações no Dashboard e as queries locais do Dexie, exibindo o estado vazio adequadamente conforme os Critérios BDD (Sec 4.1).

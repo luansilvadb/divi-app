@@ -14,6 +14,8 @@
 ## State Management & Persistence
 
 - **Dexie:** Lightweight wrapper for IndexedDB to handle offline data storage.
+- **RxJS:** Reactive extensions for handling database observables and streams.
+- **UUID v7:** Time-sorted universal identifiers for optimized database indexing and local-first consistency.
 - **VueUse:** Essential collection of Vue Composition API utilities.
 
 ## Data Visualization

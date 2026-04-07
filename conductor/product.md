@@ -20,4 +20,5 @@
 - **Calendar View:** A temporal view of upcoming bills, income, and scheduled financial events.
 - **Activity Log:** A transparent record of changes and updates within the application.
 - **Secure Authentication:** Robust user authentication and data protection powered by Supabase.
-- **Progressive Web App (PWA):** Seamless access across devices with offline capabilities and a native-like experience.
+- **Local-First Architecture:** Engineered for maximum performance and privacy, storing data primarily on the user's device with IndexedDB (Dexie.js).
+- **Progressive Web App (PWA):** Seamless access across devices with robust offline support and near-instant load times.

@@ -16,6 +16,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const wallets = ref<Wallet[]>([])
   const loans = ref<Loan[]>([])
   const isLoading = ref(false)
+  const initializationError = ref(false)
 
   // Getters
   const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
@@ -37,6 +38,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     wallets,
     loans,
     isLoading,
+    initializationError,
     totalBalance,
     totalDebt,
     fetchDashboardData,

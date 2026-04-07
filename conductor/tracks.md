@@ -8,6 +8,11 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+- [x] **Track: SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)**
+*Link: [./tracks/local-first-foundation_20260407/](./tracks/local-first-foundation_20260407/)*
+
+---
+
 ## Archived Tracks
 
 ### [x] Track: Fix malformed attribute error in Search Empty States (Archived 2026-04-06)

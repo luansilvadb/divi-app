@@ -12,11 +12,22 @@ import 'primeicons/primeicons.css'
 import './core/styles/main.css'
 import App from './App.vue'
 import router from './core/router'
+import { db } from './infrastructure/db/DexieDB'
+import { useDashboardStore } from './modules/dashboard/application/stores/dashboardStore'
 
 const app = createApp(App)
+const pinia = createPinia()
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
+
+// Initialize Database
+db.open().catch((err) => {
+  console.error('[Database] Failed to initialize local-first foundation:', err)
+  const dashboardStore = useDashboardStore(pinia)
+  dashboardStore.initializationError = true
+})
+
 app.directive('ripple', Ripple)
 app.directive('tooltip', Tooltip)
 app.directive('animateonscroll', AnimateOnScroll)
