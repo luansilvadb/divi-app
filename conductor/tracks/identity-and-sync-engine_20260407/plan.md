@@ -11,7 +11,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Setup da Identidade e Supabase Auth' (Protocol in workflow.md) d4f34fa
 
 ## Phase 2: Estrutura Base do Sync Engine
-- [ ] Task: Atualizar o esquema do banco local (Dexie) adicionando a propriedade `syncStatus` ('synced', 'pending', 'failed') nas entidades monitoradas.
+- [x] Task: Atualizar o esquema do banco local (Dexie) adicionando a propriedade `syncStatus` ('synced', 'pending', 'failed') nas entidades monitoradas. 83757d1
 - [ ] Task: Desenvolver o módulo central do Sync Engine responsável por consultar o Dexie atrás de registros `pending` ou `failed`.
 - [ ] Task: Integrar hooks no Dexie ou Pinia para acionar o processo de sincronização local ao efetuar uma alteração (On Local Write).
 - [ ] Task: Configurar listener de eventos do navegador sobre estado da rede (`online`/`offline`) para retomar ou pausar a sincronização.
