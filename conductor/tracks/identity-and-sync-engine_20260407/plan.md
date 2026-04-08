@@ -10,12 +10,12 @@
 - [x] Task: Atualizar o roteador (vue-router) para implementar guardas nas rotas protegidas. 8c2a895
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Setup da Identidade e Supabase Auth' (Protocol in workflow.md) d4f34fa
 
-## Phase 2: Estrutura Base do Sync Engine
+## Phase 2: Estrutura Base do Sync Engine [checkpoint: 48bd5ab]
 - [x] Task: Atualizar o esquema do banco local (Dexie) adicionando a propriedade `syncStatus` ('synced', 'pending', 'failed') nas entidades monitoradas. 83757d1
-- [x] Task: Desenvolver o módulo central do Sync Engine responsável por consultar o Dexie atrás de registros \`pending\` ou \`failed\`. 48cf0fd
+- [x] Task: Desenvolver o módulo central do Sync Engine responsável por consultar o Dexie atrás de registros `pending` ou `failed`. 48cf0fd
 - [x] Task: Integrar hooks no Dexie ou Pinia para acionar o processo de sincronização local ao efetuar uma alteração (On Local Write). d849627
-- [x] Task: Configurar listener de eventos do navegador sobre estado da rede (\`online\`/\`offline\`) para retomar ou pausar a sincronização. 662b550
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Estrutura Base do Sync Engine' (Protocol in workflow.md)
+- [x] Task: Configurar listener de eventos do navegador sobre estado da rede (`online`/`offline`) para retomar ou pausar a sincronização. 662b550
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Estrutura Base do Sync Engine' (Protocol in workflow.md) 48bd5ab
 
 ## Phase 3: Comunicação e Lógica Inteligente (CRDT)
 - [ ] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase.
