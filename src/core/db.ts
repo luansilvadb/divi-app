@@ -114,6 +114,36 @@ export class DiviDatabase extends Dexie {
       budgets: 'id, user_id, name, sync_status, deleted',
       goals: 'id, user_id, name, sync_status, deleted'
     })
+
+    this.setupSyncHooks()
+  }
+
+  private setupSyncHooks() {
+    const syncableTables = [
+      this.transactions, this.wallets, this.categories, this.payees,
+      this.loans, this.subscriptions, this.budgets, this.goals
+    ]
+
+    syncableTables.forEach(table => {
+      // Trigger sync after any change
+      table.hook('creating', (_, obj: any) => {
+        if (!obj.sync_status) {
+          obj.sync_status = 'pending'
+          obj.client_updated_at = new Date().toISOString()
+        }
+      })
+
+      table.hook('updating', (mods: any) => {
+        // If the update is NOT coming from the SyncEngine (which sets sync_status to 'synced')
+        if (mods.sync_status !== 'synced') {
+          return {
+            ...mods,
+            sync_status: 'pending',
+            client_updated_at: new Date().toISOString()
+          }
+        }
+      })
+    })
   }
 }
 

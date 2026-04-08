@@ -137,6 +137,24 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       expect(local?.title).toBe('Server Title')
       expect(local?.sync_status).toBe('synced')
     })
+
+    it('should automatically set sync_status to pending on creation via Dexie hooks', async () => {
+      // @ts-ignore - explicitly omitting metadata to test hooks
+      await db.transactions.add({
+        id: 'tx-hook-test',
+        user_id: 'test-user-id',
+        title: 'Hook Test',
+        amount: 50,
+        type: 'expense',
+        category_id: 'c1',
+        wallet_id: 'w1',
+        date: new Date().toISOString()
+      })
+
+      const record = await db.transactions.get('tx-hook-test')
+      expect(record?.sync_status).toBe('pending')
+      expect(record?.client_updated_at).toBeDefined()
+    })
   })
 
   describe('Online/Offline Transitions', () => {
