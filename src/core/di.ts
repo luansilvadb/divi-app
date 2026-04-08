@@ -20,7 +20,7 @@ import { ActivityLogService } from '../modules/activity-log/application/services
 import { ExportService } from '../modules/transactions/application/services/ExportService'
 import { AssetLoader } from '../shared/utils/asset-loader'
 import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
-import { GoalLogicService } from '../modules/budgets/application/services/GoalLogicService'
+import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 import { SyncEngine } from './sync/SyncEngine'
 
 import { DI_TOKENS } from './di-tokens'
