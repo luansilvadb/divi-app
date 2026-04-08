@@ -6,16 +6,17 @@
 - [x] Task: Implement/Refactor `src/modules/auth/` to support Google Login and session persistence. (748a1b8)
 - [x] Task: Verify Auth state integration with Pinia store. (748a1b8)
 - [ ] Task: Conductor - User Manual Verification 'Authentication & Session Management' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Authentication & Session Management' (Protocol in workflow.md)
 
 ## Phase 2: Local-First Sync Engine Foundation
-- [ ] Task: Refactor Dexie.js schemas in `src/core/db.ts` to support sync metadata (timestamps, sync status).
-- [ ] Task: Write failing unit tests for the `SyncEngine` core logic (Online/Offline transitions, conflict resolution).
-- [ ] Task: Implement the `SyncEngine` in `src/core/sync/SyncEngine.ts` using "Last Write Wins" strategy.
-- [ ] Task: Integrate `SyncEngine` with Dexie.js hooks for automated background synchronization.
-- [ ] Task: Conductor - User Manual Verification 'Local-First Sync Engine Foundation' (Protocol in workflow.md)
+- [x] Task: Refactor Dexie.js schemas in `src/core/db.ts` to support sync metadata (timestamps, sync status). (80a18cf)
+- [x] Task: Write failing unit tests for the `SyncEngine` core logic (Online/Offline transitions, conflict resolution). (73514d2)
+- [x] Task: Implement the `SyncEngine` in `src/core/sync/SyncEngine.ts` using "Last Write Wins" strategy. (2fe5e31)
+- [x] Task: Integrate `SyncEngine` with Dexie.js hooks for automated background synchronization. (aa8401a)
+- [x] Task: Conductor - User Manual Verification 'Local-First Sync Engine Foundation' (Protocol in workflow.md)
 
 ## Phase 3: Transaction CRUD & Audit Logs
-- [ ] Task: Write failing unit tests for Transaction CRUD operations (Create, Read, Update, Delete).
+- [x] Task: Write failing unit tests for Transaction CRUD operations (Create, Read, Update, Delete). (f6722fa)
 - [ ] Task: Implement Transaction module refinement in `src/modules/transactions/` with full sync support.
 - [ ] Task: Write failing unit tests for Audit Log generation and persistence.
 - [ ] Task: Implement automated Audit Log mechanism for all transaction state changes.
