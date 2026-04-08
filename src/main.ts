@@ -12,7 +12,7 @@ import 'primeicons/primeicons.css'
 import './core/styles/main.css'
 import App from './App.vue'
 import router from './core/router'
-import { db } from './infrastructure/db/DexieDB'
+import { db } from './core/db'
 import { useDashboardStore } from './modules/dashboard/application/stores/dashboardStore'
 
 const app = createApp(App)
