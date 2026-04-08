@@ -49,12 +49,15 @@ export class SyncEngine {
 
     // 3. Listeners de Conectividade
     if (typeof window !== 'undefined') {
+      const store = useSyncStore()
       window.addEventListener('online', () => {
-        useSyncStore().addLog({ status: 'success', message: 'Conexão restaurada' })
+        store.setOnlineStatus(true)
+        store.addLog({ status: 'success', message: 'Conexão restaurada' })
         this.triggerSync()
       })
       window.addEventListener('offline', () => {
-        useSyncStore().addLog({ status: 'failed', message: 'Modo offline' })
+        store.setOnlineStatus(false)
+        store.addLog({ status: 'failed', message: 'Modo offline - Alterações serão salvas localmente' })
       })
     }
   }
@@ -182,10 +185,14 @@ export class SyncEngine {
       store.setStatus('failed')
     } finally {
       this.isSyncing = false
+      // Atualiza contadores e agenda nova verificação
       const remaining = await db.sync_queue.count()
-      store.setPendingCount(remaining)
+      const fatalErrors = await db.sync_queue.where('lastError').startsWith('FATAL:').count()
       
-      if (remaining > 0) {
+      store.setPendingCount(remaining)
+      store.setFatalErrorCount(fatalErrors)
+      
+      if (remaining > 0 && fatalErrors < remaining) {
         this.triggerSync()
       }
     }
