@@ -3,6 +3,7 @@ import { ref, shallowRef, computed, watch } from 'vue' // watch adicionado
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import { useSyncStore } from '@/core/sync/syncStore' // SyncStore importada
+import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository'
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
@@ -18,6 +19,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const walletRepo = container.resolve<IWalletRepository>(DI_TOKENS.WalletRepository)
   const categoryRepo = container.resolve<ICategoryRepository>(DI_TOKENS.CategoryRepository)
   const syncStore = useSyncStore()
+  const authStore = useAuthStore()
 
   // State
   const transactions = shallowRef<Transaction[]>([])
@@ -166,28 +168,38 @@ export const useTransactionStore = defineStore('transactions', () => {
       throw new Error('Amount must be positive')
     }
 
-    // 2. ATUALIZAÇÃO OTIMISTA (Instantânea na Memória)
-    const index = transactions.value.findIndex((t) => t.id === transaction.id)
+    // 2. Refinamento de Dados (Garante ID e User)
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const enriched: Transaction = {
+      ...transaction,
+      id: transaction.id || crypto.randomUUID(),
+      user_id: transaction.user_id || activeUserId,
+      updated_at: new Date().toISOString(),
+      syncStatus: 'pending' as const
+    }
+
+    // 3. ATUALIZAÇÃO OTIMISTA
+    const index = transactions.value.findIndex((t) => t.id === enriched.id)
     const newArray = [...transactions.value]
     if (index !== -1) {
-      newArray[index] = { ...transaction, syncStatus: 'pending' }
+      newArray[index] = enriched
     } else {
-      newArray.unshift({ ...transaction, syncStatus: 'pending' })
+      newArray.unshift(enriched)
     }
     transactions.value = newArray
 
     try {
-      // 3. Persistência Local (Dexie)
-      await transactionRepo.save(transaction)
+      // 4. Persistência Local (Dexie)
+      await transactionRepo.save(enriched)
       
-      // 4. Refetch para garantir integridade (metadados, triggers, etc)
-      const date = new Date(transaction.date)
+      // 5. Refetch para garantir integridade
+      const date = new Date(enriched.date)
       await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
     } catch (err) {
       console.error('Erro ao salvar transação:', err)
-      // Rollback em caso de erro crítico
-      const date = new Date(transaction.date)
-      await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+      await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
   }
@@ -197,12 +209,12 @@ export const useTransactionStore = defineStore('transactions', () => {
     const index = transactions.value.findIndex((t) => t.id === id)
     if (index !== -1) {
       const newArray = [...transactions.value]
-      newArray[index] = { ...newArray[index]!, deleted: true }
+      newArray[index] = { ...newArray[index]!, deleted: true, syncStatus: 'pending' }
       transactions.value = newArray
     }
 
     try {
-      // 2. Persistência Local (Hard-Delete conforme pedido)
+      // 2. Persistência Local (Soft-Delete)
       await transactionRepo.delete(id)
     } catch (err) {
       console.error('Erro ao deletar transação:', err)
