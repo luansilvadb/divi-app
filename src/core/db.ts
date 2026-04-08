@@ -15,6 +15,7 @@ export interface LocalTransaction {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
 }
 
 export interface LocalWallet {
@@ -26,6 +27,7 @@ export interface LocalWallet {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
 }
 
 export interface LocalCategory {
@@ -36,6 +38,7 @@ export interface LocalCategory {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
 }
 
 export interface LocalPayee {
@@ -45,6 +48,7 @@ export interface LocalPayee {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
 }
 
 export interface LocalLoan {
@@ -58,6 +62,7 @@ export interface LocalLoan {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
   created_at?: string
 }
 
@@ -74,6 +79,7 @@ export interface LocalSubscription {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
   created_at?: string
 }
 
@@ -99,6 +105,7 @@ export interface LocalBudget {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
   created_at?: string
 }
 
@@ -114,6 +121,7 @@ export interface LocalGoal {
   syncStatus: 'synced' | 'pending' | 'failed'
   deleted: boolean
   updated_at: string
+  version: number
   created_at?: string
 }
 
@@ -127,6 +135,7 @@ export interface LocalSyncQueue {
   attempts: number
   lastError?: string
   nextRetry: string // ISO Date string
+  baseVersion: number
   created_at: string
 }
 
@@ -160,5 +169,3 @@ export class DiviDatabase extends Dexie {
 }
 
 export const db = new DiviDatabase()
-
-

@@ -30,17 +30,17 @@ export class SyncEngine {
       const table = db.table(tableName as string)
       
       table.hook('creating', (primKey, obj) => {
-        this.enqueue(tableName as string, primKey as string, 'create', obj)
+        // Nova criação: payload completo, baseVersion = 0
+        this.enqueue(tableName as string, primKey as string, 'create', obj, 0)
       })
       
       table.hook('updating', (mods, primKey, obj) => {
-        // Mesclamos as mudanças com o objeto original para ter o estado final completo
-        const finalObj = { ...obj, ...mods }
-        this.enqueue(tableName as string, primKey as string, 'update', finalObj)
+        // Atualização: ENVIAMOS APENAS O DELTA (mods) e a versão que conhecíamos
+        this.enqueue(tableName as string, primKey as string, 'update', mods, obj.version || 1)
       })
       
-      table.hook('deleting', (primKey) => {
-        this.enqueue(tableName as string, primKey as string, 'delete', { id: primKey })
+      table.hook('deleting', (primKey, obj) => {
+        this.enqueue(tableName as string, primKey as string, 'delete', { id: primKey }, obj.version || 1)
       })
     })
 
@@ -62,8 +62,14 @@ export class SyncEngine {
   /**
    * Adiciona uma mutação à fila
    */
-  private async enqueue(table: string, recordId: string, action: 'create' | 'update' | 'delete', payload: any) {
-    // Evitar loop infinito: não enfileirar se a mudança veio da própria sincronização (syncStatus === 'synced')
+  private async enqueue(
+      table: string, 
+      recordId: string, 
+      action: 'create' | 'update' | 'delete', 
+      payload: any,
+      baseVersion: number
+  ) {
+    // Evitar loop infinito: não enfileirar se a mudança veio da própria sincronização
     if (payload.syncStatus === 'synced') return
 
     await db.sync_queue.add({
@@ -74,6 +80,7 @@ export class SyncEngine {
       status: 'pending',
       attempts: 0,
       nextRetry: new Date().toISOString(),
+      baseVersion,
       created_at: new Date().toISOString()
     })
 
@@ -121,7 +128,6 @@ export class SyncEngine {
 
     this.isSyncing = true
     store.setStatus('syncing')
-    console.log(`[SyncEngine] Processando fila: ${queueItems.length} itens encontrados.`)
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
@@ -135,7 +141,6 @@ export class SyncEngine {
         } catch (error: any) {
           console.error(`[SyncEngine] Erro no item ${item.id}:`, error)
           
-          // Falha: Aplica Backoff Exponencial
           const attempts = item.attempts + 1
           const delay = Math.min(this.BASE_DELAY * Math.pow(2, attempts), this.MAX_DELAY)
           const nextRetry = new Date(Date.now() + delay).toISOString()
@@ -147,7 +152,6 @@ export class SyncEngine {
             lastError: error.message || 'Erro desconhecido'
           })
 
-          // Se falhou por rede, interrompe o loop para não queimar tentativas dos outros
           if (!navigator.onLine) break
         }
       }
@@ -159,7 +163,6 @@ export class SyncEngine {
       store.setStatus('failed')
     } finally {
       this.isSyncing = false
-      // Atualiza contador final e agenda nova verificação
       const remaining = await db.sync_queue.count()
       store.setPendingCount(remaining)
       
@@ -170,53 +173,38 @@ export class SyncEngine {
   }
 
   /**
-   * Processa um único item da fila
+   * Processa um único item da fila usando RPC para lógica de merge no servidor
    */
   private async processItem(item: LocalSyncQueue, userId: string) {
-    const { table, recordId, action, payload } = item
-    const supabaseTable = supabase.from(table)
+    const { table, recordId, action, payload, baseVersion } = item
 
-    // Limpeza de dados para o Supabase
-    const cleanData = { ...payload }
-    delete cleanData.localId
-    delete cleanData._localId
-    delete cleanData.syncStatus
-    delete cleanData._syncStatus
-    cleanData.user_id = userId
+    // Limpeza de metadados locais antes do envio
+    const cleanPayload = { ...payload }
+    delete cleanPayload.localId
+    delete cleanPayload._localId
+    delete cleanPayload.syncStatus
+    delete cleanPayload._syncStatus
+    delete cleanPayload.version // A versão é controlada pelo campo baseVersion no RPC
+    cleanPayload.user_id = userId
 
-    // Garantir que UUIDs vazios não causem erro de cast no Postgres
-    for (const key of Object.keys(cleanData)) {
-      if (cleanData[key] === '' && (key.endsWith('_id') || key === 'id')) {
-        delete cleanData[key]
-      }
-    }
+    // Chamar a função handled_sync no Supabase
+    const { data: result, error } = await supabase.rpc('handled_sync', {
+      p_table_name: table,
+      p_record_id: recordId,
+      p_action: action,
+      p_payload: cleanPayload,
+      p_base_version: baseVersion
+    })
 
-    if (action === 'delete') {
-      const { error } = await supabaseTable.delete().eq('id', recordId)
-      if (error) throw error
-    } else {
-      // Create ou Update: Usamos UPSERT com resolução básica de conflitos
-      // Nota: Em um nível ainda mais avançado, checaríamos a versão remota aqui.
-      const { error, data } = await supabaseTable.upsert(cleanData).select().single()
-      
-      if (error) {
-          // Se o erro for de conflito (ex: 409), poderíamos implementar lógica de merge aqui
-          throw error
-      }
+    if (error) throw error
 
-      // Sincroniza o ID remoto de volta para o local se for um registro novo
-      if (data && data.id) {
-         const key = table === 'transactions' ? { localId: Number(recordId) } : recordId
-         await (db as any)[table].update(key, { 
-             id: data.id, 
-             syncStatus: 'synced' 
-         })
-      } else {
-         const key = table === 'transactions' ? { localId: Number(recordId) } : recordId
-         await (db as any)[table].update(key, { 
-             syncStatus: 'synced' 
-         })
-      }
+    // Sincroniza o resultado de volta para o local (Merge com o que o servidor decidiu)
+    if (result) {
+        const key = table === 'transactions' ? { localId: Number(recordId) } : recordId
+        await (db as any)[table].update(key, { 
+            ...result,
+            syncStatus: 'synced' 
+        })
     }
   }
 }
