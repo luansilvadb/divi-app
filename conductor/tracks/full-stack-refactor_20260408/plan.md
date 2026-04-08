@@ -18,8 +18,8 @@
 ## Phase 3: Transaction CRUD & Audit Logs
 - [x] Task: Write failing unit tests for Transaction CRUD operations (Create, Read, Update, Delete). (f6722fa)
 - [x] Task: Implement Transaction module refinement in `src/modules/transactions/` with full sync support. (691bd3a)
-- [ ] Task: Write failing unit tests for Audit Log generation and persistence.
-- [ ] Task: Implement automated Audit Log mechanism for all transaction state changes.
+- [x] Task: Write failing unit tests for Audit Log generation and persistence. (7cf6e9b)
+- [x] Task: Implement automated Audit Log mechanism for all transaction state changes. (7cf6e9b)
 - [ ] Task: Conductor - User Manual Verification 'Transaction CRUD & Audit Logs' (Protocol in workflow.md)
 
 ## Phase 4: Final Integration & Coverage Validation
