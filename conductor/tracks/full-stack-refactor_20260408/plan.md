@@ -1,7 +1,7 @@
 # Implementation Plan: Full Stack Refactor & Sync Engine
 
 ## Phase 1: Authentication & Session Management
-- [ ] Task: Configure Supabase Google OAuth (PKCE) flow.
+- [x] Task: Configure Supabase Google OAuth (PKCE) flow. (051d7cb)
 - [ ] Task: Write failing unit tests for Auth session management (login, logout, session persistence).
 - [ ] Task: Implement/Refactor `src/modules/auth/` to support Google Login and session persistence.
 - [ ] Task: Verify Auth state integration with Pinia store.
