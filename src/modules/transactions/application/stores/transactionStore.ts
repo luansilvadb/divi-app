@@ -161,9 +161,35 @@ export const useTransactionStore = defineStore('transactions', () => {
   }
 
   async function saveTransaction(transaction: Transaction) {
-    await transactionRepo.save(transaction)
-    const date = new Date(transaction.date)
-    await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+    // 1. Validação de Domínio (Previne "gohorse")
+    if (transaction.amount < 0) {
+      throw new Error('Amount must be positive')
+    }
+
+    // 2. ATUALIZAÇÃO OTIMISTA (Instantânea na Memória)
+    const index = transactions.value.findIndex((t) => t.id === transaction.id)
+    const newArray = [...transactions.value]
+    if (index !== -1) {
+      newArray[index] = { ...transaction, syncStatus: 'pending' }
+    } else {
+      newArray.unshift({ ...transaction, syncStatus: 'pending' })
+    }
+    transactions.value = newArray
+
+    try {
+      // 3. Persistência Local (Dexie)
+      await transactionRepo.save(transaction)
+      
+      // 4. Refetch para garantir integridade (metadados, triggers, etc)
+      const date = new Date(transaction.date)
+      await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+    } catch (err) {
+      console.error('Erro ao salvar transação:', err)
+      // Rollback em caso de erro crítico
+      const date = new Date(transaction.date)
+      await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+      throw err
+    }
   }
 
   async function deleteTransaction(id: string) {
