@@ -212,7 +212,7 @@ export class SyncEngine {
 
         // Prepare data (remove dexie-only fields like localId, syncStatus)
         const cleanData = resolvedToUpsert.map(r => {
-          const { _localId, _syncStatus, ...rest } = r as any
+          const { localId: _localId, syncStatus: _syncStatus, ...rest } = r as any
           
           // Forçar user_id se estiver faltando ou for diferente do usuário logado
           if (user?.id) {
