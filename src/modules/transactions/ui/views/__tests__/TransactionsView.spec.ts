@@ -24,10 +24,11 @@ vi.mock('@/shared/composables/useIsMobile', () => ({
 // Mock the db file specifically before it gets imported by anything else
 vi.mock('@/core/db', () => ({
   db: {
-    wallets: { toArray: vi.fn().mockResolvedValue([]) },
-    categories: { toArray: vi.fn().mockResolvedValue([]) },
+    wallets: { toArray: vi.fn().mockResolvedValue([]), hook: vi.fn() },
+    categories: { toArray: vi.fn().mockResolvedValue([]), hook: vi.fn() },
     transactions: {
       toArray: vi.fn().mockResolvedValue([]),
+      hook: vi.fn(),
       where: vi.fn().mockReturnValue({
         between: vi.fn().mockReturnValue({
           and: vi.fn().mockReturnValue({
@@ -36,6 +37,9 @@ vi.mock('@/core/db', () => ({
         }),
       }),
     },
+    payees: { hook: vi.fn() },
+    loans: { hook: vi.fn() },
+    subscriptions: { hook: vi.fn() }
   },
 }))
 
