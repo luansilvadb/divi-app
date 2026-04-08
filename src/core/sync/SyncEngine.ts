@@ -123,120 +123,125 @@ export class SyncEngine {
   }
 
   private async syncTableRecords(tableName: string, records: any[]) {
-    const recordIds = records.map(r => r.id).filter(Boolean)
-    
-    // Fetch remote state to compare timestamps
-    let remoteRecords: any[] = []
-    if (recordIds.length > 0) {
-      const { data, error } = await supabase
-        .from(tableName)
-        .select('*')
-        .in('id', recordIds)
+    try {
+      const recordIds = records.map(r => r.id).filter(Boolean)
       
-      if (!error && data) {
-        remoteRecords = data
+      // Fetch remote state to compare timestamps
+      let remoteRecords: any[] = []
+      if (recordIds.length > 0) {
+        const { data, error } = await supabase
+          .from(tableName)
+          .select('*')
+          .in('id', recordIds)
+        
+        if (!error && data) {
+          remoteRecords = data
+        }
       }
-    }
 
-    const remoteMap = new Map(remoteRecords.map(r => [r.id, r]))
-    
-    const toPush: any[] = []
-    const toPull: any[] = []
-    const alreadySyncedIds: any[] = [] // Store full keys or objects if needed
+      const remoteMap = new Map(remoteRecords.map(r => [r.id, r]))
+      
+      const toPush: any[] = []
+      const toPull: any[] = []
+      const alreadySyncedIds: any[] = [] // Store full keys or objects if needed
 
-    for (const local of records) {
-      const remote = remoteMap.get(local.id)
+      for (const local of records) {
+        const remote = remoteMap.get(local.id)
 
-      if (!remote) {
-        // Record doesn't exist on server yet
-        toPush.push(local)
-      } else {
-        const localTime = new Date(local.updated_at).getTime()
-        const remoteTime = new Date(remote.updated_at).getTime()
-
-        if (localTime > remoteTime) {
+        if (!remote) {
+          // Record doesn't exist on server yet
           toPush.push(local)
-        } else if (remoteTime > localTime) {
-          // Server wins: Update local with remote data but keep localId
-          toPull.push({
-            ...remote,
-            localId: local.localId
-          })
         } else {
-          alreadySyncedIds.push(local.localId || local.id)
+          const localTime = new Date(local.updated_at).getTime()
+          const remoteTime = new Date(remote.updated_at).getTime()
+
+          if (localTime > remoteTime) {
+            toPush.push(local)
+          } else if (remoteTime > localTime) {
+            // Server wins: Update local with remote data but keep localId
+            toPull.push({
+              ...remote,
+              localId: local.localId
+            })
+          } else {
+            alreadySyncedIds.push(local.localId || local.id)
+          }
         }
       }
-    }
 
-    // Handle Pull (Server wins)
-    if (toPull.length > 0) {
-      const pullData = toPull.map(r => ({
-        ...r,
-        syncStatus: 'synced'
-      }))
-      await (db as any)[tableName].bulkPut(pullData)
-    }
+      // Handle Pull (Server wins)
+      if (toPull.length > 0) {
+        const pullData = toPull.map(r => ({
+          ...r,
+          syncStatus: 'synced'
+        }))
+        await (db as any)[tableName].bulkPut(pullData)
+      }
 
-    // Handle Already Synced
-    if (alreadySyncedIds.length > 0) {
-      const keyPath = (db as any)[tableName].schema.primKey.name
-      await (db as any)[tableName].where(keyPath).anyOf(alreadySyncedIds).modify({ syncStatus: 'synced' })
-    }
+      // Handle Already Synced
+      if (alreadySyncedIds.length > 0) {
+        const keyPath = (db as any)[tableName].schema.primKey.name
+        await (db as any)[tableName].where(keyPath).anyOf(alreadySyncedIds).modify({ syncStatus: 'synced' })
+      }
 
-    // Handle Push (Client wins)
-    const toDelete = toPush.filter(r => r.deleted)
-    const toUpsert = toPush.filter(r => !r.deleted)
+      // Handle Push (Client wins)
+      const toDelete = toPush.filter(r => r.deleted)
+      const toUpsert = toPush.filter(r => !r.deleted)
 
-    // Bulk Delete
-    if (toDelete.length > 0) {
-      const deleteIds = toDelete.map(r => r.id).filter(Boolean)
-      if (deleteIds.length > 0) {
-        const { error } = await supabase.from(tableName).delete().in('id', deleteIds)
-        if (!error) {
-          const localKeys = toDelete.map(r => r.localId || r.id)
+      // Bulk Delete
+      if (toDelete.length > 0) {
+        const deleteIds = toDelete.map(r => r.id).filter(Boolean)
+        if (deleteIds.length > 0) {
+          const { error } = await supabase.from(tableName).delete().in('id', deleteIds)
+          if (!error) {
+            const localKeys = toDelete.map(r => r.localId || r.id)
+            await (db as any)[tableName].bulkDelete(localKeys)
+          } else {
+            console.error(`[SyncEngine] Bulk delete failed for ${tableName}:`, error)
+            await this.markAsFailed(tableName, toDelete)
+          }
+        } else {
+          // Record was never synced (no id), just delete locally
+          const localKeys = toDelete.map(r => r.localId)
           await (db as any)[tableName].bulkDelete(localKeys)
+        }
+      }
+
+      // Bulk Upsert
+      if (toUpsert.length > 0) {
+        const payload = toUpsert.map(r => {
+          // Ensure every record has an ID before upserting
+          if (!r.id) {
+            r.id = crypto.randomUUID()
+          }
+          const { localId: _, syncStatus: __, ...rest } = r
+          return rest
+        })
+
+        const { data, error } = await supabase
+          .from(tableName)
+          .upsert(payload)
+          .select('id')
+
+        if (!error) {
+          const remoteIds = new Set(data?.map(d => d.id) || [])
+          const syncedRecords = toUpsert.filter(r => remoteIds.has(r.id))
+          
+          for (const record of syncedRecords) {
+            record.syncStatus = 'synced'
+          }
+          
+          if (syncedRecords.length > 0) {
+            await (db as any)[tableName].bulkPut(syncedRecords)
+          }
         } else {
-          console.error(`[SyncEngine] Bulk delete failed for ${tableName}:`, error)
-          await this.markAsFailed(tableName, toDelete)
+          console.error(`[SyncEngine] Bulk upsert failed for ${tableName}:`, error)
+          await this.markAsFailed(tableName, toUpsert)
         }
-      } else {
-        // Record was never synced (no id), just delete locally
-        const localKeys = toDelete.map(r => r.localId)
-        await (db as any)[tableName].bulkDelete(localKeys)
       }
-    }
-
-    // Bulk Upsert
-    if (toUpsert.length > 0) {
-      const payload = toUpsert.map(r => {
-        // Ensure every record has an ID before upserting
-        if (!r.id) {
-          r.id = crypto.randomUUID()
-        }
-        const { localId: _, syncStatus: __, ...rest } = r
-        return rest
-      })
-
-      const { data, error } = await supabase
-        .from(tableName)
-        .upsert(payload)
-        .select('id')
-
-      if (!error) {
-        const remoteIds = new Set(data?.map(d => d.id) || [])
-        const syncedRecords = toUpsert.filter(r => remoteIds.has(r.id))
-        
-        for (const record of syncedRecords) {
-          record.syncStatus = 'synced'
-        }
-        
-        if (syncedRecords.length > 0) {
-          await (db as any)[tableName].bulkPut(syncedRecords)
-        }
-      } else {
-        console.error(`[SyncEngine] Bulk upsert failed for ${tableName}:`, error)
-        await this.markAsFailed(tableName, toUpsert)
-      }
+    } catch (err) {
+      console.error(`[SyncEngine] Catastrophic error during table sync (${tableName}):`, err)
+      await this.markAsFailed(tableName, records)
     }
   }
 
