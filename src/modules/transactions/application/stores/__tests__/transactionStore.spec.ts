@@ -53,6 +53,7 @@ describe('TransactionStore CRUD', () => {
     sync_status: 'synced',
     deleted: false,
     client_updated_at: '2026-04-10T00:00:00Z',
+    created_at: '2026-04-10T00:00:00Z',
     version: 1
   }
 

@@ -10,7 +10,7 @@
           <span class="goal-name text-lg font-bold text-text-primary tracking-tight">{{
             goal.name
           }}</span>
-          <ItemSyncIndicator :status="goal.syncStatus" />
+          <ItemSyncIndicator :status="goal.sync_status" />
         </div>
 
         <BaseBadge :color="goal.color || 'var(--color-primary-main)'" variant="subtle">

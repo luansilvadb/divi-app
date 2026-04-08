@@ -614,6 +614,7 @@ async function simulateAddTransaction() {
     sync_status: 'pending',
     deleted: false,
     client_updated_at: now.toISOString(),
+    created_at: now.toISOString(),
     version: 1
   })
 }

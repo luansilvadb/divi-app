@@ -11,6 +11,7 @@ export interface SyncMetadata {
   user_id: string
   sync_status: SyncStatus
   client_updated_at: string
+  created_at: string
   version: number
   deleted: boolean
   last_synced_at?: string

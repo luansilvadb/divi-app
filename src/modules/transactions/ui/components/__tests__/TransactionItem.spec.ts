@@ -28,6 +28,7 @@ describe('TransactionItem.vue', () => {
     sync_status: 'synced' as const,
     deleted: false,
     client_updated_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
     version: 1
   }
 

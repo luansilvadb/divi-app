@@ -1,11 +1,11 @@
 import type { SyncMetadata } from './SyncMetadata'
 
 export interface Loan extends SyncMetadata {
-  title: string
+  name: string
   description?: string
-  amount: number
-  interestRate: number
-  startDate: string
-  endDate?: string
+  total_value: number
+  remaining_value: number
+  interest_rate: number
+  due_date: string
   status: 'active' | 'paid' | 'overdue'
 }

@@ -60,6 +60,7 @@ describe('SyncEngine Error Handling', () => {
       date: now,
       sync_status: 'pending',
       client_updated_at: now,
+      created_at: now,
       deleted: false,
       version: 1
     })

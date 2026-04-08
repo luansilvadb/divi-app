@@ -71,6 +71,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         date: now,
         sync_status: 'pending',
         client_updated_at: now,
+        created_at: now,
         deleted: false,
         version: 1
       })
@@ -102,6 +103,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         date: clientTime,
         sync_status: 'pending',
         client_updated_at: clientTime,
+        created_at: clientTime,
         deleted: false,
         version: 1
       })
@@ -172,6 +174,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         date: new Date().toISOString(),
         sync_status: 'pending',
         client_updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
         deleted: false,
         version: 1
       })

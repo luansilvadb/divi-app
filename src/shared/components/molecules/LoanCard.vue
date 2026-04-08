@@ -9,7 +9,7 @@
           <h3 class="loan-name text-lg font-bold text-text-primary tracking-tight leading-tight">
             {{ loan.name }}
           </h3>
-          <ItemSyncIndicator :status="loan.syncStatus" />
+          <ItemSyncIndicator :status="loan.sync_status" />
           <span class="loan-due text-xs font-semibold text-text-disabled"
             >Vence: {{ formatDate(loan.due_date) }}</span
           >
