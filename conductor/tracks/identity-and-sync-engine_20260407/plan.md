@@ -26,6 +26,6 @@
 
 ## Phase 4: Sincronização na Interface (UI Feedback)
 - [x] Task: Criar componente de Indicador Global na navbar informando o status global da rede e do Sync Engine. b26bf46
-- [~] Task: Adicionar pequeno indicador visual para os dados em Nível do Item nas listagens da aplicação (Ex: ícone de nuvem sincronizada ou pendente).
+- [x] Task: Adicionar pequeno indicador visual para os dados em Nível do Item nas listagens da aplicação (Ex: ícone de nuvem sincronizada ou pendente). c4b1c57
 - [ ] Task: Construir a seção ou painel de logs de Sync no Perfil/Configurações do usuário mostrando tentativas passadas e status atual.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Sincronização na Interface (UI Feedback)' (Protocol in workflow.md)n workflow.md)
