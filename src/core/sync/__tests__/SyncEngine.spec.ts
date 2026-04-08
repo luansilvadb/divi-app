@@ -11,6 +11,9 @@ vi.mock('../../supabase', () => ({
       })),
       upsert: vi.fn(() => ({
         select: vi.fn().mockResolvedValue({ data: [], error: null })
+      })),
+      select: vi.fn(() => ({
+        in: vi.fn().mockResolvedValue({ data: [], error: null })
       }))
     }))
   }
@@ -191,12 +194,23 @@ describe('SyncEngine', () => {
       updated_at: new Date().toISOString()
     })
 
-    // Mock successful upsert
-    vi.mocked(supabase.from).mockReturnValueOnce({
-      upsert: vi.fn().mockReturnValueOnce({
-        select: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null })
-      })
-    } as any)
+    // Mock successful select (return nothing, so it pushes) and upsert
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === 'transactions') {
+        return {
+          select: vi.fn().mockImplementation((query) => {
+            if (query === '*') {
+              return { in: vi.fn().mockResolvedValueOnce({ data: [], error: null }) }
+            }
+            return { in: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null }) }
+          }),
+          upsert: vi.fn().mockReturnValueOnce({
+            select: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null })
+          })
+        } as any
+      }
+      return {} as any
+    })
 
     await syncEngine.sync()
 
@@ -220,12 +234,20 @@ describe('SyncEngine', () => {
       updated_at: new Date().toISOString()
     })
 
-    // Mock successful delete
-    vi.mocked(supabase.from).mockReturnValueOnce({
-      delete: vi.fn().mockReturnValueOnce({
-        in: vi.fn().mockResolvedValueOnce({ error: null })
-      })
-    } as any)
+    // Mock successful select (return nothing, so it pushes to delete) and delete
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === 'transactions') {
+        return {
+          select: vi.fn().mockReturnValueOnce({
+            in: vi.fn().mockResolvedValueOnce({ data: [], error: null })
+          }),
+          delete: vi.fn().mockReturnValueOnce({
+            in: vi.fn().mockResolvedValueOnce({ error: null })
+          })
+        } as any
+      }
+      return {} as any
+    })
 
     await syncEngine.sync()
 

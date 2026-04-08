@@ -24,6 +24,8 @@ export interface LocalWallet {
   balance: number
   currency: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
 }
 
 export interface LocalCategory {
@@ -32,6 +34,8 @@ export interface LocalCategory {
   icon?: string
   color?: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
 }
 
 export interface LocalPayee {
@@ -39,6 +43,8 @@ export interface LocalPayee {
   name: string
   user_id: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
 }
 
 export interface LocalLoan {
@@ -50,6 +56,8 @@ export interface LocalLoan {
   interest_rate?: number
   due_date: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
   created_at?: string
 }
 
@@ -64,6 +72,8 @@ export interface LocalSubscription {
   frequency: 'monthly' | 'yearly'
   last_billed_at?: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
   created_at?: string
 }
 

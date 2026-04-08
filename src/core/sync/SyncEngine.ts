@@ -123,8 +123,70 @@ export class SyncEngine {
   }
 
   private async syncTableRecords(tableName: string, records: any[]) {
-    const toDelete = records.filter(r => r.deleted)
-    const toUpsert = records.filter(r => !r.deleted)
+    const recordIds = records.map(r => r.id).filter(Boolean)
+    
+    // Fetch remote state to compare timestamps
+    let remoteRecords: any[] = []
+    if (recordIds.length > 0) {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('*')
+        .in('id', recordIds)
+      
+      if (!error && data) {
+        remoteRecords = data
+      }
+    }
+
+    const remoteMap = new Map(remoteRecords.map(r => [r.id, r]))
+    const localMap = new Map(records.map(r => [r.id, r]))
+    
+    const toPush: any[] = []
+    const toPull: any[] = []
+    const alreadySyncedIds: any[] = [] // Store full keys or objects if needed
+
+    for (const local of records) {
+      const remote = remoteMap.get(local.id)
+
+      if (!remote) {
+        // Record doesn't exist on server yet
+        toPush.push(local)
+      } else {
+        const localTime = new Date(local.updated_at).getTime()
+        const remoteTime = new Date(remote.updated_at).getTime()
+
+        if (localTime > remoteTime) {
+          toPush.push(local)
+        } else if (remoteTime > localTime) {
+          // Server wins: Update local with remote data but keep localId
+          toPull.push({
+            ...remote,
+            localId: local.localId
+          })
+        } else {
+          alreadySyncedIds.push(local.localId || local.id)
+        }
+      }
+    }
+
+    // Handle Pull (Server wins)
+    if (toPull.length > 0) {
+      const pullData = toPull.map(r => ({
+        ...r,
+        syncStatus: 'synced'
+      }))
+      await (db as any)[tableName].bulkPut(pullData)
+    }
+
+    // Handle Already Synced
+    if (alreadySyncedIds.length > 0) {
+      const keyPath = (db as any)[tableName].schema.primKey.name
+      await (db as any)[tableName].where(keyPath).anyOf(alreadySyncedIds).modify({ syncStatus: 'synced' })
+    }
+
+    // Handle Push (Client wins)
+    const toDelete = toPush.filter(r => r.deleted)
+    const toUpsert = toPush.filter(r => !r.deleted)
 
     // Bulk Delete
     if (toDelete.length > 0) {
