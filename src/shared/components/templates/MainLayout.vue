@@ -4,8 +4,13 @@
     <AppSidebar class="!hidden md:!flex" @logout="emit('logout')" />
 
     <!-- Main Content Area -->
-    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0">
-      <slot />
+    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0 flex flex-col">
+      <!-- Top header (Global Status) -->
+      <GlobalHeader class="!hidden md:!flex" />
+      
+      <div class="flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden">
+        <slot />
+      </div>
     </main>
 
     <!-- Mobile Bottom Bar -->
@@ -46,6 +51,7 @@ import AppSidebar from '@/shared/components/organisms/AppSidebar.vue'
 import AppBottomBar from '@/shared/components/organisms/AppBottomBar.vue'
 import AppMobileDrawer from '@/shared/components/organisms/AppMobileDrawer.vue'
 import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
+import GlobalHeader from '@/shared/components/organisms/GlobalHeader.vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import { ref } from 'vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'

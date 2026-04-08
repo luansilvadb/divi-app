@@ -1,5 +1,6 @@
 import { db } from '../db'
 import { supabase } from '../supabase'
+import { useSyncStore } from './syncStore'
 
 export interface SyncRecord {
   table: string
@@ -93,12 +94,26 @@ export class SyncEngine {
    * Main sync logic
    */
   async sync(): Promise<void> {
-    if (this.isSyncing || !this.online) return
+    const store = useSyncStore()
+    
+    if (this.isSyncing) return
+    
+    if (!this.online) {
+      store.setStatus('offline')
+      return
+    }
     
     const pending = await this.getPendingRecords()
-    if (pending.length === 0) return
+    store.setPendingCount(pending.length)
+    
+    if (pending.length === 0) {
+      store.setStatus('synced')
+      return
+    }
 
     this.isSyncing = true
+    store.setStatus('syncing')
+    
     try {
       console.log(`[SyncEngine] Starting sync for ${pending.length} records...`)
       
@@ -111,12 +126,26 @@ export class SyncEngine {
 
       for (const tableName in grouped) {
         const records = grouped[tableName]
-        await this.syncTableRecords(tableName, records)
+        if (records) {
+          await this.syncTableRecords(tableName, records)
+        }
+      }
+      
+      const remaining = await this.getPendingRecords()
+      store.setPendingCount(remaining.length)
+      
+      if (remaining.length === 0) {
+        store.setStatus('synced')
+        store.setLastSyncTime(new Date().toISOString())
+      } else {
+        store.setStatus('pending')
       }
       
       console.log('[SyncEngine] Sync cycle completed successfully.')
     } catch (err) {
       console.error('[SyncEngine] Sync cycle failed:', err)
+      store.setStatus('failed')
+      store.setError(err instanceof Error ? err.message : String(err))
     } finally {
       this.isSyncing = false
     }
