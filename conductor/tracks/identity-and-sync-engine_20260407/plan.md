@@ -17,12 +17,12 @@
 - [x] Task: Configurar listener de eventos do navegador sobre estado da rede (`online`/`offline`) para retomar ou pausar a sincronização. 662b550
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Estrutura Base do Sync Engine' (Protocol in workflow.md) 48bd5ab
 
-## Phase 3: Comunicação e Lógica Inteligente (CRDT)
+## Phase 3: Comunicação e Lógica Inteligente (CRDT) [checkpoint: 8f219ae]
 - [x] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase. 77526d3
 - [x] Task: Configurar estratégia primária para a sincronização inteligente (CRDT ou last-write-wins baseado em timestamp \`updated_at\`). b04ae77
 - [x] Task: Validar as respostas do Supabase e retornar a confirmação para atualizar o status do item local para synced. 94e4074
 - [x] Task: Lidar apropriadamente com erros (falhas de conexão ou timeouts) mantendo os registros como failed ou pending no banco local. 31b4345
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: Comunicação e Lógica Inteligente (CRDT)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: Comunicação e Lógica Inteligente (CRDT)' (Protocol in workflow.md) 8f219ae
 
 ## Phase 4: Sincronização na Interface (UI Feedback)
 - [ ] Task: Criar componente de Indicador Global na navbar informando o status global da rede e do Sync Engine.
