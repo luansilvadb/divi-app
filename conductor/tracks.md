@@ -8,17 +8,19 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions**
-*Link: [./tracks/full-stack-refactor_20260408/](./tracks/full-stack-refactor_20260408/)*
-
----
-
 - [x] **Track: SPRINT ATUAL: EPIC 1 (Fundação e Núcleo Local-First)**
 *Link: [./tracks/local-first-foundation_20260407/](./tracks/local-first-foundation_20260407/)*
 
 ---
 
 ## Archived Tracks
+
+### [x] Track: Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions (Archived 2026-04-08)
+
+Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions
+Link: [./archive/full-stack-refactor_20260408/](./archive/full-stack-refactor_20260408/)
+
+---
 
 ### [~] Track: MICRO-RFC: Identidade e Sync Engine (Archived 2026-04-08)
 
