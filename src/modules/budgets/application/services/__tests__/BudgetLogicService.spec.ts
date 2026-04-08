@@ -15,6 +15,7 @@ describe('BudgetLogicService', () => {
     period_start: '2026-03-01',
     period_end: '2026-03-31',
     categories: ['cat1'],
+    syncStatus: 'synced',
   }
 
   const mockTransactions: Transaction[] = [

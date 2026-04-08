@@ -19,7 +19,7 @@ const authStore = useAuthStore()
           <div class="flex flex-col items-center text-center py-6">
             <div class="w-24 h-24 rounded-full bg-primary-main/20 flex items-center justify-center mb-4 border-4 border-primary-main/10">
               <span class="text-3xl font-black text-primary-main">
-                {{ authStore.user?.email?.[0].toUpperCase() || 'U' }}
+                {{ authStore.user?.email?.charAt(0).toUpperCase() || 'U' }}
               </span>
             </div>
             <h2 class="text-xl font-bold text-text-primary">{{ authStore.user?.email?.split('@')[0] || 'Usuário' }}</h2>

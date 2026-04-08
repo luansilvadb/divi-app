@@ -5,9 +5,9 @@ import type { Category } from '@/shared/domain/entities/Category'
 describe('AutoCategorizationService', () => {
   const service = new AutoCategorizationService()
   const categories: Category[] = [
-    { id: '1', name: 'Entertainment' },
-    { id: '2', name: 'Food' },
-    { id: '3', name: 'Transportation' },
+    { id: '1', name: 'Entertainment', syncStatus: 'synced' },
+    { id: '2', name: 'Food', syncStatus: 'synced' },
+    { id: '3', name: 'Transportation', syncStatus: 'synced' },
   ]
 
   it('should suggest Entertainment for Netflix', () => {

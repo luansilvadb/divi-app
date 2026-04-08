@@ -7,6 +7,8 @@ import type { IAuthService } from '../../../domain/contracts/IAuthService'
 
 const mockAuthService: IAuthService = {
   signInWithGoogle: vi.fn(),
+  signInWithEmail: vi.fn(),
+  registerWithEmail: vi.fn(),
   signOut: vi.fn(),
   getCurrentUser: vi.fn(),
   onAuthStateChange: vi.fn(),

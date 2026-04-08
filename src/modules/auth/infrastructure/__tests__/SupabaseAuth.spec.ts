@@ -125,7 +125,7 @@ describe('SupabaseAuth', () => {
           }
         }
       } as any)
-      return { data: { subscription: { unsubscribe: vi.fn() } } }
+      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } }
     })
 
     authService.onAuthStateChange(callback)
@@ -145,7 +145,7 @@ describe('SupabaseAuth', () => {
     // Simulate Supabase calling our callback without a session user
     vi.mocked(supabase.auth.onAuthStateChange).mockImplementationOnce((cb) => {
       cb('SIGNED_OUT', null)
-      return { data: { subscription: { unsubscribe: vi.fn() } } }
+      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } }
     })
 
     authService.onAuthStateChange(callback)

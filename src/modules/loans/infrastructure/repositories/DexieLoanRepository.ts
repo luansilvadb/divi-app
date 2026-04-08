@@ -18,6 +18,9 @@ export class DexieLoanRepository implements ILoanRepository {
       const data: LocalLoan = {
         ...loan,
         syncStatus: 'pending',
+        deleted: false,
+        updated_at: new Date().toISOString(),
+        version: (loan as any).version || 1,
       }
       await db.loans.put(data)
     } catch (err) {
@@ -43,6 +46,7 @@ export class DexieLoanRepository implements ILoanRepository {
       interest_rate: item.interest_rate,
       due_date: item.due_date,
       created_at: item.created_at,
+      syncStatus: item.syncStatus,
     }
   }
 }

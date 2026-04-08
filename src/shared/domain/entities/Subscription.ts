@@ -8,6 +8,7 @@ export interface Subscription {
   billing_day: number
   frequency: 'monthly' | 'yearly'
   next_billing_date?: string
+  last_billed_at?: string
   syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }

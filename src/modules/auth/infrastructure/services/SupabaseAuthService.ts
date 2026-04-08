@@ -1,5 +1,6 @@
 import type { IAuthService } from '../../domain/contracts/IAuthService'
 import type { User } from '../../domain/entities/User'
+import type { Credentials } from '../../domain/contracts/Credentials'
 import { supabase } from '@/core/supabase'
 
 export class SupabaseAuthService implements IAuthService {
@@ -11,11 +12,6 @@ export class SupabaseAuthService implements IAuthService {
       },
     })
 
-    if (error) throw error
-  }
-
-  async signOut(): Promise<void> {
-    const { error } = await supabase.auth.signOut()
     if (error) throw error
   }
 
@@ -40,7 +36,7 @@ export class SupabaseAuthService implements IAuthService {
         if (!userError && verifiedUser) {
           user = verifiedUser
         }
-      } catch (e) {
+      } catch {
         console.warn('[AuthService] Falha ao verificar usuário no servidor (offline?), usando sessão local.')
       }
     }
@@ -51,6 +47,24 @@ export class SupabaseAuthService implements IAuthService {
       name: user.user_metadata.full_name,
       avatar_url: user.user_metadata.avatar_url,
     }
+  }
+
+  async signInWithEmail(credentials: Credentials): Promise<void> {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: credentials.email,
+      password: credentials.password
+    })
+    
+    if (error) throw error
+  }
+
+  async registerWithEmail(credentials: Credentials): Promise<void> {
+    const { error } = await supabase.auth.signUp({
+      email: credentials.email,
+      password: credentials.password
+    })
+
+    if (error) throw error
   }
 
   onAuthStateChange(callback: (user: User | null) => void): void {
@@ -68,5 +82,10 @@ export class SupabaseAuthService implements IAuthService {
         avatar_url: user.user_metadata.avatar_url,
       })
     })
+  }
+
+  async signOut(): Promise<void> {
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
   }
 }
