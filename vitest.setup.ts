@@ -3,6 +3,7 @@ import { config } from '@vue/test-utils'
 
 config.global.directives = {
   ripple: () => {},
+  tooltip: () => {},
 }
 
 config.global.stubs = {

@@ -13,9 +13,10 @@ export interface LocalTransaction {
   date: string
   notes?: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  is_dirty: number
+  last_modified_at: string
   deleted: boolean
   updated_at: string
-  version: number
 }
 
 export interface LocalWallet {
@@ -25,9 +26,10 @@ export interface LocalWallet {
   balance: number
   currency: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  is_dirty: number
+  last_modified_at: string
   deleted: boolean
   updated_at: string
-  version: number
 }
 
 export interface LocalCategory {
@@ -36,9 +38,10 @@ export interface LocalCategory {
   icon?: string
   color?: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  is_dirty: number
+  last_modified_at: string
   deleted: boolean
   updated_at: string
-  version: number
 }
 
 export interface LocalPayee {
@@ -46,9 +49,10 @@ export interface LocalPayee {
   name: string
   user_id: string
   syncStatus: 'synced' | 'pending' | 'failed'
+  is_dirty: number
+  last_modified_at: string
   deleted: boolean
   updated_at: string
-  version: number
 }
 
 export interface LocalLoan {
@@ -125,19 +129,7 @@ export interface LocalGoal {
   created_at?: string
 }
 
-export interface LocalSyncQueue {
-  id?: number
-  table: string
-  recordId: string
-  action: 'create' | 'update' | 'delete'
-  payload: any
-  status: 'pending' | 'failed'
-  attempts: number
-  lastError?: string
-  nextRetry: string // ISO Date string
-  baseVersion: number
-  created_at: string
-}
+// Removed SyncQueue and SyncQuarantine interfaces as they are no longer needed
 
 export class DiviDatabase extends Dexie {
   transactions!: Table<LocalTransaction>
@@ -149,21 +141,19 @@ export class DiviDatabase extends Dexie {
   activities!: Table<LocalActivity>
   budgets!: Table<LocalBudget>
   goals!: Table<LocalGoal>
-  sync_queue!: Table<LocalSyncQueue>
 
   constructor() {
     super('DiviDB_Legacy')
-    this.version(4).stores({
-      transactions: '++localId, id, date, syncStatus, deleted',
-      wallets: '++id, name, syncStatus',
-      categories: '++id, name, syncStatus',
-      payees: '++id, name, syncStatus',
-      loans: 'id, name, syncStatus',
-      subscriptions: 'id, name, syncStatus',
+    this.version(9).stores({
+      transactions: '++localId, id, date, is_dirty, deleted',
+      wallets: '++id, name, is_dirty, deleted',
+      categories: '++id, name, is_dirty, deleted',
+      payees: '++id, name, is_dirty, deleted',
+      loans: 'id, name, is_dirty, deleted',
+      subscriptions: 'id, name, is_dirty, deleted',
       activities: 'id, timestamp',
-      budgets: 'id, name, type, syncStatus',
-      goals: 'id, name, type, syncStatus',
-      sync_queue: '++id, table, recordId, action, status, nextRetry',
+      budgets: 'id, name, type, is_dirty, deleted',
+      goals: 'id, name, type, is_dirty, deleted'
     })
   }
 }

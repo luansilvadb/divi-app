@@ -65,6 +65,18 @@ const router = createRouter({
       component: () => import('../../modules/auth/ui/views/LoginView.vue'),
       meta: { guestOnly: true },
     },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../../modules/auth/ui/views/ProfileView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../../modules/settings/ui/views/SettingsView.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
@@ -84,6 +96,16 @@ router.beforeEach(async (to, _from) => {
   } catch (e) {
     console.error('Router Auth Guard Error:', e)
     return true
+  }
+})
+
+// Navigation Error Handler (Critical for Offline/PWA)
+router.onError((error, to) => {
+  if (error.message.includes('Failed to fetch dynamically imported module') || error.message.includes('Importing a shadowed module')) {
+    console.error(`[Router] Falha ao carregar a página "${String(to.name)}" devido à falta de conexão.`, error)
+    // Aqui poderíamos redirecionar para uma página de "Offline" customizada se desejado
+  } else {
+    console.error('[Router] Erro inesperado na navegação:', error)
   }
 })
 

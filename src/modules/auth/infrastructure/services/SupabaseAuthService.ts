@@ -20,19 +20,30 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    // Garantir o parsing da sessão (vital no fluxo implícito do OAuth)
-    await supabase.auth.getSession()
+    // 1. Obter a sessão local (rápido e funciona offline)
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    
+    if (sessionError || !session) return null
 
-    // Limpar o hash da URL (proteção contra token leak)
+    // 2. Limpar o hash da URL (proteção contra token leak)
     if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search)
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user) return null
+    // 3. Se estivermos online, podemos validar o usuário no servidor para maior segurança
+    // Se estivermos offline, confiamos na sessão local para não travar o app
+    let user = session.user
+    
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      try {
+        const { data: { user: verifiedUser }, error: userError } = await supabase.auth.getUser()
+        if (!userError && verifiedUser) {
+          user = verifiedUser
+        }
+      } catch (e) {
+        console.warn('[AuthService] Falha ao verificar usuário no servidor (offline?), usando sessão local.')
+      }
+    }
 
     return {
       id: user.id,

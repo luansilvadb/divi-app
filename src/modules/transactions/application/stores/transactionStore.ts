@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref, shallowRef, computed, watch } from 'vue'
+import { ref, shallowRef, computed, watch } from 'vue' // watch adicionado
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
+import { useSyncStore } from '@/core/sync/syncStore' // SyncStore importada
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository'
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
@@ -16,12 +17,45 @@ export const useTransactionStore = defineStore('transactions', () => {
   const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
   const walletRepo = container.resolve<IWalletRepository>(DI_TOKENS.WalletRepository)
   const categoryRepo = container.resolve<ICategoryRepository>(DI_TOKENS.CategoryRepository)
+  const syncStore = useSyncStore()
 
   // State
   const transactions = shallowRef<Transaction[]>([])
   const wallets = shallowRef<Wallet[]>([])
   const categories = shallowRef<Category[]>([])
   const isLoading = ref(false)
+  
+  // RASTREIO DE CONTEXTO: Guarda o que a UI está vendo no momento
+  const currentYear = ref(new Date().getFullYear())
+  const currentMonth = ref(new Date().getMonth() + 1)
+
+  // ... (GAPS: manter getters e outras refs)
+
+  async function fetchTransactionsByMonth(year: number, month: number) {
+    isLoading.value = true
+    currentYear.value = year
+    currentMonth.value = month
+    
+    try {
+      const raw = await transactionRepo.getByMonth(year, month)
+      raw.sort((a, b) => {
+        const timeA = (a as UITransaction)._timestamp
+        const timeB = (b as UITransaction)._timestamp
+        return timeB - timeA
+      })
+      transactions.value = [...raw]
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  // REATIVIDADE AUTOMÁTICA: 
+  // Sempre que o SyncEngine notificar que "algo mudou fisicamente no banco",
+  // nós refazemos a busca local para manter a UI em dia com o Supabase.
+  watch(() => syncStore.updateCounter, () => {
+    console.log('[TransactionStore] Re-buscando dados devido a mudança no Sync...')
+    fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+  })
 
   // UI State
   const searchQuery = ref('')
@@ -30,68 +64,40 @@ export const useTransactionStore = defineStore('transactions', () => {
   const categoryMap = shallowRef<Record<string, Category>>({})
   const walletMap = shallowRef<Record<string, Wallet>>({})
 
-  const totalIncome = ref(0)
-  const totalExpense = ref(0)
+
+  // 2. GETTERS DERIVADOS (O que a UI realmente consome)
+  // A UI NUNCA usa o array 'transactions' diretamente para exibição.
+  const activeTransactions = computed(() => {
+    return (transactions.value as UITransaction[]).filter(t => !t.deleted)
+  })
+
+  // Gráficos e Saldos derivam de activeTransactions.
+  const totalIncome = computed(() => {
+    let inc = 0
+    const trans = activeTransactions.value
+    for (let i = 0, len = trans.length; i < len; i++) {
+      if (trans[i]?.type === 'income') inc += trans[i]!.amount
+    }
+    return inc
+  })
+
+  const totalExpense = computed(() => {
+    let exp = 0
+    const trans = activeTransactions.value
+    for (let i = 0, len = trans.length; i < len; i++) {
+      if (trans[i]?.type === 'expense') exp += trans[i]!.amount
+    }
+    return exp
+  })
+
   const monthlyBalance = computed(() => totalIncome.value - totalExpense.value)
 
-  // Top Categories Single Pass
-  const topCategories = computed(() => {
-    const catMap: Record<string, number> = {}
-    const trans = transactions.value
-
-    for (let i = 0, len = trans.length; i < len; i++) {
-      const t = trans[i]!
-      if (t.type === 'expense') {
-        catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
-      }
-    }
-
-    const expenseTotal = totalExpense.value
-    if (expenseTotal === 0) return []
-
-    return Object.entries(catMap)
-      .map(([id, total]) => {
-        const cat = categoryMap.value[id]
-        return {
-          id,
-          name: cat?.name || 'Outros',
-          color: cat?.color || '#9ca3af',
-          total,
-          percent: (total / expenseTotal) * 100,
-        }
-      })
-      .sort((a, b) => b.total - a.total)
-      .slice(0, 5)
-  })
-
-  // Sort happens on fetch/update now, preventing O(N log N) on every UI computation.
-  watch(
-    transactions,
-    (newTransactions: Transaction[]) => {
-      let inc = 0
-      let exp = 0
-      for (let i = 0, len = newTransactions.length; i < len; i++) {
-        const t = newTransactions[i]!
-        if (t.type === 'income') inc += t.amount
-        else if (t.type === 'expense') exp += t.amount
-      }
-      totalIncome.value = inc
-      totalExpense.value = exp
-    },
-    { immediate: true },
-  )
-
-  // UI Getters
-  const uiTransactions = computed(() => {
-    return transactions.value as UITransaction[]
-  })
-
   const filteredTransactionsArray = computed(() => {
-    if (!searchQuery.value.trim()) return uiTransactions.value
+    if (!searchQuery.value.trim()) return activeTransactions.value
 
     const query = searchQuery.value.toLowerCase().trim()
     const result: UITransaction[] = []
-    const trans = uiTransactions.value
+    const trans = activeTransactions.value
     const catMap = categoryMap.value
 
     for (let i = 0, len = trans.length; i < len; i++) {
@@ -154,23 +160,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     categoryMap.value = map
   }
 
-  async function fetchTransactionsByMonth(year: number, month: number) {
-    isLoading.value = true
-    try {
-      const raw = await transactionRepo.getByMonth(year, month)
-      // Sort by timestamp descending once, preventing sorted re-computations in groupedTransactions
-      raw.sort((a, b) => {
-        const timeA = (a as UITransaction)._timestamp
-        const timeB = (b as UITransaction)._timestamp
-        return timeB - timeA
-      })
-      // Ensure reactivity by assigning a new reference
-      transactions.value = [...raw]
-    } finally {
-      isLoading.value = false
-    }
-  }
-
   async function saveTransaction(transaction: Transaction) {
     await transactionRepo.save(transaction)
     const date = new Date(transaction.date)
@@ -178,9 +167,52 @@ export const useTransactionStore = defineStore('transactions', () => {
   }
 
   async function deleteTransaction(id: string) {
-    await transactionRepo.delete(id)
-    transactions.value = transactions.value.filter((t) => t.id !== id)
+    // 1. ATUALIZAÇÃO OTIMISTA (Instantânea na Memória)
+    const index = transactions.value.findIndex((t) => t.id === id)
+    if (index !== -1) {
+      const newArray = [...transactions.value]
+      newArray[index] = { ...newArray[index]!, deleted: true }
+      transactions.value = newArray
+    }
+
+    try {
+      // 2. Persistência Local (Hard-Delete conforme pedido)
+      await transactionRepo.delete(id)
+    } catch (err) {
+      console.error('Erro ao deletar transação:', err)
+      await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+    }
   }
+
+  // Top Categories Single Pass
+  const topCategories = computed(() => {
+    const catMap: Record<string, number> = {}
+    const trans = activeTransactions.value
+
+    for (let i = 0, len = trans.length; i < len; i++) {
+      const t = trans[i]!
+      if (t.type === 'expense') {
+        catMap[t.category_id] = (catMap[t.category_id] || 0) + t.amount
+      }
+    }
+
+    const expenseTotal = totalExpense.value
+    if (expenseTotal === 0) return []
+
+    return Object.entries(catMap)
+      .map(([id, total]) => {
+        const cat = categoryMap.value[id]
+        return {
+          id,
+          name: cat?.name || 'Outros',
+          color: cat?.color || '#9ca3af',
+          total,
+          percent: (total / expenseTotal) * 100,
+        }
+      })
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5)
+  })
 
   return {
     transactions,

@@ -1,266 +1,206 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { SyncEngine } from '../SyncEngine'
 import { db } from '../../db'
 import { supabase } from '../../supabase'
+import { setActivePinia, createPinia } from 'pinia'
+import 'fake-indexeddb/auto'
 
-vi.mock('../../supabase', () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      delete: vi.fn(() => ({
-        in: vi.fn().mockResolvedValue({ error: null })
+// Mock do Supabase extremamente resiliente
+vi.mock('../../supabase', () => {
+  const mockUpsert = vi.fn().mockResolvedValue({ error: null })
+  const mockDelete = vi.fn().mockReturnThis()
+  const mockIn = vi.fn().mockResolvedValue({ error: null })
+  const mockSelect = vi.fn().mockReturnThis()
+  const mockEq = vi.fn().mockResolvedValue({ data: [], error: null })
+
+  return {
+    supabase: {
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'test-user-id' } }, error: null }),
+      },
+      from: vi.fn(() => ({
+        upsert: mockUpsert,
+        delete: mockDelete,
+        in: mockIn,
+        select: mockSelect,
+        eq: mockEq,
       })),
-      upsert: vi.fn(() => ({
-        select: vi.fn().mockResolvedValue({ data: [], error: null })
-      })),
-      select: vi.fn(() => ({
-        in: vi.fn().mockResolvedValue({ data: [], error: null })
-      }))
-    }))
+    },
   }
-}))
+})
 
-describe('SyncEngine', () => {
-  let syncEngine: SyncEngine
+describe('SyncEngine (Motor de Sincronização)', () => {
+  let engine: SyncEngine
 
   beforeEach(async () => {
     setActivePinia(createPinia())
-    // Clear all tables
-    await Promise.all([
-      db.transactions.clear(),
-      db.wallets.clear(),
-      db.categories.clear(),
-      db.payees.clear(),
-      db.loans.clear(),
-      db.subscriptions.clear()
-    ])
-    syncEngine = new SyncEngine()
-  })
-
-  it('should find all pending records across monitored tables', async () => {
-    // Add pending transaction
-    await db.transactions.add({
-      user_id: 'u1',
-      title: 'T1',
-      amount: 10,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'pending',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    // Add synced transaction (should be ignored)
-    await db.transactions.add({
-      user_id: 'u1',
-      title: 'T2',
-      amount: 20,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'synced',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    // Add pending wallet
-    await db.wallets.add({
-      user_id: 'u1',
-      name: 'W1',
-      balance: 100,
-      currency: 'BRL',
-      syncStatus: 'pending',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    const pendingRecords = await syncEngine.getPendingRecords()
-
-    // 1 transaction + 1 wallet = 2 records
-    expect(pendingRecords).toHaveLength(2)
+    // Reseta o Singleton para cada teste
+    SyncEngine._resetInstance()
     
-    const transactionRecord = pendingRecords.find(r => r.table === 'transactions')
-    expect(transactionRecord).toBeDefined()
-    expect(transactionRecord?.data.title).toBe('T1')
-
-    const walletRecord = pendingRecords.find(r => r.table === 'wallets')
-    expect(walletRecord).toBeDefined()
-    expect(walletRecord?.data.name).toBe('W1')
-  })
-
-  it('should find failed records as well', async () => {
-    await db.categories.add({
-      name: 'C1',
-      syncStatus: 'failed',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    const pendingRecords = await syncEngine.getPendingRecords()
-    expect(pendingRecords).toHaveLength(1)
-    expect(pendingRecords[0]!.table).toBe('categories')
-    expect(pendingRecords[0]!.data.syncStatus).toBe('failed')
-  })
-
-  it('should trigger sync when a pending record is added', async () => {
-    const syncSpy = vi.spyOn(syncEngine, 'sync')
-
-    await db.transactions.add({
-      user_id: 'u1',
-      title: 'Auto Sync',
-      amount: 50,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'pending',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    // Wait for the debounced sync (1000ms in SyncEngine)
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await db.transactions.clear()
+    await db.wallets.clear()
+    await db.categories.clear()
     
-    expect(syncSpy).toHaveBeenCalled()
-  })
-
-  it('should trigger sync when a record is updated to pending', async () => {
-    // Add synced record
-    const id = await db.transactions.add({
-      user_id: 'u1',
-      title: 'Synced',
-      amount: 50,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'synced',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    const syncSpy = vi.spyOn(syncEngine, 'sync')
-
-    // Update to pending
-    await db.transactions.update(id, { syncStatus: 'pending' })
-
-    // Wait for the debounced sync
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    engine = SyncEngine.getInstance()
+    vi.clearAllMocks()
     
-    expect(syncSpy).toHaveBeenCalled()
+    Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
-  it('should trigger sync when network comes online', async () => {
-    // Add a pending record first so sync has something to do
-    await db.transactions.add({
-      user_id: 'u1',
-      title: 'Online Sync',
-      amount: 50,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'pending',
-      deleted: false,
-      updated_at: new Date().toISOString()
+  afterEach(async () => {
+    await db.transactions.clear()
+  })
+
+  it('deve identificar e subir apenas registros marcados como "dirty"', async () => {
+    const now = new Date().toISOString()
+    await db.transactions.add({ 
+        id: '1', 
+        title: 'Dirty Item', 
+        amount: 100, 
+        is_dirty: 1, 
+        syncStatus: 'pending', 
+        type: 'expense', 
+        category_id: 'c1', 
+        wallet_id: 'w1', 
+        date: now, 
+        deleted: false, 
+        user_id: 'test-user-id',
+        last_modified_at: now,
+        updated_at: now
     })
 
-    const syncSpy = vi.spyOn(syncEngine, 'sync')
+    const fromMock = vi.mocked(supabase.from)
+    const upsertSpy = vi.fn().mockResolvedValue({ error: null })
+    fromMock.mockReturnValue({ upsert: upsertSpy } as any)
 
-    // Simulate online event
-    window.dispatchEvent(new Event('online'))
+    await engine.pushDirtyRecords()
 
-    expect(syncSpy).toHaveBeenCalled()
-  })
-
-  it('should update online state when network goes offline', () => {
-    const syncSpy = vi.spyOn(syncEngine, 'sync')
+    expect(fromMock).toHaveBeenCalledWith('transactions')
+    expect(upsertSpy).toHaveBeenCalled()
     
-    // Simulate offline event
-    window.dispatchEvent(new Event('offline'))
-    
-    // Simulate triggering sync while offline
-    window.dispatchEvent(new Event('online'))
-    expect(syncSpy).toHaveBeenCalled()
+    const payload = upsertSpy.mock.calls[0]?.[0] as any[]
+    expect(payload?.[0]?.id).toBe('1')
+    expect(payload?.[0]?.is_dirty).toBeUndefined()
+
+    const updated = await db.transactions.where('id').equals('1').first()
+    expect(updated?.is_dirty).toBe(0)
   })
 
-  it('should perform bulk upsert and update local status to synced', async () => {
-    const id = 'test-id'
-    await db.transactions.add({
-      id,
-      user_id: 'u1',
-      title: 'Upsert Test',
-      amount: 100,
-      type: 'income',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'pending',
-      deleted: false,
-      updated_at: new Date().toISOString()
-    })
-
-    // Mock successful select (return nothing, so it pushes) and upsert
-    vi.mocked(supabase.from).mockImplementation((table: string) => {
-      if (table === 'transactions') {
-        return {
-          select: vi.fn().mockImplementation((query) => {
-            if (query === '*') {
-              return { in: vi.fn().mockResolvedValueOnce({ data: [], error: null }) }
-            }
-            return { in: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null }) }
-          }),
-          upsert: vi.fn().mockReturnValueOnce({
-            select: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null })
-          })
-        } as any
-      }
-      return {} as any
-    })
-
-    await syncEngine.sync()
-
-    const record = await db.transactions.get({ id })
-    expect(record?.syncStatus).toBe('synced')
-  })
-
-  it('should perform bulk delete and remove local record', async () => {
-    const id = 'delete-id'
-    const localId = await db.transactions.add({
-      id,
-      user_id: 'u1',
-      title: 'Delete Test',
-      amount: 50,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: '2026-04-07',
-      syncStatus: 'pending',
+  it('deve remover itens do Dexie após Hard-Delete bem-sucedido no Supabase', async () => {
+    const now = new Date().toISOString()
+    const mockId = 'del-999'
+    await db.transactions.add({ 
+      id: mockId, 
+      title: 'Item Deletado', 
+      is_dirty: 1, 
       deleted: true,
-      updated_at: new Date().toISOString()
+      amount: 0,
+      type: 'expense',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: now,
+      user_id: 'u1',
+      syncStatus: 'pending',
+      last_modified_at: now,
+      updated_at: now
     })
 
-    // Mock successful select (return nothing, so it pushes to delete) and delete
-    vi.mocked(supabase.from).mockImplementation((table: string) => {
-      if (table === 'transactions') {
-        return {
-          select: vi.fn().mockReturnValueOnce({
-            in: vi.fn().mockResolvedValueOnce({ data: [], error: null })
-          }),
-          delete: vi.fn().mockReturnValueOnce({
-            in: vi.fn().mockResolvedValueOnce({ error: null })
-          })
-        } as any
-      }
-      return {} as any
+    const fromMock = vi.mocked(supabase.from)
+    const deleteMock = vi.fn().mockReturnThis()
+    const inMock = vi.fn().mockResolvedValue({ error: null })
+    fromMock.mockReturnValue({ delete: deleteMock, in: inMock } as any)
+
+    await engine.pushDirtyRecords()
+
+    expect(inMock).toHaveBeenCalledWith('id', [mockId])
+    const check = await db.transactions.where('id').equals(mockId).first()
+    expect(check).toBeUndefined()
+  })
+
+  it('não deve rodar se estiver offline', async () => {
+    const now = new Date().toISOString()
+    Object.defineProperty(navigator, 'onLine', { value: false, configurable: true })
+    
+    await db.transactions.add({ 
+      id: 'off', 
+      title: 'Wait', 
+      is_dirty: 1,
+      amount: 0,
+      type: 'expense',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: now,
+      user_id: 'u1',
+      syncStatus: 'pending',
+      last_modified_at: now,
+      updated_at: now,
+      deleted: false
+    })
+    
+    const fromMock = vi.mocked(supabase.from)
+    await engine.pushDirtyRecords()
+    expect(fromMock).not.toHaveBeenCalled()
+  })
+
+  it('deve converter strings vazias em null para evitar erros de sintaxe UUID', async () => {
+    const now = new Date().toISOString()
+    await db.transactions.add({ 
+        id: 'bad-uuid', 
+        title: 'Error-Prone', 
+        is_dirty: 1, 
+        category_id: '', 
+        wallet_id: 'w1',
+        amount: 0,
+        type: 'expense',
+        date: now,
+        user_id: 'u1',
+        syncStatus: 'pending',
+        last_modified_at: now,
+        updated_at: now,
+        deleted: false
     })
 
-    await syncEngine.sync()
+    const fromMock = vi.mocked(supabase.from)
+    const upsertSpy = vi.fn().mockResolvedValue({ error: null })
+    fromMock.mockReturnValue({ upsert: upsertSpy } as any)
 
-    const record = await db.transactions.get(localId)
-    expect(record).toBeUndefined()
+    await engine.pushDirtyRecords()
+
+    const sentData = upsertSpy.mock.calls[0]?.[0] as any[]
+    expect(sentData?.[0]?.category_id).toBeNull()
+  })
+
+  it('deve remover registros locais se eles sumirem do Supabase (Reconciliação)', async () => {
+    const now = new Date().toISOString()
+    // 1. Registro que já estava sincronizado (is_dirty: 0)
+    await db.transactions.add({ 
+        id: 'orphan-1', 
+        title: 'Fantasma', 
+        is_dirty: 0, 
+        syncStatus: 'synced',
+        amount: 0, 
+        type: 'expense', 
+        category_id: 'c1', 
+        wallet_id: 'w1', 
+        date: now, 
+        deleted: false, 
+        user_id: 'test-user-id',
+        last_modified_at: now,
+        updated_at: now
+    })
+
+    const fromMock = vi.mocked(supabase.from)
+    // Mock simula que o Supabase está VAZIO (retorna select: id => [])
+    fromMock.mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockResolvedValue({ data: [], error: null })
+      })
+    } as any)
+
+    await engine.pullFromServer()
+
+    // O registro deve ter sido limpo pelo Detector de Fantasmas
+    const check = await db.transactions.where('id').equals('orphan-1').first()
+    expect(check).toBeUndefined()
   })
 })

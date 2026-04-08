@@ -3,6 +3,7 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 import { db, type LocalTransaction } from '@/core/db'
 import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
+import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<Transaction[]> {
@@ -38,9 +39,16 @@ export class DexieTransactionRepository implements ITransactionRepository {
   async save(transaction: Transaction): Promise<void> {
     try {
       const now = new Date().toISOString()
+      
+      // GARANTE IDENTIDADE: Toda transação nasce com UUID no cliente
+      const id = transaction.id || crypto.randomUUID()
+      
       const localData: LocalTransaction = {
         ...transaction,
+        id, // UUID Estável
         syncStatus: 'pending',
+        is_dirty: 1,
+        last_modified_at: now,
         updated_at: now,
       }
 
@@ -49,6 +57,11 @@ export class DexieTransactionRepository implements ITransactionRepository {
       } else {
         await db.transactions.add(localData)
       }
+      
+      // Empuxo imediato
+      SyncEngine.getInstance().trigger()
+      
+      console.debug('[DexieTransactionRepository] Transação marcada como "dirty" e salva localmente.')
     } catch (err) {
       throw new InfrastructureError('Failed to save transaction to local DB', err)
     }
@@ -56,8 +69,19 @@ export class DexieTransactionRepository implements ITransactionRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      // Soft delete locally
-      await db.transactions.where('id').equals(id).modify({ deleted: true, syncStatus: 'pending' })
+      const now = new Date().toISOString()
+      // Soft delete locally with State-Based flags
+      await db.transactions.where('id').equals(id).modify({ 
+        deleted: true, 
+        is_dirty: 1, 
+        last_modified_at: now,
+        syncStatus: 'pending' 
+      })
+
+      // Empuxo imediato
+      SyncEngine.getInstance().trigger()
+      
+      console.debug('[DexieTransactionRepository] Transação marcada para deleção (dirty).')
     } catch (err) {
       throw new InfrastructureError('Failed to delete transaction', err)
     }

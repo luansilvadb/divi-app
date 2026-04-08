@@ -1,0 +1,184 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.1.2 [39m[90mD:/software/divi/divi-app[39m
+
+[90mstdout[2m | src/core/sync/__tests__/SyncStrategy.spec.ts[2m > [22m[2mSync Strategy (LWW)[2m > [22m[2mshould NOT overwrite remote record if remote updated_at is newer
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngineError.spec.ts[2m > [22m[2mSyncEngine Task Implementation: Error Handling[2m > [22m[2mshould mark records as failed if Supabase returns an error
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngineTask.spec.ts[2m > [22m[2mSyncEngine Task Implementation: Validate Response[2m > [22m[2mshould update local record with remote id and set status to synced for NEW records
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncStrategy.spec.ts[2m > [22m[2mSync Strategy (LWW)[2m > [22m[2mshould overwrite remote record if local updated_at is newer
+[22m[39m[SyncEngine] Found 1 pending records.
+
+ [31mÔØ»[39m src/core/sync/__tests__/SyncEngineTask.spec.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 39[2mms[22m[39m
+[31m     [31m├ù[31m should update local record with remote id and set status to synced for NEW records[39m[32m 37[2mms[22m[39m
+[90mstdout[2m | src/core/sync/__tests__/SyncStrategy.spec.ts[2m > [22m[2mSync Strategy (LWW)[2m > [22m[2mshould mark records as failed if supabase upsert fails
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngineError.spec.ts[2m > [22m[2mSyncEngine Task Implementation: Error Handling[2m > [22m[2mshould mark records as failed if an exception is thrown during sync
+[22m[39m[SyncEngine] Found 1 pending records.
+
+ [31mÔØ»[39m src/core/sync/__tests__/SyncEngineError.spec.ts [2m([22m[2m2 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 46[2mms[22m[39m
+[31m     [31m├ù[31m should mark records as failed if Supabase returns an error[39m[32m 36[2mms[22m[39m
+[31m     [31m├ù[31m should mark records as failed if an exception is thrown during sync[39m[32m 8[2mms[22m[39m
+ [31mÔØ»[39m src/core/sync/__tests__/SyncStrategy.spec.ts [2m([22m[2m3 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 53[2mms[22m[39m
+[31m     [31m├ù[31m should NOT overwrite remote record if remote updated_at is newer[39m[32m 37[2mms[22m[39m
+[31m     [31m├ù[31m should overwrite remote record if local updated_at is newer[39m[32m 7[2mms[22m[39m
+[31m     [31m├ù[31m should mark records as failed if supabase upsert fails[39m[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseProgressBar.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 113[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseIconBox.spec.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseButton.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseBadge.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseSelect.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 203[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseInput.spec.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 260[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/molecules/__tests__/ThemeToggle.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseSkeleton.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/transactions/ui/components/__tests__/TransactionItem.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 178[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/BaseCard.spec.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 314[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/subscriptions/ui/views/__tests__/SubscriptionsView.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 58[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/molecules/__tests__/BaseSearchInput.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 488[2mms[22m[39m
+[90mstdout[2m | src/modules/transactions/ui/views/__tests__/TransactionsView.spec.ts
+[22m[39m[DI] Registered: IAuthService
+[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+[DI] Registered: IPayeeRepository
+[DI] Registered: ILoanRepository
+[DI] Registered: IBudgetRepository
+[DI] Registered: IGoalRepository
+[DI] Registered: IBudgetLogicService
+[DI] Registered: IGoalLogicService
+[DI] Registered: ISubscriptionRepository
+[DI] Registered: IActivityLogService
+[DI] Registered: IAssetLoader
+[DI] Registered: ExportService
+[DI] Registered: ISyncEngine
+
+[90mstdout[2m | src/__tests__/App.spec.ts
+[22m[39m[DI] Registered: IAuthService
+[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+[DI] Registered: IPayeeRepository
+[DI] Registered: ILoanRepository
+[DI] Registered: IBudgetRepository
+[DI] Registered: IGoalRepository
+[DI] Registered: IBudgetLogicService
+[DI] Registered: IGoalLogicService
+[DI] Registered: ISubscriptionRepository
+[DI] Registered: IActivityLogService
+[DI] Registered: IAssetLoader
+[DI] Registered: ExportService
+[DI] Registered: ISyncEngine
+
+ [32mÔ£ô[39m src/modules/loans/ui/views/__tests__/LoansView.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 76[2mms[22m[39m
+[90mstdout[2m | src/modules/auth/ui/views/__tests__/LoginView.spec.ts
+[22m[39m[DI] Registered: IAuthService
+[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+[DI] Registered: IPayeeRepository
+[DI] Registered: ILoanRepository
+[DI] Registered: IBudgetRepository
+[DI] Registered: IGoalRepository
+[DI] Registered: IBudgetLogicService
+[DI] Registered: IGoalLogicService
+[DI] Registered: ISubscriptionRepository
+[DI] Registered: IActivityLogService
+[DI] Registered: IAssetLoader
+[DI] Registered: ExportService
+[DI] Registered: ISyncEngine
+
+[90mstdout[2m | src/modules/auth/ui/views/__tests__/LoginView.spec.ts[2m > [22m[2mLoginView.vue[2m > [22m[2mrenders login view with proper accessibility attributes
+[22m[39m[DI] Registered: IAuthService
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a pending record is added
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a pending record is added
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a pending record is added
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a pending record is added
+[22m[39m[SyncEngine] No pending records.
+
+ [32mÔ£ô[39m src/core/router/__tests__/index.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 976[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m should redirect to dashboard if route is guestOnly and user is logged in [33m 743[2mms[22m[39m
+[90mstdout[2m | src/modules/auth/ui/views/__tests__/LoginView.spec.ts[2m > [22m[2mLoginView.vue[2m > [22m[2msvg and loading spinner should have aria-hidden
+[22m[39m[DI] Registered: IAuthService
+
+[90mstdout[2m | src/modules/auth/ui/views/__tests__/LoginView.spec.ts[2m > [22m[2mLoginView.vue[2m > [22m[2mterms and privacy links should have aria-labels
+[22m[39m[DI] Registered: IAuthService
+
+ [32mÔ£ô[39m src/modules/auth/ui/__tests__/AuthView.spec.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 685[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m renders login form by default [33m 356[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/auth/ui/views/__tests__/LoginView.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/dashboard/ui/views/__tests__/DashboardView.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 288[2mms[22m[39m
+ [32mÔ£ô[39m src/__tests__/App.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/transactions/ui/views/__tests__/TransactionsView.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/components/atoms/__tests__/ItemSyncIndicator.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+ [32mÔ£ô[39m src/modules/transactions/infrastructure/__tests__/DexieTransactionRepository.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+ [32mÔ£ô[39m src/modules/auth/infrastructure/__tests__/SupabaseAuth.spec.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/auth/application/__tests__/authStore.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/goals/application/stores/__tests__/goalStore.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/transactions/application/services/__tests__/AutoCategorizationService.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/shared/stores/__tests__/themeStore.spec.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/goals/ui/views/__tests__/GoalsView.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/budgets/application/stores/__tests__/budgetStore.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/budgets/application/services/__tests__/BudgetLogicService.spec.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/transactions/domain/__tests__/Transaction.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/loans/application/stores/__tests__/loanStore.spec.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/modules/budgets/ui/views/__tests__/BudgetsView.spec.ts [2m([22m[2m1 test[22m[2m)[22m[32m 36[2mms[22m[39m
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould trigger sync when a record is updated to pending
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould perform bulk upsert and update local status to synced
+[22m[39m[SyncEngine] No pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould perform bulk upsert and update local status to synced
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould perform bulk upsert and update local status to synced
+[22m[39m[SyncEngine] Found 1 pending records.
+
+[90mstdout[2m | src/core/sync/__tests__/SyncEngine.spec.ts[2m > [22m[2mSyncEngine[2m > [22m[2mshould perform bulk delete and remove local record
+[22m[39m[SyncEngine] Found 1 pending records.
+
+ [31mÔØ»[39m src/core/sync/__tests__/SyncEngine.spec.ts [2m([22m[2m8 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[33m 3072[2mms[22m[39m
+     [32mÔ£ô[39m should find all pending records across monitored tables[32m 25[2mms[22m[39m
+     [32mÔ£ô[39m should find failed records as well[32m 5[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m should trigger sync when a pending record is added [33m 1505[2mms[22m[39m
+     [33m[2mÔ£ô[22m[39m should trigger sync when a record is updated to pending [33m 1508[2mms[22m[39m
+[31m     [31m├ù[31m should trigger sync when network comes online[39m[32m 7[2mms[22m[39m
+[31m     [31m├ù[31m should update online state when network goes offline[39m[32m 3[2mms[22m[39m
+[31m     [31m├ù[31m should perform bulk upsert and update local status to synced[39m[32m 10[2mms[22m[39m
+[31m     [31m├ù[31m should perform bulk delete and remove local record[39m[32m 7[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m32 passed[39m[22m[90m (36)[39m
+[2m      Tests [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m115 passed[39m[22m[90m (125)[39m
+[2m   Start at [22m 01:34:07
+[2m   Duration [22m 6.18s[2m (transform 14.72s, setup 7.13s, import 23.04s, tests 8.36s, environment 61.68s)[22m
+

@@ -111,8 +111,9 @@
       </div>
 
       <!-- Main User Profile (Compact) -->
-      <div 
-        class="group/user relative flex items-center p-2 mx-2 mb-6 rounded-xl transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/5 cursor-default select-none"
+      <RouterLink 
+        to="/profile"
+        class="group/user relative flex items-center p-2 mx-2 mb-6 rounded-xl transition-colors duration-300 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer select-none no-underline"
         :class="{ 'justify-center mx-0': isCollapsed }"
       >
         <!-- Avatar Area -->
@@ -128,23 +129,21 @@
           class="ml-3 flex-1 min-w-0 transition-opacity duration-300"
           :class="{ 'opacity-0 w-0 hidden': isCollapsed }"
         >
-          <div class="text-[0.8rem] font-bold text-text-primary truncate tracking-tight">Luan Silva</div>
-          <div class="text-[0.6rem] font-medium text-text-secondary/40 truncate tracking-tight uppercase">luan@divi.app</div>
+          <div class="text-[0.8rem] font-bold text-text-primary truncate tracking-tight text-left">Luan Silva</div>
+          <div class="text-[0.6rem] font-medium text-text-secondary/40 truncate tracking-tight uppercase text-left">luan@divi.app</div>
         </div>
 
         <i 
           v-if="!isCollapsed" 
-          class="pi pi-chevron-up text-[0.6rem] text-text-secondary/20 transition-transform duration-300 group-hover/user:translate-y-[-2px]"
+          class="pi pi-chevron-right text-[0.6rem] text-text-secondary/20 transition-transform duration-300 group-hover/user:translate-x-1"
         ></i>
-      </div>
+      </RouterLink>
     </div>
   </aside>
 </template>
-te>
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount } from 'vue'
-
 import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
 import Menu from 'primevue/menu'
@@ -198,6 +197,13 @@ const menuItems = computed(() => [
             { label: 'Calendário', icon: 'pi pi-calendar', route: '/calendar' },
             { label: 'Relatórios', icon: 'pi pi-chart-line', route: '/reports' },
             { label: 'Atividades', icon: 'pi pi-file', route: '/activity-log' }
+        ]
+    },
+    {
+        label: 'Preferências',
+        items: [
+            { label: 'Meu Perfil', icon: 'pi pi-user', route: '/profile' },
+            { label: 'Configurações', icon: 'pi pi-cog', route: '/settings' }
         ]
     }
 ])

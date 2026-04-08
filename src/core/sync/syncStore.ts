@@ -18,9 +18,13 @@ export const useSyncStore = defineStore('sync', {
     fatalErrorCount: 0,
     isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     error: null as string | null,
-    logs: [] as SyncLog[]
+    logs: [] as SyncLog[],
+    updateCounter: 0 // Sinalizador reativo de mudança
   }),
   actions: {
+    notifyChange() {
+      this.updateCounter++
+    },
     setStatus(status: SyncStatus) {
       this.status = status
     },
