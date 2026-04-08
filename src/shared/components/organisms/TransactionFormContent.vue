@@ -196,6 +196,13 @@ function handleTitleInput() {
 
 async function handleSubmit() {
   if (isSubmitting.value) return
+  
+  if (!form.title.trim()) {
+    // Basic validation alert (could be improved with a proper toast)
+    alert('O título da transação é obrigatório.')
+    return
+  }
+  
   isSubmitting.value = true
   try {
     const isEditing = !!props.initialData?.id

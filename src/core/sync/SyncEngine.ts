@@ -1,286 +1,278 @@
-import { db } from '../db'
 import { supabase } from '../supabase'
+import { db, type DiviDatabase } from '../db'
 import { useSyncStore } from './syncStore'
 
-export interface SyncRecord {
-  table: string
-  data: any
-}
-
 export class SyncEngine {
-  private monitoredTables = [
+  private isSyncing = false
+  private syncTimeout: ReturnType<typeof setTimeout> | null = null
+  private monitoredTables: (keyof DiviDatabase)[] = [
     'transactions',
     'wallets',
     'categories',
     'payees',
     'loans',
-    'subscriptions'
-  ] as const
-
-  private isSyncing = false
-  private online = navigator.onLine
+    'subscriptions',
+    'budgets',
+    'goals'
+  ]
 
   constructor() {
-    this.registerHooks()
-    this.initNetworkListener()
+    this.setupListeners()
   }
 
-  private initNetworkListener() {
-    window.addEventListener('online', () => {
-      this.online = true
-      console.log('[SyncEngine] Network is online. Resuming sync...')
-      this.sync().catch(err => console.error('[SyncEngine] Online sync failed', err))
-    })
+  private setupListeners() {
+    this.startAutoSync()
 
-    window.addEventListener('offline', () => {
-      this.online = false
-      console.log('[SyncEngine] Network is offline. Pausing sync...')
-    })
-  }
-
-  private registerHooks() {
-    for (const tableName of this.monitoredTables) {
-      const table = (db as any)[tableName]
-      
-      table.hook('creating', (_primKey: any, obj: any) => {
-        if (obj.syncStatus !== 'synced') {
-          this.triggerSync()
-        }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => {
+        useSyncStore().addLog({ status: 'success', message: 'Conexão restaurada' })
+        this.triggerSync()
       })
-
-      table.hook('updating', (mods: any, _primKey: any, _obj: any) => {
-        if (mods.syncStatus === 'pending' || mods.syncStatus === 'failed') {
-          this.triggerSync()
-        }
+      window.addEventListener('offline', () => {
+        useSyncStore().addLog({ status: 'failed', message: 'Modo offline' })
       })
     }
   }
 
-  private triggerSync() {
-    if (!this.online) return
-    
-    // Debounced sync call
-    setTimeout(() => {
-      this.sync().catch(err => console.error('[SyncEngine] Sync failed', err))
-    }, 1000)
+  private startAutoSync() {
+    this.triggerSync()
+  }
+
+  public triggerSync() {
+    if (this.syncTimeout) {
+      clearTimeout(this.syncTimeout)
+    }
+
+    this.syncTimeout = setTimeout(async () => {
+      try {
+        await this.sync()
+      } catch (error) {
+        console.error('[SyncEngine] Auto-sync failed:', error)
+      } finally {
+        this.startAutoSync()
+      }
+    }, 1000) // Debounce para agregamento de chamadas (1 segundo)
   }
 
   /**
-   * Scans all monitored tables for records that are pending or failed to sync.
+   * Obtém todos os registros pendentes de todas as tabelas monitoradas
    */
-  async getPendingRecords(): Promise<SyncRecord[]> {
-    const results: SyncRecord[] = []
+  public async getPendingRecords() {
+    const allPending: { table: keyof DiviDatabase; data: any }[] = []
 
-    for (const tableName of this.monitoredTables) {
-      const table = (db as any)[tableName]
-      
-      const pending = await table
+    for (const table of this.monitoredTables) {
+      // Ignorar tabelas que não são sincronizáveis ou de log
+      if (table === 'activities') continue
+
+      const pending = await (db as any)[table]
         .where('syncStatus')
-        .anyOf(['pending', 'failed'])
+        .equals('pending')
+        .toArray()
+      
+      const failed = await (db as any)[table]
+        .where('syncStatus')
+        .equals('failed')
         .toArray()
 
-      pending.forEach((record: any) => {
-        results.push({
-          table: tableName,
-          data: record
-        })
-      })
+      const toSync = [...pending, ...failed]
+      
+      for (const item of toSync) {
+        allPending.push({ table, data: item })
+      }
     }
 
-    return results
+    return allPending
   }
 
   /**
-   * Main sync logic
+   * Executa o ciclo de sincronização
    */
   async sync(): Promise<void> {
     const store = useSyncStore()
-    
-    if (this.isSyncing) return
-    
-    if (!this.online) {
-      store.setStatus('offline')
-      return
-    }
-    
-    const pending = await this.getPendingRecords()
-    store.setPendingCount(pending.length)
-    
-    if (pending.length === 0) {
-      store.setStatus('synced')
-      return
-    }
 
+    if (this.isSyncing) return
     this.isSyncing = true
     store.setStatus('syncing')
-    
+
     try {
-      console.log(`[SyncEngine] Starting sync for ${pending.length} records...`)
+      const pendingRecords = await this.getPendingRecords()
       
-      // Group records by table for bulk operations
-      const grouped = pending.reduce((acc, record) => {
-        const table = record.table
-        if (!acc[table]) {
-          acc[table] = []
-        }
-        acc[table]!.push(record.data)
+      if (pendingRecords.length === 0) {
+        console.log('[SyncEngine] No pending records.')
+        store.setStatus('synced')
+        return
+      }
+
+      console.log(`[SyncEngine] Found ${pendingRecords.length} pending records.`)
+      store.addLog({
+        status: 'pending',
+        message: `Iniciando sincronização de ${pendingRecords.length} registros.`
+      })
+
+      // Agrupar por tabela para otimizar upserts
+      const grouped = pendingRecords.reduce((acc, curr) => {
+        const table = curr.table
+        if (!acc[table]) acc[table] = []
+        acc[table]?.push(curr.data)
         return acc
       }, {} as Record<string, any[]>)
 
-      for (const tableName in grouped) {
-        const records = grouped[tableName]
-        if (records) {
-          await this.syncTableRecords(tableName, records)
-        }
+      for (const [table, records] of Object.entries(grouped)) {
+        await this.syncTableRecords(table as keyof DiviDatabase, records)
       }
-      
-      const remaining = await this.getPendingRecords()
-      store.setPendingCount(remaining.length)
-      
-      if (remaining.length === 0) {
-        store.setStatus('synced')
-        store.setLastSyncTime(new Date().toISOString())
-      } else {
-        store.setStatus('pending')
-      }
-      
-      console.log('[SyncEngine] Sync cycle completed successfully.')
-    } catch (err) {
-      console.error('[SyncEngine] Sync cycle failed:', err)
+
+      store.setStatus('synced')
+      store.setLastSyncTime(new Date().toISOString())
+      store.addLog({
+        status: 'success',
+        message: 'Sincronização concluída com sucesso.'
+      })
+    } catch (error: any) {
       store.setStatus('failed')
-      store.setError(err instanceof Error ? err.message : String(err))
+      store.addLog({
+        status: 'failed',
+        message: `Erro na sincronização: ${error.message || 'Erro desconhecido'}`,
+        details: typeof error === 'object' ? error : { error: String(error) }
+      })
+      console.error('[SyncEngine] Sync error:', error)
     } finally {
       this.isSyncing = false
     }
   }
 
-  private async syncTableRecords(tableName: string, records: any[]) {
+  /**
+   * Sincroniza registros de uma tabela específica
+   */
+  private async syncTableRecords(table: keyof DiviDatabase, records: any[]) {
+    const store = useSyncStore()
     try {
-      const recordIds = records.map(r => r.id).filter(Boolean)
-      
-      // Fetch remote state to compare timestamps
-      let remoteRecords: any[] = []
-      if (recordIds.length > 0) {
-        const { data, error } = await supabase
-          .from(tableName)
-          .select('*')
-          .in('id', recordIds)
-        
-        if (!error && data) {
-          remoteRecords = data
-        }
-      }
-
-      const remoteMap = new Map(remoteRecords.map(r => [r.id, r]))
-      
-      const toPush: any[] = []
-      const toPull: any[] = []
-      const alreadySyncedIds: any[] = [] // Store full keys or objects if needed
-
-      for (const local of records) {
-        const remote = remoteMap.get(local.id)
-
-        if (!remote) {
-          // Record doesn't exist on server yet
-          toPush.push(local)
-        } else {
-          const localTime = new Date(local.updated_at).getTime()
-          const remoteTime = new Date(remote.updated_at).getTime()
-
-          if (localTime > remoteTime) {
-            toPush.push(local)
-          } else if (remoteTime > localTime) {
-            // Server wins: Update local with remote data but keep localId
-            toPull.push({
-              ...remote,
-              localId: local.localId
-            })
-          } else {
-            alreadySyncedIds.push(local.localId || local.id)
-          }
-        }
-      }
-
-      // Handle Pull (Server wins)
-      if (toPull.length > 0) {
-        const pullData = toPull.map(r => ({
-          ...r,
-          syncStatus: 'synced'
-        }))
-        await (db as any)[tableName].bulkPut(pullData)
-      }
-
-      // Handle Already Synced
-      if (alreadySyncedIds.length > 0) {
-        const keyPath = (db as any)[tableName].schema.primKey.name
-        await (db as any)[tableName].where(keyPath).anyOf(alreadySyncedIds).modify({ syncStatus: 'synced' })
-      }
-
-      // Handle Push (Client wins)
-      const toDelete = toPush.filter(r => r.deleted)
-      const toUpsert = toPush.filter(r => !r.deleted)
-
-      // Bulk Delete
+      // 1. Lidar com registros deletados (se existirem)
+      const toDelete = records.filter(r => r.deleted && r.id)
       if (toDelete.length > 0) {
-        const deleteIds = toDelete.map(r => r.id).filter(Boolean)
-        if (deleteIds.length > 0) {
-          const { error } = await supabase.from(tableName).delete().in('id', deleteIds)
-          if (!error) {
-            const localKeys = toDelete.map(r => r.localId || r.id)
-            await (db as any)[tableName].bulkDelete(localKeys)
-          } else {
-            console.error(`[SyncEngine] Bulk delete failed for ${tableName}:`, error)
-            await this.markAsFailed(tableName, toDelete)
+        const { error } = await supabase
+          .from(table)
+          .delete()
+          .in('id', toDelete.map(r => r.id))
+
+        if (error) {
+          console.error(`[SyncEngine] Delete error for ${table}:`, error)
+          store.addLog({
+            status: 'failed',
+            message: `Erro ao deletar em ${table}`,
+            details: error as any
+          })
+          throw error
+        }
+        
+        for (const record of toDelete) {
+          const key = table === 'transactions' ? record.localId : record.id;
+          if (key) {
+            await (db as any)[table].delete(key);
           }
-        } else {
-          // Record was never synced (no id), just delete locally
-          const localKeys = toDelete.map(r => r.localId)
-          await (db as any)[tableName].bulkDelete(localKeys)
         }
       }
 
-      // Bulk Upsert
+      // 2. Upsert (Inserir ou Atualizar) registros ativos
+      const toUpsert = records.filter(r => !r.deleted)
       if (toUpsert.length > 0) {
-        const payload = toUpsert.map(r => {
-          // Ensure every record has an ID before upserting
-          if (!r.id) {
-            r.id = crypto.randomUUID()
+        // Obter user_id diretamente do Supabase para garantir sincronia com a sessão
+        const { data: { user } } = await supabase.auth.getUser()
+        
+        // 2.1 Fetch remote records for LWW conflict resolution
+        const remoteIds = toUpsert.map(r => r.id).filter(Boolean);
+        let remoteRecords: any[] = [];
+        if (remoteIds.length > 0) {
+          const { data } = await supabase.from(table).select('*').in('id', remoteIds);
+          if (data) remoteRecords = data;
+        }
+
+        // 2.2 Resolve conflicts using LWW
+        const resolvedToUpsert = [];
+        for (const localRecord of toUpsert) {
+          if (!localRecord.id) {
+            resolvedToUpsert.push(localRecord);
+            continue;
           }
-          const { localId: _, syncStatus: __, ...rest } = r
-          return rest
+          const remoteMatched = remoteRecords.find(r => r.id === localRecord.id);
+          if (remoteMatched && remoteMatched.updated_at && localRecord.updated_at) {
+            const remoteTime = new Date(remoteMatched.updated_at).getTime();
+            const localTime = new Date(localRecord.updated_at).getTime();
+            if (remoteTime > localTime) {
+              const key = table === 'transactions' ? localRecord.localId : localRecord.id;
+              if (key) {
+                await (db as any)[table].update(key, { ...remoteMatched, syncStatus: 'synced' });
+              }
+              continue; // Skip upsert
+            }
+          }
+          resolvedToUpsert.push(localRecord);
+        }
+
+        if (resolvedToUpsert.length === 0) return;
+
+        // Prepare data (remove dexie-only fields like localId, syncStatus)
+        const cleanData = resolvedToUpsert.map(r => {
+          const { _localId, _syncStatus, ...rest } = r as any
+          
+          // Forçar user_id se estiver faltando ou for diferente do usuário logado
+          if (user?.id) {
+            rest.user_id = user.id
+          }
+
+          // Remove empty strings ONLY from UUID fields to avoid "invalid input syntax for type uuid"
+          // String fields like 'title' should stay even if empty to avoid NOT NULL violations if not handled by DB defaults
+          const result: any = { ...rest }
+          for (const key of Object.keys(result)) {
+            if (result[key] === '' && (key.endsWith('_id') || key === 'id')) {
+              delete result[key]
+            }
+          }
+          return result
         })
 
-        const { data, error } = await supabase
-          .from(tableName)
-          .upsert(payload)
-          .select('id')
+        const { data: upsertedData, error } = await supabase
+          .from(table)
+          .upsert(cleanData)
+          .select()
 
-        if (!error) {
-          const remoteIds = new Set(data?.map(d => d.id) || [])
-          const syncedRecords = toUpsert.filter(r => remoteIds.has(r.id))
+        if (error) {
+          console.error(`[SyncEngine] Upsert error for ${table}:`, error)
+          store.addLog({
+            status: 'failed',
+            message: `Erro ao subir dados para ${table}: ${error.message}`,
+            details: error as any
+          })
+          throw error
+        }
+
+        // Mark as synced locally
+        for (let i = 0; i < toUpsert.length; i++) {
+          const record = toUpsert[i];
+          const remoteRecord = upsertedData ? upsertedData[i] : null;
+          const key = table === 'transactions' ? record.localId : record.id;
           
-          for (const record of syncedRecords) {
-            record.syncStatus = 'synced'
+          if (key) {
+            const updates: any = { syncStatus: 'synced' };
+            if (remoteRecord && remoteRecord.id && !record.id) {
+              updates.id = remoteRecord.id;
+            }
+            await (db as any)[table].update(key, updates);
           }
-          
-          if (syncedRecords.length > 0) {
-            await (db as any)[tableName].bulkPut(syncedRecords)
-          }
-        } else {
-          console.error(`[SyncEngine] Bulk upsert failed for ${tableName}:`, error)
-          await this.markAsFailed(tableName, toUpsert)
         }
       }
-    } catch (err) {
-      console.error(`[SyncEngine] Catastrophic error during table sync (${tableName}):`, err)
-      await this.markAsFailed(tableName, records)
+    } catch (error) {
+      // Mark as failed locally so we can retry later
+      for (const record of records) {
+        const key = table === 'transactions' ? record.localId : record.id;
+        if (key) {
+          await (db as any)[table].update(key, { syncStatus: 'failed' })
+        }
+      }
+      throw error
     }
-  }
-
-  private async markAsFailed(tableName: string, records: any[]) {
-    for (const record of records) {
-      record.syncStatus = 'failed'
-    }
-    await (db as any)[tableName].bulkPut(records)
   }
 }
+
+const syncEngine = new SyncEngine()
+export { syncEngine }
+export default syncEngine
