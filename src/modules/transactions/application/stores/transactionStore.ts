@@ -200,7 +200,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       // 5. Audit Log (Automatizado)
       await activityLogService.logActivity({
         action: isNew ? 'Nova Transação' : 'Transação Atualizada',
-        description: `${enriched.type === 'income' ? '+' : '-'} ${enriched.amount} : ${enriched.title}`,
+        description: `R$ ${enriched.amount} : ${enriched.title}`,
         type: 'success',
         user_id: activeUserId
       })

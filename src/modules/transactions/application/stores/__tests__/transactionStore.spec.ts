@@ -171,6 +171,7 @@ describe('TransactionStore CRUD', () => {
       
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(expect.objectContaining({
         action: expect.stringMatching(/Transaction|Transação/i),
+        description: expect.stringMatching(/R\$ 10 : Sample/),
         user_id: 'test-user-id'
       }))
     })
