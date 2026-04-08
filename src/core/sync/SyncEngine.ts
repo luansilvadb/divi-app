@@ -139,7 +139,6 @@ export class SyncEngine {
     }
 
     const remoteMap = new Map(remoteRecords.map(r => [r.id, r]))
-    const localMap = new Map(records.map(r => [r.id, r]))
     
     const toPush: any[] = []
     const toPull: any[] = []
@@ -210,7 +209,11 @@ export class SyncEngine {
     // Bulk Upsert
     if (toUpsert.length > 0) {
       const payload = toUpsert.map(r => {
-        const { localId, syncStatus, ...rest } = r
+        // Ensure every record has an ID before upserting
+        if (!r.id) {
+          r.id = crypto.randomUUID()
+        }
+        const { localId: _, syncStatus: __, ...rest } = r
         return rest
       })
 
@@ -227,7 +230,9 @@ export class SyncEngine {
           record.syncStatus = 'synced'
         }
         
-        await (db as any)[tableName].bulkPut(syncedRecords)
+        if (syncedRecords.length > 0) {
+          await (db as any)[tableName].bulkPut(syncedRecords)
+        }
       } else {
         console.error(`[SyncEngine] Bulk upsert failed for ${tableName}:`, error)
         await this.markAsFailed(tableName, toUpsert)
