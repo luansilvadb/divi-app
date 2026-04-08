@@ -5,11 +5,10 @@
 
 import { SupabaseAuthService } from '../modules/auth/infrastructure/services/SupabaseAuthService'
 import { DexieTransactionRepository } from '../modules/transactions/infrastructure/DexieTransactionRepository'
-import { db as newDb } from '../infrastructure/db/DexieDB'
 import {
   DexieWalletRepository,
   DexieCategoryRepository,
-} from '../modules/transactions/infrastructure/repositories/index'
+} from '../modules/transactions/infrastructure/repositories/DexieMetadataRepositories'
 import { DexiePayeeRepository } from '../modules/transactions/infrastructure/repositories/PayeeRepository'
 import { db } from './db'
 import { DexieLoanRepository } from '../modules/loans/infrastructure/repositories/DexieLoanRepository'
@@ -40,6 +39,7 @@ class Container {
   }
 
   /**
+   * Resolve a service by token or class reference
    */
   resolve<T>(token: Token<T>): T {
     const key = typeof token === 'string' ? token : token.name
@@ -56,7 +56,7 @@ export const container = new Container()
 // To maintain compatibility with existing code during migration,
 // we register both with the string from DI_TOKENS and the explicit string.
 container.register(DI_TOKENS.AuthService, new SupabaseAuthService())
-container.register(DI_TOKENS.TransactionRepository, new DexieTransactionRepository(newDb))
+container.register(DI_TOKENS.TransactionRepository, new DexieTransactionRepository())
 container.register(DI_TOKENS.WalletRepository, new DexieWalletRepository())
 container.register(DI_TOKENS.CategoryRepository, new DexieCategoryRepository())
 container.register(DI_TOKENS.PayeeRepository, new DexiePayeeRepository())

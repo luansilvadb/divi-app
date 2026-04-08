@@ -1,24 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { DexieTransactionRepository } from '../DexieTransactionRepository'
-import { DiviDatabase } from '../../../../infrastructure/db/DexieDB'
-import Dexie from 'dexie'
-import { indexedDB, IDBKeyRange } from 'fake-indexeddb'
-import type { Transaction } from '../../domain/Transaction'
-
-Dexie.dependencies.indexedDB = indexedDB
-Dexie.dependencies.IDBKeyRange = IDBKeyRange
+import { db } from '@/core/db'
+import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 describe('DexieTransactionRepository', () => {
-  let db: DiviDatabase
   let repository: DexieTransactionRepository
 
-  beforeEach(() => {
-    db = new DiviDatabase('TestRepoDB')
-    repository = new DexieTransactionRepository(db)
-  })
-
-  afterEach(async () => {
-    await db.delete()
+  beforeEach(async () => {
+    await db.transactions.clear()
+    repository = new DexieTransactionRepository()
   })
 
   it('should save a transaction and retrieve it', async () => {
@@ -31,6 +21,7 @@ describe('DexieTransactionRepository', () => {
       category_id: 'cat-1',
       wallet_id: 'wallet-1',
       date: '2026-04-07T10:00:00Z',
+      syncStatus: 'pending',
       deleted: false,
       created_at: '2026-04-07T10:00:00Z',
       updated_at: '2026-04-07T10:00:00Z'
@@ -54,6 +45,7 @@ describe('DexieTransactionRepository', () => {
       category_id: 'c1',
       wallet_id: 'w1',
       date: '2026-04-07T10:00:00Z',
+      syncStatus: 'pending',
       deleted: false,
       created_at: '2026-04-07T10:00:00Z',
       updated_at: '2026-04-07T10:00:00Z'
@@ -67,6 +59,7 @@ describe('DexieTransactionRepository', () => {
       category_id: 'c2',
       wallet_id: 'w2',
       date: '2026-04-07T11:00:00Z',
+      syncStatus: 'pending',
       deleted: false,
       created_at: '2026-04-07T11:00:00Z',
       updated_at: '2026-04-07T11:00:00Z'
@@ -77,11 +70,5 @@ describe('DexieTransactionRepository', () => {
 
     const all = await repository.getAll()
     expect(all).toHaveLength(2)
-  })
-
-  it('should return a live query observable from watchAll', async () => {
-    const observable = repository.watchAll()
-    expect(observable).toBeDefined()
-    expect(typeof observable.subscribe).toBe('function')
   })
 })

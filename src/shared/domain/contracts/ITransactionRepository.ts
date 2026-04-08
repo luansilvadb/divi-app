@@ -5,5 +5,5 @@ export interface ITransactionRepository {
   getByMonth(year: number, month: number): Promise<Transaction[]>
   save(transaction: Transaction): Promise<void>
   delete(id: string): Promise<void>
-  sync(): Promise<void>
+  watchAll(): any
 }

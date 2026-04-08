@@ -18,7 +18,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Estrutura Base do Sync Engine' (Protocol in workflow.md) 48bd5ab
 
 ## Phase 3: Comunicação e Lógica Inteligente (CRDT)
-- [ ] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase.
+- [~] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase.
 - [ ] Task: Configurar estratégia primária para a sincronização inteligente (CRDT ou last-write-wins baseado em timestamp `updated_at`).
 - [ ] Task: Validar as respostas do Supabase e retornar a confirmação para atualizar o status do item local para `synced`.
 - [ ] Task: Lidar apropriadamente com erros (falhas de conexão ou timeouts) mantendo os registros como `failed` ou `pending` no banco local.

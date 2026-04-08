@@ -13,7 +13,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: MICRO-RFC: Identidade e Sync Engine**
+- [~] **Track: MICRO-RFC: Identidade e Sync Engine**
 *Link: [./tracks/identity-and-sync-engine_20260407/](./tracks/identity-and-sync-engine_20260407/)*
 
 ---

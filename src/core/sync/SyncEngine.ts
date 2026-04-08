@@ -1,4 +1,5 @@
 import { db } from '../db'
+import { supabase } from '../supabase'
 
 export interface SyncRecord {
   table: string
@@ -55,6 +56,8 @@ export class SyncEngine {
   }
 
   private triggerSync() {
+    if (!this.online) return
+    
     // Debounced sync call
     setTimeout(() => {
       this.sync().catch(err => console.error('[SyncEngine] Sync failed', err))
@@ -87,10 +90,10 @@ export class SyncEngine {
   }
 
   /**
-   * Main sync logic (to be implemented in Phase 3)
+   * Main sync logic
    */
   async sync(): Promise<void> {
-    if (this.isSyncing) return
+    if (this.isSyncing || !this.online) return
     
     const pending = await this.getPendingRecords()
     if (pending.length === 0) return
@@ -98,9 +101,82 @@ export class SyncEngine {
     this.isSyncing = true
     try {
       console.log(`[SyncEngine] Starting sync for ${pending.length} records...`)
-      // Phase 3 implementation will go here
+      
+      // Group records by table for bulk operations
+      const grouped = pending.reduce((acc, record) => {
+        if (!acc[record.table]) acc[record.table] = []
+        acc[record.table].push(record.data)
+        return acc
+      }, {} as Record<string, any[]>)
+
+      for (const tableName in grouped) {
+        const records = grouped[tableName]
+        await this.syncTableRecords(tableName, records)
+      }
+      
+      console.log('[SyncEngine] Sync cycle completed successfully.')
+    } catch (err) {
+      console.error('[SyncEngine] Sync cycle failed:', err)
     } finally {
       this.isSyncing = false
     }
+  }
+
+  private async syncTableRecords(tableName: string, records: any[]) {
+    const toDelete = records.filter(r => r.deleted)
+    const toUpsert = records.filter(r => !r.deleted)
+
+    // Bulk Delete
+    if (toDelete.length > 0) {
+      const deleteIds = toDelete.map(r => r.id).filter(Boolean)
+      if (deleteIds.length > 0) {
+        const { error } = await supabase.from(tableName).delete().in('id', deleteIds)
+        if (!error) {
+          const localKeys = toDelete.map(r => r.localId || r.id)
+          await (db as any)[tableName].bulkDelete(localKeys)
+        } else {
+          console.error(`[SyncEngine] Bulk delete failed for ${tableName}:`, error)
+          await this.markAsFailed(tableName, toDelete)
+        }
+      } else {
+        // Record was never synced (no id), just delete locally
+        const localKeys = toDelete.map(r => r.localId)
+        await (db as any)[tableName].bulkDelete(localKeys)
+      }
+    }
+
+    // Bulk Upsert
+    if (toUpsert.length > 0) {
+      const payload = toUpsert.map(r => {
+        const { localId, syncStatus, ...rest } = r
+        return rest
+      })
+
+      const { data, error } = await supabase
+        .from(tableName)
+        .upsert(payload)
+        .select('id')
+
+      if (!error) {
+        const remoteIds = new Set(data?.map(d => d.id) || [])
+        const syncedRecords = toUpsert.filter(r => remoteIds.has(r.id))
+        
+        for (const record of syncedRecords) {
+          record.syncStatus = 'synced'
+        }
+        
+        await (db as any)[tableName].bulkPut(syncedRecords)
+      } else {
+        console.error(`[SyncEngine] Bulk upsert failed for ${tableName}:`, error)
+        await this.markAsFailed(tableName, toUpsert)
+      }
+    }
+  }
+
+  private async markAsFailed(tableName: string, records: any[]) {
+    for (const record of records) {
+      record.syncStatus = 'failed'
+    }
+    await (db as any)[tableName].bulkPut(records)
   }
 }

@@ -1,49 +1,82 @@
+import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
+import type { Transaction } from '@/shared/domain/entities/Transaction'
+import { db, type LocalTransaction } from '@/core/db'
+import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
-import type { TransactionRepositoryPort } from '../application/TransactionRepositoryPort'
-import type { Transaction } from '../domain/Transaction'
-import type { DiviDatabase } from '@/infrastructure/db/DexieDB'
-import type { TransactionEntity } from '@/infrastructure/db/entities/TransactionEntity'
 
-export class DexieTransactionRepository implements TransactionRepositoryPort {
-  constructor(private db: DiviDatabase) {}
-
-  async save(transaction: Transaction): Promise<void> {
-    const entity: TransactionEntity = {
-      ...transaction,
-      syncStatus: 'pending'
-    }
-    await this.db.transactions.put(entity)
-  }
-
+export class DexieTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<Transaction[]> {
-    const entities = await this.db.transactions.toArray()
-    return entities.map(this.mapToDomain)
+    try {
+      const list = await db.transactions.toArray()
+      return list.map((item) => this.mapToEntity(item))
+    } catch (err) {
+      throw new InfrastructureError('Failed to get all transactions from local DB', err)
+    }
   }
 
   async getByMonth(year: number, month: number): Promise<Transaction[]> {
-    const startDate = new Date(year, month - 1, 1).toISOString()
-    const endDate = new Date(year, month, 0, 23, 59, 59).toISOString()
-    const entities = await this.db.transactions
-      .where('date')
-      .between(startDate, endDate, true, true)
-      .toArray()
-    return entities.map(this.mapToDomain)
+    try {
+      const start = new Date(year, month - 1, 1).toISOString()
+      const end = new Date(year, month, 0, 23, 59, 59).toISOString()
+
+      const list = await db.transactions
+        .where('date')
+        .between(start, end)
+        .and((t) => !t.deleted)
+        .toArray()
+
+      return list.map((item) => this.mapToEntity(item))
+    } catch (err) {
+      throw new InfrastructureError('Failed to get transactions by month from local DB', err)
+    }
   }
 
   watchAll(): any {
-    return liveQuery(() => this.db.transactions.toArray())
+    return liveQuery(() => db.transactions.toArray())
+  }
+
+  async save(transaction: Transaction): Promise<void> {
+    try {
+      const now = new Date().toISOString()
+      const localData: LocalTransaction = {
+        ...transaction,
+        syncStatus: 'pending',
+        updated_at: now,
+      }
+
+      if (transaction.localId) {
+        await db.transactions.put(localData)
+      } else {
+        await db.transactions.add(localData)
+      }
+    } catch (err) {
+      throw new InfrastructureError('Failed to save transaction to local DB', err)
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.db.transactions.delete(id)
+    try {
+      // Soft delete locally
+      await db.transactions.where('id').equals(id).modify({ deleted: true, syncStatus: 'pending' })
+    } catch (err) {
+      throw new InfrastructureError('Failed to delete transaction', err)
+    }
   }
 
-  async sync(): Promise<void> {
-    // Out of scope for Epic 1
-  }
-
-  private mapToDomain(entity: TransactionEntity): Transaction {
-    const { syncStatus, ...domain } = entity
-    return domain as Transaction
+  private mapToEntity(
+    item: LocalTransaction,
+  ): Transaction & { _titleLower: string; _timestamp: number; _dateKey: string } {
+    const t = {
+      ...(item as unknown as Transaction),
+      syncStatus: item.syncStatus,
+      deleted: !!item.deleted,
+    }
+    // Pre-calculate derivations to optimize UI rendering
+    return {
+      ...t,
+      _titleLower: t.title.toLowerCase(),
+      _timestamp: new Date(t.date).getTime(),
+      _dateKey: t.date.substring(0, 10),
+    }
   }
 }

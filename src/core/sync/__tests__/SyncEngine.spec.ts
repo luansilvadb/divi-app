@@ -1,6 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SyncEngine } from '../SyncEngine'
 import { db } from '../../db'
+import { supabase } from '../../supabase'
+
+vi.mock('../../supabase', () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      delete: vi.fn(() => ({
+        in: vi.fn().mockResolvedValue({ error: null })
+      })),
+      upsert: vi.fn(() => ({
+        select: vi.fn().mockResolvedValue({ data: [], error: null })
+      }))
+    }))
+  }
+}))
 
 describe('SyncEngine', () => {
   let syncEngine: SyncEngine
@@ -159,5 +173,63 @@ describe('SyncEngine', () => {
     
     // We can't directly check the private 'online' property, but we can verify it doesn't crash
     // and we've covered the code path.
+  })
+
+  it('should perform bulk upsert and update local status to synced', async () => {
+    const id = 'test-id'
+    await db.transactions.add({
+      id,
+      user_id: 'u1',
+      title: 'Upsert Test',
+      amount: 100,
+      type: 'income',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: '2026-04-07',
+      syncStatus: 'pending',
+      deleted: false,
+      updated_at: new Date().toISOString()
+    })
+
+    // Mock successful upsert
+    vi.mocked(supabase.from).mockReturnValueOnce({
+      upsert: vi.fn().mockReturnValueOnce({
+        select: vi.fn().mockResolvedValueOnce({ data: [{ id }], error: null })
+      })
+    } as any)
+
+    await syncEngine.sync()
+
+    const record = await db.transactions.get({ id })
+    expect(record?.syncStatus).toBe('synced')
+  })
+
+  it('should perform bulk delete and remove local record', async () => {
+    const id = 'delete-id'
+    const localId = await db.transactions.add({
+      id,
+      user_id: 'u1',
+      title: 'Delete Test',
+      amount: 50,
+      type: 'expense',
+      category_id: 'c1',
+      wallet_id: 'w1',
+      date: '2026-04-07',
+      syncStatus: 'pending',
+      deleted: true,
+      updated_at: new Date().toISOString()
+    })
+
+    // Mock successful delete
+    vi.mocked(supabase.from).mockReturnValueOnce({
+      delete: vi.fn().mockReturnValueOnce({
+        in: vi.fn().mockResolvedValueOnce({ error: null })
+      })
+    } as any)
+
+    await syncEngine.sync()
+
+    const record = await db.transactions.get(localId)
+    expect(record).toBeUndefined()
   })
 })
