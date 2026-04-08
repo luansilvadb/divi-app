@@ -10,13 +10,21 @@ vi.mock('../../supabase', () => ({
     auth: {
       getUser: vi.fn(),
     },
-    from: vi.fn(() => ({
-      upsert: vi.fn(),
-      delete: vi.fn(),
-      select: vi.fn(),
-      eq: vi.fn(),
-      in: vi.fn(),
-    })),
+    from: vi.fn(() => {
+      const mock = {
+        upsert: vi.fn().mockResolvedValue({ error: null }),
+        delete: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        in: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }
+      mock.select.mockReturnValue(mock)
+      mock.eq.mockReturnValue(mock)
+      mock.in.mockReturnValue(mock)
+      return mock
+    }),
   },
 }))
 
@@ -56,11 +64,15 @@ describe('SyncEngine Error Handling', () => {
       version: 1
     })
 
-    vi.mocked(supabase.from).mockReturnValue({
+    const mockTable = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
       upsert: vi.fn().mockResolvedValue({ 
         error: { message: 'Network Timeout', code: 'TIMEOUT' } 
       })
-    } as any)
+    }
+    vi.mocked(supabase.from).mockReturnValue(mockTable as any)
 
     await engine.pushDirtyRecords()
 

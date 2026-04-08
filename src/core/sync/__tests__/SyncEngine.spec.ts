@@ -10,15 +10,25 @@ vi.mock('../../supabase', () => ({
     auth: {
       getUser: vi.fn(),
     },
-    from: vi.fn(() => ({
-      upsert: vi.fn(),
-      delete: vi.fn(),
-      select: vi.fn(),
-      eq: vi.fn(),
-      in: vi.fn(),
-    })),
+    from: vi.fn(),
   },
 }))
+
+const createMockTable = () => {
+  const mock = {
+    upsert: vi.fn().mockResolvedValue({ error: null }),
+    delete: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    in: vi.fn().mockReturnThis(),
+    maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+    single: vi.fn().mockResolvedValue({ data: null, error: null }),
+  }
+  mock.select.mockReturnValue(mock)
+  mock.eq.mockReturnValue(mock)
+  mock.in.mockReturnValue(mock)
+  return mock
+}
 
 describe('SyncEngine (Local-First Engine Foundation)', () => {
   let engine: SyncEngine
@@ -40,6 +50,9 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       error: null 
     } as any)
     
+    // Default mock behavior
+    vi.mocked(supabase.from).mockImplementation(() => createMockTable() as any)
+
     // Simulate online
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
@@ -62,20 +75,19 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         version: 1
       })
 
-      const upsertSpy = vi.fn().mockResolvedValue({ error: null })
-      vi.mocked(supabase.from).mockReturnValue({ upsert: upsertSpy } as any)
+      const mockTable = createMockTable()
+      vi.mocked(supabase.from).mockReturnValue(mockTable as any)
 
       await engine.pushDirtyRecords()
 
       expect(supabase.from).toHaveBeenCalledWith('transactions')
-      expect(upsertSpy).toHaveBeenCalled()
+      expect(mockTable.upsert).toHaveBeenCalled()
       
       const updated = await db.transactions.get('tx-1')
       expect(updated?.sync_status).toBe('synced')
     })
 
     it('should implement conflict resolution (LWW) when server version is newer', async () => {
-      // This test will fail because LWW is not implemented yet
       const clientTime = '2026-01-01T10:00:00Z'
       const serverTime = '2026-01-01T11:00:00Z'
       
@@ -95,21 +107,32 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       })
 
       // Simulate server having a newer version
-      const selectSpy = vi.fn().mockReturnThis()
-      const eqSpy = vi.fn().mockResolvedValue({ 
-        data: [{ 
-          id: 'tx-conflict', 
-          title: 'Server Title', 
-          client_updated_at: serverTime,
-          sync_status: 'synced' 
-        }], 
+      const mockTable = createMockTable()
+      mockTable.maybeSingle.mockResolvedValue({ 
+        data: { client_updated_at: serverTime }, 
         error: null 
       })
-      vi.mocked(supabase.from).mockReturnValue({ select: selectSpy, eq: eqSpy } as any)
+      mockTable.single.mockResolvedValue({ 
+        data: { 
+          id: 'tx-conflict', 
+          user_id: 'test-user-id', 
+          title: 'Server Title', 
+          amount: 100, 
+          type: 'expense', 
+          category_id: 'cat-1', 
+          wallet_id: 'wal-1', 
+          date: serverTime, 
+          client_updated_at: serverTime, 
+          sync_status: 'synced', 
+          deleted: false, 
+          version: 2 
+        }, 
+        error: null 
+      })
+      vi.mocked(supabase.from).mockReturnValue(mockTable as any)
 
       await engine.pushDirtyRecords()
 
-      // Expect the local record to be updated from server since server is newer (LWW)
       const local = await db.transactions.get('tx-conflict')
       expect(local?.title).toBe('Server Title')
       expect(local?.sync_status).toBe('synced')
