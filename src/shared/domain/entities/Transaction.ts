@@ -1,5 +1,6 @@
-export interface Transaction {
-  id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Transaction extends SyncMetadata {
   localId?: string // for Dexie
   title: string
   amount: number
@@ -8,11 +9,6 @@ export interface Transaction {
   category_id: string
   wallet_id: string
   payee_id?: string
-  user_id: string
   notes?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  deleted: boolean
-  created_at: string
-  updated_at: string
 }
 

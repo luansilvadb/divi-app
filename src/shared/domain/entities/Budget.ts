@@ -1,6 +1,6 @@
-export interface Budget {
-  id: string
-  user_id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Budget extends SyncMetadata {
   name: string
   type: 'spending' | 'saving'
   limit_value: number
@@ -9,6 +9,4 @@ export interface Budget {
   color?: string
   categories?: string[]
   wallets?: string[]
-  syncStatus: 'synced' | 'pending' | 'failed'
-  created_at?: string
 }

@@ -1,12 +1,11 @@
-export interface Loan {
-  id: string
-  user_id: string
-  name: string
-  total_value: number
-  remaining_value: number
-  interest_rate?: number
-  due_date: string
-  type?: 'to_pay' | 'to_receive'
-  syncStatus: 'synced' | 'pending' | 'failed'
-  created_at?: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Loan extends SyncMetadata {
+  title: string
+  description?: string
+  amount: number
+  interestRate: number
+  startDate: string
+  endDate?: string
+  status: 'active' | 'paid' | 'overdue'
 }

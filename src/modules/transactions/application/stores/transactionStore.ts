@@ -178,8 +178,11 @@ export const useTransactionStore = defineStore('transactions', () => {
       ...transaction,
       id: transaction.id || crypto.randomUUID(),
       user_id: transaction.user_id || activeUserId,
-      updated_at: new Date().toISOString(),
-      syncStatus: 'pending' as const
+      date: transaction.date || new Date().toISOString().slice(0, 10),
+      sync_status: 'pending',
+      deleted: false,
+      client_updated_at: new Date().toISOString(),
+      version: transaction.version || 1
     }
 
     // 3. ATUALIZAÇÃO OTIMISTA
@@ -200,7 +203,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       // 5. Audit Log (Automatizado)
       await activityLogService.logActivity({
         action: isNew ? 'Nova Transação' : 'Transação Atualizada',
-        description: `R$ ${enriched.amount} : ${enriched.title}`,
+        description: `R$ ${Math.abs(enriched.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} : ${enriched.title}`,
         type: 'success',
         user_id: activeUserId
       })
@@ -223,7 +226,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       const target = transactions.value[index]!
       deletedTitle = target.title
       const newArray = [...transactions.value]
-      newArray[index] = { ...target, deleted: true, syncStatus: 'pending' }
+      newArray[index] = { ...target, deleted: true, sync_status: 'pending', client_updated_at: new Date().toISOString() }
       transactions.value = newArray
     }
 

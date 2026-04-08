@@ -39,6 +39,7 @@
           label="Valor (R$)"
           type="number"
           :step="0.01"
+          :min="0"
           v-model="form.amount"
           placeholder="0,00"
           class="!mb-0"
@@ -198,8 +199,12 @@ async function handleSubmit() {
   if (isSubmitting.value) return
   
   if (!form.title.trim()) {
-    // Basic validation alert (could be improved with a proper toast)
     alert('O título da transação é obrigatório.')
+    return
+  }
+
+  if (form.amount <= 0) {
+    alert('O valor da transação deve ser maior que zero.')
     return
   }
   
@@ -211,7 +216,10 @@ async function handleSubmit() {
       const transactionData = {
         ...props.initialData,
         ...form,
-        updated_at: new Date().toISOString(),
+        sync_status: props.initialData.sync_status || 'pending',
+        deleted: props.initialData.deleted || false,
+        client_updated_at: new Date().toISOString(),
+        version: props.initialData.version || 1
       }
       await store.saveTransaction(transactionData as Transaction)
     } else {
@@ -219,18 +227,20 @@ async function handleSubmit() {
         ...form,
         id: crypto.randomUUID(),
         user_id: '', // Will be filled by repo/service
-        syncStatus: 'pending',
+        sync_status: 'pending',
         deleted: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        client_updated_at: new Date().toISOString(),
+        version: 1
       }
       await store.saveTransaction(transactionData as Transaction)
     }
 
     emit('saved')
     emit('close')
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Save error:', error)
+    const message = error instanceof Error ? error.message : 'Erro ao salvar transação.'
+    alert(message)
   } finally {
     isSubmitting.value = false
   }

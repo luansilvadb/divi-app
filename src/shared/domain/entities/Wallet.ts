@@ -1,9 +1,8 @@
-export interface Wallet {
-  id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Wallet extends SyncMetadata {
   name: string
   balance: number
   currency: string
-  user_id: string
   icon?: string
-  created_at?: string
 }

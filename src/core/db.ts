@@ -1,18 +1,7 @@
 import Dexie, { type Table } from 'dexie'
+import type { SyncMetadata } from '@/shared/domain/entities/SyncMetadata'
 
-/**
- * Standard sync metadata for all local-first entities.
- */
-export interface SyncMetadata {
-  id: string // UUID v7 (time-sorted)
-  user_id: string
-  sync_status: 'synced' | 'pending' | 'failed'
-  client_updated_at: string
-  server_updated_at?: string
-  last_synced_at?: string
-  deleted: boolean
-  version: number
-}
+export type { SyncMetadata }
 
 export interface LocalTransaction extends SyncMetadata {
   title: string
@@ -65,7 +54,7 @@ export interface LocalActivity {
   action: string
   description: string
   type: 'info' | 'success' | 'warning' | 'error'
-  user_id: string
+  user_id?: string
 }
 
 export interface LocalBudget extends SyncMetadata {
@@ -134,8 +123,9 @@ export class DiviDatabase extends Dexie {
       })
 
       table.hook('updating', (mods: any) => {
-        // If the update is NOT coming from the SyncEngine (which sets sync_status to 'synced')
-        if (mods.sync_status !== 'synced') {
+        // Only mark as pending if sync_status is NOT explicitly being set to a non-pending value
+        // (Allows SyncEngine to set 'synced' or 'failed')
+        if (mods.sync_status === undefined) {
           return {
             ...mods,
             sync_status: 'pending',

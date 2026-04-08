@@ -1,6 +1,7 @@
 import { supabase } from '../supabase'
 import { db } from '../db'
 import { useSyncStore } from './syncStore'
+import { SYNCABLE_TABLES } from './syncConfig'
 
 /**
  * SyncEngine: Responsible for bi-directional synchronization between Dexie.js and Supabase.
@@ -10,6 +11,7 @@ export class SyncEngine {
   private static instance: SyncEngine
   private isPushing = false
   private isPulling = false
+  private debounceId: any = null
 
   constructor() {
     SyncEngine.instance = this
@@ -53,8 +55,22 @@ export class SyncEngine {
    * Pushes pending local changes to Supabase and Pulls updates.
    */
   public async trigger() {
+    if (this.isPushing || this.isPulling) return
     await this.pushDirtyRecords()
     await this.pullFromServer()
+  }
+
+  /**
+   * Enqueues a sync operation with a small debounce to group multiple local changes.
+   */
+  public enqueueSync() {
+    if (this.debounceId) {
+      clearTimeout(this.debounceId)
+    }
+    this.debounceId = setTimeout(() => {
+      this.trigger()
+      this.debounceId = null
+    }, 500) // 500ms debounce to allow multiple changes to group
   }
 
   /**
@@ -74,12 +90,7 @@ export class SyncEngine {
 
       store?.setStatus('syncing')
 
-      const syncableTables = [
-        'transactions', 'wallets', 'categories', 'payees', 
-        'loans', 'subscriptions', 'budgets', 'goals'
-      ] as const
-
-      for (const tableName of syncableTables) {
+      for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
         
         // Find records that are NOT synced
@@ -123,14 +134,43 @@ export class SyncEngine {
           }
 
           // 2. Push to Supabase
-          // We increment version on each push if it's a conflict-prone field? 
-          // For now, simple LWW based on client_updated_at.
+          // Sanitize record to remove legacy/local-only fields
+          const { sync_status: _sync_status, ...payload } = record as any
+          delete (payload as any).syncStatus
+          delete (payload as any).is_dirty
+          delete (payload as any).last_modified_at
+          delete (payload as any).localId
+
+          // Convert empty strings to null for UUID fields (Postgres requirement)
+          Object.keys(payload).forEach(key => {
+            if (key.endsWith('_id') && payload[key] === '') {
+              payload[key] = null
+            }
+          })
+
+          if (payload.deleted) {
+            // HARD DELETE on server if marked as deleted
+            const { error: deleteError } = await supabase
+              .from(tableName)
+              .delete()
+              .eq('id', record.id)
+
+            if (!deleteError) {
+              await table.delete(record.id) // Physical delete locally after server confirmation
+            } else {
+              console.error(`[SyncEngine] Delete error in ${tableName}:${record.id}`, deleteError)
+              await table.update(record.id, { sync_status: 'failed' })
+            }
+            continue
+          }
+
           const { error: upsertError } = await supabase
             .from(tableName)
             .upsert({ 
-              ...record, 
+              ...payload, 
               user_id: user.id,
-              server_updated_at: new Date().toISOString() // Server track of when it received it
+              server_updated_at: new Date().toISOString(),
+              sync_status: 'synced' // Clear status on server
             }, { onConflict: 'id' })
 
           if (!upsertError) {
@@ -170,12 +210,7 @@ export class SyncEngine {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      const syncableTables = [
-        'transactions', 'wallets', 'categories', 'payees', 
-        'loans', 'subscriptions', 'budgets', 'goals'
-      ] as const
-
-      for (const tableName of syncableTables) {
+      for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
         
         const { data: serverData, error } = await supabase

@@ -23,7 +23,7 @@
 - [x] Task: Conductor - User Manual Verification 'Transaction CRUD & Audit Logs' (Protocol in workflow.md)
 
 ## Phase 4: Final Integration & Coverage Validation
-- [ ] Task: Conduct a full integration pass, ensuring Auth, Sync, and Transactions work seamlessly together.
-- [ ] Task: Run full test suite with Vitest and verify >80% code coverage for the refactored modules.
-- [ ] Task: Perform final linting and type-checking across the entire codebase.
-- [ ] Task: Conductor - User Manual Verification 'Final Integration & Coverage Validation' (Protocol in workflow.md)
+- [x] Task: Conduct a full integration pass, ensuring Auth, Sync, and Transactions work seamlessly together.
+- [x] Task: Run full test suite with Vitest and verify >80% code coverage for the refactored modules.
+- [x] Task: Perform final linting and type-checking across the entire codebase.
+- [x] Task: Conductor - User Manual Verification 'Final Integration & Coverage Validation' (Protocol in workflow.md)

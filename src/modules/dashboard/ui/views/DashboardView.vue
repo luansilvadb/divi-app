@@ -241,8 +241,9 @@
                   >
                     <span class="text-lg opacity-50 font-bold">R$</span>
                     {{
-                      dashboardStore.totalBalance.toLocaleString('pt-BR', {
+                      Math.abs(dashboardStore.totalBalance).toLocaleString('pt-BR', {
                         minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
                       })
                     }}
                   </div>
@@ -536,7 +537,7 @@
                   >
                     <path d="M7 10l5 5 5-5z" />
                   </svg>
-                  {{ t.type === 'expense' ? '-' : '+' }} R$ {{ t.amount.toLocaleString('pt-BR') }}
+                  R$ {{ Math.abs(t.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
                 </div>
               </div>
             </div>
@@ -610,10 +611,10 @@ async function simulateAddTransaction() {
     category_id: 'default-cat',
     wallet_id: 'default-wallet',
     date: now.toISOString(),
-    syncStatus: 'pending',
+    sync_status: 'pending',
     deleted: false,
-    created_at: now.toISOString(),
-    updated_at: now.toISOString(),
+    client_updated_at: now.toISOString(),
+    version: 1
   })
 }
 

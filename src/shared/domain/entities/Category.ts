@@ -1,9 +1,7 @@
-export interface Category {
-  id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Category extends SyncMetadata {
   name: string
   icon?: string
   color?: string
-  parent_id?: string
-  user_id?: string // system categories don't have user_id
-  syncStatus: 'synced' | 'pending' | 'failed'
 }

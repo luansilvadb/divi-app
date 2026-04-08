@@ -50,10 +50,10 @@ describe('TransactionStore CRUD', () => {
     category_id: 'cat-1',
     wallet_id: 'wal-1',
     user_id: 'user-1',
-    syncStatus: 'synced',
+    sync_status: 'synced',
     deleted: false,
-    created_at: '2026-04-10T00:00:00Z',
-    updated_at: '2026-04-10T00:00:00Z'
+    client_updated_at: '2026-04-10T00:00:00Z',
+    version: 1
   }
 
   beforeEach(() => {
@@ -102,7 +102,7 @@ describe('TransactionStore CRUD', () => {
       expect(mockTransactionRepo.save).toHaveBeenCalledWith(expect.objectContaining({
         id: sampleTx.id,
         title: sampleTx.title,
-        syncStatus: 'pending'
+        sync_status: 'pending'
       }))
       expect(mockTransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
@@ -156,11 +156,12 @@ describe('TransactionStore CRUD', () => {
     it('should assign current user_id when saving a new transaction', async () => {
       const store = useTransactionStore()
       const txWithoutUser = { ...sampleTx, user_id: '' }
-      
+    
       await store.saveTransaction(txWithoutUser)
       
-      const savedCall = mockTransactionRepo.save.mock.calls[0][0]
-      expect(savedCall.user_id).toBe('test-user-id')
+      expect(mockTransactionRepo.save).toHaveBeenCalledWith(expect.objectContaining({
+        user_id: 'test-user-id'
+      }))
     })
   })
 
@@ -171,7 +172,7 @@ describe('TransactionStore CRUD', () => {
       
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(expect.objectContaining({
         action: expect.stringMatching(/Transaction|Transação/i),
-        description: expect.stringMatching(/R\$ 10 : Sample/),
+        description: expect.stringMatching(/R\$ 10,00 : Sample/),
         user_id: 'test-user-id'
       }))
     })

@@ -44,7 +44,7 @@
           Total Mensal
         </div>
         <div class="text-xl font-black text-error-main tracking-tighter">
-          R$ {{ totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
+          R$ {{ Math.abs(totalExpense).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
           </div>
           <div class="flex items-baseline gap-2">
             <span class="text-[0.8rem] font-black text-text-primary">
-              R$ {{ cat.total.toLocaleString('pt-BR', { minimumFractionDigits: 0 }) }}
+              R$ {{ Math.abs(cat.total).toLocaleString('pt-BR', { minimumFractionDigits: 0 }) }}
             </span>
             <span class="text-[0.6rem] font-black text-text-secondary opacity-40">
               {{ cat.percent.toFixed(1) }}%

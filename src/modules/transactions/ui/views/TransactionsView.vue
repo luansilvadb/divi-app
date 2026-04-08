@@ -177,7 +177,7 @@
                 class="text-3xl font-black tracking-tighter"
                 :class="store.monthlyBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
               >
-                {{ formatCurrencySign(store.monthlyBalance) }}
+                {{ formatCurrency(Math.abs(store.monthlyBalance)) }}
               </div>
             </div>
           </div>
@@ -267,7 +267,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { useTransactionStore } from '../../application/stores/transactionStore'
-import { formatCurrency, formatCurrencySign, getRelativeDayLabel } from '@/shared/utils/formatters'
+import { formatCurrency, getRelativeDayLabel } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'

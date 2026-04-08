@@ -181,4 +181,21 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       expect(supabase.from).not.toHaveBeenCalled()
     })
   })
+
+  describe('Immediate Sync (Enqueue)', () => {
+    it('should trigger sync after a short delay when enqueueSync is called', async () => {
+      vi.useFakeTimers()
+      const triggerSpy = vi.spyOn(engine, 'trigger')
+      
+      engine.enqueueSync()
+      
+      expect(triggerSpy).not.toHaveBeenCalled()
+      
+      // Advance by debounce time (500ms)
+      await vi.advanceTimersByTimeAsync(600)
+      
+      expect(triggerSpy).toHaveBeenCalled()
+      vi.useRealTimers()
+    })
+  })
 })

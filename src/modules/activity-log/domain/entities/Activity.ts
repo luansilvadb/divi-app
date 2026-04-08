@@ -4,5 +4,5 @@ export interface Activity {
   action: string
   description: string
   type: 'info' | 'success' | 'warning' | 'error'
-  user_id: string
+  user_id?: string
 }

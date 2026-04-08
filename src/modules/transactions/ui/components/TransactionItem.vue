@@ -70,7 +70,7 @@
         </span>
 
         <!-- Sync Indicator -->
-        <ItemSyncIndicator :status="transaction.syncStatus" />
+        <ItemSyncIndicator :status="transaction.sync_status" />
       </div>
 
       <!-- Mobile Tags (Inline text layout) -->
@@ -123,7 +123,7 @@
           class="font-black text-[1rem] sm:text-xl tracking-tighter transition-all duration-300"
           :class="transaction.type === 'expense' ? 'text-error-main' : 'text-success-main'"
         >
-          {{ transaction.type === 'expense' ? '-' : '+' }} {{ formatCurrency(transaction.amount) }}
+          {{ formatCurrency(transaction.amount) }}
         </span>
       </div>
 
