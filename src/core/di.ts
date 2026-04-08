@@ -20,7 +20,8 @@ import { ActivityLogService } from '../modules/activity-log/application/services
 import { ExportService } from '../modules/transactions/application/services/ExportService'
 import { AssetLoader } from '../shared/utils/asset-loader'
 import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
-import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
+import { GoalLogicService } from '../modules/budgets/application/services/GoalLogicService'
+import { SyncEngine } from './sync/SyncEngine'
 
 import { DI_TOKENS } from './di-tokens'
 
@@ -69,6 +70,7 @@ const activityLogService = new ActivityLogService()
 container.register(DI_TOKENS.ActivityLogService, activityLogService)
 container.register(DI_TOKENS.AssetLoader, new AssetLoader(activityLogService))
 container.register(DI_TOKENS.ExportService, new ExportService())
+container.register(DI_TOKENS.SyncEngine, new SyncEngine())
 
 // Helper to provide/inject services in Vue components if needed
 export const useService = <T>(token: Token<T>): T => container.resolve(token)

@@ -38,7 +38,7 @@
           id="amount"
           label="Valor (R$)"
           type="number"
-          step="0.01"
+          :step="0.01"
           v-model="form.amount"
           placeholder="0,00"
           class="!mb-0"

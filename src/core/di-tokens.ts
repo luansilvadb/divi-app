@@ -18,4 +18,5 @@ export const DI_TOKENS = {
   ActivityLogService: 'IActivityLogService',
   ExportService: 'ExportService',
   AssetLoader: 'IAssetLoader',
+  SyncEngine: 'ISyncEngine',
 } as const
