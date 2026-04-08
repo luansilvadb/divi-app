@@ -20,7 +20,7 @@
 ## Phase 3: Comunicação e Lógica Inteligente (CRDT)
 - [x] Task: Implementar rotinas para transmissão de fila das atualizações pendentes para o banco Supabase. 77526d3
 - [x] Task: Configurar estratégia primária para a sincronização inteligente (CRDT ou last-write-wins baseado em timestamp \`updated_at\`). b04ae77
-- [ ] Task: Validar as respostas do Supabase e retornar a confirmação para atualizar o status do item local para `synced`.
+- [x] Task: Validar as respostas do Supabase e retornar a confirmação para atualizar o status do item local para synced. 94e4074
 - [ ] Task: Lidar apropriadamente com erros (falhas de conexão ou timeouts) mantendo os registros como `failed` ou `pending` no banco local.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Comunicação e Lógica Inteligente (CRDT)' (Protocol in workflow.md)
 
