@@ -21,8 +21,18 @@ export class SyncEngine {
   }
 
   private setupListeners() {
-    this.startAutoSync()
+    // 1. Sincronização em tempo real baseada em eventos do banco local (Dexie Hooks)
+    this.monitoredTables.forEach(tableName => {
+      const table = db.table(tableName as string)
+      table.hook('creating', () => this.triggerSync())
+      table.hook('updating', () => this.triggerSync())
+      table.hook('deleting', () => this.triggerSync())
+    })
 
+    // 2. Sincronizar ao iniciar a aplicação
+    this.triggerSync()
+
+    // 3. Sincronizar ao restaurar conexão
     if (typeof window !== 'undefined') {
       window.addEventListener('online', () => {
         useSyncStore().addLog({ status: 'success', message: 'Conexão restaurada' })
@@ -49,7 +59,7 @@ export class SyncEngine {
       } catch (error) {
         console.error('[SyncEngine] Auto-sync failed:', error)
       } finally {
-        this.startAutoSync()
+        this.isSyncing = false
       }
     }, 1000) // Debounce para agregamento de chamadas (1 segundo)
   }
