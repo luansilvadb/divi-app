@@ -21,10 +21,22 @@ const mockCategoryRepo = {
   getAll: vi.fn().mockResolvedValue([]),
 }
 
+const mockActivityLogService = {
+  logActivity: vi.fn(),
+  getRecentActivities: vi.fn().mockResolvedValue([]),
+}
+
 // We mock the SyncStore as it's used in a watch
 vi.mock('@/core/sync/syncStore', () => ({
   useSyncStore: () => ({
     updateCounter: 0
+  })
+}))
+
+// Mock AuthStore
+vi.mock('@/modules/auth/application/authStore', () => ({
+  useAuthStore: () => ({
+    user: { id: 'test-user-id' }
   })
 }))
 
@@ -46,12 +58,18 @@ describe('TransactionStore CRUD', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia())
-    vi.clearAllMocks()
+    vi.resetAllMocks()
     
+    // Devolvemos o comportamento default após o reset
+    mockTransactionRepo.getByMonth.mockResolvedValue([])
+    mockTransactionRepo.getAll.mockResolvedValue([])
+    mockActivityLogService.getRecentActivities.mockResolvedValue([])
+
     // Register mocks in the container
     container.register(DI_TOKENS.TransactionRepository, mockTransactionRepo)
     container.register(DI_TOKENS.WalletRepository, mockWalletRepo)
     container.register(DI_TOKENS.CategoryRepository, mockCategoryRepo)
+    container.register(DI_TOKENS.ActivityLogService, mockActivityLogService)
   })
 
   describe('Read Operations', () => {
@@ -77,13 +95,15 @@ describe('TransactionStore CRUD', () => {
   describe('Create/Update Operations', () => {
     it('should call save on repository and refresh list', async () => {
       const store = useTransactionStore()
-      
-      // Mock fetch to verify refresh
       mockTransactionRepo.getByMonth.mockResolvedValue([])
       
       await store.saveTransaction(sampleTx)
       
-      expect(mockTransactionRepo.save).toHaveBeenCalledWith(sampleTx)
+      expect(mockTransactionRepo.save).toHaveBeenCalledWith(expect.objectContaining({
+        id: sampleTx.id,
+        title: sampleTx.title,
+        syncStatus: 'pending'
+      }))
       expect(mockTransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
   })
@@ -95,7 +115,7 @@ describe('TransactionStore CRUD', () => {
       
       await store.deleteTransaction(sampleTx.id)
       
-      expect(store.transactions[0].deleted).toBe(true)
+      expect(store.transactions[0]?.deleted).toBe(true)
       expect(mockTransactionRepo.delete).toHaveBeenCalledWith(sampleTx.id)
     })
 
@@ -125,13 +145,46 @@ describe('TransactionStore CRUD', () => {
       store.transactions = [{ ...sampleTx }]
       
       const updatedTx = { ...sampleTx, title: 'New Title' }
-      
       mockTransactionRepo.getByMonth.mockResolvedValue([updatedTx])
       
       await store.saveTransaction(updatedTx)
       
       const found = store.transactions.find(t => t.id === sampleTx.id)
       expect(found?.title).toBe('New Title')
+    })
+
+    it('should assign current user_id when saving a new transaction', async () => {
+      const store = useTransactionStore()
+      const txWithoutUser = { ...sampleTx, user_id: '' }
+      
+      await store.saveTransaction(txWithoutUser)
+      
+      const savedCall = mockTransactionRepo.save.mock.calls[0][0]
+      expect(savedCall.user_id).toBe('test-user-id')
+    })
+  })
+
+  describe('Audit Logging', () => {
+    it('should create an audit log entry when saving a transaction', async () => {
+      const store = useTransactionStore()
+      await store.saveTransaction(sampleTx)
+      
+      expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(expect.objectContaining({
+        action: expect.stringMatching(/Transaction|Transação/i),
+        user_id: 'test-user-id'
+      }))
+    })
+
+    it('should create an audit log entry when deleting a transaction', async () => {
+      const store = useTransactionStore()
+      store.transactions = [sampleTx]
+      
+      await store.deleteTransaction(sampleTx.id)
+      
+      expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(expect.objectContaining({
+        action: expect.stringMatching(/Delete|Removida|Remoção/i),
+        user_id: 'test-user-id'
+      }))
     })
   })
 })

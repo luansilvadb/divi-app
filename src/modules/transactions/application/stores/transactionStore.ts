@@ -7,6 +7,7 @@ import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository'
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
+import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
@@ -18,6 +19,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
   const walletRepo = container.resolve<IWalletRepository>(DI_TOKENS.WalletRepository)
   const categoryRepo = container.resolve<ICategoryRepository>(DI_TOKENS.CategoryRepository)
+  const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.ActivityLogService)
   const syncStore = useSyncStore()
   const authStore = useAuthStore()
 
@@ -182,8 +184,9 @@ export const useTransactionStore = defineStore('transactions', () => {
 
     // 3. ATUALIZAÇÃO OTIMISTA
     const index = transactions.value.findIndex((t) => t.id === enriched.id)
+    const isNew = index === -1
     const newArray = [...transactions.value]
-    if (index !== -1) {
+    if (!isNew) {
       newArray[index] = enriched
     } else {
       newArray.unshift(enriched)
@@ -194,7 +197,15 @@ export const useTransactionStore = defineStore('transactions', () => {
       // 4. Persistência Local (Dexie)
       await transactionRepo.save(enriched)
       
-      // 5. Refetch para garantir integridade
+      // 5. Audit Log (Automatizado)
+      await activityLogService.logActivity({
+        action: isNew ? 'Nova Transação' : 'Transação Atualizada',
+        description: `${enriched.type === 'income' ? '+' : '-'} ${enriched.amount} : ${enriched.title}`,
+        type: 'success',
+        user_id: activeUserId
+      })
+
+      // 6. Refetch para garantir integridade
       const date = new Date(enriched.date)
       await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
     } catch (err) {
@@ -207,15 +218,28 @@ export const useTransactionStore = defineStore('transactions', () => {
   async function deleteTransaction(id: string) {
     // 1. ATUALIZAÇÃO OTIMISTA (Instantânea na Memória)
     const index = transactions.value.findIndex((t) => t.id === id)
+    let deletedTitle = 'Desconhecida'
     if (index !== -1) {
+      const target = transactions.value[index]!
+      deletedTitle = target.title
       const newArray = [...transactions.value]
-      newArray[index] = { ...newArray[index]!, deleted: true, syncStatus: 'pending' }
+      newArray[index] = { ...target, deleted: true, syncStatus: 'pending' }
       transactions.value = newArray
     }
 
     try {
       // 2. Persistência Local (Soft-Delete)
       await transactionRepo.delete(id)
+
+      // 3. Audit Log
+      if (authStore.user?.id) {
+        await activityLogService.logActivity({
+          action: 'Transação Removida',
+          description: `Remoção da transação: ${deletedTitle}`,
+          type: 'warning',
+          user_id: authStore.user.id
+        })
+      }
     } catch (err) {
       console.error('Erro ao deletar transação:', err)
       await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
