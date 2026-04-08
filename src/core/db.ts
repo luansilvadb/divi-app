@@ -96,6 +96,9 @@ export interface LocalBudget {
   color?: string
   categories?: string[]
   wallets?: string[]
+  syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
   created_at?: string
 }
 
@@ -108,7 +111,23 @@ export interface LocalGoal {
   type: 'saving' | 'debt'
   color?: string
   icon?: string
+  syncStatus: 'synced' | 'pending' | 'failed'
+  deleted: boolean
+  updated_at: string
   created_at?: string
+}
+
+export interface LocalSyncQueue {
+  id?: number
+  table: string
+  recordId: string
+  action: 'create' | 'update' | 'delete'
+  payload: any
+  status: 'pending' | 'failed'
+  attempts: number
+  lastError?: string
+  nextRetry: string // ISO Date string
+  created_at: string
 }
 
 export class DiviDatabase extends Dexie {
@@ -121,10 +140,11 @@ export class DiviDatabase extends Dexie {
   activities!: Table<LocalActivity>
   budgets!: Table<LocalBudget>
   goals!: Table<LocalGoal>
+  sync_queue!: Table<LocalSyncQueue>
 
   constructor() {
     super('DiviDB_Legacy')
-    this.version(3).stores({
+    this.version(4).stores({
       transactions: '++localId, id, date, syncStatus, deleted',
       wallets: '++id, name, syncStatus',
       categories: '++id, name, syncStatus',
@@ -132,8 +152,9 @@ export class DiviDatabase extends Dexie {
       loans: 'id, name, syncStatus',
       subscriptions: 'id, name, syncStatus',
       activities: 'id, timestamp',
-      budgets: 'id, name, type',
-      goals: 'id, name, type',
+      budgets: 'id, name, type, syncStatus',
+      goals: 'id, name, type, syncStatus',
+      sync_queue: '++id, table, recordId, action, status, nextRetry',
     })
   }
 }
