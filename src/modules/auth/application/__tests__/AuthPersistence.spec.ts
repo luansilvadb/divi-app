@@ -2,9 +2,10 @@ import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useAuthStore } from '../authStore'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
+import type { User } from '../../domain/entities/User'
 
 describe('Auth Persistence Integration', () => {
-  let authService: any
+  let authService: any // Still using any for the mock object itself to avoid implementing all methods manually, but casting internally
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -12,35 +13,35 @@ describe('Auth Persistence Integration', () => {
       getCurrentUser: vi.fn(),
       onAuthStateChange: vi.fn(),
       signOut: vi.fn(),
-      signInWithGoogle: vi.fn()
+      signInWithGoogle: vi.fn(),
+      signInWithEmail: vi.fn(),
+      registerWithEmail: vi.fn()
     }
   })
 
   it('should recover user session from service on initialization', async () => {
-    const mockUser = { id: '123', email: 'persisted@test.com' }
+    const mockUser: User = { id: '123', email: 'persisted@test.com' }
     authService.getCurrentUser.mockResolvedValueOnce(mockUser)
     
     const store = useAuthStore()
     
-    // This is the "failing" part: the store currently doesn't initialize itself from a service
-    // We expect the store to have an initialize method or to be initialized by a manager
-    await store.initialize(authService)
+    await store.initialize(authService as IAuthService)
     
     expect(store.user).toEqual(mockUser)
     expect(store.isAuthenticated).toBe(true)
   })
 
-  it('should update store when auth state changes in the service', () => {
+  it('should update store when auth state changes in the service', async () => {
     const store = useAuthStore()
-    let authCallback: any
+    let authCallback: (user: User | null) => void = () => {}
 
-    authService.onAuthStateChange.mockImplementation((cb: any) => {
+    authService.onAuthStateChange.mockImplementation((cb: (user: User | null) => void) => {
       authCallback = cb
     })
 
-    store.initialize(authService)
+    await store.initialize(authService as IAuthService)
     
-    const newUser = { id: '456', email: 'new@test.com' }
+    const newUser: User = { id: '456', email: 'new@test.com' }
     authCallback(newUser)
     
     expect(store.user).toEqual(newUser)

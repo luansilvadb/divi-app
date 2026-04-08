@@ -8,7 +8,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions**
+- [~] **Track: Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions**
 *Link: [./tracks/full-stack-refactor_20260408/](./tracks/full-stack-refactor_20260408/)*
 
 ---

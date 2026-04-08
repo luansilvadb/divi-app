@@ -3,8 +3,8 @@
 ## Phase 1: Authentication & Session Management
 - [x] Task: Configure Supabase Google OAuth (PKCE) flow. (051d7cb)
 - [x] Task: Write failing unit tests for Auth session management (login, logout, session persistence). (61ba4bb)
-- [ ] Task: Implement/Refactor `src/modules/auth/` to support Google Login and session persistence.
-- [ ] Task: Verify Auth state integration with Pinia store.
+- [x] Task: Implement/Refactor `src/modules/auth/` to support Google Login and session persistence. (748a1b8)
+- [x] Task: Verify Auth state integration with Pinia store. (748a1b8)
 - [ ] Task: Conductor - User Manual Verification 'Authentication & Session Management' (Protocol in workflow.md)
 
 ## Phase 2: Local-First Sync Engine Foundation
