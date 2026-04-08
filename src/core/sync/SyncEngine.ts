@@ -141,18 +141,37 @@ export class SyncEngine {
         } catch (error: any) {
           console.error(`[SyncEngine] Erro no item ${item.id}:`, error)
           
-          const attempts = item.attempts + 1
-          const delay = Math.min(this.BASE_DELAY * Math.pow(2, attempts), this.MAX_DELAY)
-          const nextRetry = new Date(Date.now() + delay).toISOString()
+          // Classificação do Erro
+          const isRetryable = this.isRetryableError(error)
+          
+          if (isRetryable) {
+            // Falha Temporária: Aplica Backoff Exponencial
+            const attempts = item.attempts + 1
+            const delay = Math.min(this.BASE_DELAY * Math.pow(2, attempts), this.MAX_DELAY)
+            const nextRetry = new Date(Date.now() + delay).toISOString()
 
-          await db.sync_queue.update(item.id!, {
-            attempts,
-            nextRetry,
-            status: 'failed',
-            lastError: error.message || 'Erro desconhecido'
-          })
-
-          if (!navigator.onLine) break
+            await db.sync_queue.update(item.id!, {
+              attempts,
+              nextRetry,
+              status: 'failed',
+              lastError: error.message || 'Erro temporário de rede'
+            })
+            
+            // Se falhou por rede, interrompe o loop (preserva ordem para dependências)
+            break
+          } else {
+            // Falha Fatal (Pílula Venenosa): Marca como fatal e continua a fila
+            await db.sync_queue.update(item.id!, {
+              status: 'failed',
+              lastError: `FATAL: ${error.message || 'Erro de validação/esquema'}`
+            })
+            
+            const syncStore = useSyncStore()
+            syncStore.addLog({
+              status: 'failed',
+              message: `Erro crítico no item ${item.recordId} da tabela ${item.table}: ${error.message}`,
+            })
+          }
         }
       }
 
@@ -206,6 +225,30 @@ export class SyncEngine {
             syncStatus: 'synced' 
         })
     }
+  }
+
+  /**
+   * Identifica se um erro do Supabase/Rede é passível de retentativa
+   */
+  private isRetryableError(error: any): boolean {
+    // 1. Erros de rede (offline)
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return true
+    
+    // 2. Erros de conexão ou timeout (Cuidado com strings de erro comuns)
+    const retryableMsgs = ['fetch', 'network', 'timeout', 'ratelimit', 'too many requests']
+    const msg = (error.message || '').toLowerCase()
+    if (retryableMsgs.some(m => msg.includes(m))) return true
+
+    // 3. Status Codes de Servidor (5xx) ou Rate Limit (429) ou Timeout (408)
+    const status = error.status || (error.error?.status)
+    if (status) {
+      if (status >= 500) return true
+      if (status === 429 || status === 408) return true
+    }
+
+    // Erros 4xx (exceto timeout/rate limit) geralmente são pílulas venenosas:
+    // 400 (Bad Request), 403 (Forbidden), 404 (Not Found)
+    return false
   }
 }
 
