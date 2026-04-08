@@ -10,6 +10,7 @@
           <span class="goal-name text-lg font-bold text-text-primary tracking-tight">{{
             goal.name
           }}</span>
+          <ItemSyncIndicator :status="goal.syncStatus" />
         </div>
 
         <BaseBadge :color="goal.color || 'var(--color-primary-main)'" variant="subtle">
@@ -77,6 +78,7 @@ import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import type { Goal } from '../../domain/entities/Goal'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 const props = defineProps<{
   goal: Goal

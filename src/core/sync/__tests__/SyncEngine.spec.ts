@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { setActivePinia, createPinia } from 'pinia'
 import { SyncEngine } from '../SyncEngine'
 import { db } from '../../db'
 import { supabase } from '../../supabase'
@@ -23,6 +24,7 @@ describe('SyncEngine', () => {
   let syncEngine: SyncEngine
 
   beforeEach(async () => {
+    setActivePinia(createPinia())
     // Clear all tables
     await Promise.all([
       db.transactions.clear(),
@@ -70,7 +72,9 @@ describe('SyncEngine', () => {
       name: 'W1',
       balance: 100,
       currency: 'BRL',
-      syncStatus: 'pending'
+      syncStatus: 'pending',
+      deleted: false,
+      updated_at: new Date().toISOString()
     })
 
     const pendingRecords = await syncEngine.getPendingRecords()
@@ -90,13 +94,15 @@ describe('SyncEngine', () => {
   it('should find failed records as well', async () => {
     await db.categories.add({
       name: 'C1',
-      syncStatus: 'failed'
+      syncStatus: 'failed',
+      deleted: false,
+      updated_at: new Date().toISOString()
     })
 
     const pendingRecords = await syncEngine.getPendingRecords()
     expect(pendingRecords).toHaveLength(1)
-    expect(pendingRecords[0].table).toBe('categories')
-    expect(pendingRecords[0].data.syncStatus).toBe('failed')
+    expect(pendingRecords[0]!.table).toBe('categories')
+    expect(pendingRecords[0]!.data.syncStatus).toBe('failed')
   })
 
   it('should trigger sync when a pending record is added', async () => {
@@ -171,11 +177,14 @@ describe('SyncEngine', () => {
   })
 
   it('should update online state when network goes offline', () => {
+    const syncSpy = vi.spyOn(syncEngine, 'sync')
+    
     // Simulate offline event
     window.dispatchEvent(new Event('offline'))
     
-    // We can't directly check the private 'online' property, but we can verify it doesn't crash
-    // and we've covered the code path.
+    // Simulate triggering sync while offline
+    window.dispatchEvent(new Event('online'))
+    expect(syncSpy).toHaveBeenCalled()
   })
 
   it('should perform bulk upsert and update local status to synced', async () => {

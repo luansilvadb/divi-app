@@ -9,5 +9,6 @@ export interface Budget {
   color?: string
   categories?: string[]
   wallets?: string[]
+  syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }

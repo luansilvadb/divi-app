@@ -123,9 +123,12 @@
                   💳
                 </div>
                 <div class="flex flex-col">
-                  <span class="font-black text-text-primary text-[1.05rem] tracking-tight">{{
-                    sub.name
-                  }}</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-black text-text-primary text-[1.05rem] tracking-tight">{{
+                      sub.name
+                    }}</span>
+                    <ItemSyncIndicator :status="sub.syncStatus" />
+                  </div>
                   <span
                     class="text-[9px] font-black uppercase tracking-[0.15em] text-text-disabled"
                     >{{ sub.frequency === 'monthly' ? 'Mensal' : 'Anual' }}</span
@@ -239,6 +242,7 @@ import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 const store = useSubscriptionStore()
 const isMobile = useIsMobile()

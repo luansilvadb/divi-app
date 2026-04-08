@@ -25,7 +25,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3: Comunicação e Lógica Inteligente (CRDT)' (Protocol in workflow.md) 8f219ae
 
 ## Phase 4: Sincronização na Interface (UI Feedback)
-- [ ] Task: Criar componente de Indicador Global na navbar informando o status global da rede e do Sync Engine.
-- [ ] Task: Adicionar pequeno indicador visual para os dados em Nível do Item nas listagens da aplicação (Ex: ícone de nuvem sincronizada ou pendente).
+- [x] Task: Criar componente de Indicador Global na navbar informando o status global da rede e do Sync Engine. b26bf46
+- [~] Task: Adicionar pequeno indicador visual para os dados em Nível do Item nas listagens da aplicação (Ex: ícone de nuvem sincronizada ou pendente).
 - [ ] Task: Construir a seção ou painel de logs de Sync no Perfil/Configurações do usuário mostrando tentativas passadas e status atual.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Sincronização na Interface (UI Feedback)' (Protocol in workflow.md)n workflow.md)

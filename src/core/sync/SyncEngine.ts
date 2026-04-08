@@ -119,8 +119,11 @@ export class SyncEngine {
       
       // Group records by table for bulk operations
       const grouped = pending.reduce((acc, record) => {
-        if (!acc[record.table]) acc[record.table] = []
-        acc[record.table].push(record.data)
+        const table = record.table
+        if (!acc[table]) {
+          acc[table] = []
+        }
+        acc[table]!.push(record.data)
         return acc
       }, {} as Record<string, any[]>)
 

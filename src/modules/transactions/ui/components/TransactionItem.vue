@@ -68,6 +68,9 @@
         >
           {{ transaction.title || 'Sem título' }}
         </span>
+
+        <!-- Sync Indicator -->
+        <ItemSyncIndicator :status="transaction.syncStatus" />
       </div>
 
       <!-- Mobile Tags (Inline text layout) -->
@@ -158,6 +161,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, h } from 'vue'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'

@@ -9,6 +9,7 @@
           <h3 class="loan-name text-lg font-bold text-text-primary tracking-tight leading-tight">
             {{ loan.name }}
           </h3>
+          <ItemSyncIndicator :status="loan.syncStatus" />
           <span class="loan-due text-xs font-semibold text-text-disabled"
             >Vence: {{ formatDate(loan.due_date) }}</span
           >
@@ -66,6 +67,7 @@ import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import type { Loan } from '../../domain/entities/Loan'
 
 defineProps<{

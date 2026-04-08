@@ -3,10 +3,11 @@ export interface Subscription {
   user_id: string
   name: string
   amount: number
-  category_id: string
-  wallet_id: string
+  category_id?: string
+  wallet_id?: string
   billing_day: number
   frequency: 'monthly' | 'yearly'
-  last_billed_at?: string
+  next_billing_date?: string
+  syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }

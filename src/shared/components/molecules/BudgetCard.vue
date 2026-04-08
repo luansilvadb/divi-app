@@ -10,6 +10,7 @@
           <span class="budget-name text-lg font-bold text-text-primary tracking-tight">{{
             budget.name
           }}</span>
+          <ItemSyncIndicator :status="budget.syncStatus" />
         </div>
 
         <BaseBadge :color="budget.color || 'var(--color-primary-main)'" variant="subtle">
@@ -84,6 +85,7 @@ import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import type { Budget } from '../../domain/entities/Budget'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 const props = defineProps<{
   budget: Budget

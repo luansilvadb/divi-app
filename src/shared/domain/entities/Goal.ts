@@ -7,5 +7,6 @@ export interface Goal {
   type: 'saving' | 'debt'
   color?: string
   icon?: string
+  syncStatus: 'synced' | 'pending' | 'failed'
   created_at?: string
 }

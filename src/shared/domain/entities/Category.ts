@@ -5,4 +5,5 @@ export interface Category {
   color?: string
   parent_id?: string
   user_id?: string // system categories don't have user_id
+  syncStatus: 'synced' | 'pending' | 'failed'
 }
