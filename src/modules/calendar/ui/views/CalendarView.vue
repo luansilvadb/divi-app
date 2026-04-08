@@ -165,7 +165,7 @@
                 class="font-black text-sm tracking-tight"
                 :class="t.type === 'expense' ? 'text-error-main' : 'text-success-main'"
               >
-                {{ t.type === 'expense' ? '-' : '+' }} {{ formatCurrency(t.amount) }}
+                {{ formatCurrency(t.amount) }}
               </span>
             </li>
           </ul>
@@ -200,7 +200,7 @@
                 class="text-2xl font-black tracking-tight"
                 :class="selectedDateBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
               >
-                {{ formatCurrency(selectedDateBalance) }}
+                {{ formatCurrency(Math.abs(selectedDateBalance)) }}
               </div>
             </div>
           </div>

@@ -10,7 +10,7 @@
           <span class="budget-name text-lg font-bold text-text-primary tracking-tight">{{
             budget.name
           }}</span>
-          <ItemSyncIndicator :status="budget.syncStatus" />
+          <ItemSyncIndicator :status="budget.sync_status" />
         </div>
 
         <BaseBadge :color="budget.color || 'var(--color-primary-main)'" variant="subtle">

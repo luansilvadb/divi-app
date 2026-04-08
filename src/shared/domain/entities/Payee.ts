@@ -1,5 +1,5 @@
-export interface Payee {
-  id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Payee extends SyncMetadata {
   name: string
-  user_id: string
 }

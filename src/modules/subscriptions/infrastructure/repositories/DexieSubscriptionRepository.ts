@@ -19,10 +19,10 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
         ...subscription,
         category_id: subscription.category_id || '',
         wallet_id: subscription.wallet_id || '',
-        syncStatus: 'pending',
-        deleted: false,
-        updated_at: new Date().toISOString(),
-        version: (subscription as any).version || 1,
+        sync_status: 'pending',
+        deleted: !!subscription.deleted,
+        client_updated_at: new Date().toISOString(),
+        version: subscription.version || 1,
       }
       await db.subscriptions.put(data)
     } catch (err) {
@@ -50,7 +50,10 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
       frequency: item.frequency,
       last_billed_at: item.last_billed_at,
       created_at: item.created_at,
-      syncStatus: item.syncStatus,
+      sync_status: item.sync_status,
+      deleted: !!item.deleted,
+      client_updated_at: item.client_updated_at,
+      version: item.version || 1
     }
   }
 }

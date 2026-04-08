@@ -1,14 +1,20 @@
 import { supabase } from '../supabase'
 import { db } from '../db'
 import { useSyncStore } from './syncStore'
+import { SYNCABLE_TABLES } from './syncConfig'
 
+/**
+ * SyncEngine: Responsible for bi-directional synchronization between Dexie.js and Supabase.
+ * Implements "Last Write Wins" (LWW) conflict resolution strategy.
+ */
 export class SyncEngine {
   private static instance: SyncEngine
   private isPushing = false
+  private isPulling = false
+  private debounceId: any = null
 
   constructor() {
     SyncEngine.instance = this
-    // No auto-init in tests
     if (import.meta.env.MODE !== 'test') {
       this.init()
     }
@@ -21,40 +27,22 @@ export class SyncEngine {
     return SyncEngine.instance
   }
 
-  /** Exclusivo para testes */
   public static _resetInstance() {
     (SyncEngine as any).instance = undefined
   }
 
   private init() {
-    // 1. Pequeno delay no boot para o Pinia respirar
-    setTimeout(() => {
-      this.pushDirtyRecords()
-      this.pullFromServer() // <- Já puxa no boot!
-    }, 1000)
-
-    // 2. Listeners de sistema (Ouvindo a volta da internet)
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => {
-        this.safeStore()?.setOnlineStatus(true)
-        this.pushDirtyRecords()
-        this.pullFromServer() // <- Puxa novidades ao voltar rede
-      })
-      window.addEventListener('offline', () => {
-        this.safeStore()?.setOnlineStatus(false)
-      })
+      window.addEventListener('online', () => this.trigger())
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          this.pushDirtyRecords()
-          this.pullFromServer() // <- Puxa ao voltar foco (alt+tab)
-        }
+        if (document.visibilityState === 'visible') this.trigger()
       })
+      
+      // Periodic sync every 5 minutes
+      setInterval(() => this.trigger(), 5 * 60 * 1000)
     }
   }
 
-  /**
-   * Helper para acessar a store sem quebrar o boot
-   */
   private safeStore() {
     try {
       return useSyncStore()
@@ -64,7 +52,30 @@ export class SyncEngine {
   }
 
   /**
-   * O Tubo Direto: Pega o que está sujo (1) e joga na nuvem
+   * Pushes pending local changes to Supabase and Pulls updates.
+   */
+  public async trigger() {
+    if (this.isPushing || this.isPulling) return
+    await this.pushDirtyRecords()
+    await this.pullFromServer()
+  }
+
+  /**
+   * Enqueues a sync operation with a small debounce to group multiple local changes.
+   */
+  public enqueueSync() {
+    if (this.debounceId) {
+      clearTimeout(this.debounceId)
+    }
+    this.debounceId = setTimeout(() => {
+      this.trigger()
+      this.debounceId = null
+    }, 500) // 500ms debounce to allow multiple changes to group
+  }
+
+  /**
+   * Pushes pending local changes to Supabase.
+   * Implements LWW by checking server timestamps before upserting.
    */
   public async pushDirtyRecords() {
     if (this.isPushing) return
@@ -72,152 +83,178 @@ export class SyncEngine {
 
     this.isPushing = true
     const store = this.safeStore()
-    console.log('[SyncEngine] Verificando dados pendentes para subir...')
-
+    
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
       store?.setStatus('syncing')
 
-      const tables = ['transactions', 'wallets', 'categories'] as const
-      
-      for (const tableName of tables) {
+      for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
         
-        // 1. Busca o que está pendente no Dexie (is_dirty === 1)
-        const dirtyRecords = await table.where('is_dirty').equals(1).toArray()
-        
-        if (dirtyRecords.length === 0) continue
+        // Find records that are NOT synced
+        const pendingRecords = await table
+          .where('sync_status')
+          .anyOf(['pending', 'failed'])
+          .toArray()
 
-        // SEPARAÇÃO: Upserts e Deletes
-        const toDelete = dirtyRecords.filter(r => r.deleted === true)
-        const toUpsert = dirtyRecords.filter(r => !r.deleted)
+        if (pendingRecords.length === 0) continue
 
-        // 1. PROCESSAR UPSERTS (Novos e Editados)
-        if (toUpsert.length > 0) {
-          console.log(`[SyncEngine] Upsert de ${toUpsert.length} itens em ${tableName}...`)
-          const payload = toUpsert.map(record => {
-            const { localId: _l, is_dirty: _d, syncStatus: _s, last_modified_at: _m, ...cleanData } = record as any
+        for (const record of pendingRecords) {
+          // 1. Fetch current server state for this ID to check for conflicts
+          const { data: serverRecord, error: fetchError } = await supabase
+            .from(tableName)
+            .select('client_updated_at, version')
+            .eq('id', record.id)
+            .maybeSingle()
+
+          if (!fetchError && serverRecord) {
+            const serverTime = new Date(serverRecord.client_updated_at).getTime()
+            const clientTime = new Date(record.client_updated_at).getTime()
             
-            // Sanitização UUID
-            Object.keys(cleanData).forEach(key => {
-              if ((key === 'id' || key.endsWith('_id')) && cleanData[key] === '') {
-                cleanData[key] = null
+            // LWW Strategy: If server is NEWER, we pull and resolve locally
+            if (serverTime > clientTime) {
+              console.warn(`[SyncEngine] Conflict detected for ${tableName}:${record.id}. Server is newer. Pulling server version.`)
+              const { data: fullServerRecord, error: pullError } = await supabase
+                .from(tableName)
+                .select('*')
+                .eq('id', record.id)
+                .single()
+              
+              if (!pullError && fullServerRecord) {
+                await table.put({
+                  ...fullServerRecord,
+                  sync_status: 'synced',
+                  last_synced_at: new Date().toISOString()
+                })
               }
-            })
+              continue // Skip pushing this record
+            }
+          }
 
-            return { ...cleanData, user_id: user.id, updated_at: new Date().toISOString() }
+          // 2. Push to Supabase
+          // Sanitize record to remove legacy/local-only fields
+          const { sync_status: _sync_status, ...payload } = record as any
+          delete (payload as any).syncStatus
+          delete (payload as any).is_dirty
+          delete (payload as any).last_modified_at
+          delete (payload as any).localId
+
+          // Convert empty strings to null for UUID fields (Postgres requirement)
+          Object.keys(payload).forEach(key => {
+            if (key.endsWith('_id') && payload[key] === '') {
+              payload[key] = null
+            }
           })
 
-          const { error } = await supabase.from(tableName).upsert(payload, { onConflict: 'id' })
-          
-          if (!error) {
-            const ids = toUpsert.map(r => r.id)
-            await table.where('id').anyOf(ids).modify({ 
-              is_dirty: 0, 
-              syncStatus: 'synced' 
+          if (payload.deleted) {
+            // HARD DELETE on server if marked as deleted
+            const { error: deleteError } = await supabase
+              .from(tableName)
+              .delete()
+              .eq('id', record.id)
+
+            if (!deleteError) {
+              await table.delete(record.id) // Physical delete locally after server confirmation
+            } else {
+              console.error(`[SyncEngine] Delete error in ${tableName}:${record.id}`, deleteError)
+              await table.update(record.id, { sync_status: 'failed' })
+            }
+            continue
+          }
+
+          const { error: upsertError } = await supabase
+            .from(tableName)
+            .upsert({ 
+              ...payload, 
+              user_id: user.id,
+              server_updated_at: new Date().toISOString(),
+              sync_status: 'synced' // Clear status on server
+            }, { onConflict: 'id' })
+
+          if (!upsertError) {
+            await table.update(record.id, { 
+              sync_status: 'synced',
+              last_synced_at: new Date().toISOString()
             })
           } else {
-            console.error(`[SyncEngine] Erro Upsert ${tableName}:`, error.message)
-            const ids = toUpsert.map(r => r.id)
-            await table.where('id').anyOf(ids).modify({ syncStatus: 'failed' })
+            console.error(`[SyncEngine] Upsert error in ${tableName}:${record.id}`, upsertError)
+            await table.update(record.id, { sync_status: 'failed' })
           }
         }
-
-        // 2. PROCESSAR DELETES (Expurgo Físico na Nuvem)
-        if (toDelete.length > 0) {
-          console.log(`[SyncEngine] Deletando ${toDelete.length} itens do Supabase em ${tableName}...`)
-          const idsToRemove = toDelete.map(r => r.id)
-          
-          const { error } = await supabase
-            .from(tableName)
-            .delete()
-            .in('id', idsToRemove)
-
-          if (!error) {
-            // Remocão física local APENAS APÓS sucesso remoto
-            await table.where('id').anyOf(idsToRemove).delete()
-            console.log(`[SyncEngine] ✅ Itens removidos do Supabase e do banco local!`)
-          } else {
-            console.error(`[SyncEngine] Erro ao deletar no Supabase:`, error.message)
-            // Se falhou por RLS ou rede, mantém local como dirty para tentar de novo
-            await table.where('id').anyOf(idsToRemove).modify({ syncStatus: 'failed' })
-          }
-        }
-        
-        console.log(`[SyncEngine] ✅ ${tableName} sincronizado!`)
       }
       
       store?.setStatus('synced')
       store?.setLastSyncTime(new Date().toISOString())
     } catch (err) {
-      console.error('[SyncEngine] Falha no fluxo de push:', err)
+      console.error('[SyncEngine] Push failed:', err)
       store?.setStatus('failed')
     } finally {
       this.isPushing = false
     }
   }
 
-  // Atalho para ser chamado pelos repositórios após um save local
-  public trigger() {
-    this.pushDirtyRecords()
-  }
-
   /**
-   * PULL BÁSICO: Traz o que está no servidor para o local
+   * Pulls all data from server that user has access to.
+   * Basic reconciliation: overwrites local ONLY if server is newer or local is synced.
    */
   public async pullFromServer() {
+    if (this.isPulling) return
     if (typeof navigator !== 'undefined' && !navigator.onLine) return
+
+    this.isPulling = true
+    const store = this.safeStore()
     
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      for (const tableName of ['transactions', 'wallets', 'categories'] as const) {
-        const { data, error } = await supabase
+      for (const tableName of SYNCABLE_TABLES) {
+        const table = db.table(tableName)
+        
+        const { data: serverData, error } = await supabase
           .from(tableName)
           .select('*')
           .eq('user_id', user.id)
 
-        if (error || !data) continue
+        if (error || !serverData) continue
 
-        const table = db.table(tableName)
-        
-        // 1. Aplicar atualizações do servidor
-        for (const item of data) {
-           const local = await table.where('id').equals(item.id).first()
-           if (!local || local.is_dirty === 0) {
-              const localId = (local as any)?.localId
-              const updatedId = await table.put({ ...item, localId, is_dirty: 0, syncStatus: 'synced' })
-              
-              // LIMPEZA DE CLONES: Garante que não existam outros registros com o mesmo ID UUID
-              await table.where('id').equals(item.id).and(r => r.localId !== updatedId).delete()
-           }
-        }
-
-        // 2. DETECTOR DE FANTASMAS (Limpar o que sumiu do Supabase)
-        // Pedimos apenas os IDs para ser leve
-        const { data: serverIds, error: idError } = await supabase
-          .from(tableName)
-          .select('id')
-          .eq('user_id', user.id)
-
-        if (!idError && serverIds) {
-          const serverIdSet = new Set(serverIds.map(s => s.id))
-          const localSynced = await table.where('is_dirty').equals(0).toArray()
+        for (const item of serverData) {
+          const local = await table.get(item.id)
           
-          const orphans = localSynced.filter(r => !serverIdSet.has(r.id))
-          if (orphans.length > 0) {
-            console.log(`[SyncEngine] Removendo ${orphans.length} fantasmas em ${tableName}...`)
-            await table.where('id').anyOf(orphans.map(o => o.id)).delete()
+          if (!local) {
+            // New record from server
+            await table.add({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+          } else if (local.sync_status === 'synced') {
+            // Overwrite local if it's already synced (server is ground truth)
+            await table.put({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+          } else {
+            // Conflict check for pending local changes
+            const serverTime = new Date(item.client_updated_at).getTime()
+            const clientTime = new Date(local.client_updated_at).getTime()
+            
+            if (serverTime > clientTime) {
+              await table.put({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+            }
           }
         }
+
+        // Phantom cleanup: Remove local records that were synced but no longer on server
+        const localSynced = await table.where('sync_status').equals('synced').toArray()
+        const serverIds = new Set(serverData.map(s => s.id))
+        
+        const orphans = localSynced.filter(r => !serverIds.has(r.id))
+        if (orphans.length > 0) {
+          await table.bulkDelete(orphans.map(o => o.id))
+        }
       }
-      // 3. Notificar UI de que dados mudaram (Reconciliação concluída)
-      this.safeStore()?.notifyChange()
+      
+      store?.notifyChange()
     } catch (err) {
-      console.error('[SyncEngine] Erro no pull manual:', err)
+      console.error('[SyncEngine] Pull failed:', err)
+    } finally {
+      this.isPulling = false
     }
   }
 }

@@ -127,7 +127,7 @@
                     <span class="font-black text-text-primary text-[1.05rem] tracking-tight">{{
                       sub.name
                     }}</span>
-                    <ItemSyncIndicator :status="sub.syncStatus" />
+                    <ItemSyncIndicator :status="sub.sync_status" />
                   </div>
                   <span
                     class="text-[9px] font-black uppercase tracking-[0.15em] text-text-disabled"

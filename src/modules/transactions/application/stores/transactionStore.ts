@@ -3,9 +3,11 @@ import { ref, shallowRef, computed, watch } from 'vue' // watch adicionado
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import { useSyncStore } from '@/core/sync/syncStore' // SyncStore importada
+import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository'
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
+import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
@@ -17,7 +19,9 @@ export const useTransactionStore = defineStore('transactions', () => {
   const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
   const walletRepo = container.resolve<IWalletRepository>(DI_TOKENS.WalletRepository)
   const categoryRepo = container.resolve<ICategoryRepository>(DI_TOKENS.CategoryRepository)
+  const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.ActivityLogService)
   const syncStore = useSyncStore()
+  const authStore = useAuthStore()
 
   // State
   const transactions = shallowRef<Transaction[]>([])
@@ -161,23 +165,84 @@ export const useTransactionStore = defineStore('transactions', () => {
   }
 
   async function saveTransaction(transaction: Transaction) {
-    await transactionRepo.save(transaction)
-    const date = new Date(transaction.date)
-    await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+    // 1. Validação de Domínio (Previne "gohorse")
+    if (transaction.amount < 0) {
+      throw new Error('Amount must be positive')
+    }
+
+    // 2. Refinamento de Dados (Garante ID e User)
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const enriched: Transaction = {
+      ...transaction,
+      id: transaction.id || crypto.randomUUID(),
+      user_id: transaction.user_id || activeUserId,
+      date: transaction.date || new Date().toISOString().slice(0, 10),
+      sync_status: 'pending',
+      deleted: false,
+      client_updated_at: new Date().toISOString(),
+      version: transaction.version || 1
+    }
+
+    // 3. ATUALIZAÇÃO OTIMISTA
+    const index = transactions.value.findIndex((t) => t.id === enriched.id)
+    const isNew = index === -1
+    const newArray = [...transactions.value]
+    if (!isNew) {
+      newArray[index] = enriched
+    } else {
+      newArray.unshift(enriched)
+    }
+    transactions.value = newArray
+
+    try {
+      // 4. Persistência Local (Dexie)
+      await transactionRepo.save(enriched)
+      
+      // 5. Audit Log (Automatizado)
+      await activityLogService.logActivity({
+        action: isNew ? 'Nova Transação' : 'Transação Atualizada',
+        description: `R$ ${Math.abs(enriched.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} : ${enriched.title}`,
+        type: 'success',
+        user_id: activeUserId
+      })
+
+      // 6. Refetch para garantir integridade
+      const date = new Date(enriched.date)
+      await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+    } catch (err) {
+      console.error('Erro ao salvar transação:', err)
+      await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+      throw err
+    }
   }
 
   async function deleteTransaction(id: string) {
     // 1. ATUALIZAÇÃO OTIMISTA (Instantânea na Memória)
     const index = transactions.value.findIndex((t) => t.id === id)
+    let deletedTitle = 'Desconhecida'
     if (index !== -1) {
+      const target = transactions.value[index]!
+      deletedTitle = target.title
       const newArray = [...transactions.value]
-      newArray[index] = { ...newArray[index]!, deleted: true }
+      newArray[index] = { ...target, deleted: true, sync_status: 'pending', client_updated_at: new Date().toISOString() }
       transactions.value = newArray
     }
 
     try {
-      // 2. Persistência Local (Hard-Delete conforme pedido)
+      // 2. Persistência Local (Soft-Delete)
       await transactionRepo.delete(id)
+
+      // 3. Audit Log
+      if (authStore.user?.id) {
+        await activityLogService.logActivity({
+          action: 'Transação Removida',
+          description: `Remoção da transação: ${deletedTitle}`,
+          type: 'warning',
+          user_id: authStore.user.id
+        })
+      }
     } catch (err) {
       console.error('Erro ao deletar transação:', err)
       await fetchTransactionsByMonth(currentYear.value, currentMonth.value)

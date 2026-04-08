@@ -25,10 +25,11 @@ describe('TransactionItem.vue', () => {
     category_id: 'cat1',
     wallet_id: 'wal1',
     user_id: 'user1',
-    syncStatus: 'synced' as const,
+    sync_status: 'synced' as const,
     deleted: false,
+    client_updated_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    version: 1
   }
 
   const props = {
@@ -38,7 +39,7 @@ describe('TransactionItem.vue', () => {
   }
 
   it('renders sync pending indicator when syncStatus is pending', () => {
-    const pendingTransaction = { ...transaction, syncStatus: 'pending' as const }
+    const pendingTransaction = { ...transaction, sync_status: 'pending' as const }
     const wrapper = mount(TransactionItem, {
       props: { ...props, transaction: pendingTransaction },
     })
@@ -48,7 +49,7 @@ describe('TransactionItem.vue', () => {
   })
 
   it('renders sync failed indicator when syncStatus is failed', () => {
-    const failedTransaction = { ...transaction, syncStatus: 'failed' as const }
+    const failedTransaction = { ...transaction, sync_status: 'failed' as const }
     const wrapper = mount(TransactionItem, {
       props: { ...props, transaction: failedTransaction },
     })

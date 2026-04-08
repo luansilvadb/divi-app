@@ -79,20 +79,23 @@ async function processSubscriptions() {
           await db.table('transactions').add({
             id: crypto.randomUUID(),
             title: `Assinatura: ${sub.name}`,
-            amount: -sub.amount,
+            amount: Math.abs(sub.amount),
             type: 'expense',
             category_id: sub.category_id,
             wallet_id: sub.wallet_id,
             date: today.toISOString(),
-            syncStatus: 'pending',
+            sync_status: 'pending',
             deleted: false,
-            updated_at: today.toISOString(),
+            client_updated_at: today.toISOString(),
+            created_at: today.toISOString(),
+            version: 1
           })
 
           // Update subscription last billed date
           await db.table('subscriptions').update(sub.id, {
             last_billed_at: today.toISOString(),
-            syncStatus: 'pending',
+            sync_status: 'pending',
+            client_updated_at: today.toISOString()
           })
         }
       }

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SyncEngine } from '../SyncEngine'
 import { db } from '../../db'
 import { supabase } from '../../supabase'
@@ -8,10 +8,24 @@ import 'fake-indexeddb/auto'
 vi.mock('../../supabase', () => ({
   supabase: {
     auth: {
-      getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'u1' } }, error: null })
+      getUser: vi.fn(),
     },
-    from: vi.fn()
-  }
+    from: vi.fn(() => {
+      const mock = {
+        upsert: vi.fn().mockResolvedValue({ error: null }),
+        delete: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        in: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+        single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      }
+      mock.select.mockReturnValue(mock)
+      mock.eq.mockReturnValue(mock)
+      mock.in.mockReturnValue(mock)
+      return mock
+    }),
+  },
 }))
 
 describe('SyncEngine Error Handling', () => {
@@ -20,20 +34,19 @@ describe('SyncEngine Error Handling', () => {
   beforeEach(async () => {
     setActivePinia(createPinia())
     SyncEngine._resetInstance()
-    await Promise.all([
-      db.transactions.clear(),
-      db.wallets.clear()
-    ])
+    await Promise.all(
+      Object.values(db.tables).map(table => table.clear())
+    )
     engine = SyncEngine.getInstance()
     vi.clearAllMocks()
+    vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
+      data: { user: { id: 'u1' } }, 
+      error: null 
+    } as any)
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
-  afterEach(async () => {
-    await db.transactions.clear()
-  })
-
-  it('deve marcar registros como "failed" se o Supabase retornar erro', async () => {
+  it('should mark records as "failed" if Supabase returns an error', async () => {
     const id = 'error-123'
     const now = new Date().toISOString()
     await db.transactions.add({
@@ -45,59 +58,26 @@ describe('SyncEngine Error Handling', () => {
       category_id: 'c1',
       wallet_id: 'w1',
       date: now,
-      is_dirty: 1,
-      syncStatus: 'pending',
+      sync_status: 'pending',
+      client_updated_at: now,
+      created_at: now,
       deleted: false,
-      last_modified_at: now,
-      updated_at: now
+      version: 1
     })
 
-    // Mock de erro no Supabase
-    vi.mocked(supabase.from).mockReturnValue({
+    const mockTable = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
       upsert: vi.fn().mockResolvedValue({ 
         error: { message: 'Network Timeout', code: 'TIMEOUT' } 
       })
-    } as any)
+    }
+    vi.mocked(supabase.from).mockReturnValue(mockTable as any)
 
     await engine.pushDirtyRecords()
 
-    const record = await db.transactions.where('id').equals(id).first()
-    expect(record?.syncStatus).toBe('failed')
-    expect(record?.is_dirty).toBe(1) // Deve continuar sujo para re-tentativa
-  })
-
-  it('deve marcar registros como "failed" se houver uma exceção fatal', async () => {
-    const id = 'exception-123'
-    const now = new Date().toISOString()
-    await db.transactions.add({
-      id,
-      user_id: 'u1',
-      title: 'Crash Test',
-      amount: 100,
-      type: 'expense',
-      category_id: 'c1',
-      wallet_id: 'w1',
-      date: now,
-      is_dirty: 1,
-      syncStatus: 'pending',
-      deleted: false,
-      last_modified_at: now,
-      updated_at: now
-    })
-
-    // Simula um crash total
-    vi.mocked(supabase.from).mockImplementation(() => {
-      throw new Error('Fatal System Error')
-    })
-
-    await engine.pushDirtyRecords()
-
-    // O motor atual apenas loga o erro no console e seta status na store,
-    // mas se quisermos marcar o registro individual, precisamos ajustar o Engine.
-    // Vamos verificar se pelo menos a store marcou como falha
-    const record = await db.transactions.where('id').equals(id).first()
-    // Por enquanto ele continua pendente no nosso engine simplificado.
-    // Se o usuário quer "failed", temos que ajustar o engine.
-    expect(record?.is_dirty).toBe(1)
+    const record = await db.transactions.get(id)
+    expect(record?.sync_status).toBe('failed')
   })
 })

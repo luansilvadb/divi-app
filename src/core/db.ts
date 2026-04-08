@@ -1,9 +1,9 @@
 import Dexie, { type Table } from 'dexie'
+import type { SyncMetadata } from '@/shared/domain/entities/SyncMetadata'
 
-export interface LocalTransaction {
-  id?: string
-  localId?: string
-  user_id: string
+export type { SyncMetadata }
+
+export interface LocalTransaction extends SyncMetadata {
   title: string
   amount: number
   type: 'income' | 'expense'
@@ -12,67 +12,33 @@ export interface LocalTransaction {
   payee_id?: string
   date: string
   notes?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  is_dirty: number
-  last_modified_at: string
-  deleted: boolean
-  updated_at: string
 }
 
-export interface LocalWallet {
-  id?: string
-  user_id: string
+export interface LocalWallet extends SyncMetadata {
   name: string
   balance: number
   currency: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  is_dirty: number
-  last_modified_at: string
-  deleted: boolean
-  updated_at: string
 }
 
-export interface LocalCategory {
-  id?: string
+export interface LocalCategory extends SyncMetadata {
   name: string
   icon?: string
   color?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  is_dirty: number
-  last_modified_at: string
-  deleted: boolean
-  updated_at: string
 }
 
-export interface LocalPayee {
-  id?: string
+export interface LocalPayee extends SyncMetadata {
   name: string
-  user_id: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  is_dirty: number
-  last_modified_at: string
-  deleted: boolean
-  updated_at: string
 }
 
-export interface LocalLoan {
-  id: string
-  user_id: string
+export interface LocalLoan extends SyncMetadata {
   name: string
   total_value: number
   remaining_value: number
   interest_rate?: number
   due_date: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  deleted: boolean
-  updated_at: string
-  version: number
-  created_at?: string
 }
 
-export interface LocalSubscription {
-  id: string
-  user_id: string
+export interface LocalSubscription extends SyncMetadata {
   name: string
   amount: number
   category_id: string
@@ -80,11 +46,6 @@ export interface LocalSubscription {
   billing_day: number
   frequency: 'monthly' | 'yearly'
   last_billed_at?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  deleted: boolean
-  updated_at: string
-  version: number
-  created_at?: string
 }
 
 export interface LocalActivity {
@@ -93,11 +54,10 @@ export interface LocalActivity {
   action: string
   description: string
   type: 'info' | 'success' | 'warning' | 'error'
+  user_id?: string
 }
 
-export interface LocalBudget {
-  id: string
-  user_id: string
+export interface LocalBudget extends SyncMetadata {
   name: string
   type: 'spending' | 'saving'
   limit_value: number
@@ -106,30 +66,16 @@ export interface LocalBudget {
   color?: string
   categories?: string[]
   wallets?: string[]
-  syncStatus: 'synced' | 'pending' | 'failed'
-  deleted: boolean
-  updated_at: string
-  version: number
-  created_at?: string
 }
 
-export interface LocalGoal {
-  id: string
-  user_id: string
+export interface LocalGoal extends SyncMetadata {
   name: string
   target_value: number
   current_value: number
   type: 'saving' | 'debt'
   color?: string
   icon?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  deleted: boolean
-  updated_at: string
-  version: number
-  created_at?: string
 }
-
-// Removed SyncQueue and SyncQuarantine interfaces as they are no longer needed
 
 export class DiviDatabase extends Dexie {
   transactions!: Table<LocalTransaction>
@@ -143,17 +89,50 @@ export class DiviDatabase extends Dexie {
   goals!: Table<LocalGoal>
 
   constructor() {
-    super('DiviDB_Legacy')
-    this.version(9).stores({
-      transactions: '++localId, id, date, is_dirty, deleted',
-      wallets: '++id, name, is_dirty, deleted',
-      categories: '++id, name, is_dirty, deleted',
-      payees: '++id, name, is_dirty, deleted',
-      loans: 'id, name, is_dirty, deleted',
-      subscriptions: 'id, name, is_dirty, deleted',
-      activities: 'id, timestamp',
-      budgets: 'id, name, type, is_dirty, deleted',
-      goals: 'id, name, type, is_dirty, deleted'
+    // New database name for the fresh sync engine foundation
+    super('DiviDB_v2')
+    
+    this.version(1).stores({
+      transactions: 'id, user_id, date, sync_status, deleted',
+      wallets: 'id, user_id, name, sync_status, deleted',
+      categories: 'id, user_id, name, sync_status, deleted',
+      payees: 'id, user_id, name, sync_status, deleted',
+      loans: 'id, user_id, name, sync_status, deleted',
+      subscriptions: 'id, user_id, name, sync_status, deleted',
+      activities: 'id, user_id, timestamp',
+      budgets: 'id, user_id, name, sync_status, deleted',
+      goals: 'id, user_id, name, sync_status, deleted'
+    })
+
+    this.setupSyncHooks()
+  }
+
+  private setupSyncHooks() {
+    const syncableTables = [
+      this.transactions, this.wallets, this.categories, this.payees,
+      this.loans, this.subscriptions, this.budgets, this.goals
+    ]
+
+    syncableTables.forEach(table => {
+      // Trigger sync after any change
+      table.hook('creating', (_, obj: any) => {
+        if (!obj.sync_status) {
+          obj.sync_status = 'pending'
+          obj.client_updated_at = new Date().toISOString()
+        }
+      })
+
+      table.hook('updating', (mods: any) => {
+        // Only mark as pending if sync_status is NOT explicitly being set to a non-pending value
+        // (Allows SyncEngine to set 'synced' or 'failed')
+        if (mods.sync_status === undefined) {
+          return {
+            ...mods,
+            sync_status: 'pending',
+            client_updated_at: new Date().toISOString()
+          }
+        }
+      })
     })
   }
 }

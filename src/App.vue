@@ -49,16 +49,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { container } from './core/di'
 import { useTheme } from './core/theme'
 import type { IAuthService } from './modules/auth/domain/contracts/IAuthService'
-import type { User } from './modules/auth/domain/entities/User'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import Button from 'primevue/button'
 
 import MainLayout from './shared/components/templates/MainLayout.vue'
+
+import { useAuthStore } from './modules/auth/application/authStore'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const route = useRoute()
@@ -75,25 +77,24 @@ const closeUpdateToast = () => {
 }
 
 const authService = container.resolve<IAuthService>('IAuthService')
-const isLoggedIn = ref(false)
-const user = ref<User | null>(null)
+const authStore = useAuthStore()
+const { isAuthenticated: isLoggedIn } = storeToRefs(authStore)
 const isLoginRoute = computed(() => route.name === 'login')
 
-
-
 onMounted(async () => {
-  // Set initial user
-  user.value = await authService.getCurrentUser()
-  isLoggedIn.value = !!user.value
+  // Initialize Auth Store (handles initial fetch and subscription)
+  await authStore.initialize(authService)
 
-  // Listen for auth changes
+  // Initial redirect if not logged in and not on login route
+  if (!isLoggedIn.value && !isLoginRoute.value) {
+    router.push({ name: 'login' })
+  }
+
+  // Reactive redirect based on auth changes
   authService.onAuthStateChange((newUser) => {
-    user.value = newUser
-    isLoggedIn.value = !!newUser
-
     if (!newUser) {
       router.push({ name: 'login' })
-    } else if (router.currentRoute.value.name === 'login') {
+    } else if (isLoginRoute.value) {
       router.push({ name: 'dashboard' })
     }
   })

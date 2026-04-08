@@ -1,6 +1,6 @@
-export interface Subscription {
-  id: string
-  user_id: string
+import type { SyncMetadata } from './SyncMetadata'
+
+export interface Subscription extends SyncMetadata {
   name: string
   amount: number
   category_id?: string
@@ -9,6 +9,4 @@ export interface Subscription {
   frequency: 'monthly' | 'yearly'
   next_billing_date?: string
   last_billed_at?: string
-  syncStatus: 'synced' | 'pending' | 'failed'
-  created_at?: string
 }

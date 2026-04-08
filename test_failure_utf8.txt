@@ -1,0 +1,172 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.1.2 [39m[90mD:/software/divi/divi-app[39m
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts
+[22m[39m[DI] Registered: IAuthService
+[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+[DI] Registered: IPayeeRepository
+[DI] Registered: ILoanRepository
+[DI] Registered: IBudgetRepository
+[DI] Registered: IGoalRepository
+[DI] Registered: IBudgetLogicService
+[DI] Registered: IGoalLogicService
+[DI] Registered: ISubscriptionRepository
+[DI] Registered: IActivityLogService
+[DI] Registered: IAssetLoader
+[DI] Registered: ExportService
+[DI] Registered: ISyncEngine
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mRead Operations[2m > [22m[2mshould fetch transactions and update state
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mRead Operations[2m > [22m[2mshould handle repository errors gracefully during fetch
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mCreate/Update Operations[2m > [22m[2mshould call save on repository and refresh list
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mDelete Operations[2m > [22m[2mshould perform optimistic delete and then persist
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mDelete Operations[2m > [22m[2mshould rollback optimistic delete on failure
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+node.exe : [90mstderr[2m | src/modules/transactions/app
+lication/stores/__tests__/transactionStore.spec.ts[2m > 
+[22m[2mTransactionStore CRUD[2m > [22m[2mDelete 
+Operations[2m > [22m[2mshould rollback optimistic 
+delete on failure
+No linha:1 caractere:1
++ & "C:\Program Files\nodejs/node.exe" 
+"C:\Users\Luan\AppData\Roaming\n ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr 
+   [2m...lete on failure:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39mErro ao deletar transa├º├úo: Error: Delete 
+Failed
+    at D:/software/divi/divi-app/src/modules/transactions
+/application/stores/__tests__/transactionStore.spec.ts:11
+3:52
+    at [90mfile:///D:/software/divi/divi-app/[39mnode_m
+odules/[4m@vitest/runner[24m/dist/chunk-artifact.js:302
+:11
+    at [90mfile:///D:/software/divi/divi-app/[39mnode_m
+odules/[4m@vitest/runner[24m/dist/chunk-artifact.js:189
+3:26
+    at [90mfile:///D:/software/divi/divi-app/[39mnode_m
+odules/[4m@vitest/runner[24m/dist/chunk-artifact.js:231
+6:20
+    at new Promise (<anonymous>)
+    at runWithCancel [90m(file:///D:/software/divi/divi-
+app/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk-
+artifact.js:2313:10[90m)[39m
+    at [90mfile:///D:/software/divi/divi-app/[39mnode_m
+odules/[4m@vitest/runner[24m/dist/chunk-artifact.js:229
+5:20
+    at new Promise (<anonymous>)
+    at runWithTimeout [90m(file:///D:/software/divi/divi
+-app/[39mnode_modules/[4m@vitest/runner[24m/dist/chunk
+-artifact.js:2262:10[90m)[39m
+    at [90mfile:///D:/software/divi/divi-app/[39mnode_m
+odules/[4m@vitest/runner[24m/dist/chunk-artifact.js:294
+5:64
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mValidation and Optimistic Updates[2m > [22m[2mshould validate transaction before saving
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mValidation and Optimistic Updates[2m > [22m[2mshould support updating an existing transaction in the list and handle refresh
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+[90mstdout[2m | src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts[2m > [22m[2mTransactionStore CRUD[2m > [22m[2mValidation and Optimistic Updates[2m > [22m[2mshould assign current user_id when saving a new transaction
+[22m[39m[DI] Registered: ITransactionRepository
+[DI] Registered: IWalletRepository
+[DI] Registered: ICategoryRepository
+
+ [31mÔØ»[39m src/modules/transactions/application/stores/__tests__/transactionStore.spec.ts [2m([22m[2m8 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 16[2mms[22m[39m
+       [32mÔ£ô[39m should fetch transactions and update state[32m 5[2mms[22m[39m
+       [32mÔ£ô[39m should handle repository errors gracefully during fetch[32m 1[2mms[22m[39m
+[31m       [31m├ù[31m should call save on repository and refresh list[39m[32m 5[2mms[22m[39m
+       [32mÔ£ô[39m should perform optimistic delete and then persist[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m should rollback optimistic delete on failure[32m 1[2mms[22m[39m
+       [32mÔ£ô[39m should validate transaction before saving[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m should support updating an existing transaction in the list and handle refresh[32m 0[2mms[22m[39m
+       [32mÔ£ô[39m should assign current user_id when saving a new transaction[32m 0[2mms[22m[39m
+
+[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m[1m[41m Failed Tests 1 
+[49m[22m[31mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[39m
+
+[41m[1m FAIL [22m[49m src/modules/transactions/applic
+ation/stores/__tests__/transactionStore.spec.ts[2m > 
+[22mTransactionStore CRUD[2m > [22mCreate/Update 
+Operations[2m > [22mshould call save on repository and 
+refresh list
+[31m[1mAssertionError[22m: expected "vi.fn()" to be 
+called with arguments: [ { id: 'tx-1', ÔÇª(11) } ][90m
+
+Received:
+
+[1m  1st vi.fn() call:
+
+[22m[33m@@ -4,13 +4,13 @@[90m
+[2m      "category_id": "cat-1",[22m
+[2m      "created_at": "2026-04-10T00:00:00Z",[22m
+[2m      "date": "2026-04-10T00:00:00Z",[22m
+[2m      "deleted": false,[22m
+[2m      "id": "tx-1",[22m
+[32m-     "syncStatus": "synced",[90m
+[31m+     "syncStatus": "pending",[90m
+[2m      "title": "Sample",[22m
+[2m      "type": "expense",[22m
+[32m-     "updated_at": "2026-04-10T00:00:00Z",[90m
+[31m+     "updated_at": "2026-04-08T15:01:58.588Z",[90m
+[2m      "user_id": "user-1",[22m
+[2m      "wallet_id": "wal-1",[22m
+[2m    },[22m
+[2m  ][22m
+[31m[90m
+
+Number of calls: [1m1[22m
+[31m[39m
+[36m [2mÔØ»[22m src/modules/transactions/application/s
+tores/__tests__/transactionStore.spec.ts:[2m93:40[22m[
+39m
+    [90m 91|[39m       [35mawait[39m 
+store[33m.[39m[34msaveTransaction[39m(sampleTx)
+    [90m 92|[39m
+    [90m 93|[39m       [34mexpect[39m(mockTransaction
+Repo[33m.[39msave)[33m.[39m[34mtoHaveBeenCalledWith
+[39m(sampleTx)
+    [90m   |[39m                                       
+ [31m^[39m
+    [90m 94|[39m       expect(mockTransactionRepo.getBy
+Month).toHaveBeenCalledWith(2026ÔÇª
+    [90m 95|[39m     })
+
+[31m[2mÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m7 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 12:01:57
+[2m   Duration [22m 938ms[2m (transform 134ms, setup 97ms, import 193ms, tests 16ms, environment 513ms)[22m
+

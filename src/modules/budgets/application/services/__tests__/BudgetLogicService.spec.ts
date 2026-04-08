@@ -15,7 +15,11 @@ describe('BudgetLogicService', () => {
     period_start: '2026-03-01',
     period_end: '2026-03-31',
     categories: ['cat1'],
-    syncStatus: 'synced',
+    sync_status: 'synced',
+    deleted: false,
+    client_updated_at: '',
+    created_at: '',
+    version: 1
   }
 
   const mockTransactions: Transaction[] = [
@@ -28,10 +32,11 @@ describe('BudgetLogicService', () => {
       category_id: 'cat1',
       wallet_id: 'w1',
       user_id: 'user1',
-      syncStatus: 'synced',
+      sync_status: 'synced',
       deleted: false,
+      client_updated_at: '',
       created_at: '',
-      updated_at: '',
+      version: 1,
     },
     {
       id: 't2',
@@ -42,10 +47,11 @@ describe('BudgetLogicService', () => {
       category_id: 'cat2',
       wallet_id: 'w1',
       user_id: 'user1',
-      syncStatus: 'synced',
+      sync_status: 'synced',
       deleted: false,
+      client_updated_at: '',
       created_at: '',
-      updated_at: '',
+      version: 1,
     },
     {
       id: 't3',
@@ -56,10 +62,11 @@ describe('BudgetLogicService', () => {
       category_id: 'cat1',
       wallet_id: 'w1',
       user_id: 'user1',
-      syncStatus: 'synced',
+      sync_status: 'synced',
       deleted: false,
+      client_updated_at: '',
       created_at: '',
-      updated_at: '',
+      version: 1,
     },
   ]
 
