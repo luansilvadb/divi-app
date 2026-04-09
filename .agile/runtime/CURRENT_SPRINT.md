@@ -27,8 +27,4 @@
 
 ## 🛡️ Impedimentos e Bloqueios
 
-- DoD Rejeitado: O increment falhou na análise de linting (`npm run lint`).
-  - 6 erros encontrados via `oxlint`.
-  - Arquivos com problema: `src/modules/dashboard/ui/views/__tests__/DashboardView.spec.ts`, `src/core/di.ts`, `src/modules/goals/application/stores/__tests__/goalStore.spec.ts`, `src/modules/loans/application/stores/__tests__/loanStore.spec.ts`, `src/modules/budgets/application/stores/__tests__/budgetStore.spec.ts`.
-  - Detalhe: Variáveis atribuídas mas não usadas (`transactionStore`, `dashboardStore`) e imports não utilizados (`db`, `container`).
-- Teste unitário falhou: Erro ao deletar transação no rollback optimistic.
+Nenhum reportado até o momento.

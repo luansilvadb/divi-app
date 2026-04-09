@@ -227,8 +227,8 @@ async function handleSubmit() {
       await authService.signInWithEmail({ email: email.value, password: password.value })
       toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!', life: 3000 })
     }
-  } catch (error: any) {
-    toast.add({ severity: 'error', summary: 'Erro', detail: error.message || 'Ocorreu um erro na autenticação.', life: 5000 })
+  } catch (error: Error | unknown) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: (error instanceof Error ? error.message : 'Ocorreu um erro na autenticação.'), life: 5000 })
   } finally {
     isLoading.value = false
   }
@@ -238,8 +238,8 @@ async function handleGoogleLogin() {
   isLoading.value = true
   try {
     await authService.signInWithGoogle()
-  } catch (error: any) {
-    toast.add({ severity: 'error', summary: 'Erro', detail: error.message || 'Ocorreu um erro ao conectar com Google.', life: 5000 })
+  } catch (error: Error | unknown) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: (error instanceof Error ? error.message : 'Ocorreu um erro ao conectar com Google.'), life: 5000 })
   } finally {
     isLoading.value = false
   }

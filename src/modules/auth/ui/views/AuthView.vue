@@ -7,10 +7,8 @@ import Button from 'primevue/button'
 import Message from 'primevue/message'
 
 import { SupabaseAuth } from '../../infrastructure/SupabaseAuth'
-import { useAuthStore } from '../../application/authStore'
 
 const authService = new SupabaseAuth()
-const authStore = useAuthStore()
 const router = useRouter()
 
 const isLoginMode = ref(true)
@@ -41,8 +39,8 @@ const handleSubmit = async () => {
       successMessage.value = 'Registration successful! You can now log in.'
       isLoginMode.value = true
     }
-  } catch (err: any) {
-    errorMessage.value = err.message || 'An error occurred'
+  } catch (err: Error | unknown) {
+    errorMessage.value = (err instanceof Error ? err.message : 'An error occurred')
   } finally {
     loading.value = false
   }
@@ -51,8 +49,8 @@ const handleSubmit = async () => {
 const handleGoogleLogin = async () => {
   try {
     await authService.signInWithGoogle()
-  } catch (err: any) {
-    errorMessage.value = err.message || 'Google login failed'
+  } catch (err: Error | unknown) {
+    errorMessage.value = (err instanceof Error ? err.message : 'Google login failed')
   }
 }
 </script>

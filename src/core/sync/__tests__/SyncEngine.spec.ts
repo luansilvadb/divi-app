@@ -141,7 +141,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
     })
 
     it('should automatically set sync_status to pending on creation via Dexie hooks', async () => {
-      // @ts-ignore - explicitly omitting metadata to test hooks
+      // @ts-expect-error - explicitly omitting metadata to test hooks
       await db.transactions.add({
         id: 'tx-hook-test',
         user_id: 'test-user-id',

@@ -1,5 +1,7 @@
+import PrimeVue from "primevue/config"
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import ToastService from 'primevue/toastservice'
 import App from '../App.vue'
 import { createPinia } from 'pinia'
 import router from '../core/router'
@@ -33,7 +35,7 @@ describe('App', () => {
     const pinia = createPinia()
     const wrapper = mount(App, {
       global: {
-        plugins: [pinia, router],
+        plugins: [pinia, router, PrimeVue, ToastService],
       },
     })
 
