@@ -48,3 +48,8 @@ Refine and standardize search bar components across modules to ensure consistenc
 Link: [./archive/search-system-harmonization_20260406/](./archive/search-system-harmonization_20260406/)
 
 ---
+
+- [ ] **Track: Integração Supabase Auth e Sessão Persistente**
+*Link: [./tracks/auth-supabase_20260408/](./tracks/auth-supabase_20260408/)*
+
+---
