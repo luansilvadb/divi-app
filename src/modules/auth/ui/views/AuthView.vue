@@ -7,10 +7,8 @@ import Button from 'primevue/button'
 import Message from 'primevue/message'
 
 import { SupabaseAuth } from '../../infrastructure/SupabaseAuth'
-import { useAuthStore } from '../../application/authStore'
 
 const authService = new SupabaseAuth()
-const authStore = useAuthStore()
 const router = useRouter()
 
 const isLoginMode = ref(true)

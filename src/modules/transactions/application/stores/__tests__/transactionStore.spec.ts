@@ -127,7 +127,7 @@ describe('TransactionStore CRUD', () => {
       mockTransactionRepo.delete.mockRejectedValue(new Error('Delete Failed'))
       mockTransactionRepo.getByMonth.mockResolvedValue([sampleTx])
       
-      await store.deleteTransaction(sampleTx.id)
+      await expect(store.deleteTransaction(sampleTx.id)).rejects.toThrow('Delete Failed')
       
       expect(mockTransactionRepo.getByMonth).toHaveBeenCalled()
     })
