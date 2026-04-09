@@ -246,6 +246,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     } catch (err) {
       console.error('Erro ao deletar transação:', err)
       await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+      throw err
     }
   }
 

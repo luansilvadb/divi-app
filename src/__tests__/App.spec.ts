@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils'
 import App from '../App.vue'
 import { createPinia } from 'pinia'
 import router from '../core/router'
+import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 
 // Mock PWA virtual module
 vi.mock('virtual:pwa-register/vue', () => ({
@@ -33,7 +35,7 @@ describe('App', () => {
     const pinia = createPinia()
     const wrapper = mount(App, {
       global: {
-        plugins: [pinia, router],
+        plugins: [pinia, router, PrimeVue, ToastService],
       },
     })
 
