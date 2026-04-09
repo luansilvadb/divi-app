@@ -4,8 +4,8 @@
 - [x] Task: Instalar e configurar dependência do Supabase (0a6f93b)
     - [x] Executar `npm install @supabase/supabase-js`
     - [x] Criar/Configurar variáveis de ambiente (`.env`) para o Supabase URL e Anon Key
-- [ ] Task: Implementar Singleton do Cliente Supabase
-    - [ ] Criar `src/core/supabase.ts` para exportar a instância do cliente
+- [x] Task: Implementar Singleton do Cliente Supabase (aae53b9)
+    - [x] Criar `src/core/supabase.ts` para exportar a instância do cliente
 - [ ] Task: Conductor - User Manual Verification 'Fase 1: Setup e Infraestrutura Base' (Protocol in workflow.md)
 
 ## Fase 2: Lógica de Autenticação (Infrastructure & Application)
