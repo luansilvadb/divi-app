@@ -13,20 +13,22 @@
 
 ### Tarefa 1: Integração Supabase Auth e Sessão Persistente
 
-- [ ] Instalar cliente do Supabase (`@supabase/supabase-js`) se não estiver instalado.
-- [ ] Configurar conexão com o Supabase Auth em um módulo de auth (`src/modules/auth/infrastructure/SupabaseAuth.ts`).
-- [ ] Implementar a lógica de registro, login (com email/senha ou social auth) e logout, garantindo persistência da sessão.
-- [ ] Construir/atualizar a view de Login e interligá-la ao roteador e store de autenticação.
+- [x] Instalar cliente do Supabase (`@supabase/supabase-js`) se não estiver instalado.
+- [x] Configurar conexão com o Supabase Auth em um módulo de auth (`src/modules/auth/infrastructure/SupabaseAuth.ts`).
+- [x] Implementar a lógica de registro, login (com email/senha ou social auth) e logout, garantindo persistência da sessão.
+- [x] Construir/atualizar a view de Login e interligá-la ao roteador e store de autenticação.
 
 ### Tarefa 2: Padrão de Sincronização em Background (Sync Engine)
 
-- [ ] Criar a estrutura para o Sync Engine que monitora o Dexie buscando entidades com `syncStatus` 'pending' ou 'failed'.
-- [ ] Implementar integração do Sync Engine com o backend (Supabase ou chamadas de API), processando as transações na fila.
-- [ ] Atualizar o status das entidades no Dexie para 'synced' em caso de sucesso.
-- [ ] Lidar adequadamente com conexões offline-to-online, retomando a sincronização em background quando houver rede.
+- [x] Criar a estrutura para o Sync Engine que monitora o Dexie buscando entidades com `syncStatus` 'pending' ou 'failed'.
+- [x] Implementar integração do Sync Engine com o backend (Supabase ou chamadas de API), processando as transações na fila.
+- [x] Atualizar o status das entidades no Dexie para 'synced' em caso de sucesso.
+- [x] Lidar adequadamente com conexões offline-to-online, retomando a sincronização em background quando houver rede.
+
 ## 🛡️ Impedimentos e Bloqueios
-* DoD Rejeitado: O increment falhou na análise de linting (`npm run lint`).
-  * 6 erros encontrados via `oxlint`.
-  * Arquivos com problema: `src/modules/dashboard/ui/views/__tests__/DashboardView.spec.ts`, `src/core/di.ts`, `src/modules/goals/application/stores/__tests__/goalStore.spec.ts`, `src/modules/loans/application/stores/__tests__/loanStore.spec.ts`, `src/modules/budgets/application/stores/__tests__/budgetStore.spec.ts`.
-  * Detalhe: Variáveis atribuídas mas não usadas (`transactionStore`, `dashboardStore`) e imports não utilizados (`db`, `container`).
-* Teste unitário falhou: Erro ao deletar transação no rollback optimistic.
+
+- DoD Rejeitado: O increment falhou na análise de linting (`npm run lint`).
+  - 6 erros encontrados via `oxlint`.
+  - Arquivos com problema: `src/modules/dashboard/ui/views/__tests__/DashboardView.spec.ts`, `src/core/di.ts`, `src/modules/goals/application/stores/__tests__/goalStore.spec.ts`, `src/modules/loans/application/stores/__tests__/loanStore.spec.ts`, `src/modules/budgets/application/stores/__tests__/budgetStore.spec.ts`.
+  - Detalhe: Variáveis atribuídas mas não usadas (`transactionStore`, `dashboardStore`) e imports não utilizados (`db`, `container`).
+- Teste unitário falhou: Erro ao deletar transação no rollback optimistic.

@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import DashboardView from '../DashboardView.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 
@@ -19,8 +18,6 @@ vi.mock('@/shared/utils/asset-loader', () => ({
 }))
 
 describe('DashboardView', () => {
-  let transactionStore: any
-  let dashboardStore: any
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -76,8 +73,6 @@ describe('DashboardView', () => {
       }
     })
 
-    transactionStore = useTransactionStore()
-    dashboardStore = useDashboardStore()
 
     expect(wrapper.text()).toContain('Nenhuma transação registrada')
     expect(wrapper.text()).toContain('Que tal começar agora?')

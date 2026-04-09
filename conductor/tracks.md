@@ -8,7 +8,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-*Nenhuma track ativa no momento.*
+_Nenhuma track ativa no momento._
 
 ---
 
@@ -28,7 +28,7 @@ Link: [./archive/full-stack-refactor_20260408/](./archive/full-stack-refactor_20
 
 ---
 
-### [~] Track: MICRO-RFC: Identidade e Sync Engine (Archived 2026-04-08)
+### [x] Track: MICRO-RFC: Identidade e Sync Engine (Archived 2026-04-08)
 
 MICRO-RFC: Identidade e Sync Engine
 Link: [./archive/identity-and-sync-engine_20260407/](./archive/identity-and-sync-engine_20260407/)
