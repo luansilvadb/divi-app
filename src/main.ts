@@ -32,7 +32,6 @@ db.open().catch((err) => {
 app.directive('ripple', Ripple)
 app.directive('tooltip', Tooltip)
 app.directive('animateonscroll', AnimateOnScroll)
-app.use(ToastService)
 app.use(PrimeVue, {
   theme: {
     preset: DiviPreset,
@@ -88,5 +87,6 @@ app.use(PrimeVue, {
     emptyFilterMessage: 'Nenhuma opção disponível',
   }
 })
+app.use(ToastService)
 
 app.mount('#app')
