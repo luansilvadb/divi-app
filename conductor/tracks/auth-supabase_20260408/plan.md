@@ -1,12 +1,12 @@
 # Plan: Integração Supabase Auth e Sessão Persistente (`auth-supabase_20260408`)
 
-## Fase 1: Setup e Infraestrutura Base
+## Fase 1: Setup e Infraestrutura Base [checkpoint: 0b558b7]
 - [x] Task: Instalar e configurar dependência do Supabase (0a6f93b)
     - [x] Executar `npm install @supabase/supabase-js`
     - [x] Criar/Configurar variáveis de ambiente (`.env`) para o Supabase URL e Anon Key
 - [x] Task: Implementar Singleton do Cliente Supabase (aae53b9)
     - [x] Criar `src/core/supabase.ts` para exportar a instância do cliente
-- [ ] Task: Conductor - User Manual Verification 'Fase 1: Setup e Infraestrutura Base' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Fase 1: Setup e Infraestrutura Base' (0b558b7)
 
 ## Fase 2: Lógica de Autenticação (Infrastructure & Application)
 - [ ] Task: Implementar `SupabaseAuth.ts` no módulo de infraestrutura
