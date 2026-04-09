@@ -54,55 +54,65 @@
           <span class="font-bold text-text-primary">simplificadas.</span>
         </p>
 
-        <!-- Feature pills -->
-        <div class="flex flex-wrap justify-center gap-2 animate-fade-in [animation-delay:350ms]">
-          <span
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
-          >
-            <svg
-              class="w-3.5 h-3.5 text-secondary-main shrink-0"
-              viewBox="0 0 20 20"
-              fill="currentColor"
+        <!-- Auth Form -->
+        <form @submit.prevent="handleSubmit" class="w-full flex flex-col gap-4 animate-fade-in [animation-delay:350ms]">
+          <div class="flex flex-col gap-2">
+            <label for="email" class="text-xs font-semibold uppercase tracking-wider text-text-disabled ml-1">E-mail</label>
+            <InputText 
+              id="email" 
+              v-model="email" 
+              type="email" 
+              placeholder="seu@email.com" 
+              class="w-full"
+              required 
+            />
+          </div>
+          
+          <div class="flex flex-col gap-2">
+            <label for="password" class="text-xs font-semibold uppercase tracking-wider text-text-disabled ml-1">Senha</label>
+            <Password 
+              v-model="password" 
+              toggleMask 
+              :feedback="isRegister"
+              placeholder="••••••••"
+              class="w-full"
+              inputClass="w-full"
+              required
             >
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Controle total
-          </span>
-          <span
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
+              <template v-if="isRegister" #header>
+                <div class="font-semibold text-sm mb-4">Escolha uma senha</div>
+              </template>
+              <template v-if="isRegister" #footer>
+                <Divider />
+                <ul class="pl-2 ml-2 mt-0 line-height-3">
+                  <li>Ao menos uma letra minúscula</li>
+                  <li>Ao menos uma letra maiúscula</li>
+                  <li>Ao menos um número</li>
+                  <li>Mínimo de 8 caracteres</li>
+                </ul>
+              </template>
+            </Password>
+          </div>
+
+          <BaseButton 
+            type="submit" 
+            variant="primary" 
+            class="w-full mt-2" 
+            :loading="isLoading" 
+            :disabled="isLoading"
           >
-            <svg
-              class="w-3.5 h-3.5 text-secondary-main shrink-0"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                clip-rule="evenodd"
-              />
-            </svg>
-            Seguro
-          </span>
-          <span
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-text-secondary bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 transition-transform duration-200 hover:-translate-y-[1px] hover:bg-black/10 dark:hover:bg-white/15"
+            {{ isRegister ? 'Criar conta' : 'Entrar' }}
+          </BaseButton>
+
+          <button 
+            type="button"
+            id="toggle-auth-mode"
+            @click="isRegister = !isRegister" 
+            class="text-xs font-medium text-text-secondary hover:text-primary-main transition-colors duration-200 text-center"
           >
-            <svg
-              class="w-3.5 h-3.5 text-secondary-main shrink-0"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
-              />
-            </svg>
-            Rápido
-          </span>
-        </div>
+            {{ isRegister ? 'Já tem uma conta? Entrar' : 'Não tem uma conta? Criar conta' }}
+          </button>
+        </form>
 
         <!-- Divider -->
         <div class="flex items-center gap-4 w-full animate-fade-in [animation-delay:450ms]">
@@ -111,7 +121,7 @@
           ></div>
           <span
             class="text-xs font-semibold uppercase tracking-widest text-text-disabled whitespace-nowrap"
-            >comece agora</span
+            >ou use</span
           >
           <div
             class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"
@@ -119,7 +129,7 @@
         </div>
 
         <!-- Google button -->
-        <BaseButton variant="outline" id="login-google-btn" :aria-busy="isLoading" :pt="{ root: { class: 'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none' } }" @click="handleLogin" :disabled="isLoading" :loading="isLoading">
+        <BaseButton variant="outline" id="login-google-btn" :aria-busy="isLoading" :pt="{ root: { class: 'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-border-main bg-surface-main cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary-main active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none' } }" @click="handleGoogleLogin" :disabled="isLoading" :loading="isLoading">
           <div
             class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-text-primary"
           >
@@ -185,25 +195,53 @@
       </div>
     </div>
   </div>
+  <Toast />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Divider from 'primevue/divider'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
 
 const isLoading = ref(false)
+const isRegister = ref(false)
+const email = ref('')
+const password = ref('')
+const toast = useToast()
+
 const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
 const currentYear = new Date().getFullYear()
 
-async function handleLogin() {
+async function handleSubmit() {
+  isLoading.value = true
+  try {
+    if (isRegister.value) {
+      await authService.registerWithEmail({ email: email.value, password: password.value })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Conta criada com sucesso!', life: 3000 })
+    } else {
+      await authService.signInWithEmail({ email: email.value, password: password.value })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!', life: 3000 })
+    }
+  } catch (error: any) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: error.message || 'Ocorreu um erro na autenticação.', life: 5000 })
+  } finally {
+    isLoading.value = false
+  }
+}
+
+async function handleGoogleLogin() {
   isLoading.value = true
   try {
     await authService.signInWithGoogle()
-  } catch (error) {
-    console.error('Login error:', error)
+  } catch (error: any) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: error.message || 'Ocorreu um erro ao conectar com Google.', life: 5000 })
   } finally {
     isLoading.value = false
   }
