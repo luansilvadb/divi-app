@@ -49,7 +49,7 @@ Link: [./archive/search-system-harmonization_20260406/](./archive/search-system-
 
 ---
 
-- [ ] **Track: Integração Supabase Auth e Sessão Persistente**
+- [x] **Track: Integração Supabase Auth e Sessão Persistente**
 *Link: [./tracks/auth-supabase_20260408/](./tracks/auth-supabase_20260408/)*
 
 ---
