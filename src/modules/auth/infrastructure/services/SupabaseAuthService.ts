@@ -5,10 +5,11 @@ import { supabase } from '@/core/supabase'
 
 export class SupabaseAuthService implements IAuthService {
   async signInWithGoogle(): Promise<void> {
+    const redirectUrl = import.meta.env.VITE_AUTH_REDIRECT_URL || window.location.origin
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: redirectUrl,
       },
     })
 
