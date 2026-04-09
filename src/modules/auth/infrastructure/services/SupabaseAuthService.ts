@@ -44,8 +44,8 @@ export class SupabaseAuthService implements IAuthService {
     return {
       id: user.id,
       email: user.email!,
-      name: user.user_metadata.full_name,
-      avatar_url: user.user_metadata.avatar_url,
+      name: user.user_metadata?.full_name,
+      avatar_url: user.user_metadata?.avatar_url,
     }
   }
 
@@ -78,8 +78,8 @@ export class SupabaseAuthService implements IAuthService {
       callback({
         id: user.id,
         email: user.email!,
-        name: user.user_metadata.full_name,
-        avatar_url: user.user_metadata.avatar_url,
+        name: user.user_metadata?.full_name,
+        avatar_url: user.user_metadata?.avatar_url,
       })
     })
   }
