@@ -46,6 +46,7 @@
       <RouterView />
     </main>
   </div>
+  <Toast />
 </template>
 
 <script setup lang="ts">
@@ -56,6 +57,7 @@ import { useTheme } from './core/theme'
 import type { IAuthService } from './modules/auth/domain/contracts/IAuthService'
 import { useRegisterSW } from 'virtual:pwa-register/vue'
 import Button from 'primevue/button'
+import Toast from 'primevue/toast'
 
 import MainLayout from './shared/components/templates/MainLayout.vue'
 

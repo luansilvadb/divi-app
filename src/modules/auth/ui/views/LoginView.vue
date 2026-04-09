@@ -195,7 +195,6 @@
       </div>
     </div>
   </div>
-  <Toast />
 </template>
 
 <script setup lang="ts">
@@ -204,7 +203,6 @@ import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Divider from 'primevue/divider'
-import Toast from 'primevue/toast'
 import { useToast } from 'primevue/usetoast'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
