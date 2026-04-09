@@ -14,6 +14,13 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Archived Tracks
 
+### [x] Track: Integração Supabase Auth e Sessão Persistente (Archived 2026-04-08)
+
+Implementar um sistema de autenticação e gerenciamento de sessão utilizando o Supabase Auth para o aplicativo Divi.
+Link: [./archive/auth-supabase_20260408/](./archive/auth-supabase_20260408/)
+
+---
+
 ### [x] Track: Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions (Archived 2026-04-08)
 
 Full Stack Alignment: Test Coverage, Google Auth, Sync Engine & CRUD Transactions
@@ -46,10 +53,5 @@ Link: [./archive/attribute-name-fix_20260406/](./archive/attribute-name-fix_2026
 
 Refine and standardize search bar components across modules to ensure consistency in look, feel, and functionality.
 Link: [./archive/search-system-harmonization_20260406/](./archive/search-system-harmonization_20260406/)
-
----
-
-- [x] **Track: Integração Supabase Auth e Sessão Persistente**
-*Link: [./tracks/auth-supabase_20260408/](./tracks/auth-supabase_20260408/)*
 
 ---
