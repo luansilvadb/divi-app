@@ -14,9 +14,9 @@
 
 ## Fase 2: UI Quick Entry (Modal)
 
-- [ ] Task: Criar componente `QuickEntryModal.vue`
-  - [ ] Escrever testes de componente para o modal (foco inicial, atalhos Enter/Esc)
-  - [ ] Implementar estrutura do modal com campos de Valor, Payee, Categoria e Carteira
+- [x] Task: Criar componente `QuickEntryModal.vue` (d12fd47)
+  - [x] Escrever testes de componente para o modal (foco inicial, atalhos Enter/Esc)
+  - [x] Implementar estrutura do modal com campos de Valor, Payee, Categoria e Carteira
 - [ ] Task: Integrar Predição na UI
   - [ ] Adicionar `watch` no campo Payee para disparar o `PredictionService`
   - [ ] Implementar preenchimento automático visual dos campos sugeridos
