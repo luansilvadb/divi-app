@@ -6,13 +6,13 @@
 - [x] Tarefa: Conductor - User Manual Verification 'Fase 1: Análise e Mapeamento' (Protocol in workflow.md)
 
 ## Fase 2: Configuração da SSoT (Fonte Única de Verdade)
-- [~] Tarefa: Revisar o `diviPreset.ts` para garantir que cobre todos os requisitos semânticos de cores identificados.
-- [ ] Tarefa: Atualizar `main.css` (@theme) para remover os blocos de re-exportação de tokens antigos.
-- [ ] Tarefa: Limpar `theme.css` e deixar apenas a paleta base (tokens de cor hex).
-- [ ] Tarefa: Conductor - User Manual Verification 'Fase 2: Configuração da SSoT' (Protocol in workflow.md)
+- [x] Tarefa: Revisar o `diviPreset.ts` para garantir que cobre todos os requisitos semânticos de cores identificados. 855e8ad
+- [x] Tarefa: Atualizar `main.css` (@theme) para remover os blocos de re-exportação de tokens antigos. e75f782
+- [x] Tarefa: Limpar `theme.css` e deixar apenas a paleta base (tokens de cor hex). e75f782
+- [x] Tarefa: Conductor - User Manual Verification 'Fase 2: Configuração da SSoT' (Protocol in workflow.md)
 
 ## Fase 3: Migração de Componentes (Bulk Refactor)
-- [ ] Tarefa: Substituir classes customizadas por equivalentes `tailwindcss-primeui` seguindo a Tabela de Migração definida no diagnóstico.
+- [~] Tarefa: Substituir classes customizadas por equivalentes `tailwindcss-primeui` seguindo a Tabela de Migração definida no diagnóstico.
 - [ ] Tarefa: Converter cores hardcoded para classes semânticas.
 - [ ] Tarefa: Corrigir problemas de especificidade em componentes nativos PrimeVue (Dialog, Select, Button).
 - [ ] Tarefa: Conductor - User Manual Verification 'Fase 3: Migração de Componentes' (Protocol in workflow.md)
