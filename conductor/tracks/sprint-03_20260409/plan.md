@@ -27,7 +27,7 @@
 - [x] Task: Salvar Transação e disparar SyncEngine (ea22f53)
   - [x] Implementar lógica de salvamento local via Dexie no `QuickEntryModal`
   - [x] Garantir chamada de `SyncEngine.enqueueSync()` após o salvamento
-- [ ] Task: Feedback Visual e UX
-  - [ ] Adicionar Toast de sucesso ao salvar
-  - [ ] Garantir fechamento automático do modal e limpeza dos campos
+- [x] Task: Feedback Visual e UX (07eeccf)
+  - [x] Adicionar Toast de sucesso ao salvar
+  - [x] Garantir fechamento automático do modal e limpeza dos campos
 - [ ] Task: Conductor - User Manual Verification 'Fase 3: Integração e Persistência'
