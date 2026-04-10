@@ -18,6 +18,6 @@
 - [x] Tarefa: Conductor - User Manual Verification 'Fase 3: Migração de Componentes' (Protocol in workflow.md)
 
 ## Fase 4: Validação e Testes
-- [~] Tarefa: Verificar consistência visual nos temas Light e Dark.
-- [ ] Tarefa: Executar testes de UI para garantir que não houve quebra de layout ou perda de estilos.
-- [ ] Tarefa: Conductor - User Manual Verification 'Fase 4: Validação e Testes' (Protocol in workflow.md)
+- [x] Tarefa: Verificar consistência visual nos temas Light e Dark. 1065b6d
+- [x] Tarefa: Executar testes de UI para garantir que não houve quebra de layout ou perda de estilos. 1065b6d
+- [x] Tarefa: Conductor - User Manual Verification 'Fase 4: Validação e Testes' (Protocol in workflow.md)
