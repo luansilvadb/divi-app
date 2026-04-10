@@ -90,8 +90,11 @@ onMounted(() => {
   // Use a -40px top margin to trigger "out of view" when it crosses under the global header line
   useIntersectionObserver(
     headerRef,
-    ([{ isIntersecting }]) => {
-      setInView(isIntersecting)
+    (entries) => {
+      const entry = entries[0]
+      if (entry) {
+        setInView(entry.isIntersecting)
+      }
     },
     { threshold: 0, rootMargin: '-10px 0px 0px 0px' }
   )

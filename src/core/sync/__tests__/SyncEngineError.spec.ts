@@ -40,9 +40,17 @@ describe('SyncEngine Error Handling', () => {
     engine = SyncEngine.getInstance()
     vi.clearAllMocks()
     vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
-      data: { user: { id: 'u1' } }, 
+      data: {
+        user: {
+          id: 'u1',
+          app_metadata: {},
+          user_metadata: {},
+          aud: 'authenticated',
+          created_at: new Date().toISOString()
+        }
+      },
       error: null 
-    } as unknown as { data: { user: { id: string } }; error: null })
+    } as any)
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 

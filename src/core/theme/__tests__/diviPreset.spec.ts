@@ -3,7 +3,7 @@ import DiviPreset from '../diviPreset'
 
 describe('DiviPreset', () => {
   it('should have all semantic colors defined', () => {
-    const semantic = DiviPreset.semantic
+    const semantic = DiviPreset.semantic as any
     expect(semantic).toBeDefined()
     expect(semantic?.colorScheme?.light?.primary).toBeDefined()
     expect(semantic?.colorScheme?.light?.secondary).toBeDefined()
@@ -21,14 +21,12 @@ describe('DiviPreset', () => {
   })
 
   it('should have correct surface mapping for primary text in light mode', () => {
-    const surface = DiviPreset.semantic?.colorScheme?.light?.surface
-    // @ts-expect-error Types might be incomplete
+    const surface = (DiviPreset.semantic as any)?.colorScheme?.light?.surface
     expect(surface?.[800]).toBe('#1e293b')
   })
 
   it('should have correct surface mapping for primary text in dark mode', () => {
-    const surface = DiviPreset.semantic?.colorScheme?.dark?.surface
-    // @ts-expect-error Types might be incomplete
+    const surface = (DiviPreset.semantic as any)?.colorScheme?.dark?.surface
     expect(surface?.[50]).toBe('#f0f6fc')
   })
 })

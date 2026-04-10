@@ -45,6 +45,7 @@ const handleSave = async () => {
     try {
       await transactionStore.saveTransaction({
         id: crypto.randomUUID(),
+        user_id: '', // Will be enriched by store
         amount: amount.value,
         title: payee.value,
         payee_id: payee.value,
