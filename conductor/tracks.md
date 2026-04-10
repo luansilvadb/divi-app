@@ -8,7 +8,10 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-_Nenhuma track ativa no momento._
+### [x] Track: Sprint 03: Motor de Inserção Rápida e Predição
+
+Sprint 03: Motor de Inserção Rápida e Predição
+Link: [./tracks/sprint-03_20260409/](./tracks/sprint-03_20260409/)
 
 ---
 
