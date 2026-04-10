@@ -1,34 +1,11 @@
 @import './theme.css' layer(base);
 @import 'tailwindcss';
-@layer primevue;
+@import 'tailwindcss-primeui';
+@layer theme, base, primevue, components, utilities;
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary-main: var(--color-primary-main);
-
-  --color-secondary-main: var(--color-secondary-main);
-
-  --color-accent-main: var(--color-accent-main);
-
-  --color-bg-main: var(--color-bg-main);
-
-  --color-surface-main: var(--color-surface-main);
-
-  --color-border-main: var(--color-border-main);
-
-  --color-text-primary: var(--color-text-primary);
-  --color-text-secondary: var(--color-text-secondary);
-  --color-text-disabled: var(--color-text-disabled);
-
-  --color-success-main: var(--color-success-main);
-
-  --color-error-main: var(--color-error-main);
-
-  --color-warning-main: var(--color-warning-main);
-
-  --color-info-main: var(--color-info-main);
-
   --color-glass-bg: var(--color-glass-bg);
   --color-glass-border: var(--color-glass-border);
   --color-hover-border: var(--color-hover-border);
