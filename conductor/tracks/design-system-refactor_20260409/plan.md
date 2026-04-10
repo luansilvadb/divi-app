@@ -12,12 +12,12 @@
 - [x] Tarefa: Conductor - User Manual Verification 'Fase 2: Configuração da SSoT' (Protocol in workflow.md)
 
 ## Fase 3: Migração de Componentes (Bulk Refactor)
-- [~] Tarefa: Substituir classes customizadas por equivalentes `tailwindcss-primeui` seguindo a Tabela de Migração definida no diagnóstico.
-- [ ] Tarefa: Converter cores hardcoded para classes semânticas.
-- [ ] Tarefa: Corrigir problemas de especificidade em componentes nativos PrimeVue (Dialog, Select, Button).
-- [ ] Tarefa: Conductor - User Manual Verification 'Fase 3: Migração de Componentes' (Protocol in workflow.md)
+- [x] Tarefa: Substituir classes customizadas por equivalentes `tailwindcss-primeui` seguindo a Tabela de Migração definida no diagnóstico. 958d593
+- [x] Tarefa: Converter cores hardcoded para classes semânticas. 958d593
+- [x] Tarefa: Corrigir problemas de especificidade em componentes nativos PrimeVue (Dialog, Select, Button). 958d593
+- [x] Tarefa: Conductor - User Manual Verification 'Fase 3: Migração de Componentes' (Protocol in workflow.md)
 
 ## Fase 4: Validação e Testes
-- [ ] Tarefa: Verificar consistência visual nos temas Light e Dark.
+- [~] Tarefa: Verificar consistência visual nos temas Light e Dark.
 - [ ] Tarefa: Executar testes de UI para garantir que não houve quebra de layout ou perda de estilos.
 - [ ] Tarefa: Conductor - User Manual Verification 'Fase 4: Validação e Testes' (Protocol in workflow.md)
