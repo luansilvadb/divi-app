@@ -41,7 +41,11 @@ describe('PredictionService', () => {
         payee_id: payeeId,
         date: new Date().toISOString(),
         sync_status: 'synced',
-        deleted: 0
+        deleted: false,
+        user_id: 'test-user',
+        client_updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        version: 1
       })
     }
 
@@ -56,7 +60,11 @@ describe('PredictionService', () => {
       payee_id: payeeId,
       date: new Date().toISOString(),
       sync_status: 'synced',
-      deleted: 0
+        deleted: false,
+        user_id: 'test-user',
+        client_updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        version: 1
     })
 
     // When
@@ -86,7 +94,11 @@ describe('PredictionService', () => {
         payee_id: payeeId,
         date: subDays(new Date(), 40).toISOString(),
         sync_status: 'synced',
-        deleted: 0
+        deleted: false,
+        user_id: 'test-user',
+        client_updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        version: 1
       })
     }
 
@@ -102,7 +114,11 @@ describe('PredictionService', () => {
         payee_id: payeeId,
         date: subDays(new Date(), 5).toISOString(),
         sync_status: 'synced',
-        deleted: 0
+        deleted: false,
+        user_id: 'test-user',
+        client_updated_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        version: 1
       })
     }
 

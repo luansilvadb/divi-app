@@ -13,7 +13,7 @@ export class PredictionService implements IPredictionService {
     const recentTransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter(t => t.date >= thirtyDaysAgo && t.deleted === 0)
+      .filter(t => t.date >= thirtyDaysAgo && !t.deleted)
       .toArray()
 
     if (recentTransactions.length > 0) {
@@ -24,7 +24,7 @@ export class PredictionService implements IPredictionService {
     const allTransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter(t => t.deleted === 0)
+      .filter(t => !t.deleted)
       .toArray()
 
     if (allTransactions.length > 0) {
@@ -33,7 +33,7 @@ export class PredictionService implements IPredictionService {
 
     // 3. Fallback: Se for novo payee, buscar a categoria mais usada globalmente
     const globalTransactions = await this.db.transactions
-      .filter(t => t.deleted === 0)
+      .filter(t => !t.deleted)
       .limit(100) // Limitar para performance
       .toArray()
 
@@ -61,6 +61,14 @@ export class PredictionService implements IPredictionService {
 
     const bestCategory = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0]
     const bestWallet = Object.entries(walletCounts).sort((a, b) => b[1] - a[1])[0]
+
+    if (!bestCategory || !bestWallet) {
+      return {
+        categoryId: 'geral',
+        walletId: 'default',
+        confidence: 0
+      }
+    }
 
     return {
       categoryId: bestCategory[0],

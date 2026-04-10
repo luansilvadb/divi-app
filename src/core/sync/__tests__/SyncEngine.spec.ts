@@ -46,9 +46,17 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
     vi.clearAllMocks()
     
     vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
-      data: { user: { id: 'test-user-id' } }, 
+      data: {
+        user: {
+          id: 'test-user-id',
+          app_metadata: {},
+          user_metadata: {},
+          aud: 'authenticated',
+          created_at: new Date().toISOString()
+        }
+      },
       error: null 
-    } as unknown as { data: { user: { id: string } }; error: null })
+    } as any)
     
     // Default mock behavior
     vi.mocked(supabase.from).mockImplementation(() => createMockTable() as unknown as ReturnType<typeof supabase.from>)

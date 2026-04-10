@@ -25,7 +25,10 @@ describe('SupabaseAuth', () => {
   })
 
   it('should call signInWithPassword when signInWithEmail is called', async () => {
-    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ data: {} as unknown as Session, error: null } as AuthResponse)
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
+      data: { user: {} as any, session: {} as any },
+      error: null
+    } as any)
     await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -37,14 +40,17 @@ describe('SupabaseAuth', () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ 
       data: { user: null, session: null }, 
       error: new Error('Invalid credentials') as unknown as AuthError
-    } as AuthResponse)
+    } as any)
     
     await expect(authService.signInWithEmail({ email: 'test@example.com', password: 'password123' }))
       .rejects.toThrow('Invalid credentials')
   })
 
   it('should call signUp when registerWithEmail is called', async () => {
-    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ data: {} as unknown as Session, error: null } as AuthResponse)
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
+      data: { user: {} as any, session: {} as any },
+      error: null
+    } as any)
     await authService.registerWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -106,7 +112,7 @@ describe('SupabaseAuth', () => {
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
       data: { user: null },
       error: null
-    } as UserResponse)
+    } as any)
 
     const user = await authService.getCurrentUser()
     expect(user).toBeNull()

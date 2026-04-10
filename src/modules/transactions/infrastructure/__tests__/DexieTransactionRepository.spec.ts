@@ -50,7 +50,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should hide deleted transactions from all fetching methods', async () => {
-    const t1: Partial<Transaction> = {
+    const t1: any = {
       id: 'tx-active',
       user_id: 'user-1',
       title: 'Active',
@@ -61,7 +61,7 @@ describe('DexieTransactionRepository', () => {
       date: '2026-04-07T10:00:00Z',
       deleted: false
     }
-    const t2: Partial<Transaction> = {
+    const t2: any = {
       id: 'tx-deleted',
       user_id: 'user-1',
       title: 'Deleted',
@@ -87,7 +87,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should mark for sync when a transaction is deleted (soft delete)', async () => {
-    const t1: Partial<Transaction> = {
+    const t1: any = {
       id: 'tx-to-delete',
       user_id: 'user-1',
       title: 'Deleting soon',
@@ -109,7 +109,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should update last_modified_at and sync_status on update', async () => {
-    const t1: Partial<Transaction> = {
+    const t1: any = {
       id: 'tx-update',
       user_id: 'user-1',
       title: 'Original Title',

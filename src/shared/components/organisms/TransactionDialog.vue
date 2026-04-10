@@ -156,6 +156,7 @@ let startY = 0
 const scrollContainer = ref<HTMLElement | null>(null)
 
 function onTouchStartHeader(e: TouchEvent) {
+  if (!e.touches[0]) return
   startY = e.touches[0].clientY
   isDragging.value = true
   isSnappingBack.value = false
@@ -165,10 +166,11 @@ function onTouchStartHeader(e: TouchEvent) {
 function onTouchStartContent(e: TouchEvent) {
   // Only allow dragging the sheet down if the scroll container is at the absolute top.
   // Otherwise, let the user scroll the form normally.
-  if (scrollContainer.value && scrollContainer.value.scrollTop > 0) {
+  if (!scrollContainer.value || scrollContainer.value.scrollTop > 0) {
     isDragging.value = false
     return
   }
+  if (!e.touches[0]) return
   startY = e.touches[0].clientY
   isDragging.value = true
   isSnappingBack.value = false
@@ -176,7 +178,7 @@ function onTouchStartContent(e: TouchEvent) {
 }
 
 function onTouchMove(e: TouchEvent) {
-  if (!isDragging.value) return
+  if (!isDragging.value || !e.touches[0]) return
   const currentY = e.touches[0].clientY
   const delta = currentY - startY
   if (delta > 0) {
