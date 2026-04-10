@@ -19,4 +19,5 @@ export const DI_TOKENS = {
   ExportService: 'ExportService',
   AssetLoader: 'IAssetLoader',
   SyncEngine: 'ISyncEngine',
+  PredictionService: 'IPredictionService',
 } as const
