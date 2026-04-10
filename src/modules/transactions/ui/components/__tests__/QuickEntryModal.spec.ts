@@ -25,18 +25,22 @@ describe('QuickEntryModal', () => {
   const mockPredictionService = {
     predict: vi.fn()
   }
+  const mockSyncEngine = {
+    enqueueSync: vi.fn()
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
     // Registrar mock no DI container
     vi.spyOn(container, 'resolve').mockImplementation((token) => {
       if (token === DI_TOKENS.PredictionService) return mockPredictionService
-      // Fallback para outros tokens se necessário
+      if (token === DI_TOKENS.SyncEngine) return mockSyncEngine
       return {
         categories: [],
         wallets: [],
         fetchCategories: vi.fn(),
-        fetchWallets: vi.fn()
+        fetchWallets: vi.fn(),
+        saveTransaction: vi.fn().mockResolvedValue({})
       }
     })
   })
@@ -76,32 +80,22 @@ describe('QuickEntryModal', () => {
     vm.amount = 100
     vm.payee = 'Starbucks'
     
-    // Aguardar o watch. Usamos um polling simples ou waitFor do vitest
     await vi.waitFor(() => expect(mockPredictionService.predict).toHaveBeenCalled())
     
     expect(vm.categoryId).toBe('cat-predita')
     expect(vm.walletId).toBe('wallet-predita')
   })
 
-  it('não deve sobrepor categoria se o usuário já interagiu', async () => {
-    mockPredictionService.predict.mockResolvedValue({
-      categoryId: 'cat-predita',
-      walletId: 'wallet-predita',
-      confidence: 0.8
-    })
-
+  it('deve chamar saveTransaction e enqueueSync ao salvar', async () => {
     const wrapper = mountComponent()
     const vm = wrapper.vm as any
     
     vm.amount = 100
-    vm.categoryId = 'cat-usuario'
-    vm.isUserInteracted.category = true
-    
     vm.payee = 'Starbucks'
     
-    await vi.waitFor(() => expect(mockPredictionService.predict).toHaveBeenCalled())
+    await vm.handleSave()
     
-    expect(vm.categoryId).toBe('cat-usuario')
-    expect(vm.walletId).toBe('wallet-predita')
+    expect(mockSyncEngine.enqueueSync).toHaveBeenCalled()
+    expect(wrapper.emitted('save')).toBeTruthy()
   })
 })

@@ -36,15 +36,39 @@ const close = () => {
   emit('update:visible', false)
 }
 
-const handleSave = () => {
+const handleSave = async () => {
   if (amount.value && payee.value) {
-    emit('save', {
-      amount: amount.value,
-      payee: payee.value,
-      categoryId: categoryId.value,
-      walletId: walletId.value
-    })
-    reset()
+    try {
+      await transactionStore.saveTransaction({
+        id: crypto.randomUUID(),
+        amount: amount.value,
+        title: payee.value,
+        payee_id: payee.value, // Por simplicidade, usando o nome como ID se não houver mapeamento
+        category_id: categoryId.value || 'geral',
+        wallet_id: walletId.value || 'default',
+        type: 'expense',
+        date: new Date().toISOString().slice(0, 10),
+        sync_status: 'pending',
+        deleted: false,
+        client_updated_at: new Date().toISOString(),
+        version: 1
+      } as any)
+
+      // Disparar sincronização
+      const syncEngine = useService<any>(DI_TOKENS.SyncEngine)
+      syncEngine.enqueueSync()
+
+      emit('save', {
+        amount: amount.value,
+        payee: payee.value,
+        categoryId: categoryId.value,
+        walletId: walletId.value
+      })
+      reset()
+      close()
+    } catch (err) {
+      console.error('Erro ao salvar via Quick Entry:', err)
+    }
   }
 }
 
