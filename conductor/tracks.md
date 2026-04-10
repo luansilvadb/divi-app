@@ -8,14 +8,18 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-### [x] Track: Sprint 03: Motor de Inserção Rápida e Predição
-
-Sprint 03: Motor de Inserção Rápida e Predição
-Link: [./tracks/sprint-03_20260409/](./tracks/sprint-03_20260409/)
+_Nenhuma track ativa no momento._
 
 ---
 
 ## Archived Tracks
+
+### [x] Track: Sprint 03: Motor de Inserção Rápida e Predição (Archived 2026-04-09)
+
+Sprint 03: Motor de Inserção Rápida e Predição
+Link: [./archive/sprint-03_20260409/](./archive/sprint-03_20260409/)
+
+---
 
 ### [x] Track: Integração Supabase Auth e Sessão Persistente (Archived 2026-04-08)
 
