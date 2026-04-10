@@ -16,16 +16,16 @@ O "divi" não será apenas um aplicativo. Será o primeiro cérebro financeiro l
 
 ## ÉPICOS DE ENGENHARIA (Os Próximos Passos para a Revolução)
 
-**🎯 EPIC 1: A Fundação e o Núcleo Local-First (Ativo - Meta: v0.2.0)**
-- Construção da arquitetura central com Vue 3, Pinia e Dexie.
-- Configuração do modelo Offline-First com esquema reativo.
-- Tela inicial com carregamento sub-100ms.
+**🎯 EPIC 1: A Fundação e o Núcleo Local-First (CONCLUÍDO - v0.2.0)**
+- [x] Construção da arquitetura central com Vue 3, Pinia e Dexie.
+- [x] Configuração do modelo Offline-First com esquema reativo.
+- [x] Tela inicial com carregamento sub-100ms.
 
-**EPIC 2: Identidade e o Cordão Umbilical (Planejado - Meta: v0.3.0)**
-- Integração Supabase Auth e sessão persistente.
-- Padrão de sincronização em background (Sync Engine) dos dados Dexie.
+**🎯 EPIC 2: Identidade e o Cordão Umbilical (CONCLUÍDO - v0.3.0)**
+- [x] Integração Supabase Auth e sessão persistente.
+- [x] Padrão de sincronização em background (Sync Engine) dos dados Dexie.
 
-**EPIC 3: A Dança dos Números (Planejado - Meta: v0.4.0)**
+**EPIC 3: A Dança dos Números (Ativo - Meta: v0.4.0)**
 - Inserção ultrarrápida de transações com categorização preditiva.
 - UX sem atrito: o caminho mais curto entre pensamento e registro.
 
