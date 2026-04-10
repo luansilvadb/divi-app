@@ -93,7 +93,7 @@ export class DiviDatabase extends Dexie {
     super('DiviDB_v2')
     
     this.version(1).stores({
-      transactions: 'id, user_id, date, sync_status, deleted',
+      transactions: 'id, user_id, date, sync_status, deleted, payee_id',
       wallets: 'id, user_id, name, sync_status, deleted',
       categories: 'id, user_id, name, sync_status, deleted',
       payees: 'id, user_id, name, sync_status, deleted',
