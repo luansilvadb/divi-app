@@ -10,3 +10,9 @@
 - Data/Hora: (T=1)
 - Versão: v0.2.0
 - **Síntese:** Epic 1 (A Fundação e o Núcleo Local-First) 100% implementado e arquivado como SPRINT_1_v0.1.0.md. Bump de versão MINOR realizado. Preparando o motor para o Epic 2.
+
+## [2026-04-10 01:10] — Sprint 02 Concluída
+
+- Versão: v0.2.0 → v0.3.0
+- Tasks: [2/2] concluídas
+- **Síntese:** Epic 2 (Identidade e o Cordão Umbilical) 100% implementado. Autenticação via Supabase e SyncEngine robusto com estratégia LWW (Last Write Wins) integrados. Código auditado e validado. Archival realizado com sucesso.

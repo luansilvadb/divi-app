@@ -1,26 +1,23 @@
-# SPRINT ATUAL: EPIC 2 (Identidade e o Cordão Umbilical)
+# Sprint 03 — v0.3.0
 
-**Meta:** v0.3.0
-**Status:** Aguardando Execução
-**Tech Lead:** Usuário
+> Épico: 03 — A Dança dos Números
+> Objetivo: Implementar a inserção ultrarrápida de transações com motor de predição local para latência zero.
 
-> **Aviso ao Tech Lead:**
-> Instruções estritas. Qualquer alteração neste arquivo deve ser apenas a marcação de `[x]` nas caixas de seleção. Dúvidas arquiteturais não são admitidas; apenas traduza as especificações abaixo em código. Referencie o arquivo `.agile/spec/TECHNICAL_SPEC_V0.3.0.md` para os detalhes exatos de implementação.
+## Checklist
 
----
+- [ ] **TASK-01: Motor de Predição Local**
+  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
+  - DoD: Implementar `PredictionService` com lógica de histórico e preenchimento automático.
 
-## MICRO-RFC: Identidade e Sync Engine
+- [ ] **TASK-02: UI Quick Entry (Modal)**
+  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
+  - DoD: Criar componente de entrada rápida com foco automático e suporte a atalhos (Enter/Esc).
 
-### Tarefa 1: Integração Supabase Auth e Sessão Persistente
+- [ ] **TASK-03: Integração com SyncEngine**
+  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
+  - DoD: Garantir que transações criadas via Quick Entry disparem o `SyncEngine.enqueueSync()`.
 
-- [x] Instalar cliente do Supabase (`@supabase/supabase-js`) se não estiver instalado.
-- [x] Configurar conexão com o Supabase Auth em um módulo de auth (`src/modules/auth/infrastructure/SupabaseAuth.ts`).
-- [x] Implementar a lógica de registro, login (com email/senha ou social auth) e logout, garantindo persistência da sessão.
-- [x] Construir/atualizar a view de Login e interligá-la ao roteador e store de autenticação.
+## Notas
 
-### Tarefa 2: Padrão de Sincronização em Background (Sync Engine)
-
-- [x] Criar a estrutura para o Sync Engine que monitora o Dexie buscando entidades com `syncStatus` 'pending' ou 'failed'.
-- [x] Implementar integração do Sync Engine com o backend (Supabase ou chamadas de API), processando as transações na fila.
-- [x] Atualizar o status das entidades no Dexie para 'synced' em caso de sucesso.
-- [x] Lidar adequadamente com conexões offline-to-online, retomando a sincronização em background quando houver rede.
+- Focar na eliminação de cliques desnecessários.
+- A predição deve ser silenciosa e não intrusiva.
