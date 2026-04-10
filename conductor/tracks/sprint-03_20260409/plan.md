@@ -12,7 +12,7 @@
   - [x] Atualizar `src/core/di.ts` e `src/core/di-tokens.ts`
 - [x] Task: Conductor - User Manual Verification 'Fase 1: Motor de Predição Local' (c37dd7a)
 
-## Fase 2: UI Quick Entry (Modal)
+## Fase 2: UI Quick Entry (Modal) [checkpoint: 0f707f2]
 
 - [x] Task: Criar componente `QuickEntryModal.vue` (d12fd47)
   - [x] Escrever testes de componente para o modal (foco inicial, atalhos Enter/Esc)
@@ -20,7 +20,7 @@
 - [x] Task: Integrar Predição na UI (70de4dd)
   - [x] Adicionar `watch` no campo Payee para disparar o `PredictionService`
   - [x] Implementar preenchimento automático visual dos campos sugeridos
-- [ ] Task: Conductor - User Manual Verification 'Fase 2: UI Quick Entry'
+- [x] Task: Conductor - User Manual Verification 'Fase 2: UI Quick Entry' (0f707f2)
 
 ## Fase 3: Integração e Persistência
 
