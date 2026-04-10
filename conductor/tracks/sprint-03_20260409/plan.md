@@ -4,10 +4,10 @@
 
 - [x] Task: Definir Interfaces e Tipos para Predição (c32e412)
   - [x] Criar tipos em `src/modules/transactions/domain/prediction.ts`
-- [ ] Task: Implementar `PredictionService`
-  - [ ] Criar testes unitários para a lógica de predição em `src/modules/transactions/application/__tests__/PredictionService.spec.ts`
-  - [ ] Implementar `PredictionService` em `src/modules/transactions/application/PredictionService.ts`
-  - [ ] Integrar busca histórica via Dexie
+- [x] Task: Implementar `PredictionService` (660e72c)
+  - [x] Criar testes unitários para a lógica de predição em `src/modules/transactions/application/__tests__/PredictionService.spec.ts`
+  - [x] Implementar `PredictionService` em `src/modules/transactions/application/PredictionService.ts`
+  - [x] Integrar busca histórica via Dexie
 - [ ] Task: Registrar `PredictionService` no container de DI
   - [ ] Atualizar `src/core/di.ts` e `src/core/di-tokens.ts`
 - [ ] Task: Conductor - User Manual Verification 'Fase 1: Motor de Predição Local'
