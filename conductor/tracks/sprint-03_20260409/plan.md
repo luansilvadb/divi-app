@@ -24,9 +24,9 @@
 
 ## Fase 3: Integração e Persistência
 
-- [ ] Task: Salvar Transação e disparar SyncEngine
-  - [ ] Implementar lógica de salvamento local via Dexie no `QuickEntryModal`
-  - [ ] Garantir chamada de `SyncEngine.enqueueSync()` após o salvamento
+- [x] Task: Salvar Transação e disparar SyncEngine (ea22f53)
+  - [x] Implementar lógica de salvamento local via Dexie no `QuickEntryModal`
+  - [x] Garantir chamada de `SyncEngine.enqueueSync()` após o salvamento
 - [ ] Task: Feedback Visual e UX
   - [ ] Adicionar Toast de sucesso ao salvar
   - [ ] Garantir fechamento automático do modal e limpeza dos campos
