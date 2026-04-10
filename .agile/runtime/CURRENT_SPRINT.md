@@ -1,23 +1,27 @@
-# Sprint 03 — v0.3.0
+# Sprint 04 — v0.4.0
 
-> Épico: 03 — A Dança dos Números
-> Objetivo: Implementar a inserção ultrarrápida de transações com motor de predição local para latência zero.
+> Épico: 04 — O Espelho Orçamentário
+> Objetivo: Implementar a gestão de budgets reativa para controle financeiro em tempo real.
 
 ## Checklist
 
-- [ ] **TASK-01: Motor de Predição Local**
-  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
-  - DoD: Implementar `PredictionService` com lógica de histórico e preenchimento automático.
+- [ ] **TASK-01: Esquema de Budgets no Dexie**
+  - Spec: `spec/TECHNICAL_SPEC_V0.5.0.md`
+  - DoD: Adicionar tabela `budgets` ao Dexie e atualizar repositórios.
 
-- [ ] **TASK-02: UI Quick Entry (Modal)**
-  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
-  - DoD: Criar componente de entrada rápida com foco automático e suporte a atalhos (Enter/Esc).
+- [ ] **TASK-02: BudgetStore e Reatividade**
+  - Spec: `spec/TECHNICAL_SPEC_V0.5.0.md`
+  - DoD: Implementar Store para gerenciar orçamentos e calcular saldos derivados via `liveQuery`.
 
-- [ ] **TASK-03: Integração com SyncEngine**
-  - Spec: `spec/TECHNICAL_SPEC_V0.4.0.md`
-  - DoD: Garantir que transações criadas via Quick Entry disparem o `SyncEngine.enqueueSync()`.
+- [ ] **TASK-03: UI de Visualização de Orçamentos**
+  - Spec: `spec/TECHNICAL_SPEC_V0.5.0.md`
+  - DoD: Criar tela/seção de orçamentos com barras de progresso dinâmicas.
+
+- [ ] **TASK-04: Sincronização de Orçamentos**
+  - Spec: `spec/TECHNICAL_SPEC_V0.5.0.md`
+  - DoD: Integrar orçamentos ao `SyncEngine` para persistência no backend.
 
 ## Notas
 
-- Focar na eliminação de cliques desnecessários.
-- A predição deve ser silenciosa e não intrusiva.
+- A experiência de configurar um budget deve ser tão fluida quanto registrar uma transação.
+- Priorizar o feedback visual imediato.
