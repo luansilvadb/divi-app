@@ -6,9 +6,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
----
-
-_Nenhuma track ativa no momento._
+- [ ] **Track: Refactor do Design System de Tokens (Fonte Única de Verdade)**
+*Link: [./tracks/design-system-refactor_20260409/](./tracks/design-system-refactor_20260409/)*
 
 ---
 
