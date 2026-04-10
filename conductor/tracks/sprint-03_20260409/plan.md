@@ -1,6 +1,6 @@
 # Plan: Sprint 03 — v0.3.0: Inserção Rápida e Predição (`sprint-03_20260409`)
 
-## Fase 1: Motor de Predição Local (Domain & Application)
+## Fase 1: Motor de Predição Local (Domain & Application) [checkpoint: c37dd7a]
 
 - [x] Task: Definir Interfaces e Tipos para Predição (c32e412)
   - [x] Criar tipos em `src/modules/transactions/domain/prediction.ts`
@@ -10,7 +10,7 @@
   - [x] Integrar busca histórica via Dexie
 - [x] Task: Registrar `PredictionService` no container de DI (abb728b)
   - [x] Atualizar `src/core/di.ts` e `src/core/di-tokens.ts`
-- [ ] Task: Conductor - User Manual Verification 'Fase 1: Motor de Predição Local'
+- [x] Task: Conductor - User Manual Verification 'Fase 1: Motor de Predição Local' (c37dd7a)
 
 ## Fase 2: UI Quick Entry (Modal)
 
