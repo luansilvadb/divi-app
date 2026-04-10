@@ -5,6 +5,7 @@ import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import Button from 'primevue/button'
+import { useToast } from 'primevue/usetoast'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 
 const transactionStore = useTransactionStore()
 const predictionService = useService<IPredictionService>(DI_TOKENS.PredictionService)
+const toast = useToast()
 
 const amount = ref<number | null>(null)
 const payee = ref('')
@@ -43,7 +45,7 @@ const handleSave = async () => {
         id: crypto.randomUUID(),
         amount: amount.value,
         title: payee.value,
-        payee_id: payee.value, // Por simplicidade, usando o nome como ID se não houver mapeamento
+        payee_id: payee.value,
         category_id: categoryId.value || 'geral',
         wallet_id: walletId.value || 'default',
         type: 'expense',
@@ -58,6 +60,13 @@ const handleSave = async () => {
       const syncEngine = useService<any>(DI_TOKENS.SyncEngine)
       syncEngine.enqueueSync()
 
+      toast.add({
+        severity: 'success',
+        summary: 'Transação Salva',
+        detail: `R$ ${amount.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} - ${payee.value}`,
+        life: 3000
+      })
+
       emit('save', {
         amount: amount.value,
         payee: payee.value,
@@ -68,6 +77,12 @@ const handleSave = async () => {
       close()
     } catch (err) {
       console.error('Erro ao salvar via Quick Entry:', err)
+      toast.add({
+        severity: 'error',
+        summary: 'Erro ao Salvar',
+        detail: 'Não foi possível salvar a transação localmente.',
+        life: 5000
+      })
     }
   }
 }
@@ -117,7 +132,7 @@ watch(() => props.visible, (newVal) => {
 })
 
 // Expor para testes
-defineExpose({ amount, payee, categoryId, walletId, handleSave, close })
+defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInteracted })
 </script>
 
 <template>
@@ -192,7 +207,3 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close })
     </div>
   </Dialog>
 </template>
-
-<style scoped>
-/* Estilos específicos se necessário */
-</style>

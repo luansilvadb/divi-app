@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import QuickEntryModal from '../QuickEntryModal.vue'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 import { createTestingPinia } from '@pinia/testing'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
@@ -52,7 +53,7 @@ describe('QuickEntryModal', () => {
         ...props
       },
       global: {
-        plugins: [PrimeVue, createTestingPinia({ createSpy: vi.fn })],
+        plugins: [PrimeVue, ToastService, createTestingPinia({ createSpy: vi.fn })],
         stubs: {
           Dialog: {
             template: '<div v-if="visible"><slot /></div>',

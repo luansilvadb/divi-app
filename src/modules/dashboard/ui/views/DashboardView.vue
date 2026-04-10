@@ -4,6 +4,19 @@
     highlight="Financeiro"
     subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
   >
+    <template #action>
+      <BaseButton 
+        variant="primary" 
+        class="!rounded-2xl !px-6 !py-3 shadow-2xl hover:shadow-primary-main/30 transition-all duration-500 group/quick"
+        @click="showQuickEntry = true"
+      >
+        <span class="flex items-center gap-2 text-[0.7rem] font-black uppercase tracking-[0.2em]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover/quick:rotate-90 transition-transform duration-500"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Entrada Rápida
+        </span>
+      </BaseButton>
+    </template>
+
     <!-- Initialization Error Banner (Incognito Mode) -->
     <div
       v-if="dashboardStore.initializationError"
@@ -550,6 +563,8 @@
         </BaseCard>
       </aside>
     </div>
+
+    <QuickEntryModal v-model:visible="showQuickEntry" />
   </StandardPageLayout>
 </template>
 
@@ -578,7 +593,10 @@ import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import SelectButton from 'primevue/selectbutton'
+import QuickEntryModal from '@/modules/transactions/ui/components/QuickEntryModal.vue'
 import { container } from '@/core/di'
+
+const showQuickEntry = ref(false)
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
 import type { TransactionRepositoryPort } from '@/modules/transactions/application/TransactionRepositoryPort'
