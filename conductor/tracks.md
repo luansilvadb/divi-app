@@ -4,14 +4,14 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## Active Tracks
+## Archived Tracks
 
-- [x] **Track: Refactor do Design System de Tokens (Fonte Única de Verdade)**
-*Link: [./tracks/design-system-refactor_20260409/](./tracks/design-system-refactor_20260409/)*
+### [x] Track: Refactor do Design System de Tokens (Fonte Única de Verdade) (Archived 2026-04-10)
+
+Refactor do Design System de Tokens (Fonte Única de Verdade)
+Link: [./archive/design-system-refactor_20260409/](./archive/design-system-refactor_20260409/)
 
 ---
-
-## Archived Tracks
 
 ### [x] Track: Sprint 03: Motor de Inserção Rápida e Predição (Archived 2026-04-09)
 
