@@ -24,6 +24,30 @@ const DiviPreset = definePreset(Aura, {
           hoverColor: '#22334b',
           activeColor: '#2f4769',
         },
+        secondary: {
+          color: '#10b981',
+          contrastColor: '#ffffff',
+          hoverColor: '#059669',
+          activeColor: '#047857',
+        },
+        error: {
+          color: '#e11d48',
+          contrastColor: '#ffffff',
+          hoverColor: '#be123c',
+          activeColor: '#9f1239',
+        },
+        accent: {
+          color: '#d49a46',
+          contrastColor: '#ffffff',
+          hoverColor: '#b47b2c',
+          activeColor: '#92601c',
+        },
+        warn: {
+          color: '#d97706',
+          contrastColor: '#ffffff',
+          hoverColor: '#b45309',
+          activeColor: '#92400e',
+        },
         surface: {
           0: '#ffffff',
           50: '#f8fafc',
@@ -45,6 +69,30 @@ const DiviPreset = definePreset(Aura, {
           contrastColor: '#ffffff',
           hoverColor: '#5c77a3',
           activeColor: '#3d5b87',
+        },
+        secondary: {
+          color: '#10b981',
+          contrastColor: '#ffffff',
+          hoverColor: '#059669',
+          activeColor: '#047857',
+        },
+        error: {
+          color: '#f43f5e',
+          contrastColor: '#ffffff',
+          hoverColor: '#e11d48',
+          activeColor: '#be123c',
+        },
+        accent: {
+          color: '#c5a059',
+          contrastColor: '#ffffff',
+          hoverColor: '#b48a3d',
+          activeColor: '#936a28',
+        },
+        warn: {
+          color: '#f59e0b',
+          contrastColor: '#ffffff',
+          hoverColor: '#d97706',
+          activeColor: '#b45309',
         },
         surface: {
           0: '#ffffff',
