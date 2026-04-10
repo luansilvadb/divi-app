@@ -25,6 +25,7 @@
 ## Styling & Icons
 
 - **PrimeIcons:** Consistent and comprehensive set of icons for the UI.
+- **Tailwind PrimeUI:** Unified design system integration between PrimeVue and Tailwind CSS, establishing a Single Source of Truth for tokens.
 - **PostCSS:** Tool for transforming CSS with JavaScript.
 
 ## Testing & Quality Assurance
