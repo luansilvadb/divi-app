@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SupabaseAuth } from '../SupabaseAuth'
 import { supabase } from '@/core/supabase'
+import type { AuthResponse, UserResponse, AuthChangeEvent, Session, AuthError, User } from '@supabase/supabase-js'
 
 vi.mock('@/core/supabase', () => ({
   supabase: {
@@ -24,7 +25,7 @@ describe('SupabaseAuth', () => {
   })
 
   it('should call signInWithPassword when signInWithEmail is called', async () => {
-    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ data: {}, error: null } as any)
+    vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ data: {} as unknown as Session, error: null } as AuthResponse)
     await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -35,15 +36,15 @@ describe('SupabaseAuth', () => {
   it('should throw error when signInWithEmail fails', async () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({ 
       data: { user: null, session: null }, 
-      error: new Error('Invalid credentials') 
-    } as any)
+      error: new Error('Invalid credentials') as unknown as AuthError
+    } as AuthResponse)
     
     await expect(authService.signInWithEmail({ email: 'test@example.com', password: 'password123' }))
       .rejects.toThrow('Invalid credentials')
   })
 
   it('should call signUp when registerWithEmail is called', async () => {
-    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ data: {}, error: null } as any)
+    vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ data: {} as unknown as Session, error: null } as AuthResponse)
     await authService.registerWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -54,8 +55,8 @@ describe('SupabaseAuth', () => {
   it('should throw error when registerWithEmail fails', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({ 
       data: { user: null, session: null }, 
-      error: new Error('Email already exists') 
-    } as any)
+      error: new Error('Email already exists') as unknown as AuthError
+    } as AuthResponse)
     
     await expect(authService.registerWithEmail({ email: 'test@example.com', password: 'password123' }))
       .rejects.toThrow('Email already exists')
@@ -86,9 +87,9 @@ describe('SupabaseAuth', () => {
       }
     }
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
-      data: { user: mockSupabaseUser },
+      data: { user: mockSupabaseUser as unknown as User },
       error: null
-    } as any)
+    } as UserResponse)
 
     const user = await authService.getCurrentUser()
 
@@ -105,7 +106,7 @@ describe('SupabaseAuth', () => {
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
       data: { user: null },
       error: null
-    } as any)
+    } as UserResponse)
 
     const user = await authService.getCurrentUser()
     expect(user).toBeNull()
@@ -116,7 +117,7 @@ describe('SupabaseAuth', () => {
     
     // Simulate Supabase calling our callback with a session
     vi.mocked(supabase.auth.onAuthStateChange).mockImplementationOnce((cb) => {
-      cb('SIGNED_IN', {
+      cb('SIGNED_IN' as AuthChangeEvent, {
         user: {
           id: '123',
           email: 'test@test.com',
@@ -124,8 +125,8 @@ describe('SupabaseAuth', () => {
             full_name: 'Test User'
           }
         }
-      } as any)
-      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } }
+      } as unknown as Session)
+      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } } as unknown as ReturnType<typeof supabase.auth.onAuthStateChange>
     })
 
     authService.onAuthStateChange(callback)
@@ -144,8 +145,8 @@ describe('SupabaseAuth', () => {
     
     // Simulate Supabase calling our callback without a session user
     vi.mocked(supabase.auth.onAuthStateChange).mockImplementationOnce((cb) => {
-      cb('SIGNED_OUT', null)
-      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } }
+      cb('SIGNED_OUT' as AuthChangeEvent, null)
+      return { data: { subscription: { unsubscribe: vi.fn(), id: '1', callback: vi.fn() } } } as unknown as ReturnType<typeof supabase.auth.onAuthStateChange>
     })
 
     authService.onAuthStateChange(callback)
@@ -154,3 +155,4 @@ describe('SupabaseAuth', () => {
     expect(callback).toHaveBeenCalledWith(null)
   })
 })
+

@@ -5,3 +5,4 @@ export interface IGoalRepository {
   save(goal: Goal): Promise<void>
   delete(id: string): Promise<void>
 }
+

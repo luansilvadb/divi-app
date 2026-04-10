@@ -103,3 +103,4 @@ describe('LoginView.vue', () => {
     expect(privacyLink?.attributes('aria-label')).toBe('Política de Privacidade')
   })
 })
+

@@ -64,3 +64,4 @@ const tooltipContent = computed(() => {
   vertical-align: middle;
 }
 </style>
+

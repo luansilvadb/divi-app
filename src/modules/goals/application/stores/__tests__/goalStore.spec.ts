@@ -27,3 +27,4 @@ describe('goalStore', () => {
     expect(store.searchQuery).toBe('Dream')
   })
 })
+

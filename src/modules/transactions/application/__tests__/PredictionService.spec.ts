@@ -127,3 +127,4 @@ describe('PredictionService', () => {
     expect(result.confidence).toBe(0)
   })
 })
+

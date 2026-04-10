@@ -13,3 +13,4 @@ describe('Supabase Singleton', () => {
         expect(supabase['supabaseUrl']).toBe(import.meta.env.VITE_SUPABASE_URL);
     });
 });
+

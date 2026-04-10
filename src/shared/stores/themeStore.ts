@@ -63,3 +63,4 @@ export const useThemeStore = defineStore('theme', () => {
     initThemeObservers
   }
 })
+

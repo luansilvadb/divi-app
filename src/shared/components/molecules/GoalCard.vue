@@ -7,7 +7,7 @@
             <span class="emoji-icon text-xl leading-none" v-if="goal.icon">{{ goal.icon }}</span>
             <i class="pi pi-bullseye text-xl"></i>
           </BaseIconBox>
-          <span class="goal-name text-lg font-bold text-text-primary tracking-tight">{{
+          <span class="goal-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">{{
             goal.name
           }}</span>
           <ItemSyncIndicator :status="goal.sync_status" />
@@ -22,15 +22,15 @@
     <div class="goal-info flex flex-col gap-5 pt-2">
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-2">
-          <span class="consumed text-2xl font-black text-text-primary tracking-tighter">{{
+          <span class="consumed text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">{{
             formatCurrency(goal.current_value)
           }}</span>
-          <span class="limit text-sm font-semibold text-text-secondary opacity-70"
+          <span class="limit text-sm font-semibold text-surface-600 dark:text-surface-200 opacity-70"
             >/ {{ formatCurrency(goal.target_value) }}</span
           >
         </div>
         <div
-          class="percentage-pill text-xs font-black bg-bg-main dark:bg-white/5 px-3 py-1.5 rounded-lg shadow-xs border border-white/10"
+          class="percentage-pill text-xs font-black bg-surface-100 dark:bg-surface-950 bg-surface-800/10 px-3 py-1.5 rounded-lg shadow-xs border border-white/10"
           :style="{ color: goal.color || 'var(--color-primary-main)' }"
         >
           {{ Math.round(percentage) }}%
@@ -40,16 +40,16 @@
       <BaseProgressBar :percentage="percentage" :color="goal.color" />
 
       <div
-        class="goal-footer-details flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5"
+        class="goal-footer-details flex justify-between items-center pt-4 border-t border-surface-200 dark:border-surface-200/10"
       >
         <div class="insight-group flex flex-col gap-0.5">
           <span
-            class="insight-label text-[0.7rem] font-bold text-text-secondary uppercase tracking-widest"
+            class="insight-label text-[0.7rem] font-bold text-surface-600 dark:text-surface-200 uppercase tracking-widest"
           >
             {{ percentage < 100 ? 'Faltam' : 'Objetivo' }}
           </span>
           <span
-            class="insight-value text-base font-black text-text-primary tracking-tight"
+            class="insight-value text-base font-black text-surface-800 dark:text-surface-50 tracking-tight"
             :class="{ 'text-success-main': percentage >= 100 }"
           >
             {{
@@ -61,7 +61,7 @@
         </div>
 
         <div
-          class="date-badge flex items-center gap-2 text-[0.75rem] font-bold text-text-secondary bg-black/3 dark:bg-white/5 px-3 py-2 rounded-xl border border-black/2 dark:border-white/2"
+          class="date-badge flex items-center gap-2 text-[0.75rem] font-bold text-surface-600 dark:text-surface-200 bg-black/3 bg-surface-800/10 px-3 py-2 rounded-xl border border-black/2 dark:border-white/2"
         >
           <i class="pi pi-calendar text-xs"></i>
           {{ formatDate(goal.created_at) }}
@@ -101,3 +101,5 @@ const formatDate = (dateString?: string) => {
   return new Date(dateString).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
 }
 </script>
+
+

@@ -25,3 +25,4 @@ describe('AutoCategorizationService', () => {
     expect(result).toBeNull()
   })
 })
+

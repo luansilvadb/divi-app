@@ -80,3 +80,4 @@ describe('BaseBadge.vue', () => {
     expect(badge.props('severity')).toBe('info')
   })
 })
+

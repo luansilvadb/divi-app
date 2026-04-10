@@ -78,3 +78,4 @@ describe('BaseSelect.vue', () => {
     expect(errorMsg.text()).toBe('This is an error message')
   })
 })
+

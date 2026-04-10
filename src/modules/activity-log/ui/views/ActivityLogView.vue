@@ -21,10 +21,10 @@
             class="flex flex-col items-center justify-center h-[400px] text-center"
           >
             <div
-              class="w-12 h-12 border-4 border-primary-main/10 border-t-primary-main rounded-full animate-spin"
+              class="w-12 h-12 border-4 border-primary/10 border-t-primary-main rounded-full animate-spin"
             ></div>
             <p
-              class="mt-8 text-[10px] font-black tracking-widest text-text-disabled uppercase animate-pulse"
+              class="mt-8 text-[10px] font-black tracking-widest text-surface-400 dark:text-surface-400 uppercase animate-pulse"
             >
               Carregando atividades...
             </p>
@@ -36,7 +36,7 @@
             class="flex flex-col items-center justify-center h-[400px] text-center px-6"
           >
             <div
-              class="w-20 h-20 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center mb-8 border border-black/5 dark:border-white/5 opacity-50"
+              class="w-20 h-20 rounded-full bg-surface-50 dark:bg-surface-800/10 flex items-center justify-center mb-8 border border-surface-200 dark:border-surface-200/10 opacity-50"
             >
               <svg
                 viewBox="0 0 24 24"
@@ -52,10 +52,10 @@
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
-            <h3 class="text-2xl font-black text-text-primary tracking-tight mb-2">
+            <h3 class="text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
               Nenhuma atividade registrada
             </h3>
-            <p class="text-sm text-text-secondary font-medium leading-relaxed max-w-xs">
+            <p class="text-sm text-surface-600 dark:text-surface-200 font-medium leading-relaxed max-w-xs">
               Seu log de operações está vazio no momento.
             </p>
           </div>
@@ -69,12 +69,12 @@
             >
               <!-- Vertical Timeline Line -->
               <div
-                class="absolute top-11 bottom-[-40px] left-5 w-0.5 bg-black/5 dark:bg-white/5 rounded-full z-0 group-last:hidden"
+                class="absolute top-11 bottom-[-40px] left-5 w-0.5 bg-surface-50 dark:bg-surface-800/10 rounded-full z-0 group-last:hidden"
               ></div>
 
               <!-- Status Icon Area -->
               <div
-                class="activity-icon-wrapper relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 z-10 shadow-sm border border-black/5 dark:border-white/5"
+                class="activity-icon-wrapper relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 z-10 shadow-sm border border-surface-200 dark:border-surface-200/10"
               >
                 <div
                   class="absolute inset-0 rounded-full opacity-10"
@@ -100,7 +100,7 @@
                   stroke-width="3"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="w-4 h-4 text-error-main"
+                  class="w-4 h-4 text-error"
                 >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
@@ -129,7 +129,7 @@
                   stroke-width="3"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="w-4 h-4 text-primary-main"
+                  class="w-4 h-4 text-primary"
                 >
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="16" x2="12" y2="12" />
@@ -139,14 +139,14 @@
 
               <!-- Content Block -->
               <div
-                class="activity-content-box flex-1 flex flex-col gap-2 p-5 rounded-2xl border border-black/5 dark:border-white/5 hover:bg-white/40 dark:hover:bg-black/20 transition-all duration-300"
+                class="activity-content-box flex-1 flex flex-col gap-2 p-5 rounded-2xl border border-surface-200 dark:border-surface-200/10 hover:bg-white/40 dark:hover:bg-black/20 transition-all duration-300"
               >
                 <div class="activity-header flex justify-between items-start gap-4">
-                  <h3 class="action-title text-base font-black text-text-primary tracking-tight">
+                  <h3 class="action-title text-base font-black text-surface-800 dark:text-surface-50 tracking-tight">
                     {{ activity.action }}
                   </h3>
                   <div
-                    class="timestamp-badge text-[10px] font-black uppercase tracking-widest text-text-disabled flex items-center gap-2 px-3 py-1.5 bg-black/5 dark:bg-white/5 rounded-full"
+                    class="timestamp-badge text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 flex items-center gap-2 px-3 py-1.5 bg-surface-50 dark:bg-surface-800/10 rounded-full"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -164,7 +164,7 @@
                   </div>
                 </div>
                 <p
-                  class="activity-description text-sm text-text-secondary leading-relaxed font-medium opacity-80"
+                  class="activity-description text-sm text-surface-600 dark:text-surface-200 leading-relaxed font-medium opacity-80"
                 >
                   {{ activity.description }}
                 </p>
@@ -179,12 +179,12 @@
         <BaseCard>
           <template #header>Auditoria de Segurança</template>
           <div class="flex flex-col gap-6 pt-2">
-            <p class="text-xs text-text-secondary font-medium leading-relaxed">
+            <p class="text-xs text-surface-600 dark:text-surface-200 font-medium leading-relaxed">
               O log de atividades é imutável e serve como registro histórico de todas as operações
               sensíveis realizadas na sua conta.
             </p>
             <div
-              class="bg-primary-main/5 p-4 rounded-2xl border border-primary-main/10 flex gap-4 items-start"
+              class="bg-primary/5 p-4 rounded-2xl border border-primary/10 flex gap-4 items-start"
             >
               <div class="mt-0.5">
                 <svg
@@ -197,17 +197,17 @@
                   stroke-width="2.5"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="text-primary-main"
+                  class="text-primary"
                 >
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="16" x2="12" y2="12"></line>
                   <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
               </div>
-              <p class="text-[0.8rem] text-text-secondary leading-relaxed">
+              <p class="text-[0.8rem] text-surface-600 dark:text-surface-200 leading-relaxed">
                 Todas as ações são registradas com
-                <strong class="text-text-primary">timestamp</strong> e
-                <strong class="text-text-primary">contexto do usuário</strong>.
+                <strong class="text-surface-800 dark:text-surface-50">timestamp</strong> e
+                <strong class="text-surface-800 dark:text-surface-50">contexto do usuário</strong>.
               </p>
             </div>
           </div>
@@ -261,13 +261,13 @@ const statusBg = (type: string) => {
     case 'success':
       return 'bg-success-main'
     case 'error':
-      return 'bg-error-main'
+      return 'bg-error'
     case 'warning':
       return 'bg-warning-main'
     case 'info':
-      return 'bg-primary-main'
+      return 'bg-primary'
     default:
-      return 'bg-primary-main'
+      return 'bg-primary'
   }
 }
 
@@ -282,3 +282,5 @@ const formatDateTime = (timestamp: string) => {
   return `${dateString.toUpperCase()}, ${timeString}`
 }
 </script>
+
+

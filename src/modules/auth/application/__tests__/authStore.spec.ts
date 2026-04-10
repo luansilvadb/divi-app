@@ -28,3 +28,4 @@ describe('Auth Store', () => {
     expect(store.isAuthenticated).toBe(false)
   })
 })
+

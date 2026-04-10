@@ -1,9 +1,8 @@
 <template>
-  <div 
-    class="sync-status-indicator flex items-center gap-2 px-3 py-1.5 rounded-full border border-black/5 dark:border-white/5 bg-white/50 dark:bg-white/5 backdrop-blur-sm transition-all duration-300 group cursor-default"
+  <div
+    class="sync-status-indicator flex items-center gap-2 px-3 py-1.5 rounded-full border border-surface-200 dark:border-surface-800/10 bg-surface-0/50 dark:bg-surface-800/10 backdrop-blur-sm transition-all duration-300 group cursor-default"
     v-tooltip.bottom="tooltipContent"
-  >
-    <!-- Simple Status Icon -->
+  >    <!-- Simple Status Icon -->
     <div class="relative flex items-center justify-center w-5 h-5">
       <i 
         :class="statusInfo.icon" 
@@ -77,3 +76,4 @@ const tooltipContent = computed(() => {
   box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
 }
 </style>
+

@@ -11,7 +11,7 @@ export class SyncEngine {
   private static instance: SyncEngine
   private isPushing = false
   private isPulling = false
-  private debounceId: any = null
+  private debounceId: ReturnType<typeof setTimeout> | null = null
 
   constructor() {
     SyncEngine.instance = this
@@ -28,7 +28,7 @@ export class SyncEngine {
   }
 
   public static _resetInstance() {
-    (SyncEngine as any).instance = undefined
+    SyncEngine.instance = undefined as unknown as SyncEngine
   }
 
   private init() {
@@ -135,11 +135,11 @@ export class SyncEngine {
 
           // 2. Push to Supabase
           // Sanitize record to remove legacy/local-only fields
-          const { sync_status: _sync_status, ...payload } = record as any
-          delete (payload as any).syncStatus
-          delete (payload as any).is_dirty
-          delete (payload as any).last_modified_at
-          delete (payload as any).localId
+          const { sync_status: _sync_status, ...payload } = record as Record<string, unknown>
+          delete payload.syncStatus
+          delete payload.is_dirty
+          delete payload.last_modified_at
+          delete payload.localId
 
           // Convert empty strings to null for UUID fields (Postgres requirement)
           Object.keys(payload).forEach(key => {
@@ -260,3 +260,4 @@ export class SyncEngine {
 }
 
 export default SyncEngine
+

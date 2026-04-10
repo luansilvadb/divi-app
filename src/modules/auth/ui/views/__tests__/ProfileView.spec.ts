@@ -19,3 +19,4 @@ describe('ProfileView.vue', () => {
     expect(wrapper.text()).toContain('luan@example.com')
   })
 })
+

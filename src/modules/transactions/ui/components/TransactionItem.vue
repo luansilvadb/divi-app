@@ -2,7 +2,7 @@
   <div
     role="button"
     tabindex="0"
-    class="transaction-item flex items-center p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer relative transition-all duration-300 rounded-[1.5rem] sm:rounded-[2rem] border border-black/5 dark:border-white/5 bg-white/50 dark:bg-[#161D2C] hover:bg-white/80 dark:hover:bg-[#1F242F] hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary-main focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
+    class="transaction-item flex items-center p-3 sm:p-4 gap-3 sm:gap-4 cursor-pointer relative transition-all duration-300 rounded-[1.5rem] sm:rounded-[2rem] border border-surface-200 dark:border-surface-800/10 bg-white/50 dark:bg-surface-700 hover:bg-white/80 dark:hover:bg-surface-700/80 hover:shadow-xl hover:shadow-black/5 group mb-2 last:mb-0 outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main"
     @click="$emit('click')"
     @keydown.enter.prevent="$emit('click')"
     @keydown.space.prevent="$emit('click')"
@@ -23,13 +23,13 @@
           class="w-5 h-5 sm:w-7 sm:h-7 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]"
           @error="handleImageError"
         />
-        <component v-else :is="iconComponent" class="w-5 h-5 sm:w-7 sm:h-7 text-accent-main" />
+        <component v-else :is="iconComponent" class="w-5 h-5 sm:w-7 sm:h-7 text-accent" />
       </div>
 
       <!-- Transaction Type Indicator (Small Overlay) -->
       <div
         class="absolute -bottom-0.5 -right-0.5 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 border-surface-main z-20 flex items-center justify-center shadow-lg"
-        :class="transaction.type === 'income' ? 'bg-success-main' : 'bg-error-main'"
+        :class="transaction.type === 'income' ? 'bg-success-main' : 'bg-error'"
       >
         <svg
           v-if="transaction.type === 'income'"
@@ -64,7 +64,7 @@
     <div class="flex-1 min-w-0 flex flex-col justify-center gap-1.5">
       <div class="flex items-center gap-2">
         <span
-          class="font-extrabold text-text-primary text-[0.95rem] sm:text-[1.1rem] leading-tight truncate tracking-tight"
+          class="font-extrabold text-surface-800 dark:text-surface-50 text-[0.95rem] sm:text-[1.1rem] leading-tight truncate tracking-tight"
         >
           {{ transaction.title || 'Sem título' }}
         </span>
@@ -75,13 +75,13 @@
 
       <!-- Mobile Tags (Inline text layout) -->
       <div
-        class="flex sm:hidden items-center gap-1.5 text-[0.6rem] font-black uppercase tracking-widest text-text-disabled truncate"
+        class="flex sm:hidden items-center gap-1.5 text-[0.6rem] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 truncate"
       >
         <span v-if="walletName" class="truncate max-w-[65px]">{{ walletName }}</span>
 
         <span v-if="walletName" class="text-black/20 dark:text-white/20">&bull;</span>
 
-        <span class="truncate max-w-[80px] text-text-secondary">{{ categoryName }}</span>
+        <span class="truncate max-w-[80px] text-surface-600 dark:text-surface-200">{{ categoryName }}</span>
 
         <template v-if="showTime">
           <span class="text-black/20 dark:text-white/20">&bull;</span>
@@ -94,14 +94,14 @@
         <!-- Wallet Tag -->
         <div
           v-if="walletName"
-          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-white/5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary border border-white/5"
+          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-surface-800/10 text-[0.65rem] font-black uppercase tracking-widest text-surface-600 dark:text-surface-200 border border-surface-200/10"
         >
           {{ walletName }}
         </div>
 
         <!-- Category Tag -->
         <div
-          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-white/5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary border border-white/5"
+          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-surface-800/10 text-[0.65rem] font-black uppercase tracking-widest text-surface-600 dark:text-surface-200 border border-surface-200/10"
         >
           {{ categoryName }}
         </div>
@@ -109,7 +109,7 @@
         <!-- Time Tag -->
         <div
           v-if="showTime"
-          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-white/5 text-[0.65rem] font-black uppercase tracking-widest text-text-secondary border border-white/5"
+          class="px-3 py-1 rounded-lg bg-black/20 dark:bg-surface-800/10 text-[0.65rem] font-black uppercase tracking-widest text-surface-600 dark:text-surface-200 border border-surface-200/10"
         >
           {{ formatTime(transaction.date) }}
         </div>
@@ -121,7 +121,7 @@
       <div class="text-right">
         <span
           class="font-black text-[1rem] sm:text-xl tracking-tighter transition-all duration-300"
-          :class="transaction.type === 'expense' ? 'text-error-main' : 'text-success-main'"
+          :class="transaction.type === 'expense' ? 'text-error' : 'text-success-main'"
         >
           {{ formatCurrency(transaction.amount) }}
         </span>
@@ -133,7 +133,7 @@
       >
         <button
           aria-label="Excluir transação"
-          class="w-10 h-10 rounded-full flex items-center justify-center text-text-disabled hover:bg-error-main/10 hover:text-error-main transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main cursor-pointer"
+          class="w-10 h-10 rounded-full flex items-center justify-center text-surface-400 dark:text-surface-400 hover:bg-error/10 hover:text-error transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main cursor-pointer"
           @click.stop="$emit('delete', transaction.id)"
         >
           <svg
@@ -242,3 +242,5 @@ function formatTime(dateStr: string) {
   return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 }
 </script>
+
+

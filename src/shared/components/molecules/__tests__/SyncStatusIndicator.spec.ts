@@ -50,3 +50,4 @@ describe('SyncStatusIndicator.vue', () => {
     expect(wrapper.text()).toContain('Pendente')
   })
 })
+

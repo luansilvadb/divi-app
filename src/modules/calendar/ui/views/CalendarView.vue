@@ -23,7 +23,7 @@
             <div
               v-for="day in ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']"
               :key="day"
-              class="text-center text-[10px] font-black uppercase tracking-widest text-text-disabled py-2"
+              class="text-center text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 py-2"
             >
               {{ day }}
             </div>
@@ -37,10 +37,10 @@
               class="relative aspect-square rounded-2xl p-2 border border-transparent transition-all duration-300 flex flex-col items-center cursor-pointer group"
               :class="[
                 day.isCurrentMonth
-                  ? 'bg-white/40 dark:bg-black/10 hover:bg-white dark:hover:bg-white/10 hover:border-black/5 dark:hover:border-white/10'
+                  ? 'bg-white/40 dark:bg-black/10 hover:bg-white dark:hover:bg-white/10 hover:border-surface-200 dark:hover:border-white/10'
                   : 'opacity-20 cursor-default',
                 isSelected(day.date)
-                  ? 'ring-2 ring-primary-main/40 border-primary-main/20 bg-white/80 dark:bg-white/5'
+                  ? 'ring-2 ring-primary/40 border-primary/20 bg-white/80 bg-surface-800/10'
                   : '',
               ]"
               @click="day.isCurrentMonth && selectDate(day.date)"
@@ -49,8 +49,8 @@
                 class="text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-colors"
                 :class="
                   isToday(day.date)
-                    ? 'bg-primary-main text-white shadow-lg shadow-primary-main/20'
-                    : 'text-text-primary'
+                    ? 'bg-primary text-white shadow-lg shadow-primary-main/20'
+                    : 'text-surface-800 dark:text-surface-50'
                 "
               >
                 {{ day.dayNumber }}
@@ -64,11 +64,11 @@
                   v-for="(t, i) in getTransactionsForDate(day.date).slice(0, 3)"
                   :key="t.id || i"
                   class="w-1.5 h-1.5 rounded-full shadow-sm"
-                  :class="t.type === 'income' ? 'bg-success-main' : 'bg-error-main'"
+                  :class="t.type === 'income' ? 'bg-success-main' : 'bg-error'"
                 ></div>
                 <span
                   v-if="getTransactionsForDate(day.date).length > 3"
-                  class="text-[8px] font-black text-text-disabled"
+                  class="text-[8px] font-black text-surface-400 dark:text-surface-400"
                 >
                   +{{ getTransactionsForDate(day.date).length - 3 }}
                 </span>
@@ -83,8 +83,8 @@
         <BaseCard>
           <template #header>
             <div class="flex flex-col gap-1">
-              <span class="text-text-primary">Atividade do Dia</span>
-              <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{
+              <span class="text-surface-800 dark:text-surface-50">Atividade do Dia</span>
+              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">{{
                 formatDateFull(selectedDate)
               }}</span>
             </div>
@@ -118,7 +118,7 @@
             <li
               v-for="t in selectedDateTransactions"
               :key="t.id || t.localId"
-              class="flex items-center gap-4 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              class="flex items-center gap-4 p-3 rounded-xl hover:bg-surface-50 dark:hover:bg-white/5 transition-colors"
             >
               <BaseIconBox
                 :color="
@@ -156,14 +156,14 @@
                 </svg>
               </BaseIconBox>
               <div class="flex-1 min-w-0">
-                <div class="font-bold text-sm text-text-primary truncate">{{ t.title }}</div>
-                <div class="text-[10px] font-black uppercase tracking-widest text-text-disabled">
+                <div class="font-bold text-sm text-surface-800 dark:text-surface-50 truncate">{{ t.title }}</div>
+                <div class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
                   {{ t.category_id || 'Geral' }}
                 </div>
               </div>
               <span
                 class="font-black text-sm tracking-tight"
-                :class="t.type === 'expense' ? 'text-error-main' : 'text-success-main'"
+                :class="t.type === 'expense' ? 'text-error' : 'text-success-main'"
               >
                 {{ formatCurrency(t.amount) }}
               </span>
@@ -188,17 +188,17 @@
               status="error"
             />
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <div
-              class="w-full p-4 rounded-2xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center"
+              class="w-full p-4 rounded-2xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center"
             >
-              <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled mb-1"
+              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-1"
                 >Saldo do Dia</span
               >
               <div
                 class="text-2xl font-black tracking-tight"
-                :class="selectedDateBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
+                :class="selectedDateBalance >= 0 ? 'text-primary' : 'text-error'"
               >
                 {{ formatCurrency(Math.abs(selectedDateBalance)) }}
               </div>
@@ -324,3 +324,5 @@ const formatDateFull = (date: Date) => {
   return date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 </script>
+
+

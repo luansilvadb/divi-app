@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import GoalsView from '../GoalsView.vue'
@@ -14,7 +14,14 @@ vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
 }))
 
 describe('GoalsView', () => {
-  let storeMock: any
+  let storeMock: {
+    goals: unknown[]
+    searchQuery: string
+    isLoading: boolean
+    totalSaved: number
+    totalTarget: number
+    fetchGoals: Mock
+  }
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -26,7 +33,7 @@ describe('GoalsView', () => {
       totalTarget: 0,
       fetchGoals: vi.fn(),
     }
-    ;(useGoalStore as any).mockReturnValue(storeMock)
+    vi.mocked(useGoalStore).mockReturnValue(storeMock as unknown as ReturnType<typeof useGoalStore>)
   })
 
   it('exposes searchEmptySubtitle computed property', () => {
@@ -46,6 +53,7 @@ describe('GoalsView', () => {
     })
 
     // This should fail initially because searchEmptySubtitle is not defined in the component
-    expect((wrapper.vm as any).searchEmptySubtitle).toBe('Não encontramos metas para "Japão"')
+    expect((wrapper.vm as unknown as { searchEmptySubtitle: string }).searchEmptySubtitle).toBe('Não encontramos metas para "Japão"')
   })
 })
+

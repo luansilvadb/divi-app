@@ -76,3 +76,4 @@ container.register(DI_TOKENS.PredictionService, new PredictionService(db))
 
 // Helper to provide/inject services in Vue components if needed
 export const useService = <T>(token: Token<T>): T => container.resolve(token)
+

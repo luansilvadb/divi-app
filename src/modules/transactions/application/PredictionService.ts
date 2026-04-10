@@ -1,4 +1,4 @@
-import type { DiviDatabase } from '@/core/db'
+import type { DiviDatabase, LocalTransaction } from '@/core/db'
 import type { IPredictionService, PredictionResult } from '../domain/prediction'
 
 export class PredictionService implements IPredictionService {
@@ -50,7 +50,7 @@ export class PredictionService implements IPredictionService {
     }
   }
 
-  private calculateBestMatch(transactions: any[]): PredictionResult {
+  private calculateBestMatch(transactions: LocalTransaction[]): PredictionResult {
     const categoryCounts: Record<string, number> = {}
     const walletCounts: Record<string, number> = {}
 
@@ -69,3 +69,4 @@ export class PredictionService implements IPredictionService {
     }
   }
 }
+

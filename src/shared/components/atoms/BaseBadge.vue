@@ -43,3 +43,4 @@ const primeSeverity = computed(() => {
 
 
 </script>
+

@@ -1,3 +1,4 @@
+import type { Observable } from 'rxjs'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import { db, type LocalTransaction } from '@/core/db'
@@ -33,8 +34,10 @@ export class DexieTransactionRepository implements ITransactionRepository {
     }
   }
 
-  watchAll(): any {
-    return liveQuery(() => db.transactions.filter(t => !t.deleted).toArray())
+  watchAll(): Observable<Transaction[]> {
+    return liveQuery(() =>
+      db.transactions.filter((t) => !t.deleted).toArray(),
+    ) as unknown as Observable<Transaction[]>
   }
 
   async save(transaction: Transaction): Promise<void> {
@@ -93,3 +96,4 @@ export class DexieTransactionRepository implements ITransactionRepository {
     }
   }
 }
+

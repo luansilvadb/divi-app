@@ -3,30 +3,31 @@
     :visible="isOpen"
     @update:visible="$emit('close')"
     position="right"
-    class="!bg-bg-main !w-[280px] shadow-2xl !border-none"
+    class="!w-[280px] shadow-2xl border-l border-surface-200 dark:border-surface-800/50"
+    :ptOptions="{ mergeProps: true }"
     :pt="{
-      mask: { class: 'z-[90]' },
-      root: { class: 'flex flex-col overflow-hidden z-[100]' },
-      header: { class: 'p-0 border-none hidden' },
-      content: { class: 'p-0 flex-1 overflow-y-auto flex flex-col' }
+      mask: { class: '!z-[290]' },
+      root: { class: '!flex !flex-col !overflow-hidden !z-[300] !bg-surface-0 dark:!bg-surface-900' },
+      header: { class: '!p-0 !border-none !hidden' },
+      content: { class: '!p-0 !flex-1 !overflow-y-auto !flex !flex-col !bg-surface-0 dark:!bg-surface-900' }
     }"
   >
     <!-- Custom Luxury Header -->
-    <div class="relative overflow-hidden bg-surface-main border-b border-black/5 dark:border-white/5">
+    <div class="relative overflow-hidden bg-surface-0 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-800/10">
       <!-- Subtle Brand Accent Overlay -->
-      <div class="absolute inset-0 bg-primary-main/[0.04] pointer-events-none"></div>
+      <div class="absolute inset-0 bg-primary/[0.04] pointer-events-none"></div>
 
       <div class="relative z-10 flex items-center justify-between px-6 py-5">
         <div class="flex flex-col">
-          <span class="text-xl font-black text-text-primary tracking-tighter leading-none mb-1">Mais Opções</span>
+          <span class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tighter leading-none mb-1">Mais Opções</span>
           <div class="flex items-center opacity-50">
-            <span class="text-[0.6rem] font-bold uppercase tracking-[0.15em] text-text-secondary">EXPLORE O SISTEMA</span>
+            <span class="text-[0.6rem] font-bold uppercase tracking-[0.15em] text-surface-600 dark:text-surface-200">EXPLORE O SISTEMA</span>
           </div>
         </div>
 
         <button
           @click="$emit('close')"
-          class="w-10 h-10 flex items-center justify-center text-text-secondary hover:text-text-primary rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-95"
+          class="w-10 h-10 flex items-center justify-center text-surface-600 dark:text-surface-200 hover:text-surface-800 dark:text-surface-50 rounded-full hover:bg-surface-50 dark:hover:bg-surface-800/10 transition-all active:scale-95"
           aria-label="Fechar menu"
         >
           <i class="pi pi-times text-xl"></i>
@@ -35,37 +36,48 @@
     </div>
 
     <!-- Scrollable Navigation -->
-    <nav class="flex-1 p-4 overflow-y-auto">
+    <nav class="flex-1 px-4 py-8 overflow-y-auto">
         <Menu :model="menuItems" class="border-none bg-transparent w-full">
             <template #item="{ item, props }">
                 <RouterLink v-if="item.route" v-slot="{ href, navigate, isActive }" :to="item.route" custom>
                     <a :href="href" v-bind="props.action" @click="(e) => { navigate(e); $emit('close'); }" :class="[
-                      'flex items-center gap-3 px-3 py-3 rounded-xl transition-colors cursor-pointer',
-                      isActive ? 'text-primary-main bg-primary-main/5' : 'text-text-secondary hover:bg-black/5 dark:hover:bg-white/5'
+                      'flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 cursor-pointer group relative',
+                      isActive ? 'text-primary bg-primary/5 shadow-sm' : 'text-surface-600 dark:text-surface-400 hover:bg-surface-50 dark:hover:bg-surface-800/20'
                     ]">
-                        <span :class="item.icon" class="text-currentColor w-5 h-5 flex items-center justify-center text-lg"></span>
-                        <span class="font-medium">{{ item.label }}</span>
+                        <span :class="[item.icon, isActive ? 'scale-110 shadow-primary/20' : 'opacity-70 group-hover:opacity-100']" class="w-6 h-6 flex items-center justify-center text-lg transition-transform"></span>
+                        <span class="font-black text-[0.85rem] uppercase tracking-widest">{{ item.label }}</span>
+                        
+                        <!-- Active bar indicator -->
+                        <div v-if="isActive" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_12px_rgba(var(--primary-color-rgb),0.5)]"></div>
                     </a>
                 </RouterLink>
             </template>
             <template #submenuheader="{ item }">
-                <span class="block text-xs font-bold uppercase tracking-wider text-text-disabled mb-3 mt-4">
-                    {{ item.label }}
-                </span>
+                <div class="px-4 mb-3 mt-8 first:mt-0">
+                    <span class="text-[0.6rem] font-black uppercase tracking-[0.25em] text-surface-400 dark:text-surface-500/60">
+                        {{ item.label }}
+                    </span>
+                    <div class="h-px w-8 bg-surface-200 dark:bg-surface-800/10 mt-1.5 rounded-full"></div>
+                </div>
             </template>
         </Menu>
     </nav>
 
     <!-- Footer Actions -->
-    <div class="p-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between pb-safe mt-auto">
-      <ThemeToggle />
-      <button
+    <div class="p-6 border-t border-surface-200 dark:border-surface-800/10 flex flex-col gap-4 pb-safe mt-auto">
+      <div class="flex items-center justify-between">
+        <span class="text-[0.65rem] font-black uppercase tracking-widest text-surface-400">Aparência</span>
+        <ThemeToggle />
+      </div>
+
+      <BaseButton
+        variant="ghost"
         @click="handleLogout"
-        class="flex items-center gap-3 px-3 py-3 rounded-xl text-error-main hover:bg-error-main/10 transition-colors cursor-pointer"
+        class="!w-full !justify-start !gap-3 !px-4 !py-3.5 !rounded-2xl !text-error !bg-error/5 hover:!bg-error/10 !border-none"
       >
-        <span class="font-medium">Sair</span>
-        <span class="pi pi-sign-out w-5 h-5 flex items-center justify-center text-lg"></span>
-      </button>
+        <i class="pi pi-sign-out text-lg"></i>
+        <span class="font-black text-[0.85rem] uppercase tracking-widest">Sair da Conta</span>
+      </BaseButton>
     </div>
   </Drawer>
 </template>
@@ -76,6 +88,7 @@ import { RouterLink } from 'vue-router'
 import Drawer from 'primevue/drawer'
 import Menu from 'primevue/menu'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
+import BaseButton from '../atoms/BaseButton.vue'
 
 defineProps<{
   isOpen: boolean
@@ -116,3 +129,4 @@ const menuItems = computed(() => [
   padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
 </style>
+

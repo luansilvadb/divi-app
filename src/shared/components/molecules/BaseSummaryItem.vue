@@ -17,20 +17,20 @@
     <!-- Text area -->
     <div class="summary-text flex flex-col gap-0.5 min-w-0">
       <span
-        class="label text-[0.65rem] font-black text-text-secondary uppercase tracking-[0.15em] leading-none truncate opacity-80"
+        class="label text-[0.65rem] font-black text-surface-600 dark:text-surface-200 uppercase tracking-[0.15em] leading-none truncate opacity-80"
       >
         {{ error ? 'Erro de carga' : label }}
       </span>
       <strong
         v-if="!error"
-        class="value text-2xl font-black text-text-primary leading-tight tracking-tighter transition-all duration-300 truncate"
+        class="value text-2xl font-black text-surface-800 dark:text-surface-50 leading-tight tracking-tighter transition-all duration-300 truncate"
         :class="statusClass"
       >
         {{ value }}
       </strong>
       <span
         v-else
-        class="text-error-main text-xs font-black animate-pulse-error uppercase tracking-widest"
+        class="text-error text-xs font-black animate-pulse-error uppercase tracking-widest"
         >Indisponível</span
       >
     </div>
@@ -64,13 +64,14 @@ const statusClass = computed(() => {
     case 'success':
       return 'text-success-main'
     case 'error':
-      return 'text-error-main'
+      return 'text-error'
     case 'warning':
       return 'text-warning-main'
     case 'info':
-      return 'text-primary-main'
+      return 'text-primary'
     default:
-      return 'text-text-primary'
+      return 'text-surface-800 dark:text-surface-50'
   }
 })
 </script>
+

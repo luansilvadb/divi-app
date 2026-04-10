@@ -6,3 +6,4 @@ export interface Activity {
   type: 'info' | 'success' | 'warning' | 'error'
   user_id?: string
 }
+

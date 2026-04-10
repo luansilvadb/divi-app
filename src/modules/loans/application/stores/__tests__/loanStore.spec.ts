@@ -27,3 +27,4 @@ describe('loanStore', () => {
     expect(store.searchQuery).toBe('Bank')
   })
 })
+

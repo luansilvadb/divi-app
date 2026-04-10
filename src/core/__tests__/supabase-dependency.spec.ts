@@ -7,3 +7,4 @@ describe('Supabase Dependency', () => {
         expect(typeof createClient).toBe('function');
     });
 });
+

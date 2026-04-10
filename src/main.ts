@@ -39,7 +39,7 @@ app.use(PrimeVue, {
       darkModeSelector: '.dark',
       cssLayer: {
         name: 'primevue',
-        order: 'primevue, tailwind',
+        order: 'theme, base, primevue',
       },
     }
   },
@@ -90,3 +90,4 @@ app.use(PrimeVue, {
 app.use(ToastService)
 
 app.mount('#app')
+

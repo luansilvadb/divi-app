@@ -18,3 +18,4 @@ export interface IAssetLoader {
    */
   getFallback(type?: 'category' | 'wallet' | 'generic'): string
 }
+

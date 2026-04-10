@@ -110,3 +110,4 @@ describe('BaseCard.vue', () => {
     expect(wrapper.emitted('click')).toBeTruthy()
   })
 })
+

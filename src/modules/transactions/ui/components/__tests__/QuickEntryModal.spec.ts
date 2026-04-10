@@ -76,7 +76,7 @@ describe('QuickEntryModal', () => {
     })
 
     const wrapper = mountComponent()
-    const vm = wrapper.vm as any
+    const vm = wrapper.vm as unknown as { amount: number | null; payee: string; categoryId: string; walletId: string }
     
     vm.amount = 100
     vm.payee = 'Starbucks'
@@ -89,7 +89,7 @@ describe('QuickEntryModal', () => {
 
   it('deve chamar saveTransaction e enqueueSync ao salvar', async () => {
     const wrapper = mountComponent()
-    const vm = wrapper.vm as any
+    const vm = wrapper.vm as unknown as { amount: number | null; payee: string; handleSave(): Promise<void> }
     
     vm.amount = 100
     vm.payee = 'Starbucks'
@@ -100,3 +100,4 @@ describe('QuickEntryModal', () => {
     expect(wrapper.emitted('save')).toBeTruthy()
   })
 })
+

@@ -7,7 +7,7 @@
             <i class="pi pi-dollar text-xl"></i>
             <i class="pi pi-chart-line text-xl"></i>
           </BaseIconBox>
-          <span class="budget-name text-lg font-bold text-text-primary tracking-tight">{{
+          <span class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">{{
             budget.name
           }}</span>
           <ItemSyncIndicator :status="budget.sync_status" />
@@ -23,17 +23,17 @@
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-1.5">
           <span
-            class="consumed text-3xl font-extrabold text-text-primary tracking-tighter"
-            :class="{ 'text-error-main': isOverBudget }"
+            class="consumed text-3xl font-extrabold text-surface-800 dark:text-surface-50 tracking-tighter"
+            :class="{ 'text-error': isOverBudget }"
             >{{ formatCurrency(consumed) }}</span
           >
-          <span class="limit text-base font-medium text-text-secondary"
+          <span class="limit text-base font-medium text-surface-600 dark:text-surface-200"
             >/ {{ formatCurrency(budget.limit_value) }}</span
           >
         </div>
         <div
-          class="percentage-pill text-sm font-bold bg-black/5 dark:bg-white/10 text-text-secondary px-2.5 py-1 rounded-lg"
-          :class="{ 'over-budget !bg-error-main/10 !text-error-main': isOverBudget }"
+          class="percentage-pill text-sm font-bold bg-surface-50 dark:bg-white/10 text-surface-600 dark:text-surface-200 px-2.5 py-1 rounded-lg"
+          :class="{ 'over-budget !bg-error/10 !text-error': isOverBudget }"
         >
           {{ Math.round(percentage) }}%
         </div>
@@ -46,21 +46,21 @@
       />
 
       <div
-        class="budget-footer-details flex justify-between items-center pt-4 border-t border-black/5 dark:border-white/5"
+        class="budget-footer-details flex justify-between items-center pt-4 border-t border-surface-200 dark:border-surface-200/10"
       >
         <div
           class="cadence flex items-center gap-2 text-sm"
           v-if="daysRemaining > 0 && !isOverBudget"
         >
-          <span class="cadence-label text-text-secondary">Sugerido por dia:</span>
+          <span class="cadence-label text-surface-600 dark:text-surface-200">Sugerido por dia:</span>
           <span
-            class="cadence-value font-bold text-text-primary bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-md"
+            class="cadence-value font-bold text-surface-800 dark:text-surface-50 bg-surface-50 dark:bg-white/10 px-2 py-0.5 rounded-md"
           >
             {{ formatCurrency(dailyCadence) }}
           </span>
         </div>
         <div
-          class="cadence over-alert flex items-center gap-2 text-sm text-error-main font-semibold"
+          class="cadence over-alert flex items-center gap-2 text-sm text-error font-semibold"
           v-else-if="isOverBudget"
         >
           <span class="cadence-label">Orçamento estourado</span>
@@ -68,7 +68,7 @@
         </div>
 
         <div
-          class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-text-secondary bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded-lg"
+          class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-surface-600 dark:text-surface-200 bg-surface-50 dark:bg-surface-800/10 px-2.5 py-1 rounded-lg"
         >
           <i class="pi pi-clock text-sm"></i>
           {{ daysRemaining }} dias
@@ -120,3 +120,5 @@ const formatCurrency = (value: number) => {
   }).format(value)
 }
 </script>
+
+

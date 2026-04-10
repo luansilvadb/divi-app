@@ -300,3 +300,4 @@ export const useTransactionStore = defineStore('transactions', () => {
     deleteTransaction,
   }
 })
+

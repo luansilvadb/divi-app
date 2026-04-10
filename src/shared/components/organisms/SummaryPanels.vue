@@ -7,18 +7,18 @@
           <i class="pi pi-exclamation-triangle text-xs"></i>
         </BaseIconBox>
         <span
-          class="text-[10px] font-black uppercase text-error-main bg-error-main/5 px-2 py-1 rounded-md tracking-widest border border-error-main/10"
+          class="text-[10px] font-black uppercase text-error bg-error/5 px-2 py-1 rounded-md tracking-widest border border-error-main/10"
           >Vencidos</span
         >
       </div>
 
       <div class="summary-body space-y-1">
-        <h4 class="text-2xl font-black text-text-primary tracking-tighter">
+        <h4 class="text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">
           {{ formatCurrency(overdueAmount) }}
         </h4>
         <div class="flex items-center gap-2">
-          <span class="w-1.5 h-1.5 rounded-full bg-error-main animate-pulse"></span>
-          <span class="text-xs font-bold text-text-secondary tracking-tight"
+          <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+          <span class="text-xs font-bold text-surface-600 dark:text-surface-200 tracking-tight"
             >{{ overdueCount }} transações pendentes</span
           >
         </div>
@@ -38,12 +38,12 @@
       </div>
 
       <div class="summary-body space-y-1">
-        <h4 class="text-2xl font-black text-text-primary tracking-tighter">
+        <h4 class="text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">
           {{ formatCurrency(futureAmount) }}
         </h4>
         <div class="flex items-center gap-2">
           <span class="w-1.5 h-1.5 rounded-full bg-info-main opacity-50"></span>
-          <span class="text-xs font-bold text-text-secondary tracking-tight"
+          <span class="text-xs font-bold text-surface-600 dark:text-surface-200 tracking-tight"
             >Compromisso nos próximos 7 dias</span
           >
         </div>
@@ -66,3 +66,4 @@ function formatCurrency(amount: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)
 }
 </script>
+

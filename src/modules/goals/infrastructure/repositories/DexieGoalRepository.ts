@@ -16,3 +16,4 @@ export class DexieGoalRepository implements IGoalRepository {
     await db.table('goals').delete(id)
   }
 }
+

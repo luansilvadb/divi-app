@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex items-center !bg-[#161D2C] rounded-2xl h-11 w-full max-w-[280px] overflow-hidden shadow-xl border border-white/5"
+    class="flex items-center !bg-surface-700 rounded-2xl h-11 w-full max-w-[280px] overflow-hidden shadow-xl border border-surface-200/10"
   >
     <button
       type="button"
       @click="$emit('prev')"
-      class="p-2 hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all duration-300 border-none h-full w-12 flex items-center justify-center shrink-0 cursor-pointer active:scale-90"
+      class="p-2 hover:bg-surface-0/5 text-surface-600 dark:text-surface-200 hover:text-surface-800 dark:text-surface-50 transition-all duration-300 border-none h-full w-12 flex items-center justify-center shrink-0 cursor-pointer active:scale-90"
       aria-label="Mês anterior"
     >
       <svg
@@ -25,7 +25,7 @@
 
     <div class="flex-1 flex flex-col items-center justify-center min-w-0 px-2 select-none group">
       <span
-        class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-text-primary leading-none truncate"
+        class="text-[0.7rem] font-black uppercase tracking-[0.2em] text-surface-800 dark:text-surface-50 leading-none truncate"
       >
         {{ month }}
       </span>
@@ -34,7 +34,7 @@
     <button
       type="button"
       @click="$emit('next')"
-      class="p-2 hover:bg-white/5 text-text-secondary hover:text-text-primary transition-all duration-300 border-none h-full w-12 flex items-center justify-center shrink-0 cursor-pointer active:scale-90"
+      class="p-2 hover:bg-surface-0/5 text-surface-600 dark:text-surface-200 hover:text-surface-800 dark:text-surface-50 transition-all duration-300 border-none h-full w-12 flex items-center justify-center shrink-0 cursor-pointer active:scale-90"
       aria-label="Próximo mês"
     >
       <svg
@@ -68,3 +68,4 @@ defineEmits<{
   (e: 'next'): void
 }>()
 </script>
+

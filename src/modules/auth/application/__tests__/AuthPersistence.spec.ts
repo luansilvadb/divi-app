@@ -1,11 +1,18 @@
 import { setActivePinia, createPinia } from 'pinia'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { useAuthStore } from '../authStore'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
 import type { User } from '../../domain/entities/User'
 
 describe('Auth Persistence Integration', () => {
-  let authService: any // Still using any for the mock object itself to avoid implementing all methods manually, but casting internally
+  let authService: {
+    getCurrentUser: Mock
+    onAuthStateChange: Mock
+    signOut: Mock
+    signInWithGoogle: Mock
+    signInWithEmail: Mock
+    registerWithEmail: Mock
+  }
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -52,3 +59,4 @@ describe('Auth Persistence Integration', () => {
     expect(store.isAuthenticated).toBe(false)
   })
 })
+

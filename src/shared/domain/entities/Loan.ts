@@ -9,3 +9,4 @@ export interface Loan extends SyncMetadata {
   due_date: string
   status: 'active' | 'paid' | 'overdue'
 }
+

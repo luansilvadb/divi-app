@@ -57,3 +57,4 @@ describe('Theme Store', () => {
     expect(store.isDark).toBe(true)
   })
 })
+

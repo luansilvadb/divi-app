@@ -17,3 +17,4 @@ export interface IBudgetLogicService {
    */
   isOverBudget(budget: Budget, consumed: number): boolean
 }
+

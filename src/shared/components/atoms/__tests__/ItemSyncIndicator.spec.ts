@@ -32,3 +32,4 @@ describe('ItemSyncIndicator.vue', () => {
     expect(wrapper.find('svg').exists()).toBe(false)
   })
 })
+

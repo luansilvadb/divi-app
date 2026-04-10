@@ -34,7 +34,7 @@
           class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
         >
           <div
-            class="w-24 h-24 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-8 text-primary-main"
+            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-text-primary">
+          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
             Nenhum empréstimo
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -65,7 +65,7 @@
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
-            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +97,7 @@
         <div v-else-if="store.isLoading" class="flex flex-col gap-6">
           <div class="flex justify-center py-20">
             <div
-              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin"
+              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
             ></div>
           </div>
         </div>
@@ -144,17 +144,17 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <!-- Next Due Highlight Box -->
             <div
-              class="w-full p-6 rounded-3xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center shadow-inner border border-black/5 dark:border-white/5"
+              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-text-disabled mb-3"
+              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Próximo Vencimento</span
               >
-              <div class="text-2xl font-black tracking-tighter text-text-primary">15 de Abril</div>
-              <span class="text-[0.7rem] font-bold text-text-disabled uppercase tracking-widest mt-2"
+              <div class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50">15 de Abril</div>
+              <span class="text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest mt-2"
                 >R$ 1.250,40 agendado</span
               >
             </div>
@@ -165,9 +165,9 @@
         <BaseCard>
           <template #header>Sinais Relevantes</template>
           <div class="p-2 space-y-4">
-            <div class="flex gap-4 p-4 rounded-2xl bg-error-main/5 border border-error-main/10">
+            <div class="flex gap-4 p-4 rounded-2xl bg-error/5 border border-error-main/10">
               <div
-                class="w-10 h-10 rounded-xl bg-error-main/10 text-error-main flex-shrink-0 flex items-center justify-center shadow-sm"
+                class="w-10 h-10 rounded-xl bg-error/10 text-error flex-shrink-0 flex items-center justify-center shadow-sm"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,8 +183,8 @@
                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01" />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-text-secondary leading-relaxed pt-1">
-                Atenção: seus juros médios subiram <span class="text-error-main font-black">2.1%</span>
+              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
+                Atenção: seus juros médios subiram <span class="text-error font-black">2.1%</span>
                 neste trimestre. Avalie portabilidades.
               </p>
             </div>
@@ -259,3 +259,5 @@ const cancelDelete = () => {
   loanToDelete.value = null
 }
 </script>
+
+

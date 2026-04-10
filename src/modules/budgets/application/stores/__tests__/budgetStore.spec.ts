@@ -27,3 +27,4 @@ describe('budgetStore', () => {
     expect(store.searchQuery).toBe('Test')
   })
 })
+

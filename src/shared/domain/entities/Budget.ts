@@ -10,3 +10,4 @@ export interface Budget extends SyncMetadata {
   categories?: string[]
   wallets?: string[]
 }
+

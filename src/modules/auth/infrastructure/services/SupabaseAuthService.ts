@@ -90,3 +90,4 @@ export class SupabaseAuthService implements IAuthService {
     if (error) throw error
   }
 }
+

@@ -10,3 +10,4 @@ export interface Subscription extends SyncMetadata {
   next_billing_date?: string
   last_billed_at?: string
 }
+

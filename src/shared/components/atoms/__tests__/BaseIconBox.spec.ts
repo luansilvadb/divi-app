@@ -55,7 +55,8 @@ describe('BaseIconBox.vue', () => {
 
   it('applies default classes if no color is provided', () => {
     const wrapper = mount(BaseIconBox)
-    expect(wrapper.classes()).toContain('bg-primary-main/10')
-    expect(wrapper.classes()).toContain('text-primary-main')
+    expect(wrapper.classes()).toContain('bg-primary/10')
+    expect(wrapper.classes()).toContain('text-primary')
   })
 })
+

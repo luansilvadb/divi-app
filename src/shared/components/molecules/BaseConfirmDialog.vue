@@ -16,12 +16,12 @@
   >
     <template v-if="!isMobile">
       <BaseCard
-        class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-white/5 !bg-surface-main overflow-hidden flex flex-col relative"
+        class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-surface-200/10 !bg-surface-0 dark:bg-surface-800 overflow-hidden flex flex-col relative"
         padding="none"
       >
         <div class="p-8 text-center flex flex-col items-center">
           <div
-            class="w-16 h-16 rounded-full bg-error-main/10 flex items-center justify-center text-error-main mb-6 border border-error-main/20 shadow-inner"
+            class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center text-error mb-6 border border-error-main/20 shadow-inner"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -42,10 +42,10 @@
             </svg>
           </div>
 
-          <h3 class="text-xl font-black text-text-primary tracking-tight mb-2">
+          <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
             {{ title || 'Tem certeza?' }}
           </h3>
-          <p class="text-sm font-medium text-text-secondary leading-relaxed opacity-70">
+          <p class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70">
             {{
               message ||
               'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
@@ -53,17 +53,17 @@
           </p>
         </div>
 
-        <div class="flex border-t border-white/5">
+        <div class="flex border-t border-surface-200/10">
           <button
             type="button"
-            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-widest text-text-secondary hover:bg-white/5 transition-all border-r border-white/5"
+            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-widest text-surface-600 dark:text-surface-200 hover:bg-white/5 transition-all border-r border-surface-200/10"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
           </button>
           <button
             type="button"
-            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] text-error-main hover:bg-error-main/10 transition-all flex items-center justify-center gap-2 group"
+            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] text-error hover:bg-error/10 transition-all flex items-center justify-center gap-2 group"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}
@@ -87,14 +87,14 @@
     </template>
     <template v-else>
       <div
-        class="bg-surface-main dark:bg-surface-main rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
+        class="bg-surface-0 dark:bg-surface-800 dark:bg-surface-0 dark:bg-surface-800 rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
       >
         <!-- Drag Handle for Visual Cue -->
         <div class="w-12 h-1.5 bg-white/10 rounded-full mb-8 shrink-0"></div>
 
         <!-- Icon/Warning -->
         <div
-          class="w-16 h-16 rounded-full bg-error-main/10 flex items-center justify-center text-error-main mb-6 border border-error-main/20 shadow-inner"
+          class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center text-error mb-6 border border-error-main/20 shadow-inner"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -115,10 +115,10 @@
           </svg>
         </div>
 
-        <h3 class="text-xl font-black text-text-primary tracking-tight mb-2">
+        <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
           {{ title || 'Tem certeza?' }}
         </h3>
-        <p class="text-sm font-medium text-text-secondary leading-relaxed opacity-70 mb-8">
+        <p class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70 mb-8">
           {{
             message ||
             'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
@@ -175,3 +175,5 @@ const { modalPt, bottomSheetPt } = useOverlayPt()
   padding-bottom: env(safe-area-inset-bottom, 2rem);
 }
 </style>
+
+

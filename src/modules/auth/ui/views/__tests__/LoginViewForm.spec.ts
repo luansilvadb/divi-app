@@ -92,3 +92,4 @@ describe('LoginView.vue - Email/Password Form', () => {
     })
   })
 })
+

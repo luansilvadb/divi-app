@@ -85,3 +85,4 @@ describe('BudgetLogicService', () => {
     expect(cadence).toBe(100) // 1000 / 10
   })
 })
+

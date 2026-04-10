@@ -14,3 +14,4 @@ export const SYNCABLE_TABLES = [
 ] as const
 
 export type SyncableTable = (typeof SYNCABLE_TABLES)[number]
+

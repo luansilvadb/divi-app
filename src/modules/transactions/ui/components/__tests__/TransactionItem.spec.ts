@@ -66,3 +66,4 @@ describe('TransactionItem.vue', () => {
     expect(wrapper.find('[data-test^="sync-indicator-"]').exists()).toBe(false)
   })
 })
+

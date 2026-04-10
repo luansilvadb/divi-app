@@ -1,9 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
+import type { Component } from 'vue'
 import BaseSearchInput from '../BaseSearchInput.vue'
 import PrimeVue from 'primevue/config'
 
-const mountWithPrimeVue = (component: any, options = {}) => {
+const mountWithPrimeVue = (component: Component, options = {}) => {
   return mount(component, {
     global: {
       plugins: [PrimeVue],
@@ -87,3 +88,4 @@ describe('BaseSearchInput.vue', () => {
     expect(wrapper.find('.pi-spinner.pi-spin').exists()).toBe(true)
   })
 })
+

@@ -12,7 +12,7 @@
       <template #item="slotProps">
         <div class="wallet-slide min-w-full p-1">
           <BaseCard
-            class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+            class="wallet-card-premium !p-0 h-[140px] flex overflow-hidden bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-200/10 shadow-2xl transition-all duration-300 hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
             clickable
           >
             <div
@@ -33,18 +33,18 @@
                     />
                   </div>
                   <span
-                    class="wallet-name text-xs font-bold text-text-secondary uppercase tracking-widest"
+                    class="wallet-name text-xs font-bold text-surface-600 dark:text-surface-200 uppercase tracking-widest"
                     >{{ slotProps.data.name }}</span
                   >
                 </div>
                 <span
-                  class="wallet-label text-[0.7rem] font-bold text-text-disabled uppercase opacity-80"
+                  class="wallet-label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase opacity-80"
                   >{{ slotProps.data.currency }}</span
                 >
               </div>
               <div class="wallet-main">
                 <h3
-                  class="wallet-balance text-4xl font-extrabold text-text-primary tracking-tighter"
+                  class="wallet-balance text-4xl font-extrabold text-surface-800 dark:text-surface-50 tracking-tighter"
                 >
                   {{ formatCurrency(slotProps.data.balance) }}
                 </h3>
@@ -58,10 +58,10 @@
     <!-- Nosso próprio design para quando não houver contas e remover aquela mensagem padrão -->
     <BaseCard
       v-else
-      class="!p-0 h-[140px] flex flex-col items-center justify-center overflow-hidden bg-surface-main border border-black/5 dark:border-white/5 shadow-2xl mx-1 my-1 text-center"
+      class="!p-0 h-[140px] flex flex-col items-center justify-center overflow-hidden bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-200/10 shadow-2xl mx-1 my-1 text-center"
     >
       <span class="text-2xl mb-3 opacity-50">🏦</span>
-      <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-text-secondary opacity-60">
+      <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-surface-600 dark:text-surface-200 opacity-60">
         Nenhuma conta cadastrada
       </p>
     </BaseCard>
@@ -128,3 +128,5 @@ function formatCurrency(amount: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)
 }
 </script>
+
+

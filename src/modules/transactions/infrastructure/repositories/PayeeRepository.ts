@@ -17,3 +17,4 @@ export class DexiePayeeRepository implements IPayeeRepository {
     return payee ? (payee as Payee) : null
   }
 }
+

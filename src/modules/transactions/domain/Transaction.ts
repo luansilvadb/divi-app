@@ -20,3 +20,4 @@ export function createTransaction(data: Transaction): Transaction {
   }
   return { ...data }
 }
+

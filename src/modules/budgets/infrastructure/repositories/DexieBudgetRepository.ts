@@ -16,3 +16,4 @@ export class DexieBudgetRepository implements IBudgetRepository {
     await db.table('budgets').delete(id)
   }
 }
+

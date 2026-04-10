@@ -5,3 +5,4 @@ export interface ILoanRepository {
   save(loan: Loan): Promise<void>
   delete(id: string): Promise<void>
 }
+

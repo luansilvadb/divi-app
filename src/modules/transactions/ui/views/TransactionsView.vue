@@ -7,11 +7,11 @@
   >
     <!-- Header with Search & Filters -->
     <template #action>
-      <div class="flex items-center justify-end gap-3 w-full lg:min-w-[420px]">
+      <div class="flex items-center justify-start md:justify-end gap-3 w-full">
         <!-- Month Selector (Standardized) -->
         <BaseMonthSwitcher
           :month="monthLabelOnly"
-          class="!max-w-none"
+          class="!max-w-none w-full md:w-auto"
           @prev="prevMonth"
           @next="nextMonth"
         />
@@ -21,14 +21,16 @@
       </div>
     </template>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-32 md:pb-0">
       <!-- MAIN LIST COLUMN -->
-      <main class="lg:col-span-2 space-y-8">
+      <main class="lg:col-span-2 space-y-8 order-2 lg:order-1">
         <!-- Search Bar -->
-        <BaseSearchInput
-          v-model="searchQuery"
-          placeholder="Buscar transações..."
-        />
+        <div class="px-1">
+          <BaseSearchInput
+            v-model="searchQuery"
+            placeholder="Buscar transações..."
+          />
+        </div>
 
         <!-- Transactions List -->
         <div
@@ -36,7 +38,7 @@
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
-            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -64,16 +66,16 @@
           <div v-for="(group, day) in groupedTransactions as any" :key="day" class="space-y-4">
             <div class="flex items-center justify-between px-2">
               <div class="flex items-center gap-3">
-                <span class="text-2xl font-black tracking-tighter text-text-primary">{{
+                <span class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50">{{
                   String(day).split('-')[2]
                 }}</span>
                 <div class="flex flex-col -space-y-1">
                   <span
-                    class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                    class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                     >{{ getRelativeDayLabel(String(day)) }}</span
                   >
                   <span
-                    class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-main"
+                    class="text-[10px] font-black uppercase tracking-[0.2em] text-primary"
                     >{{ formatDateMonth(String(day)) }}</span
                   >
                 </div>
@@ -103,7 +105,7 @@
       </main>
 
       <!-- SIDEBAR COLUMN -->
-      <aside class="side-column">
+      <aside class="side-column order-1 lg:order-2">
         <!-- Monthly Metrics -->
         <BaseCard>
           <template #header>
@@ -139,7 +141,7 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <BaseSummaryItem
               label="Saídas"
@@ -164,18 +166,18 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <!-- Net Result Highlight -->
             <div
-              class="w-full p-5 rounded-3xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center shadow-inner border border-black/5 dark:border-white/5"
+              class="w-full p-5 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled mb-2"
+              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-2"
                 >Resultado Líquido</span
               >
               <div
                 class="text-3xl font-black tracking-tighter"
-                :class="store.monthlyBalance >= 0 ? 'text-primary-main' : 'text-error-main'"
+                :class="store.monthlyBalance >= 0 ? 'text-primary' : 'text-error'"
               >
                 {{ formatCurrency(Math.abs(store.monthlyBalance)) }}
               </div>
@@ -223,11 +225,11 @@
                     :style="{ backgroundColor: cat.color }"
                   ></div>
                   <span
-                    class="text-[11px] font-black uppercase tracking-widest text-text-primary"
+                    class="text-[11px] font-black uppercase tracking-widest text-surface-800 dark:text-surface-50"
                     >{{ cat.name }}</span
                   >
                 </div>
-                <span class="text-[11px] font-black tracking-tight text-text-disabled">{{
+                <span class="text-[11px] font-black tracking-tight text-surface-400 dark:text-surface-400">{{
                   formatCurrency(cat.total)
                 }}</span>
               </div>
@@ -372,3 +374,5 @@ function formatDateMonth(dateStr: string) {
   return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
 }
 </script>
+
+

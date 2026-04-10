@@ -1,3 +1,4 @@
+import type { Observable } from 'rxjs'
 import type { Transaction } from '../entities/Transaction'
 
 export interface ITransactionRepository {
@@ -5,5 +6,6 @@ export interface ITransactionRepository {
   getByMonth(year: number, month: number): Promise<Transaction[]>
   save(transaction: Transaction): Promise<void>
   delete(id: string): Promise<void>
-  watchAll(): any
+  watchAll(): Observable<Transaction[]>
 }
+

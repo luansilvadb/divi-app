@@ -71,3 +71,4 @@ export class DexieCategoryRepository implements ICategoryRepository {
     }
   }
 }
+

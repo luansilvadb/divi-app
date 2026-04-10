@@ -40,3 +40,4 @@ describe('Transaction Domain Model', () => {
     expect(() => createTransaction(transactionData)).toThrow('Amount must be positive')
   })
 })
+

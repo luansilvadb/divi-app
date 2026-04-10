@@ -20,11 +20,11 @@ export class DexieLoanRepository implements ILoanRepository {
         sync_status: 'pending',
         deleted: false,
         client_updated_at: new Date().toISOString(),
-        version: (loan as any).version || 1,
+        version: loan.version || 1,
       }
       await db.loans.put(data)
     } catch (err) {
-      throw new InfrastructureError('Failed to save loan to local DB', err)
+      throw new InfrastructureError('Failed to save loan to local DB', err instanceof Error ? err : new Error(String(err)))
     }
   }
 
@@ -32,7 +32,7 @@ export class DexieLoanRepository implements ILoanRepository {
     try {
       await db.loans.delete(id)
     } catch (err) {
-      throw new InfrastructureError('Failed to delete loan', err)
+      throw new InfrastructureError('Failed to delete loan', err instanceof Error ? err : new Error(String(err)))
     }
   }
 
@@ -43,11 +43,15 @@ export class DexieLoanRepository implements ILoanRepository {
       name: item.name,
       total_value: item.total_value,
       remaining_value: item.remaining_value,
-      interest_rate: item.interest_rate,
+      interest_rate: item.interest_rate || 0,
       due_date: item.due_date,
       sync_status: item.sync_status,
       client_updated_at: item.client_updated_at,
-      version: item.version
-    } as any
+      version: item.version,
+      deleted: item.deleted,
+      created_at: item.created_at || new Date().toISOString(),
+      status: 'active' // Default status if not present in LocalLoan
+    }
   }
 }
+

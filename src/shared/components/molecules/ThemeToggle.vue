@@ -1,7 +1,7 @@
 <template>
   <button
     @click="toggleTheme"
-    class="theme-toggle flex items-center justify-center p-2 rounded-lg transition-colors cursor-pointer text-text-secondary hover:text-text-primary hover:bg-black/5 dark:hover:bg-white/5"
+    class="theme-toggle flex items-center justify-center p-2 rounded-lg transition-colors cursor-pointer text-surface-600 dark:text-surface-200 hover:text-surface-800 dark:text-surface-50 hover:bg-surface-50 dark:hover:bg-surface-800/10"
     :aria-label="isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
     :title="isDark ? 'Tema Claro' : 'Tema Escuro'"
   >
@@ -20,3 +20,4 @@ const { isDark, toggle: toggleTheme } = useTheme()
   transform: scale(1.1);
 }
 </style>
+

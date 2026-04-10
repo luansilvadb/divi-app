@@ -51,3 +51,4 @@ export class BudgetLogicService implements IBudgetLogicService {
     return consumed > budget.limit_value
   }
 }
+

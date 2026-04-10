@@ -101,8 +101,13 @@ async function processSubscriptions() {
       }
     }
   } catch (error) {
-    if ((error as any).name === 'InvalidStateError' || (error as any).message?.includes('closing')) {
-      console.warn('[SW] Database connection is closing or closed during subscription processing. Scaling back.')
+    if (
+      error instanceof Error &&
+      (error.name === 'InvalidStateError' || error.message?.includes('closing'))
+    ) {
+      console.warn(
+        '[SW] Database connection is closing or closed during subscription processing. Scaling back.',
+      )
     } else {
       console.error('[SW] Error processing subscriptions:', error)
     }
@@ -126,4 +131,5 @@ self.addEventListener('activate', (event) => {
 })
 
 console.log('Divi Service Worker Initialized.')
+
 

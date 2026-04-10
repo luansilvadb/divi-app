@@ -115,14 +115,14 @@ export class DiviDatabase extends Dexie {
 
     syncableTables.forEach(table => {
       // Trigger sync after any change
-      table.hook('creating', (_, obj: any) => {
+      table.hook('creating', (_, obj: SyncMetadata) => {
         if (!obj.sync_status) {
           obj.sync_status = 'pending'
           obj.client_updated_at = new Date().toISOString()
         }
       })
 
-      table.hook('updating', (mods: any) => {
+      table.hook('updating', (mods: Partial<SyncMetadata>) => {
         // Only mark as pending if sync_status is NOT explicitly being set to a non-pending value
         // (Allows SyncEngine to set 'synced' or 'failed')
         if (mods.sync_status === undefined) {
@@ -138,3 +138,4 @@ export class DiviDatabase extends Dexie {
 }
 
 export const db = new DiviDatabase()
+

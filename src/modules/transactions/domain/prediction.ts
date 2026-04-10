@@ -7,3 +7,4 @@ export interface PredictionResult {
 export interface IPredictionService {
   predict(payeeId: string, amount: number): Promise<PredictionResult>;
 }
+

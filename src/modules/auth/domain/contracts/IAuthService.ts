@@ -9,3 +9,4 @@ export interface IAuthService {
   getCurrentUser(): Promise<User | null>
   onAuthStateChange(callback: (user: User | null) => void): void
 }
+

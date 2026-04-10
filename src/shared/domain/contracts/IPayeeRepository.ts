@@ -5,3 +5,4 @@ export interface IPayeeRepository {
   save(payee: Payee): Promise<void>
   getByName(name: string): Promise<Payee | null>
 }
+

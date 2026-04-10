@@ -34,7 +34,7 @@
           class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
         >
           <div
-            class="w-24 h-24 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-8 text-primary-main"
+            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,7 @@
               <path d="M11 15h.01" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-text-primary">
+          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
             Sem assinaturas
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -67,7 +67,7 @@
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
-            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +99,7 @@
         <div v-else-if="store.isLoading" class="flex flex-col gap-6">
           <div class="flex justify-center py-20">
             <div
-              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin"
+              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
             ></div>
           </div>
         </div>
@@ -113,33 +113,33 @@
             v-for="sub in filteredSubscriptions"
             :key="sub.id"
             clickable
-            class="!rounded-3xl hover:!bg-surface-main/40 group"
+            class="!rounded-3xl hover:!bg-surface-0/40 dark:bg-surface-800/40 group"
           >
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
                 <div
-                  class="w-12 h-12 rounded-2xl bg-primary-main/10 flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform"
+                  class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-xl shadow-inner group-hover:scale-110 transition-transform"
                 >
                   💳
                 </div>
                 <div class="flex flex-col">
                   <div class="flex items-center gap-2">
-                    <span class="font-black text-text-primary text-[1.05rem] tracking-tight">{{
+                    <span class="font-black text-surface-800 dark:text-surface-50 text-[1.05rem] tracking-tight">{{
                       sub.name
                     }}</span>
                     <ItemSyncIndicator :status="sub.sync_status" />
                   </div>
                   <span
-                    class="text-[9px] font-black uppercase tracking-[0.15em] text-text-disabled"
+                    class="text-[9px] font-black uppercase tracking-[0.15em] text-surface-400 dark:text-surface-400"
                     >{{ sub.frequency === 'monthly' ? 'Mensal' : 'Anual' }}</span
                   >
                 </div>
               </div>
               <div class="text-right">
-                <div class="font-black text-xl text-primary-main tracking-tighter">
+                <div class="font-black text-xl text-primary tracking-tighter">
                   {{ formatCurrency(sub.amount) }}
                 </div>
-                <div class="text-[9px] font-black uppercase tracking-[0.1em] text-text-disabled">
+                <div class="text-[9px] font-black uppercase tracking-[0.1em] text-surface-400 dark:text-surface-400">
                   Vencimento: dia {{ sub.billing_day }}
                 </div>
               </div>
@@ -177,20 +177,20 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <!-- Income Commitment Highlight Box -->
             <div
-              class="w-full p-6 rounded-3xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center shadow-inner border border-black/5 dark:border-white/5"
+              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
               <div class="flex justify-between items-center w-full mb-3 px-1">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-text-disabled"
+                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400"
                   >Comprometimento</span
                 >
-                <span class="text-sm font-black text-primary-main tracking-tighter">8.4%</span>
+                <span class="text-sm font-black text-primary tracking-tighter">8.4%</span>
               </div>
               <BaseProgressBar :percentage="8.4" color="var(--color-primary-main)" />
-              <p class="text-[9px] font-bold text-text-disabled uppercase mt-5 tracking-widest">
+              <p class="text-[9px] font-bold text-surface-400 dark:text-surface-400 uppercase mt-5 tracking-widest">
                 Baseado na sua renda declarada
               </p>
             </div>
@@ -203,7 +203,7 @@
           <div class="p-2 space-y-4">
             <div class="flex gap-4 p-4 rounded-2xl bg-accent-main/5 border border-accent-main/10">
               <div
-                class="w-10 h-10 rounded-xl bg-accent-main/10 text-accent-main flex-shrink-0 flex items-center justify-center shadow-sm"
+                class="w-10 h-10 rounded-xl bg-accent-main/10 text-accent flex-shrink-0 flex items-center justify-center shadow-sm"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -219,9 +219,9 @@
                   <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-text-secondary leading-relaxed pt-1">
-                Identificamos <span class="text-accent-main font-black">2 serviços</span> com baixo
-                uso este mês. Considere cancelar para economizar <span class="text-text-primary">R$ 54,00</span>.
+              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
+                Identificamos <span class="text-accent font-black">2 serviços</span> com baixo
+                uso este mês. Considere cancelar para economizar <span class="text-surface-800 dark:text-surface-50">R$ 54,00</span>.
               </p>
             </div>
           </div>
@@ -262,3 +262,5 @@ onMounted(async () => {
   await store.fetchSubscriptions()
 })
 </script>
+
+

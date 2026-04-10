@@ -48,10 +48,10 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
     vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
       data: { user: { id: 'test-user-id' } }, 
       error: null 
-    } as any)
+    } as unknown as { data: { user: { id: string } }; error: null })
     
     // Default mock behavior
-    vi.mocked(supabase.from).mockImplementation(() => createMockTable() as any)
+    vi.mocked(supabase.from).mockImplementation(() => createMockTable() as unknown as ReturnType<typeof supabase.from>)
 
     // Simulate online
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
@@ -77,7 +77,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       })
 
       const mockTable = createMockTable()
-      vi.mocked(supabase.from).mockReturnValue(mockTable as any)
+      vi.mocked(supabase.from).mockReturnValue(mockTable as unknown as ReturnType<typeof supabase.from>)
 
       await engine.pushDirtyRecords()
 
@@ -131,7 +131,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         }, 
         error: null 
       })
-      vi.mocked(supabase.from).mockReturnValue(mockTable as any)
+      vi.mocked(supabase.from).mockReturnValue(mockTable as unknown as ReturnType<typeof supabase.from>)
 
       await engine.pushDirtyRecords()
 
@@ -141,7 +141,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
     })
 
     it('should automatically set sync_status to pending on creation via Dexie hooks', async () => {
-      // @ts-ignore - explicitly omitting metadata to test hooks
+      // @ts-expect-error - explicitly omitting metadata to test hooks
       await db.transactions.add({
         id: 'tx-hook-test',
         user_id: 'test-user-id',
@@ -202,3 +202,4 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
     })
   })
 })
+

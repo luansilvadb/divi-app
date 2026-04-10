@@ -5,3 +5,4 @@ export interface IBudgetRepository {
   save(budget: Budget): Promise<void>
   delete(id: string): Promise<void>
 }
+

@@ -72,3 +72,4 @@ describe('ThemeToggle.vue', () => {
     expect(store.theme).toBe('light')
   })
 })
+

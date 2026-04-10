@@ -3,15 +3,15 @@
   <Transition name="slide-up">
     <div 
       v-if="needRefresh" 
-      class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 p-5 rounded-2xl bg-surface-main/80 backdrop-blur-xl border border-white/10 shadow-2xl max-w-sm"
+      class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 p-5 rounded-2xl bg-surface-0/80 dark:bg-surface-800/80 backdrop-blur-xl border border-white/10 shadow-2xl max-w-sm"
     >
       <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary-main/20 flex items-center justify-center">
-          <i class="pi pi-sparkles text-primary-main text-xl animate-pulse"></i>
+        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+          <i class="pi pi-sparkles text-primary text-xl animate-pulse"></i>
         </div>
         <div>
-          <h3 class="font-bold text-text-primary text-sm mb-1">Nova versão disponível!</h3>
-          <p class="text-xs text-text-secondary opacity-70 leading-relaxed">
+          <h3 class="font-bold text-surface-800 dark:text-surface-50 text-sm mb-1">Nova versão disponível!</h3>
+          <p class="text-xs text-surface-600 dark:text-surface-200 opacity-70 leading-relaxed">
             Atualizamos o Divi com novas melhorias. Deseja atualizar agora para aproveitar as novidades?
           </p>
         </div>
@@ -41,8 +41,8 @@
   </MainLayout>
 
   <!-- Fallback full-screen for Login and Unauthenticated paths -->
-  <div v-else class="flex h-screen w-screen overflow-hidden bg-bg-main text-text-primary">
-    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-bg-main">
+  <div v-else class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
+    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-surface-100 dark:bg-surface-950">
       <RouterView />
     </main>
   </div>
@@ -124,3 +124,4 @@ async function handleLogout() {
   transform: translateY(10px) scale(0.95);
 }
 </style>
+

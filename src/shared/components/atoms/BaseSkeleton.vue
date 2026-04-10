@@ -3,7 +3,7 @@
     :width="width"
     :height="height"
     :borderRadius="rounded ? '50%' : '8px'"
-    class="relative overflow-hidden bg-black/5 dark:bg-white/5"
+    class="relative overflow-hidden bg-surface-50 dark:bg-surface-800/10"
     :class="customClass"
   >
 
@@ -27,3 +27,5 @@ withDefaults(
   },
 )
 </script>
+
+

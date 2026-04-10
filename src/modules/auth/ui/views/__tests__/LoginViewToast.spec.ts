@@ -94,3 +94,4 @@ describe('LoginView.vue - Feedback (Toast)', () => {
     }))
   })
 })
+

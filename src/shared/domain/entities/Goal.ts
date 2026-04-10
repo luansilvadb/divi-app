@@ -8,3 +8,4 @@ export interface Goal extends SyncMetadata {
   color?: string
   icon?: string
 }
+

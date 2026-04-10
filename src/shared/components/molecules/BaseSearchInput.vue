@@ -3,18 +3,18 @@
     <IconField class="w-full">
       <InputIcon
         v-if="loading"
-        class="pi pi-spinner pi-spin text-lg transition-all duration-300 !text-secondary-main absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0"
+        class="pi pi-spinner pi-spin text-lg transition-all duration-300 !text-secondary absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0"
       />
       <InputIcon
         v-else
-        class="pi pi-search text-lg transition-all duration-300 absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0 !text-text-disabled"
+        class="pi pi-search text-lg transition-all duration-300 absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0 !text-surface-400 dark:text-surface-400"
         :class="{ '!text-slate-500 dark:!text-slate-400 scale-110 !opacity-100': localValue }"
       />
 
       <InputText
         v-model="localValue"
         :placeholder="placeholder"
-        class="w-full pl-12 pr-12 py-4 !rounded-xl transition-all duration-300 !bg-[#161D2C] !border border-white/5 shadow-lg hover:!border-white/10 focus:!border-primary-main/30 focus:!ring-0 outline-none !text-text-primary placeholder:!text-text-secondary/40 placeholder:!font-medium placeholder:!tracking-tight"
+        class="w-full pl-12 pr-12 py-4 !rounded-xl transition-all duration-300 !bg-surface-700 !border border-surface-200/10 shadow-lg hover:!border-white/10 focus:!border-primary/30 focus:!ring-0 outline-none !text-surface-800 dark:text-surface-50 placeholder:!text-surface-600/40 dark:text-surface-200/40 placeholder:!font-medium placeholder:!tracking-tight"
         @input="onInput(($event.target as HTMLInputElement).value)"
       />
 
@@ -28,7 +28,7 @@
       >
         <button
           v-if="localValue"
-          class="absolute inset-y-0 right-4 flex items-center text-text-disabled hover:text-secondary-main transition-colors z-10 p-2 cursor-pointer"
+          class="absolute inset-y-0 right-4 flex items-center text-surface-400 dark:text-surface-400 hover:text-secondary transition-colors z-10 p-2 cursor-pointer"
           aria-label="Limpar busca"
           @click="clear"
         >
@@ -82,4 +82,6 @@ const clear = () => {
   emit('update:modelValue', '')
 }
 </script>
+
+
 

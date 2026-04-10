@@ -2,7 +2,7 @@
   <Card
 
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-300 dark:!bg-[#161D2C]"
+    class="glass-card overflow-hidden transition-all duration-300 dark:!bg-surface-700"
     :class="{
       'cursor-pointer hover-glow active:scale-[0.98]': clickable,
       'border-error-main/50 animate-pulse-error': error,
@@ -16,7 +16,7 @@
   >
     <template #header v-if="$slots.header">
       <div
-        class="px-6 py-4 border-b border-black/5 dark:border-white/5 font-bold text-text-primary text-lg tracking-tight flex items-center justify-between"
+        class="px-6 py-4 border-b border-surface-200 dark:border-surface-200/10 font-bold text-surface-800 dark:text-surface-50 text-lg tracking-tight flex items-center justify-between"
       >
         <slot name="header" />
       </div>
@@ -29,20 +29,20 @@
         class="p-8 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
       >
         <div
-          class="w-12 h-12 rounded-full bg-error-main/10 flex items-center justify-center text-error-main"
+          class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error"
         >
           <i class="pi pi-exclamation-circle text-2xl"></i>
         </div>
         <div class="flex flex-col gap-1">
-          <h3 class="text-error-main font-bold">Erro ao carregar dados</h3>
-          <p class="text-text-secondary text-sm max-w-[200px]">
+          <h3 class="text-error font-bold">Erro ao carregar dados</h3>
+          <p class="text-surface-600 dark:text-surface-200 text-sm max-w-[200px]">
             {{ errorMsg || 'Não foi possível carregar as informações agora.' }}
           </p>
         </div>
         <button
           v-if="retryable"
           @click.stop="$emit('retry')"
-          class="mt-2 px-4 py-2 bg-error-main text-white rounded-xl text-sm font-bold hover:opacity-90 active:scale-95 transition-all"
+          class="mt-2 px-4 py-2 bg-error text-white rounded-xl text-sm font-bold hover:opacity-90 active:scale-95 transition-all"
         >
           Tentar novamente
         </button>
@@ -72,8 +72,8 @@
           </slot>
         </BaseIconBox>
         <div class="flex flex-col gap-1">
-          <h3 class="text-text-primary font-bold text-lg">{{ emptyTitle || 'Sem dados' }}</h3>
-          <p class="text-text-secondary text-sm max-w-[250px] leading-relaxed">
+          <h3 class="text-surface-800 dark:text-surface-50 font-bold text-lg">{{ emptyTitle || 'Sem dados' }}</h3>
+          <p class="text-surface-600 dark:text-surface-200 text-sm max-w-[250px] leading-relaxed">
             {{ emptySubtitle || 'Não há informações disponíveis para exibir neste momento.' }}
           </p>
         </div>
@@ -83,7 +83,7 @@
       <!-- Default content -->
       <div
         v-else
-        class="p-6 text-text-primary"
+        class="p-6 text-surface-800 dark:text-surface-50"
         :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }"
       >
         <slot />
@@ -92,7 +92,7 @@
 
     <template #footer v-if="$slots.footer">
       <div
-        class="px-6 py-4 bg-black/5 dark:bg-white/5 border-t border-black/5 dark:border-white/5 text-text-secondary text-sm font-medium"
+        class="px-6 py-4 bg-surface-50 dark:bg-surface-800/10 border-t border-surface-200 dark:border-surface-200/10 text-surface-600 dark:text-surface-200 text-sm font-medium"
       >
         <slot name="footer" />
       </div>
@@ -121,3 +121,5 @@ defineProps<{
 
 defineEmits(['click', 'retry'])
 </script>
+
+

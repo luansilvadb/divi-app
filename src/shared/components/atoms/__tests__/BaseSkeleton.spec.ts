@@ -65,3 +65,4 @@ describe('BaseSkeleton.vue', () => {
     expect(wrapper.find('.p-skeleton').classes()).toContain('my-custom-class')
   })
 })
+

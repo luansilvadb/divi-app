@@ -5,3 +5,4 @@ export interface Category extends SyncMetadata {
   icon?: string
   color?: string
 }
+

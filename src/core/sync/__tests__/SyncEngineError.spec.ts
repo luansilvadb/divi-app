@@ -42,7 +42,7 @@ describe('SyncEngine Error Handling', () => {
     vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
       data: { user: { id: 'u1' } }, 
       error: null 
-    } as any)
+    } as unknown as { data: { user: { id: string } }; error: null })
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
@@ -73,7 +73,7 @@ describe('SyncEngine Error Handling', () => {
         error: { message: 'Network Timeout', code: 'TIMEOUT' } 
       })
     }
-    vi.mocked(supabase.from).mockReturnValue(mockTable as any)
+    vi.mocked(supabase.from).mockReturnValue(mockTable as unknown as ReturnType<typeof supabase.from>)
 
     await engine.pushDirtyRecords()
 
@@ -81,3 +81,4 @@ describe('SyncEngine Error Handling', () => {
     expect(record?.sync_status).toBe('failed')
   })
 })
+

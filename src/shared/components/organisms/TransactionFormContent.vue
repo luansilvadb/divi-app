@@ -1,22 +1,22 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-5 space-y-4 bg-surface-main dark:bg-surface-main h-full max-h-none pb-4"
+    class="p-5 space-y-4 bg-surface-0 dark:bg-surface-800 h-full max-h-none pb-4"
   >
     <!-- Type Switcher -->
-    <div class="flex p-1.5 bg-black/5 dark:bg-black/40 rounded-xl gap-1.5 border border-black/5 dark:border-white/5 shadow-inner w-full mb-2">
+    <div class="flex p-1.5 bg-surface-50 dark:bg-surface-800/40 rounded-xl gap-1.5 border border-surface-200 dark:border-surface-800/10 shadow-inner w-full mb-2">
       <button 
         type="button" 
         class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
-        :class="form.type === 'expense' ? 'bg-[#161D2C] text-white shadow-md ring-1 ring-white/10' : 'text-text-secondary opacity-60 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5'"
+        :class="form.type === 'expense' ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10' : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'"
         @click="form.type = 'expense'"
       >
-        <i class="pi pi-arrow-down text-sm transition-colors duration-300" :class="form.type === 'expense' ? 'text-error-main' : ''"></i> Despesa
+        <i class="pi pi-arrow-down text-sm transition-colors duration-300" :class="form.type === 'expense' ? 'text-error' : ''"></i> Despesa
       </button>
       <button 
         type="button" 
         class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
-        :class="form.type === 'income' ? 'bg-[#161D2C] text-white shadow-md ring-1 ring-white/10' : 'text-text-secondary opacity-60 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5'"
+        :class="form.type === 'income' ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10' : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'"
         @click="form.type = 'income'"
       >
         <i class="pi pi-arrow-up text-sm transition-colors duration-300" :class="form.type === 'income' ? 'text-success-main' : ''"></i> Receita
@@ -46,7 +46,7 @@
         />
 
         <div class="w-full relative">
-          <label for="date" class="block text-sm font-medium mb-1 text-text-primary">Data do Lançamento</label>
+          <label for="date" class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50">Data do Lançamento</label>
           <div class="relative w-full">
             <DatePicker
               id="date"
@@ -87,7 +87,7 @@
       <BaseButton
         variant="ghost"
         type="button"
-        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10 transition-all"
         @click="$emit('close')"
       >
         Cancelar
@@ -289,4 +289,5 @@ async function handleSubmit() {
   pointer-events: none;
 }
 </style>
+
 

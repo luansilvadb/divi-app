@@ -134,3 +134,4 @@ describe('AuthView.vue', () => {
     expect(mockSignInWithGoogle).toHaveBeenCalled()
   })
 })
+

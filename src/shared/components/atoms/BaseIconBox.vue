@@ -41,6 +41,7 @@ const customStyle = computed(() => {
 
 const customClasses = computed(() => {
   if (props.color) return ''
-  return 'bg-primary-main/10 text-primary-main'
+  return 'bg-primary/10 text-primary'
 })
 </script>
+

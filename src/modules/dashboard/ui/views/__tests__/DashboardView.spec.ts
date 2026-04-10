@@ -3,14 +3,15 @@ import { mount } from '@vue/test-utils'
 import DashboardView from '../DashboardView.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import { container } from '@/core/di'
+import { container, useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 
 // Mock dependencies
 vi.mock('@/core/di', () => ({
   container: {
     resolve: vi.fn()
-  }
+  },
+  useService: vi.fn()
 }))
 
 vi.mock('@/shared/utils/asset-loader', () => ({
@@ -35,9 +36,14 @@ describe('DashboardView', () => {
       watchAll: vi.fn(() => ({ subscribe: vi.fn(), unsubscribe: vi.fn() }))
     }
 
-    ;(container.resolve as any).mockImplementation((token: any) => {
+    vi.mocked(container.resolve).mockImplementation((token: unknown) => {
       if (token === DI_TOKENS.AssetLoader) return mockAssetLoader
       if (token === DI_TOKENS.TransactionRepository) return mockRepo
+      return {}
+    })
+
+    vi.mocked(useService).mockImplementation((token: unknown) => {
+      if (token === DI_TOKENS.AssetLoader) return mockAssetLoader
       return {}
     })
   })
@@ -63,12 +69,13 @@ describe('DashboardView', () => {
           })
         ],
         stubs: {
-          StandardPageLayout: { template: '<div><slot /></div>' },
+          StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
           BaseCard: { template: '<div><slot /></div>' },
           BaseButton: { template: '<button><slot /></button>' },
           AccountCarousel: true,
           PatrimonialChart: true,
-          SelectButton: true
+          SelectButton: true,
+          QuickEntryModal: true
         }
       }
     })
@@ -94,12 +101,13 @@ describe('DashboardView', () => {
           })
         ],
         stubs: {
-          StandardPageLayout: { template: '<div><slot /></div>' },
+          StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
           BaseCard: { template: '<div><slot /></div>' },
           BaseButton: true,
           AccountCarousel: true,
           PatrimonialChart: true,
-          SelectButton: true
+          SelectButton: true,
+          QuickEntryModal: true
         }
       }
     })
@@ -112,12 +120,13 @@ describe('DashboardView', () => {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn })],
         stubs: {
-          StandardPageLayout: { template: '<div><slot /></div>' },
+          StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
           BaseCard: { template: '<div><slot /></div>' },
           BaseButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
           AccountCarousel: true,
           PatrimonialChart: true,
-          SelectButton: true
+          SelectButton: true,
+          QuickEntryModal: true
         }
       }
     })
@@ -130,3 +139,4 @@ describe('DashboardView', () => {
     expect(transactionStore.saveTransaction).toHaveBeenCalled()
   })
 })
+

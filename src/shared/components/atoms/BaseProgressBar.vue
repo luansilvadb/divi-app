@@ -3,7 +3,7 @@
     <ProgressBar
       :value="percentage"
       :showValue="false"
-      class="h-2.5 rounded-full overflow-hidden bg-black/5 dark:bg-white/5 shadow-inner"
+      class="h-2.5 rounded-full overflow-hidden bg-surface-50 dark:bg-surface-800/10 shadow-inner"
 
     >
       <template #default>
@@ -32,3 +32,5 @@ withDefaults(
 )
 
 </script>
+
+

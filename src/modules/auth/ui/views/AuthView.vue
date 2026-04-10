@@ -39,8 +39,12 @@ const handleSubmit = async () => {
       successMessage.value = 'Registration successful! You can now log in.'
       isLoginMode.value = true
     }
-  } catch (err: any) {
-    errorMessage.value = err.message || 'An error occurred'
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMessage.value = err.message
+    } else {
+      errorMessage.value = 'An error occurred'
+    }
   } finally {
     loading.value = false
   }
@@ -49,8 +53,12 @@ const handleSubmit = async () => {
 const handleGoogleLogin = async () => {
   try {
     await authService.signInWithGoogle()
-  } catch (err: any) {
-    errorMessage.value = err.message || 'Google login failed'
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMessage.value = err.message
+    } else {
+      errorMessage.value = 'Google login failed'
+    }
   }
 }
 </script>
@@ -134,3 +142,4 @@ const handleGoogleLogin = async () => {
     </div>
   </div>
 </template>
+

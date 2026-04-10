@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
+import Button from 'primevue/button'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
-import Button from 'primevue/button'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 import { useToast } from 'primevue/usetoast'
 import { useTransactionStore } from '../../application/stores/transactionStore'
 import { useService } from '@/core/di'
@@ -53,11 +55,12 @@ const handleSave = async () => {
         sync_status: 'pending',
         deleted: false,
         client_updated_at: new Date().toISOString(),
-        version: 1
-      } as any)
+        version: 1,
+        created_at: new Date().toISOString()
+      })
 
       // Disparar sincronização
-      const syncEngine = useService<any>(DI_TOKENS.SyncEngine)
+      const syncEngine = useService<{ enqueueSync(): void }>(DI_TOKENS.SyncEngine)
       syncEngine.enqueueSync()
 
       toast.add({
@@ -142,36 +145,47 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
     modal
     header="Nova Transação Rápida"
     :style="{ width: '25rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
     @keydown="handleKeydown"
   >
-    <div class="flex flex-col gap-4 p-2">
+    <div class="flex flex-col gap-4 mt-2">
+      <!-- Valor -->
       <div class="flex flex-col gap-2">
-        <label for="amount" class="font-semibold">Valor</label>
-        <InputNumber
-          v-model="amount"
-          inputId="amount"
-          mode="currency"
-          currency="BRL"
-          locale="pt-BR"
-          class="quick-entry-amount w-full"
-          autoFocus
-          fluid
-        />
+        <label for="amount" class="text-sm font-semibold">Valor</label>
+        <IconField>
+          <InputIcon class="pi pi-dollar" />
+          <InputNumber
+            v-model="amount"
+            inputId="amount"
+            mode="decimal"
+            :minFractionDigits="2"
+            :maxFractionDigits="2"
+            locale="pt-BR"
+            placeholder="0,00"
+            class="quick-entry-amount"
+            fluid
+            autoFocus
+          />
+        </IconField>
       </div>
 
+      <!-- Beneficiário -->
       <div class="flex flex-col gap-2">
-        <label for="payee" class="font-semibold">Beneficiário (Payee)</label>
-        <InputText
-          v-model="payee"
-          id="payee"
-          class="w-full"
-          placeholder="Ex: Starbucks"
-          fluid
-        />
+        <label for="payee" class="text-sm font-semibold">Beneficiário (Payee)</label>
+        <IconField>
+          <InputIcon class="pi pi-shop" />
+          <InputText
+            v-model="payee"
+            id="payee"
+            placeholder="Ex: Starbucks"
+            fluid
+          />
+        </IconField>
       </div>
 
+      <!-- Categoria -->
       <div class="flex flex-col gap-2">
-        <label for="category" class="font-semibold">Categoria</label>
+        <label for="category" class="text-sm font-semibold">Categoria</label>
         <Select
           v-model="categoryId"
           id="category"
@@ -179,14 +193,30 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
           optionLabel="name"
           optionValue="id"
           placeholder="Selecione uma categoria"
-          class="w-full"
           @change="isUserInteracted.category = true"
           fluid
-        />
+        >
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center gap-2">
+              <i class="pi pi-tags opacity-70"></i>
+              <span>{{ transactionStore.categories.find(c => c.id === slotProps.value)?.name }}</span>
+            </div>
+            <span v-else class="opacity-60 flex items-center gap-2">
+              <i class="pi pi-tags"></i>
+              Selecione uma categoria
+            </span>
+          </template>
+          <template #option="slotProps">
+            <div class="flex items-center gap-2">
+              <span>{{ slotProps.option.name }}</span>
+            </div>
+          </template>
+        </Select>
       </div>
 
+      <!-- Carteira -->
       <div class="flex flex-col gap-2">
-        <label for="wallet" class="font-semibold">Carteira</label>
+        <label for="wallet" class="text-sm font-semibold">Carteira</label>
         <Select
           v-model="walletId"
           id="wallet"
@@ -194,16 +224,40 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
           optionLabel="name"
           optionValue="id"
           placeholder="Selecione uma carteira"
-          class="w-full"
           @change="isUserInteracted.wallet = true"
           fluid
-        />
-      </div>
-
-      <div class="flex justify-end gap-2 mt-4">
-        <Button label="Cancelar" severity="secondary" @click="close" />
-        <Button label="Salvar (Enter)" @click="handleSave" :disabled="!amount || !payee" />
+        >
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center gap-2">
+              <i class="pi pi-wallet opacity-70"></i>
+              <span>{{ transactionStore.wallets.find(w => w.id === slotProps.value)?.name }}</span>
+            </div>
+            <span v-else class="opacity-60 flex items-center gap-2">
+              <i class="pi pi-wallet"></i>
+              Selecione uma carteira
+            </span>
+          </template>
+          <template #option="slotProps">
+            <div class="flex items-center gap-2">
+              <span>{{ slotProps.option.name }}</span>
+            </div>
+          </template>
+        </Select>
       </div>
     </div>
+
+    <template #footer>
+      <div class="flex justify-between items-center w-full mt-4">
+        <span class="text-xs opacity-50 flex items-center gap-1">
+          <kbd class="px-1 border rounded opacity-70 font-sans">Esc</kbd> cancelar
+        </span>
+        <div class="flex gap-2">
+          <Button label="Cancelar" severity="secondary" text @click="close" />
+          <Button label="Salvar" icon="pi pi-check" @click="handleSave" :disabled="!amount || !payee" />
+        </div>
+      </div>
+    </template>
   </Dialog>
 </template>
+
+

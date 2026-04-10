@@ -80,3 +80,4 @@ describe('BaseButton.vue', () => {
     expect(wrapper.attributes('disabled')).toBeDefined()
   })
 })
+

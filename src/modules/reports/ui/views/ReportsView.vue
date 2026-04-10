@@ -27,15 +27,15 @@
               <div class="flex justify-between items-end">
                 <div class="flex items-center gap-3">
                   <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: cat.color }"></div>
-                  <span class="text-xs font-black uppercase tracking-widest text-text-primary">{{
+                  <span class="text-xs font-black uppercase tracking-widest text-surface-800 dark:text-surface-50">{{
                     cat.name
                   }}</span>
                 </div>
                 <div class="flex items-baseline gap-2">
-                  <span class="text-sm font-black text-text-primary">{{
+                  <span class="text-sm font-black text-surface-800 dark:text-surface-50">{{
                     formatCurrency(cat.value)
                   }}</span>
-                  <span class="text-[10px] font-bold text-text-disabled"
+                  <span class="text-[10px] font-bold text-surface-400 dark:text-surface-400"
                     >{{ cat.percentage }}%</span
                   >
                 </div>
@@ -57,15 +57,15 @@
               >
                 <div class="w-full flex gap-1 items-end justify-center h-full">
                   <div
-                    class="w-4 bg-primary-main/20 rounded-t-lg transition-all duration-700 hover:bg-primary-main/40"
+                    class="w-4 bg-primary/20 rounded-t-lg transition-all duration-700 hover:bg-primary/40"
                     :style="{ height: `${item.income}%` }"
                   ></div>
                   <div
-                    class="w-4 bg-error-main/20 rounded-t-lg transition-all duration-700 hover:bg-error-main/40"
+                    class="w-4 bg-error/20 rounded-t-lg transition-all duration-700 hover:bg-error/40"
                     :style="{ height: `${item.expense}%` }"
                   ></div>
                 </div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled">{{
+                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">{{
                   item.label
                 }}</span>
               </div>
@@ -75,14 +75,14 @@
               class="flex community-center justify-center gap-8 border-t border-black/5 dark:border-white/5 pt-6"
             >
               <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-primary-main/40"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                <div class="w-2 h-2 rounded-full bg-primary/40"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                   >Entradas</span
                 >
               </div>
               <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-error-main/40"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+                <div class="w-2 h-2 rounded-full bg-error/40"></div>
+                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                   >Saídas</span
                 >
               </div>
@@ -110,12 +110,12 @@
                 <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Média Diária</span
             >
           </div>
           <div class="flex flex-col gap-2">
-            <h3 class="text-3xl font-black text-text-primary tracking-tighter">
+            <h3 class="text-3xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">
               {{ formatCurrency(dailyAverage) }}
             </h3>
             <div class="flex items-center gap-1.5 text-success-main">
@@ -153,15 +153,15 @@
                 <path d="M12 6v6l4 2"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Maior Gasto Único</span
             >
           </div>
           <div class="flex flex-col gap-1">
-            <h3 class="text-3xl font-black text-text-primary tracking-tighter">
+            <h3 class="text-3xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">
               {{ formatCurrency(maxExpense) }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-widest text-text-disabled">
+            <p class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
               Supermercado em 15/03
             </p>
           </div>
@@ -182,7 +182,7 @@
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-text-disabled"
+            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Economia Potencial</span
             >
           </div>
@@ -190,7 +190,7 @@
             <h3 class="text-3xl font-black text-success-main tracking-tighter">
               {{ formatCurrency(potentialSavings) }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-widest text-text-disabled">
+            <p class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
               Se reduzir lazer em 20%
             </p>
           </div>
@@ -247,3 +247,4 @@ const flowData = [
   { label: 'Mar', income: 75, expense: 65 },
 ]
 </script>
+

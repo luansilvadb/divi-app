@@ -17,3 +17,4 @@ export interface SyncMetadata {
   last_synced_at?: string
   server_updated_at?: string
 }
+

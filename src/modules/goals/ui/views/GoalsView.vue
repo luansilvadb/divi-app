@@ -34,7 +34,7 @@
           class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
         >
           <div
-            class="w-24 h-24 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-8 text-primary-main"
+            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-text-primary">
+          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
             Sem metas ativas
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -66,7 +66,7 @@
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
-            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +98,7 @@
         <div v-else-if="store.isLoading" class="flex flex-col gap-6">
           <div class="flex justify-center py-20">
             <div
-              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin"
+              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
             ></div>
           </div>
         </div>
@@ -138,7 +138,7 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <BaseSummaryItem
               label="Objetivo Total"
@@ -165,16 +165,16 @@
               </template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <!-- Global Progress Highlight -->
             <div
-              class="w-full p-6 rounded-3xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center shadow-inner border border-black/5 dark:border-white/5"
+              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-text-disabled mb-3"
+              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Progresso Consolidado</span
               >
-              <div class="text-3xl font-black tracking-tighter text-primary-main mb-4">
+              <div class="text-3xl font-black tracking-tighter text-primary mb-4">
                 {{ globalProgress }}%
               </div>
               <BaseProgressBar :percentage="globalProgress" color="var(--color-primary-main)" />
@@ -205,7 +205,7 @@
                   <path d="M12 6a1 1 0 0 0-1 1v5a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V7a1 1 0 0 0-1-1z" />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-text-secondary leading-relaxed pt-1">
+              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
                 Mantendo o ritmo atual, você alcançará a meta
                 <span class="text-info-main font-black">"Viagem Japão"</span> em
                 <span class="text-success-main font-black">4 meses</span>.
@@ -256,3 +256,5 @@ onMounted(async () => {
   await store.fetchGoals()
 })
 </script>
+
+

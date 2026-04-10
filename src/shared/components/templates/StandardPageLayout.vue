@@ -1,8 +1,8 @@
 <template>
-  <div class="standard-page-layout min-h-screen bg-bg-main p-6 md:p-10 lg:p-14">
+  <div class="standard-page-layout w-full pb-8 md:pb-12">
     <!-- View Header -->
-    <div v-if="loading" class="absolute top-0 left-0 w-full h-[3px] z-50 overflow-hidden bg-primary-main/10">
-      <div class="h-full bg-primary-main animate-progress-glow"></div>
+    <div v-if="loading" class="absolute top-0 left-0 w-full h-[3px] z-50 overflow-hidden bg-primary/10 -mt-6 md:-mt-12">
+      <div class="h-full bg-primary animate-progress-glow"></div>
     </div>
 
     <BaseViewHeader :title="title" :subtitle="subtitle" :highlight="highlight">
@@ -54,3 +54,4 @@ defineProps<{
   width: 100%;
 }
 </style>
+

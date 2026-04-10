@@ -43,3 +43,4 @@ export const useBudgetStore = defineStore('budgets', () => {
     totalConsumed,
   }
 })
+

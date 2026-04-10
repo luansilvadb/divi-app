@@ -12,3 +12,4 @@ export interface Transaction extends SyncMetadata {
   notes?: string
 }
 
+

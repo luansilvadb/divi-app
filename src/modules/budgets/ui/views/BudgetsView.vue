@@ -7,12 +7,11 @@
   >
     <!-- Header Actions -->
     <template #action>
-      <div class="flex items-center justify-end gap-3 w-full lg:min-w-[420px]">
-        <!-- Note: We could add a month switcher here if budgets become month-aware -->
+      <div class="flex items-center justify-start md:justify-end gap-3 w-full">
         <BaseButton
           v-if="!isMobile"
           variant="primary"
-          class="!rounded-xl px-6 h-10"
+          class="!rounded-xl px-6 h-10 w-full md:w-auto"
           @click="showAddBudgetModal = true"
         >
           Novo Orçamento
@@ -20,9 +19,9 @@
       </div>
     </template>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-32 md:pb-0">
       <!-- MAIN COLUMN -->
-      <main class="lg:col-span-2 space-y-8">
+      <main class="lg:col-span-2 space-y-8 order-2 lg:order-1">
         <!-- Search Bar -->
         <BaseSearchInput
           v-model="store.searchQuery"
@@ -35,7 +34,7 @@
           class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
         >
           <div
-            class="w-24 h-24 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-8 text-primary-main"
+            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +50,7 @@
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-text-primary">
+          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
             Nenhum orçamento
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -65,7 +64,7 @@
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
           <div
-            class="w-20 h-20 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6"
+            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +97,7 @@
           <!-- Skeleton items could go here if available -->
           <div class="flex justify-center py-20">
             <div
-              class="w-8 h-8 border-4 border-primary-main/20 border-t-primary-main rounded-full animate-spin"
+              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
             ></div>
           </div>
         </div>
@@ -115,7 +114,7 @@
       </main>
 
       <!-- SIDEBAR COLUMN -->
-      <aside class="side-column space-y-8">
+      <aside class="side-column space-y-8 order-1 lg:order-2">
         <!-- Performance Overview -->
         <BaseCard>
           <template #header>Visão Geral</template>
@@ -127,7 +126,7 @@
               status="info"
             />
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <BaseSummaryItem
               label="Total Consumido"
@@ -140,18 +139,18 @@
               :status="store.totalConsumed > store.totalBudgeted ? 'error' : 'normal'"
             />
 
-            <div class="h-px bg-black/5 dark:bg-white/5"></div>
+            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
 
             <!-- Health Status Indicator (Standardized Highlight Box) -->
             <div
-              class="w-full p-6 rounded-3xl bg-bg-main dark:bg-black/20 flex flex-col items-center text-center shadow-inner border border-black/5 dark:border-white/5"
+              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-text-disabled mb-3"
+              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Status de Saúde</span
               >
               <div
                 v-if="store.totalConsumed > store.totalBudgeted"
-                class="text-error-main font-black flex items-center gap-2 uppercase text-xs tracking-widest"
+                class="text-error font-black flex items-center gap-2 uppercase text-xs tracking-widest"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -197,30 +196,19 @@
         <!-- Insights -->
         <BaseCard>
           <template #header>Sinais Relevantes</template>
-          <div class="p-2 space-y-4">
-            <div class="flex gap-4 p-4 rounded-2xl bg-accent-main/5 border border-accent-main/10">
-              <div
-                class="w-10 h-10 rounded-xl bg-accent-main/10 text-accent-main flex-shrink-0 flex items-center justify-center shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                </svg>
+          <div class="flex flex-col gap-4 pt-2">
+            <!-- Insight Item -->
+            <div class="flex gap-4 p-5 rounded-3xl bg-surface-50 dark:bg-surface-950/50 border border-surface-200 dark:border-surface-800/10 relative overflow-hidden group">
+              <!-- Animated Accent Glow -->
+              <div class="absolute -right-4 -top-4 w-12 h-12 bg-primary/10 blur-2xl rounded-full transition-all group-hover:scale-150"></div>
+              
+              <div class="flex flex-col gap-1 relative z-10">
+                <span class="text-[0.6rem] font-black uppercase tracking-[0.2em] text-primary opacity-80">Insight de IA</span>
+                <p class="text-[0.8rem] font-bold text-surface-600 dark:text-surface-300 leading-relaxed">
+                  Você economizou <span class="text-primary font-black">R$ 340,00</span> em <span class="text-surface-900 dark:text-surface-50">Lazer</span> 
+                  comparado ao mês passado. Ótima performance!
+                </p>
               </div>
-              <p class="text-xs font-bold text-text-secondary leading-relaxed pt-1">
-                Você economizou <span class="text-accent-main font-black">R$ 340,00</span> em Lazer
-                comparado ao mês passado. Ótima performance!
-              </p>
             </div>
           </div>
         </BaseCard>
@@ -267,3 +255,5 @@ onMounted(async () => {
   await store.fetchBudgets()
 })
 </script>
+
+

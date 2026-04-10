@@ -40,3 +40,4 @@ describe('BaseProgressBar.vue', () => {
     expect(shimmerDiv.exists()).toBe(true)
   })
 })
+

@@ -45,3 +45,4 @@ describe('Router Auth Guards', () => {
     expect(router.currentRoute.value.name).toBe('dashboard')
   })
 })
+

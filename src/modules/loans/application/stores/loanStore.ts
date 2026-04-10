@@ -43,3 +43,4 @@ export const useLoanStore = defineStore('loans', () => {
     totalDebt,
   }
   })
+
