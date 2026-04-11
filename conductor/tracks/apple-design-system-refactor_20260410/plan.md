@@ -25,7 +25,7 @@ Aplicação dos princípios de curvatura contínua (squircle) e transparência e
 Estilização minuciosa dos componentes do PrimeUI para refletir a estética da Apple usando classes Tailwind.
 
 - [x] Task: Estilizar botões (Primary, Secondary, Tertiary) com cantos arredondados e estados táteis. (ecad3b5)
-- [ ] Task: Refatorar campos de formulário (Inputs, Selects, Textareas) com foco e bordas suaves.
+- [x] Task: Refatorar campos de formulário (Inputs, Selects, Textareas) com foco e bordas suaves. (e85543c)
 - [ ] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS.
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
 
