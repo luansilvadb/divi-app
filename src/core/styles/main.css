@@ -311,4 +311,24 @@
     box-shadow: var(--apple-shadow-medium) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
+
+  /* PrimeVue Selection Controls - Apple Style */
+  .p-toggleswitch.p-toggleswitch-checked .p-toggleswitch-slider {
+    background: var(--apple-system-green) !important;
+  }
+
+  .p-checkbox.p-checkbox-checked .p-checkbox-box {
+    background: var(--apple-system-blue) !important;
+    border-color: var(--apple-system-blue) !important;
+  }
+
+  .p-slider .p-slider-range {
+    background: var(--apple-system-blue) !important;
+  }
+
+  .p-slider .p-slider-handle {
+    background: #ffffff !important;
+    border: 0.5px solid rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+  }
 }
