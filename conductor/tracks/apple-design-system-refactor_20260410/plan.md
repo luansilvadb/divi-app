@@ -1,0 +1,33 @@
+# Implementation Plan: Apple-Style Design System Refactor
+
+## Phase 1: Foundation (Apple System Tokens)
+Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para alinhar a paleta de cores e os princípios básicos de design com os da Apple.
+
+- [ ] Task: Definir cores nativas da Apple (SystemBlue, SystemPink, SystemGray, etc.) no `theme.css`.
+- [ ] Task: Configurar tokens de sombra (shadows) suaves no Tailwind CSS v4 (`main.css`).
+- [ ] Task: Definir variáveis globais de `backdrop-blur` e `vibrancy` para glassmorphism.
+- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
+
+## Phase 2: Layout & Surfaces (Glassmorphism & Squircle)
+Aplicação dos princípios de curvatura contínua (squircle) e transparência em containers principais.
+
+- [ ] Task: Refatorar o container `glass-card` para usar o raio de curvatura "Squircle Apple Style".
+- [ ] Task: Ajustar Sidebars e Headers para usar `backdrop-blur` e fundos translúcidos (Vibrant & Mixed).
+- [ ] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis.
+- [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
+
+## Phase 3: UI Controls & Components (PrimeUI Styling)
+Estilização minuciosa dos componentes do PrimeUI para refletir a estética da Apple usando classes Tailwind.
+
+- [ ] Task: Estilizar botões (Primary, Secondary, Tertiary) com cantos arredondados e estados táteis.
+- [ ] Task: Refatorar campos de formulário (Inputs, Selects, Textareas) com foco e bordas suaves.
+- [ ] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS.
+- [ ] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
+
+## Phase 4: Typography & Motion (Details & Refinement)
+Ajustes finais na tipografia e inclusão de animações fluidas típicas da Apple.
+
+- [ ] Task: Ajustar pesos de fonte, kerning e escalas tipográficas para o estilo SF Pro.
+- [ ] Task: Implementar transições suaves de hover e feedbacks visuais em componentes interativos.
+- [ ] Task: Realizar auditoria visual completa em Light e Dark Mode para garantir contraste e estética.
+- [ ] Task: Conductor - User Manual Verification 'Phase 4: Typography & Motion' (Protocol in workflow.md)

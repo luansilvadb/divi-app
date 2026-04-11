@@ -6,14 +6,16 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
-### [x] Track: Gestão de Orçamentos (Budgets)
-
-Implementar a gestão de budgets reativa para controle financeiro em tempo real, integrando Dexie, Pinia e UI com barra de progresso.
-Link: [./tracks/budget-management_20260410/](./tracks/budget-management_20260410/)
-
 ---
 
 ## Archived Tracks
+
+### [x] Track: Gestão de Orçamentos (Budgets) (Archived 2026-04-10)
+
+Implementar a gestão de budgets reativa para controle financeiro em tempo real, integrando Dexie, Pinia e UI com barra de progresso.
+Link: [./archive/budget-management_20260410/](./archive/budget-management_20260410/)
+
+---
 
 ### [x] Track: Refactor do Design System de Tokens (Fonte Única de Verdade) (Archived 2026-04-10)
 
@@ -70,3 +72,8 @@ Refine and standardize search bar components across modules to ensure consistenc
 Link: [./archive/search-system-harmonization_20260406/](./archive/search-system-harmonization_20260406/)
 
 ---
+
+---
+
+- [ ] **Track: Refatoração estética do Design System (Apple Style)**
+*Link: [./tracks/apple-design-system-refactor_20260410/](./tracks/apple-design-system-refactor_20260410/)*
