@@ -8,6 +8,11 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+- [ ] **Track: Refatorar toda UI utilizando Naive UI com estética LobeHub em Vue vite**
+*Link: [./tracks/ui-naive-refactor_20260411/](./tracks/ui-naive-refactor_20260411/)*
+
+---
+
 ## Archived Tracks
 
 ### [x] Track: Refatoração estética do Design System (Apple Style) (Archived 2026-04-10)
