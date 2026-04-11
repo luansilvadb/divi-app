@@ -11,14 +11,14 @@ Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para al
 - [x] Task: Definir variáveis globais de `backdrop-blur` e `vibrancy` para glassmorphism. (ab75eb3)
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
 
-## Phase 2: Layout & Surfaces (Glassmorphism & Squircle)
+## Phase 2: Layout & Surfaces (Glassmorphism & Squircle) [checkpoint: 0858d3c]
 
 Aplicação dos princípios de curvatura contínua (squircle) e transparência em containers principais.
 
 - [x] Task: Refatorar o container `glass-card` para usar o raio de curvatura "Squircle Apple Style". (8b06e9e)
 - [x] Task: Ajustar Sidebars e Headers para usar `backdrop-blur` e fundos translúcidos (Vibrant & Mixed). (269d850)
 - [x] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis. (082e29b)
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
 
 ## Phase 3: UI Controls & Components (PrimeUI Styling)
 
