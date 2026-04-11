@@ -39,9 +39,10 @@ export const useBudgetStore = defineStore('budgets', () => {
   const getConsumed = (budget: Budget) => {
     // Current month transactions from transactionStore (which are already filtered/reactive)
     return transactionStore.transactions
-      .filter((t) => t.category_id === budget.category_id && !t.deleted)
+      .filter((t) => t.category_id === budget.category_id && !t.deleted && t.type === 'expense')
       .reduce((acc, t) => acc + t.amount, 0)
   }
+
 
   const totalBudgeted = computed(() => budgets.value.reduce((sum, b) => sum + b.limit_value, 0))
   const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))

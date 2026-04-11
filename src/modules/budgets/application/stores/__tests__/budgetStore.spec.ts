@@ -22,10 +22,11 @@ vi.mock('@/core/sync/SyncEngine', () => {
 vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
   useTransactionStore: vi.fn(() => ({
     transactions: [
-      { id: 't1', category_id: 'c1', amount: 100, deleted: false },
-      { id: 't2', category_id: 'c1', amount: 200, deleted: false },
-      { id: 't3', category_id: 'c2', amount: 50, deleted: false },
-      { id: 't4', category_id: 'c1', amount: 300, deleted: true }, // Should be ignored
+      { id: 't1', category_id: 'c1', amount: 100, deleted: false, type: 'expense' },
+      { id: 't2', category_id: 'c1', amount: 200, deleted: false, type: 'expense' },
+      { id: 't3', category_id: 'c2', amount: 50, deleted: false, type: 'expense' },
+      { id: 't4', category_id: 'c1', amount: 300, deleted: true, type: 'expense' }, // Should be ignored
+      { id: 't5', category_id: 'c1', amount: 500, deleted: false, type: 'income' }, // Should be ignored
     ],
     categoryMap: {
       c1: { id: 'c1', name: 'Lazer' },
