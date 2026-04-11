@@ -1,6 +1,20 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { DexieBudgetRepository } from '../DexieBudgetRepository'
 import { db } from '@/core/db'
+
+// Mock SyncEngine - must be before other imports that use it
+vi.mock('@/core/sync/SyncEngine', () => {
+  class MockSyncEngine {
+    static getInstance = vi.fn(() => ({
+      enqueueSync: vi.fn()
+    }))
+    enqueueSync = vi.fn()
+  }
+  return {
+    SyncEngine: MockSyncEngine,
+    default: MockSyncEngine
+  }
+})
 
 describe('DexieBudgetRepository', () => {
   let repo: DexieBudgetRepository

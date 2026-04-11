@@ -1,18 +1,21 @@
 import { defineStore } from 'pinia'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { Subscription } from 'rxjs'
 
 export const useBudgetStore = defineStore('budgets', () => {
   const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.BudgetRepository)
   const transactionStore = useTransactionStore()
+  const authStore = useAuthStore()
 
   const budgets = ref<Budget[]>([])
   const isLoading = ref(false)
+  const searchQuery = ref('')
   let budgetSubscription: Subscription | null = null
 
   function initialize() {
@@ -40,7 +43,13 @@ export const useBudgetStore = defineStore('budgets', () => {
       .reduce((acc, t) => acc + t.amount, 0)
   }
 
+  const totalBudgeted = computed(() => budgets.value.reduce((sum, b) => sum + b.limit_value, 0))
+  const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
+
   async function saveBudget(budget: Budget) {
+    if (!budget.user_id && authStore.user?.id) {
+      budget.user_id = authStore.user.id
+    }
     await budgetRepo.save(budget)
   }
 
@@ -51,6 +60,9 @@ export const useBudgetStore = defineStore('budgets', () => {
   return {
     budgets,
     isLoading,
+    searchQuery,
+    totalBudgeted,
+    totalConsumed,
     initialize,
     dispose,
     getConsumed,

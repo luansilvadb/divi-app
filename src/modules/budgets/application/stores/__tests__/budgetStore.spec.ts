@@ -4,6 +4,20 @@ import { useBudgetStore } from '../budgetStore'
 import { db } from '@/core/db'
 import { of } from 'rxjs'
 
+// Mock SyncEngine - must be before other imports that use it
+vi.mock('@/core/sync/SyncEngine', () => {
+  class MockSyncEngine {
+    static getInstance = vi.fn(() => ({
+      enqueueSync: vi.fn()
+    }))
+    enqueueSync = vi.fn()
+  }
+  return {
+    SyncEngine: MockSyncEngine,
+    default: MockSyncEngine
+  }
+})
+
 // Mock TransactionStore
 vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
   useTransactionStore: vi.fn(() => ({
@@ -12,7 +26,17 @@ vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
       { id: 't2', category_id: 'c1', amount: 200, deleted: false },
       { id: 't3', category_id: 'c2', amount: 50, deleted: false },
       { id: 't4', category_id: 'c1', amount: 300, deleted: true } // Should be ignored
-    ]
+    ],
+    categoryMap: {
+      'c1': { id: 'c1', name: 'Lazer' }
+    }
+  }))
+}))
+
+// Mock AuthStore
+vi.mock('@/modules/auth/application/authStore', () => ({
+  useAuthStore: vi.fn(() => ({
+    user: { id: 'u1' }
   }))
 }))
 
@@ -55,8 +79,7 @@ describe('BudgetStore', () => {
 
     store.initialize()
 
-    // Since liveQuery is async, we need to wait a bit or use a more robust way to test observables
-    // For now, let's just check if it's reactive after a small delay
+    // Since liveQuery is async, we need to wait a bit
     await new Promise(resolve => setTimeout(resolve, 100))
     
     expect(store.budgets.length).toBe(1)
@@ -65,11 +88,12 @@ describe('BudgetStore', () => {
     store.dispose()
   })
 
-  it('should save a budget', async () => {
+  it('should save a budget with user_id', async () => {
     const store = useBudgetStore()
     const budget = { id: 'b-new', limit_value: 123 } as any
     await store.saveBudget(budget)
     const saved = await db.budgets.get('b-new')
+    expect(saved?.user_id).toBe('u1')
     expect(saved?.limit_value).toBe(123)
   })
 

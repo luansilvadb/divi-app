@@ -3,6 +3,7 @@ import { from, type Observable } from 'rxjs'
 import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import { db } from '@/core/db'
+import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieBudgetRepository implements IBudgetRepository {
   async getAllActive(): Promise<Budget[]> {
@@ -21,10 +22,26 @@ export class DexieBudgetRepository implements IBudgetRepository {
   }
 
   async save(budget: Budget): Promise<void> {
-    await db.budgets.put(budget)
+    const id = budget.id || crypto.randomUUID()
+    const data: Budget = {
+      ...budget,
+      id,
+      sync_status: budget.sync_status || 'pending',
+      client_updated_at: budget.client_updated_at || new Date().toISOString(),
+      created_at: budget.created_at || new Date().toISOString(),
+      deleted: !!budget.deleted,
+      version: budget.version || 1
+    }
+    await db.budgets.put(data)
+    SyncEngine.getInstance().enqueueSync()
   }
 
   async delete(id: string): Promise<void> {
-    await db.budgets.update(id, { deleted: true, sync_status: 'pending' })
+    await db.budgets.update(id, { 
+      deleted: true, 
+      sync_status: 'pending',
+      client_updated_at: new Date().toISOString()
+    })
+    SyncEngine.getInstance().enqueueSync()
   }
 }
