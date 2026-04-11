@@ -29,3 +29,6 @@ Garantir que os dados sejam sincronizados com o backend e realizar o polimento f
 - [x] **TASK-06: Testes de Integração e Mobile** (980f5b8)
   - **Goal:** Validar o fluxo completo em diferentes cenários e dispositivos.
   - **Details:** Escrever testes em `src/modules/budgets/__tests__/` e validar a responsividade no mobile.
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions fbf33c4
