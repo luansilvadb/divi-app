@@ -53,9 +53,16 @@
           <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
             Nenhum orçamento
           </h3>
-          <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
+          <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs mb-8">
             Você ainda não criou planejamentos de gastos ou metas de economia.
           </p>
+          <BaseButton
+            variant="primary"
+            class="!rounded-xl px-8 h-10"
+            @click="showAddBudgetModal = true"
+          >
+            Criar Orçamento
+          </BaseButton>
         </div>
 
         <!-- Search Empty State -->
@@ -215,7 +222,11 @@
       </aside>
     </div>
 
-    <!-- Future: BudgetForm Component -->
+    <!-- Budget Dialog -->
+    <BudgetDialog
+      :show="showAddBudgetModal"
+      @close="showAddBudgetModal = false"
+    />
   </StandardPageLayout>
 </template>
 
@@ -231,6 +242,7 @@ import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import BudgetCard from '@/shared/components/molecules/BudgetCard.vue'
+import BudgetDialog from '../components/BudgetDialog.vue'
 
 const store = useBudgetStore()
 const transactionStore = useTransactionStore()
