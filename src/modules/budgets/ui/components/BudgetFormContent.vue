@@ -4,11 +4,6 @@
     class="p-5 space-y-4 bg-surface-0 dark:bg-surface-800 h-full max-h-none pb-4"
   >
     <div class="space-y-4">
-      <div v-if="transactionStore.categories.length === 0" class="p-3 bg-error/10 text-error rounded-xl text-sm font-bold flex items-center gap-2">
-        <i class="pi pi-exclamation-triangle"></i>
-        Você precisa criar pelo menos uma categoria antes de adicionar orçamentos.
-      </div>
-
       <BaseInput
         id="name"
         label="Nome do Orçamento (Opcional)"
@@ -35,10 +30,10 @@
           label="Categoria"
           v-model="form.category_id"
           :options="transactionStore.categories.map((cat) => ({ label: cat.name, value: cat.id }))"
-          placeholder="Selecionar Categoria"
+          placeholder="Selecione ou digite nova"
           required
           class="!mb-0"
-          :disabled="transactionStore.categories.length === 0"
+          editable
         />
       </div>
     </div>
@@ -58,7 +53,7 @@
         :loading="isSubmitting"
         class="flex-[2] !py-3 font-black uppercase text-[0.7rem] tracking-[0.15em] transition-all"
         variant="primary"
-        :disabled="!form.limit_value || !form.category_id || transactionStore.categories.length === 0"
+        :disabled="!form.limit_value || !form.category_id"
       >
         Salvar Orçamento
       </BaseButton>
@@ -107,16 +102,49 @@ watch(
   { immediate: true }
 )
 
+const colors = [
+  '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', 
+  '#06b6d4', '#0ea5e9', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', 
+  '#d946ef', '#f43f5e', '#f43f5e', '#e11d48'
+]
+
 const handleSubmit = async () => {
   if (!form.limit_value || !form.category_id) return
 
   isSubmitting.value = true
   try {
+    let finalCategoryId = form.category_id
+
+    // Verifica se a string digitada já é um ID existente
+    const isExistingCategory = transactionStore.categories.some(c => c.id === finalCategoryId)
+    
+    if (!isExistingCategory) {
+      // É uma nova categoria digitada. Verifica se já existe uma com esse exato nome (case-insensitive)
+      const existingByName = transactionStore.categories.find(c => c.name.toLowerCase() === form.category_id.toLowerCase())
+      
+      if (existingByName) {
+        finalCategoryId = existingByName.id
+      } else {
+        // Cria a nova categoria em tempo real
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        await transactionStore.saveCategory({
+          name: form.category_id,
+          color: randomColor
+        } as any)
+        
+        // Pega a categoria recém-criada (a última adicionada ou buscando pelo nome)
+        const newlyCreated = transactionStore.categories.find(c => c.name === form.category_id)
+        if (newlyCreated) {
+          finalCategoryId = newlyCreated.id
+        }
+      }
+    }
+
     const budgetData = {
       ...props.initialData,
       name: form.name || undefined,
       limit_value: Number(form.limit_value),
-      category_id: form.category_id,
+      category_id: finalCategoryId,
       period: 'monthly' as const
     } as Budget
 

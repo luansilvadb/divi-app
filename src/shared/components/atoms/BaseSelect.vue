@@ -14,6 +14,7 @@
       :placeholder="placeholder"
       :invalid="!!error"
       :aria-describedby="error ? `${id}-error` : undefined"
+      :editable="editable"
       fluid
       :pt="{
         root: { class: ['w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none flex items-center', 'hover:border-primary/30', 'focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 focus-within:bg-black/10 dark:focus-within:bg-black/60'] },
@@ -51,6 +52,7 @@ defineProps<{
   options: Array<{ label: string; value: string | number }>
   placeholder?: string
   error?: string
+  editable?: boolean
 }>()
 
 defineEmits(['update:modelValue'])
