@@ -47,7 +47,8 @@
   --color-glass-blur: 14px;
   --color-hover-border: rgba(30, 41, 59, 0.08);
   --color-glass-hover-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
-  --card-radius: 2rem;
+  --card-radius: 1.25rem;
+  --apple-squircle: squircle;
 }
 
 .dark {
@@ -90,5 +91,6 @@
   --color-glass-blur: 20px;
   --color-hover-border: rgba(74, 111, 165, 0.3);
   --color-glass-hover-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-  --card-radius: 2rem;
+  --card-radius: 1.25rem;
+  --apple-squircle: squircle;
 }
