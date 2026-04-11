@@ -23,7 +23,7 @@ Criação dos componentes visuais e integração com a interface do usuário.
 ## Phase 3: Sincronização e Integração Final
 Garantir que os dados sejam sincronizados com o backend e realizar o polimento final.
 
-- [ ] **TASK-05: Sincronização de Orçamentos (SyncEngine)**
+- [x] **TASK-05: Sincronização de Orçamentos (SyncEngine)** (020b3b1)
   - **Goal:** Integrar a tabela de orçamentos ao `SyncEngine` para persistência no Supabase.
   - **Details:** Atualizar `src/core/sync/SyncEngine.ts` para incluir a nova tabela. Criar as políticas de RLS necessárias no Supabase (se acessível).
 - [ ] **TASK-06: Testes de Integração e Mobile**
