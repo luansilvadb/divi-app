@@ -4,7 +4,9 @@
       :value="percentage"
       :showValue="false"
       class="h-2.5 rounded-full overflow-hidden bg-surface-50 dark:bg-surface-800/10 shadow-inner"
-
+      :pt="{
+        value: { style: { backgroundColor: barColor } }
+      }"
     >
       <template #default>
         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer opacity-30"></div>
@@ -16,8 +18,9 @@
 <script setup lang="ts">
 import ProgressBar from 'primevue/progressbar'
 import type { UIStatus } from '@/shared/types/ui'
+import { computed } from 'vue'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     percentage: number
     color?: string
@@ -31,6 +34,15 @@ withDefaults(
   },
 )
 
+const barColor = computed(() => {
+  if (props.color) return props.color
+  
+  if (props.isOverBudget || props.status === 'error') return 'var(--p-error-color)'
+  if (props.status === 'warning') return 'var(--p-warn-color)'
+  if (props.status === 'success') return 'var(--p-secondary-color)'
+  if (props.status === 'info') return 'var(--p-primary-color)'
+  
+  return 'var(--p-primary-color)'
+})
+
 </script>
-
-
