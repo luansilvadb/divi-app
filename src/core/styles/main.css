@@ -14,6 +14,12 @@
   --shadow-apple-low: var(--apple-shadow-low);
   --shadow-apple-medium: var(--apple-shadow-medium);
   --shadow-apple-high: var(--apple-shadow-high);
+
+  /* Apple Typography Tracking (Optical Sizing) */
+  --tracking-apple-tight: -0.033em; /* 19px */
+  --tracking-apple-body: -0.022em; /* 16-17px */
+  --tracking-apple-headline: -0.016em; /* 15px */
+  --tracking-apple-display: 0.014em; /* 20px+ */
 }
 
 /*
@@ -61,6 +67,24 @@
     transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: var(--tracking-apple-display);
+    font-weight: 800;
+  }
+
+  p,
+  span,
+  label,
+  input,
+  button {
+    letter-spacing: var(--tracking-apple-body);
   }
 
   /* Base Link styles */
