@@ -16,7 +16,7 @@ Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para al
 Aplicação dos princípios de curvatura contínua (squircle) e transparência em containers principais.
 
 - [x] Task: Refatorar o container `glass-card` para usar o raio de curvatura "Squircle Apple Style". (8b06e9e)
-- [ ] Task: Ajustar Sidebars e Headers para usar `backdrop-blur` e fundos translúcidos (Vibrant & Mixed).
+- [x] Task: Ajustar Sidebars e Headers para usar `backdrop-blur` e fundos translúcidos (Vibrant & Mixed). (269d850)
 - [ ] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
 
