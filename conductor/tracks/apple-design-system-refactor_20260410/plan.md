@@ -17,7 +17,7 @@ Aplicação dos princípios de curvatura contínua (squircle) e transparência e
 
 - [x] Task: Refatorar o container `glass-card` para usar o raio de curvatura "Squircle Apple Style". (8b06e9e)
 - [x] Task: Ajustar Sidebars e Headers para usar `backdrop-blur` e fundos translúcidos (Vibrant & Mixed). (269d850)
-- [ ] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis.
+- [x] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis. (082e29b)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
 
 ## Phase 3: UI Controls & Components (PrimeUI Styling)
