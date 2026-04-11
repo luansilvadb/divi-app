@@ -80,9 +80,9 @@
 import { computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
-import BudgetProgressBar from '../ui/components/BudgetProgressBar.vue'
+import BudgetProgressBar from '@/modules/budgets/ui/components/BudgetProgressBar.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import type { Budget } from '../domain/entities/Budget'
+import type { Budget } from '@/shared/domain/entities/Budget'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 

@@ -17,7 +17,6 @@ import { DexieSubscriptionRepository } from '../modules/subscriptions/infrastruc
 import { ActivityLogService } from '../modules/activity-log/application/services/ActivityLogService'
 import { ExportService } from '../modules/transactions/application/services/ExportService'
 import { AssetLoader } from '../shared/utils/asset-loader'
-import { BudgetLogicService } from '../modules/budgets/application/services/BudgetLogicService'
 import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 import { SyncEngine } from './sync/SyncEngine'
 import { PredictionService } from '../modules/transactions/application/PredictionService'
@@ -64,7 +63,6 @@ container.register(DI_TOKENS.PayeeRepository, new DexiePayeeRepository())
 container.register(DI_TOKENS.LoanRepository, new DexieLoanRepository())
 container.register(DI_TOKENS.BudgetRepository, new DexieBudgetRepository())
 container.register(DI_TOKENS.GoalRepository, new DexieGoalRepository())
-container.register(DI_TOKENS.BudgetLogicService, new BudgetLogicService())
 container.register(DI_TOKENS.GoalLogicService, new GoalLogicService())
 container.register(DI_TOKENS.SubscriptionRepository, new DexieSubscriptionRepository())
 const activityLogService = new ActivityLogService()

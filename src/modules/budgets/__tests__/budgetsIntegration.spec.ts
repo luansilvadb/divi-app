@@ -58,7 +58,7 @@ describe('Budgets Integration', () => {
     expect(budgetStore.budgets.length).toBe(1)
 
     // 4. Initial Consumption (0)
-    expect(budgetStore.getConsumed(budgetStore.budgets[0])).toBe(0)
+    expect(budgetStore.getConsumed(budgetStore.budgets[0]!)).toBe(0)
 
     // 5. Add Transaction
     await transactionStore.saveTransaction({
@@ -79,7 +79,7 @@ describe('Budgets Integration', () => {
     await new Promise(resolve => setTimeout(resolve, 100))
     
     // Check if consumed increased
-    const consumed = budgetStore.getConsumed(budgetStore.budgets[0])
+    const consumed = budgetStore.getConsumed(budgetStore.budgets[0]!)
     expect(consumed).toBe(150)
 
     budgetStore.dispose()

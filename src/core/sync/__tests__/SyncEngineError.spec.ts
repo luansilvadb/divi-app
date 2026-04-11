@@ -9,6 +9,7 @@ vi.mock('../../supabase', () => ({
   supabase: {
     auth: {
       getUser: vi.fn(),
+      getSession: vi.fn(),
     },
     from: vi.fn(() => {
       const mock = {
@@ -50,6 +51,11 @@ describe('SyncEngine Error Handling', () => {
         }
       },
       error: null 
+    } as any)
+
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: { session: { user: { id: 'u1' } } },
+      error: null
     } as any)
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })

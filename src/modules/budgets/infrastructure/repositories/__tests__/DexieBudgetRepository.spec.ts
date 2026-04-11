@@ -30,7 +30,7 @@ describe('DexieBudgetRepository', () => {
 
     const active = await repo.getAllActive()
     expect(active.length).toBe(1)
-    expect(active[0].id).toBe('b1')
+    expect(active[0]!.id).toBe('b1')
   })
 
   it('should delete a budget (soft delete)', async () => {

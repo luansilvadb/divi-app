@@ -83,7 +83,7 @@ describe('BudgetStore', () => {
     await new Promise(resolve => setTimeout(resolve, 100))
     
     expect(store.budgets.length).toBe(1)
-    expect(store.budgets[0].id).toBe('b1')
+    expect(store.budgets[0]!.id).toBe('b1')
     
     store.dispose()
   })

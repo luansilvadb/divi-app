@@ -12,7 +12,6 @@ export const DI_TOKENS = {
   LoanRepository: 'ILoanRepository',
   BudgetRepository: 'IBudgetRepository',
   GoalRepository: 'IGoalRepository',
-  BudgetLogicService: 'IBudgetLogicService',
   GoalLogicService: 'IGoalLogicService',
   SubscriptionRepository: 'ISubscriptionRepository',
   ActivityLogService: 'IActivityLogService',

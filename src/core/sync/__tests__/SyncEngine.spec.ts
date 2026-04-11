@@ -9,6 +9,7 @@ vi.mock('../../supabase', () => ({
   supabase: {
     auth: {
       getUser: vi.fn(),
+      getSession: vi.fn(),
     },
     from: vi.fn(),
   },
@@ -56,6 +57,11 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         }
       },
       error: null 
+    } as any)
+    
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: { session: { user: { id: 'test-user-id' } } },
+      error: null
     } as any)
     
     // Default mock behavior

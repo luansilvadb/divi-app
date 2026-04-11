@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BudgetProgressBar from '../BudgetProgressBar.vue'
+import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 
 describe('BudgetProgressBar.vue', () => {
   it('should calculate the correct color class based on percentage', () => {
@@ -12,8 +13,9 @@ describe('BudgetProgressBar.vue', () => {
     })
 
     // 40% spent
-    expect(wrapper.vm.percentage).toBe(40)
-    expect(wrapper.vm.status).toBe('success') // Green if < 60%? Let's check spec again.
+    const baseProgress = wrapper.findComponent(BaseProgressBar)
+    expect(baseProgress.props('percentage')).toBe(40)
+    expect(baseProgress.props('status')).toBe('success')
   })
 
   it('should be yellow when spent is 60%', () => {
@@ -24,8 +26,9 @@ describe('BudgetProgressBar.vue', () => {
       }
     })
     // 60% spent
-    expect(wrapper.vm.percentage).toBe(60)
-    expect(wrapper.vm.status).toBe('warning')
+    const baseProgress = wrapper.findComponent(BaseProgressBar)
+    expect(baseProgress.props('percentage')).toBe(60)
+    expect(baseProgress.props('status')).toBe('warning')
   })
 
   it('should be red when over budget', () => {
@@ -36,7 +39,8 @@ describe('BudgetProgressBar.vue', () => {
       }
     })
     // Over budget
-    expect(wrapper.vm.clampedPercentage).toBe(100)
-    expect(wrapper.vm.status).toBe('error')
+    const baseProgress = wrapper.findComponent(BaseProgressBar)
+    expect(baseProgress.props('percentage')).toBe(100)
+    expect(baseProgress.props('status')).toBe('error')
   })
 })
