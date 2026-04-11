@@ -16,7 +16,7 @@ Criação dos componentes visuais e integração com a interface do usuário.
 - [x] **TASK-03: Componente BudgetProgressBar** (a237a01)
   - **Goal:** Criar um componente de barra de progresso reutilizável que mude de cor conforme o consumo.
   - **Details:** Criar `src/modules/budgets/ui/components/BudgetProgressBar.vue` usando PrimeVue ou Vanilla CSS conforme os guidelines.
-- [ ] **TASK-04: Tela de Gestão de Orçamentos**
+- [x] **TASK-04: Tela de Gestão de Orçamentos** (f8c0668)
   - **Goal:** Desenvolver a interface principal para visualizar e gerenciar (CRUD) orçamentos.
   - **Details:** Criar `src/modules/budgets/ui/views/BudgetsView.vue`. Deve listar os orçamentos com suas respectivas barras de progresso.
 
