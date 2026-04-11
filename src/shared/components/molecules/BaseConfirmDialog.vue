@@ -16,7 +16,7 @@
   >
     <template v-if="!isMobile">
       <BaseCard
-        class="w-full shadow-[0_30px_70px_rgba(0,0,0,0.6)] border border-surface-200/10 !bg-surface-0 dark:bg-surface-800 overflow-hidden flex flex-col relative"
+        class="w-full apple-material-thick shadow-apple-high border border-surface-200/10 overflow-hidden flex flex-col relative"
         padding="none"
       >
         <div class="p-8 text-center flex flex-col items-center">
@@ -89,7 +89,7 @@
     </template>
     <template v-else>
       <div
-        class="bg-surface-0 dark:bg-surface-800 dark:bg-surface-0 dark:bg-surface-800 rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
+        class="apple-material-thick rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
       >
         <!-- Drag Handle for Visual Cue -->
         <div class="w-12 h-1.5 bg-white/10 rounded-full mb-8 shrink-0"></div>

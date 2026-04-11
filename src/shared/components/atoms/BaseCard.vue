@@ -1,7 +1,7 @@
 <template>
   <Card
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-300 dark:!bg-surface-700"
+    class="glass-card overflow-hidden transition-all duration-300"
     :class="{
       'cursor-pointer hover-glow active:scale-[0.98]': clickable,
       'border-error-main/50 animate-pulse-error': error,

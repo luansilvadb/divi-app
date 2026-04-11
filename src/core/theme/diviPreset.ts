@@ -117,7 +117,7 @@ const DiviPreset = definePreset(Aura, {
       root: { borderRadius: '0' },
     },
     card: {
-      root: { borderRadius: '2rem', shadow: 'none' },
+      root: { borderRadius: 'var(--card-radius)', shadow: 'none' },
       body: { padding: '0' },
       // @ts-expect-error Types in primevue theme might be incomplete
       content: { padding: '1.5rem' },
