@@ -85,8 +85,14 @@ export class SyncEngine {
     const store = this.safeStore()
     
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      // Use getSession instead of getUser to avoid NavigatorLock issues if possible
+      // or at least handle the error
+      const { data: { session }, error: authError } = await supabase.auth.getSession()
+      if (authError || !session?.user) {
+        this.isPushing = false
+        return
+      }
+      const user = session.user
 
       store?.setStatus('syncing')
 
@@ -102,6 +108,13 @@ export class SyncEngine {
         if (pendingRecords.length === 0) continue
 
         for (const record of pendingRecords) {
+          // Prevent RLS 403 errors by skipping records that don't belong to current user
+          if (record.user_id && record.user_id !== user.id) {
+            console.error(`[SyncEngine] Abandoning sync for ${tableName}:${record.id} - user_id mismatch. Marking as synced to stop retries.`)
+            await table.update(record.id, { sync_status: 'synced' })
+            continue
+          }
+
           // 1. Fetch current server state for this ID to check for conflicts
           const { data: serverRecord, error: fetchError } = await supabase
             .from(tableName)
@@ -188,7 +201,11 @@ export class SyncEngine {
       store?.setStatus('synced')
       store?.setLastSyncTime(new Date().toISOString())
     } catch (err) {
-      console.error('[SyncEngine] Push failed:', err)
+      if (err instanceof Error && err.name === 'NavigatorLockAcquireTimeoutError') {
+        console.warn('[SyncEngine] Auth lock timeout, will retry later.')
+      } else {
+        console.error('[SyncEngine] Push failed:', err)
+      }
       store?.setStatus('failed')
     } finally {
       this.isPushing = false
@@ -205,10 +222,15 @@ export class SyncEngine {
 
     this.isPulling = true
     const store = this.safeStore()
+    let hasChanges = false
     
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      const { data: { session }, error: authError } = await supabase.auth.getSession()
+      if (authError || !session?.user) {
+        this.isPulling = false
+        return
+      }
+      const user = session.user
 
       for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
@@ -226,9 +248,14 @@ export class SyncEngine {
           if (!local) {
             // New record from server
             await table.add({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+            hasChanges = true
           } else if (local.sync_status === 'synced') {
             // Overwrite local if it's already synced (server is ground truth)
-            await table.put({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+            // But only if server data is actually different or newer
+            if (item.server_updated_at !== local.server_updated_at) {
+              await table.put({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+              hasChanges = true
+            }
           } else {
             // Conflict check for pending local changes
             const serverTime = new Date(item.client_updated_at).getTime()
@@ -236,6 +263,7 @@ export class SyncEngine {
             
             if (serverTime > clientTime) {
               await table.put({ ...item, sync_status: 'synced', last_synced_at: new Date().toISOString() })
+              hasChanges = true
             }
           }
         }
@@ -247,12 +275,19 @@ export class SyncEngine {
         const orphans = localSynced.filter(r => !serverIds.has(r.id))
         if (orphans.length > 0) {
           await table.bulkDelete(orphans.map(o => o.id))
+          hasChanges = true
         }
       }
       
-      store?.notifyChange()
+      if (hasChanges) {
+        store?.notifyChange()
+      }
     } catch (err) {
-      console.error('[SyncEngine] Pull failed:', err)
+      if (err instanceof Error && err.name === 'NavigatorLockAcquireTimeoutError') {
+        // Silent warning for lock timeout during pull
+      } else {
+        console.error('[SyncEngine] Pull failed:', err)
+      }
     } finally {
       this.isPulling = false
     }
@@ -260,4 +295,3 @@ export class SyncEngine {
 }
 
 export default SyncEngine
-
