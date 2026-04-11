@@ -67,8 +67,9 @@
           label="Categoria"
           v-model="form.category_id"
           :options="store.categories.map((cat) => ({ label: cat.name, value: cat.id }))"
-          placeholder="Selecionar Categoria"
+          placeholder="Selecione ou digite nova"
           class="!mb-0"
+          editable
         />
 
         <BaseSelect
@@ -106,6 +107,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed } from 'vue'
+import { v7 as uuidv7 } from 'uuid'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
@@ -123,6 +125,12 @@ const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
 
 const isSubmitting = ref(false)
+
+const colors = [
+  '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', 
+  '#06b6d4', '#0ea5e9', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', 
+  '#d946ef', '#f43f5e', '#f43f5e', '#e11d48'
+]
 
 interface TransactionForm {
   title: string
@@ -210,12 +218,38 @@ async function handleSubmit() {
   
   isSubmitting.value = true
   try {
+    let finalCategoryId = form.category_id
+
+    // Lógica de criação de categoria inline
+    if (finalCategoryId) {
+      const isExistingCategory = store.categories.some(c => c.id === finalCategoryId)
+      
+      if (!isExistingCategory) {
+        const existingByName = store.categories.find(c => c.name.toLowerCase() === finalCategoryId.toLowerCase())
+        if (existingByName) {
+          finalCategoryId = existingByName.id
+        } else {
+          const randomColor = colors[Math.floor(Math.random() * colors.length)]
+          await store.saveCategory({
+            name: finalCategoryId,
+            color: randomColor
+          } as any)
+          
+          const newlyCreated = store.categories.find(c => c.name === finalCategoryId)
+          if (newlyCreated) {
+            finalCategoryId = newlyCreated.id
+          }
+        }
+      }
+    }
+
     const isEditing = !!props.initialData?.id
 
     if (isEditing) {
       const transactionData = {
         ...props.initialData,
         ...form,
+        category_id: finalCategoryId,
         sync_status: props.initialData.sync_status || 'pending',
         deleted: props.initialData.deleted || false,
         client_updated_at: new Date().toISOString(),
@@ -225,7 +259,8 @@ async function handleSubmit() {
     } else {
       const transactionData = {
         ...form,
-        id: crypto.randomUUID(),
+        category_id: finalCategoryId,
+        id: uuidv7(),
         user_id: '', // Will be filled by repo/service
         sync_status: 'pending',
         deleted: false,
