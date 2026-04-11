@@ -1,17 +1,8 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PrimeVue from 'primevue/config'
 import BaseInput from '../BaseInput.vue'
 
 describe('BaseInput.vue', () => {
-  const global = {
-    plugins: [PrimeVue],
-    stubs: {
-      IconField: true,
-      InputIcon: true,
-    },
-  }
-
   it('renders a label if provided', () => {
     const wrapper = mount(BaseInput, {
       props: {
@@ -19,7 +10,6 @@ describe('BaseInput.vue', () => {
         label: 'Test Label',
         modelValue: '',
       },
-      global,
     })
 
     const label = wrapper.find('label')
@@ -34,7 +24,6 @@ describe('BaseInput.vue', () => {
         id: 'test-input',
         modelValue: '',
       },
-      global,
     })
 
     expect(wrapper.find('label').exists()).toBe(false)
@@ -47,11 +36,10 @@ describe('BaseInput.vue', () => {
         modelValue: '',
         type: 'text',
       },
-      global,
     })
 
-    const input = wrapper.find('input[type="text"]')
-    await input.setValue('new text')
+    const input = wrapper.findComponent({ name: 'NInput' })
+    await input.vm.$emit('update:value', 'new text')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['new text'])
@@ -64,11 +52,10 @@ describe('BaseInput.vue', () => {
         modelValue: null,
         type: 'number',
       },
-      global,
     })
 
-    const input = wrapper.findComponent({ name: 'InputNumber' })
-    await input.vm.$emit('update:modelValue', 42)
+    const input = wrapper.findComponent({ name: 'NInputNumber' })
+    await input.vm.$emit('update:value', 42)
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([42])
@@ -81,7 +68,6 @@ describe('BaseInput.vue', () => {
         modelValue: '',
         error: 'This is an error message',
       },
-      global,
     })
 
     const errorMsg = wrapper.find('#test-error-error')

@@ -40,8 +40,9 @@ describe('BaseIconBox.vue', () => {
       props: { color: '#ff0000' },
     })
 
-    expect(wrapper.attributes('style')).toContain('background-color: rgba(255, 0, 0, 0.082)')
-    expect(wrapper.attributes('style')).toContain('color: rgb(255, 0, 0)')
+    expect(wrapper.attributes('style')).toContain('background-color: #ff000015')
+    expect(wrapper.attributes('style')).toContain('color: #ff0000')
+    expect(wrapper.attributes('style')).toContain('border: 1px solid #ff000025')
   })
 
   it('applies css var color style correctly', () => {
@@ -49,13 +50,14 @@ describe('BaseIconBox.vue', () => {
       props: { color: 'var(--my-color)' },
     })
 
-    expect(wrapper.attributes('style')).toContain('background-color: rgba(var(--my-color), 0.1)')
+    expect(wrapper.attributes('style')).toContain('background-color: var(--my-color)15')
     expect(wrapper.attributes('style')).toContain('color: var(--my-color)')
   })
 
-  it('applies default classes if no color is provided', () => {
+  it('applies default color if none is provided', () => {
     const wrapper = mount(BaseIconBox)
-    expect(wrapper.classes()).toContain('bg-primary/10')
-    expect(wrapper.classes()).toContain('text-primary')
+    // Default color is #8b5cf6
+    expect(wrapper.attributes('style')).toContain('background-color: #8b5cf615')
+    expect(wrapper.attributes('style')).toContain('color: #8b5cf6')
   })
 })

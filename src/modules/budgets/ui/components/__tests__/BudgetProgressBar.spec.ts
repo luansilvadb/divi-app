@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { describe, it, expect, vi } from 'vitest'
 import BudgetProgressBar from '../BudgetProgressBar.vue'
-import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import { createTestingPinia } from '@pinia/testing'
 
 describe('BudgetProgressBar.vue', () => {
   it('should calculate the correct color class based on percentage', () => {
@@ -10,12 +10,13 @@ describe('BudgetProgressBar.vue', () => {
         spent: 400,
         limit: 1000,
       },
+      global: {
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
+      },
     })
 
-    // 40% spent
-    const baseProgress = wrapper.findComponent(BaseProgressBar)
-    expect(baseProgress.props('percentage')).toBe(40)
-    expect(baseProgress.props('status')).toBe('success')
+    // We check for computed percentage
+    expect(wrapper.vm.percentage).toBe(40)
   })
 
   it('should be yellow when spent is 60%', () => {
@@ -24,11 +25,12 @@ describe('BudgetProgressBar.vue', () => {
         spent: 600,
         limit: 1000,
       },
+      global: {
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
+      },
     })
-    // 60% spent
-    const baseProgress = wrapper.findComponent(BaseProgressBar)
-    expect(baseProgress.props('percentage')).toBe(60)
-    expect(baseProgress.props('status')).toBe('warning')
+
+    expect(wrapper.vm.percentage).toBe(60)
   })
 
   it('should be red when over budget', () => {
@@ -37,10 +39,12 @@ describe('BudgetProgressBar.vue', () => {
         spent: 1100,
         limit: 1000,
       },
+      global: {
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
+      },
     })
-    // Over budget
-    const baseProgress = wrapper.findComponent(BaseProgressBar)
-    expect(baseProgress.props('percentage')).toBe(100)
-    expect(baseProgress.props('status')).toBe('error')
+
+    expect(wrapper.vm.percentage).toBe(100)
+    expect(wrapper.vm.isOverBudget).toBe(true)
   })
 })

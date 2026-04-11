@@ -1,19 +1,14 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PrimeVue from 'primevue/config'
+import { NTag } from 'naive-ui'
 import BaseBadge from '../BaseBadge.vue'
 
 describe('BaseBadge.vue', () => {
-  const global = {
-    plugins: [PrimeVue],
-  }
-
   it('renders default slot content', () => {
     const wrapper = mount(BaseBadge, {
       slots: {
         default: 'Custom Badge',
       },
-      global,
     })
 
     expect(wrapper.text()).toContain('Custom Badge')
@@ -24,59 +19,52 @@ describe('BaseBadge.vue', () => {
       props: {
         label: 'Prop Label',
       },
-      global,
     })
 
     expect(wrapper.text()).toContain('Prop Label')
   })
 
-  it('maps success status to correct PrimeVue severity', () => {
+  it('maps success status to correct type', () => {
     const wrapper = mount(BaseBadge, {
       props: {
         status: 'success',
       },
-      global,
     })
 
-    // We check that the component instance has severity success,
-    // rather than looking for a DOM attribute which might be converted to classes by PrimeVue
-    const badge = wrapper.findComponent({ name: 'Badge' })
-    expect(badge.props('severity')).toBe('success')
+    const badge = wrapper.findComponent(NTag)
+    expect(badge.props('type')).toBe('success')
   })
 
-  it('maps error status to correct PrimeVue severity', () => {
+  it('maps error status to correct type', () => {
     const wrapper = mount(BaseBadge, {
       props: {
         status: 'error',
       },
-      global,
     })
 
-    const badge = wrapper.findComponent({ name: 'Badge' })
-    expect(badge.props('severity')).toBe('danger')
+    const badge = wrapper.findComponent(NTag)
+    expect(badge.props('type')).toBe('error')
   })
 
-  it('maps warning status to correct PrimeVue severity', () => {
+  it('maps warning status to correct type', () => {
     const wrapper = mount(BaseBadge, {
       props: {
         status: 'warning',
       },
-      global,
     })
 
-    const badge = wrapper.findComponent({ name: 'Badge' })
-    expect(badge.props('severity')).toBe('warn')
+    const badge = wrapper.findComponent(NTag)
+    expect(badge.props('type')).toBe('warning')
   })
 
-  it('maps info status to correct PrimeVue severity', () => {
+  it('maps info status to correct type', () => {
     const wrapper = mount(BaseBadge, {
       props: {
         status: 'info',
       },
-      global,
     })
 
-    const badge = wrapper.findComponent({ name: 'Badge' })
-    expect(badge.props('severity')).toBe('info')
+    const badge = wrapper.findComponent(NTag)
+    expect(badge.props('type')).toBe('info')
   })
 })

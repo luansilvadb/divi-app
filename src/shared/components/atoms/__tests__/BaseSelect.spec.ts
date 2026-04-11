@@ -1,26 +1,16 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PrimeVue from 'primevue/config'
 import BaseSelect from '../BaseSelect.vue'
-
-// Mock matchMedia for PrimeVue Select component
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(), // deprecated
-    removeListener: vi.fn(), // deprecated
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-})
 
 describe('BaseSelect.vue', () => {
   const global = {
-    plugins: [PrimeVue],
+    stubs: {
+      NSelect: {
+        name: 'NSelect',
+        props: ['value', 'options'],
+        template: '<div class="n-select-stub"><slot /></div>',
+      },
+    },
   }
 
   const defaultOptions = [
@@ -55,8 +45,8 @@ describe('BaseSelect.vue', () => {
       global,
     })
 
-    const select = wrapper.findComponent({ name: 'Select' })
-    await select.vm.$emit('update:modelValue', 2)
+    const select = wrapper.findComponent({ name: 'NSelect' })
+    await select.vm.$emit('update:value', 2)
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([2])

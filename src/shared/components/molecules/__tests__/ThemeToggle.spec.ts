@@ -40,10 +40,10 @@ describe('ThemeToggle.vue', () => {
     store.setTheme('light')
 
     const wrapper = mount(ThemeToggle)
-    const icon = wrapper.find('span')
+    const icon = wrapper.find('i')
 
-    expect(icon.classes()).toContain('pi-moon')
-    expect(icon.classes()).not.toContain('pi-sun')
+    expect(icon.classes()).toContain('i-lucide-moon')
+    expect(icon.classes()).not.toContain('i-lucide-sun')
   })
 
   it('displays the sun icon when in dark mode', async () => {
@@ -51,10 +51,10 @@ describe('ThemeToggle.vue', () => {
     store.setTheme('dark')
 
     const wrapper = mount(ThemeToggle)
-    const icon = wrapper.find('span')
+    const icon = wrapper.find('i')
 
-    expect(icon.classes()).toContain('pi-sun')
-    expect(icon.classes()).not.toContain('pi-moon')
+    expect(icon.classes()).toContain('i-lucide-sun')
+    expect(icon.classes()).not.toContain('i-lucide-moon')
   })
 
   it('toggles theme when clicked', async () => {

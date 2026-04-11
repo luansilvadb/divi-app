@@ -1,11 +1,21 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import QuickEntryModal from '../QuickEntryModal.vue'
-import PrimeVue from 'primevue/config'
-import ToastService from 'primevue/toastservice'
 import { createTestingPinia } from '@pinia/testing'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
+
+// Mock Naive UI useMessage
+vi.mock('naive-ui', async () => {
+  const actual = await vi.importActual('naive-ui')
+  return {
+    ...actual,
+    useMessage: () => ({
+      success: vi.fn(),
+      error: vi.fn(),
+    }),
+  }
+})
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -53,16 +63,16 @@ describe('QuickEntryModal', () => {
         ...props,
       },
       global: {
-        plugins: [PrimeVue, ToastService, createTestingPinia({ createSpy: vi.fn })],
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
         stubs: {
-          Dialog: {
-            template: '<div v-if="visible"><slot /></div>',
-            props: ['visible'],
+          NModal: {
+            template: '<div v-if="show"><slot /><slot name="footer" /></div>',
+            props: ['show'],
           },
-          InputNumber: true,
-          InputText: true,
-          Select: true,
-          Button: true,
+          NInputNumber: true,
+          NInput: true,
+          NSelect: true,
+          NButton: true,
         },
       },
     })
@@ -76,12 +86,7 @@ describe('QuickEntryModal', () => {
     })
 
     const wrapper = mountComponent()
-    const vm = wrapper.vm as unknown as {
-      amount: number | null
-      payee: string
-      categoryId: string
-      walletId: string
-    }
+    const vm = wrapper.vm as any
 
     vm.amount = 100
     vm.payee = 'Starbucks'
@@ -94,11 +99,7 @@ describe('QuickEntryModal', () => {
 
   it('deve chamar saveTransaction e enqueueSync ao salvar', async () => {
     const wrapper = mountComponent()
-    const vm = wrapper.vm as unknown as {
-      amount: number | null
-      payee: string
-      handleSave(): Promise<void>
-    }
+    const vm = wrapper.vm as any
 
     vm.amount = 100
     vm.payee = 'Starbucks'

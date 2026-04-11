@@ -1,30 +1,17 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PrimeVue from 'primevue/config'
+import { NSkeleton } from 'naive-ui'
 import BaseSkeleton from '../BaseSkeleton.vue'
 
 describe('BaseSkeleton.vue', () => {
-  const global = {
-    plugins: [PrimeVue],
-    stubs: {
-      Skeleton: {
-        props: ['width', 'height', 'borderRadius'],
-        template:
-          '<div class="p-skeleton" :data-width="width" :data-height="height" :data-radius="borderRadius"><slot /></div>',
-      },
-    },
-  }
-
   it('renders with default props', () => {
-    const wrapper = mount(BaseSkeleton, {
-      global,
-    })
+    const wrapper = mount(BaseSkeleton)
 
-    const skeleton = wrapper.find('.p-skeleton')
+    const skeleton = wrapper.findComponent(NSkeleton)
     expect(skeleton.exists()).toBe(true)
-    expect(skeleton.attributes('data-width')).toBe('100%')
-    expect(skeleton.attributes('data-height')).toBe('20px')
-    expect(skeleton.attributes('data-radius')).toBe('8px')
+    expect(skeleton.props('width')).toBe('100%')
+    expect(skeleton.props('height')).toBe('20px')
+    expect(skeleton.props('sharp')).toBe(true)
   })
 
   it('renders with custom width and height', () => {
@@ -33,12 +20,11 @@ describe('BaseSkeleton.vue', () => {
         width: '50px',
         height: '50px',
       },
-      global,
     })
 
-    const skeleton = wrapper.find('.p-skeleton')
-    expect(skeleton.attributes('data-width')).toBe('50px')
-    expect(skeleton.attributes('data-height')).toBe('50px')
+    const skeleton = wrapper.findComponent(NSkeleton)
+    expect(skeleton.props('width')).toBe('50px')
+    expect(skeleton.props('height')).toBe('50px')
   })
 
   it('applies full border radius when rounded is true', () => {
@@ -46,11 +32,11 @@ describe('BaseSkeleton.vue', () => {
       props: {
         rounded: true,
       },
-      global,
     })
 
-    const skeleton = wrapper.find('.p-skeleton')
-    expect(skeleton.attributes('data-radius')).toBe('50%')
+    const skeleton = wrapper.findComponent(NSkeleton)
+    expect(skeleton.props('circle')).toBe(true)
+    expect(skeleton.props('sharp')).toBe(false)
   })
 
   it('applies custom classes', () => {
@@ -58,11 +44,9 @@ describe('BaseSkeleton.vue', () => {
       props: {
         customClass: 'my-custom-class',
       },
-      global,
     })
 
-    // Skeleton wrapper should have the class passed via the template
-    // In our stub, we can check wrapper classes.
-    expect(wrapper.find('.p-skeleton').classes()).toContain('my-custom-class')
+    const skeleton = wrapper.findComponent(NSkeleton)
+    expect(skeleton.classes()).toContain('my-custom-class')
   })
 })

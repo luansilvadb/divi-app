@@ -13,3 +13,7 @@ Este plano detalha a correção do problema de renderização dos ícones Lucide
 ## Phase 3: Verificação e Polimento
 - [x] **Task: Validar renderização em todos os módulos**
 - [x] **Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)**
+
+## Phase: Review Fixes
+- [~] Task: Apply review suggestions and fix test suite regressions
+

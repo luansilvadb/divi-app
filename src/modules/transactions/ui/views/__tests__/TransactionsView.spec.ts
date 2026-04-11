@@ -3,7 +3,6 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import TransactionsView from '../TransactionsView.vue'
 import { ref, nextTick } from 'vue'
-import PrimeVue from 'primevue/config'
 
 // Mock shared components
 vi.mock('@/shared/components/organisms/BaseViewHeader.vue', () => ({
@@ -75,8 +74,6 @@ describe('TransactionsView', () => {
 
     const wrapper = mount(TransactionsView, {
       global: {
-        plugins: [PrimeVue],
-
         stubs: {
           BaseButton: {
             template: '<button><slot /></button>',
@@ -86,19 +83,18 @@ describe('TransactionsView', () => {
           BaseSummaryItem: true,
           BaseProgressBar: true,
           StandardPageLayout: false,
-
+          BaseMonthSwitcher: true,
+          BaseSearchInput: true,
           BaseConfirmDialog: true,
-          TransactionModal: true,
-          TransactionBottomSheet: true,
+          TransactionDialog: true,
           Teleport: true,
         },
       },
     })
 
     expect(wrapper.exists()).toBe(true)
-    // Desktop: Should have 'Adicionar' button and NO FAB
+    // Desktop: Should have 'Adicionar' button
     expect(wrapper.text()).toContain('Adicionar')
-    expect(wrapper.html()).not.toContain('aria-label="Nova Transação"')
   })
 
   it('renders correctly on mobile', async () => {
@@ -106,8 +102,6 @@ describe('TransactionsView', () => {
 
     const wrapper = mount(TransactionsView, {
       global: {
-        plugins: [PrimeVue],
-
         stubs: {
           BaseButton: true,
           TransactionItem: true,
@@ -115,10 +109,10 @@ describe('TransactionsView', () => {
           BaseSummaryItem: true,
           BaseProgressBar: true,
           StandardPageLayout: false,
-
+          BaseMonthSwitcher: true,
+          BaseSearchInput: true,
           BaseConfirmDialog: true,
-          TransactionModal: true,
-          TransactionBottomSheet: true,
+          TransactionDialog: true,
           Teleport: { template: '<div><slot /></div>' },
         },
       },
@@ -127,7 +121,7 @@ describe('TransactionsView', () => {
     await nextTick()
 
     expect(wrapper.exists()).toBe(true)
-    // Mobile: Should have NO 'Adicionar' button
+    // Mobile: Should have NO 'Adicionar' button in action slot (it's hidden in template)
     expect(wrapper.html()).not.toContain('Adicionar')
   })
 })

@@ -1,14 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import PrimeVue from 'primevue/config'
 import BaseCard from '../BaseCard.vue'
 
 describe('BaseCard.vue', () => {
   const global = {
-    plugins: [PrimeVue],
     stubs: {
+      NCard: {
+        template: '<div class="n-card"><slot name="header" /><slot name="header-extra" /><slot /><slot name="footer" /></div>'
+      },
+      NSkeleton: true,
+      NButton: true,
       BaseIconBox: true,
-      BaseSkeleton: true,
     },
   }
 
@@ -56,7 +58,7 @@ describe('BaseCard.vue', () => {
     })
 
     expect(wrapper.text()).toContain('Custom Error Message')
-    const retryBtn = wrapper.find('button')
+    const retryBtn = wrapper.findComponent({ name: 'NButton' })
     expect(retryBtn.exists()).toBe(true)
 
     await retryBtn.trigger('click')
@@ -83,7 +85,7 @@ describe('BaseCard.vue', () => {
       global,
     })
 
-    expect(wrapper.findComponent({ name: 'BaseSkeleton' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'NSkeleton' }).exists()).toBe(true)
   })
 
   it('emits click when clickable and enter is pressed', async () => {

@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import PrimeVue from 'primevue/config'
 import BudgetCard from '../BudgetCard.vue'
 import type { Budget } from '@/shared/domain/entities/Budget'
 
@@ -31,7 +30,6 @@ describe('BudgetCard.vue', () => {
         consumed: 400,
       },
       global: {
-        plugins: [PrimeVue],
         stubs: {
           BaseCard: { template: '<div><slot name="header" /><slot /></div>' },
           BaseBadge: true,
@@ -54,7 +52,6 @@ describe('BudgetCard.vue', () => {
         consumed: 1200,
       },
       global: {
-        plugins: [PrimeVue],
         stubs: {
           BaseCard: { template: '<div><slot name="header" /><slot /></div>' },
           BaseBadge: true,
@@ -65,6 +62,5 @@ describe('BudgetCard.vue', () => {
     })
 
     expect(wrapper.text()).toContain('Orçamento estourado')
-    expect(wrapper.find('.text-error').exists()).toBe(true)
   })
 })

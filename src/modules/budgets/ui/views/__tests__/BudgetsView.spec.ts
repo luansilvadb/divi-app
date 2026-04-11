@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import PrimeVue from 'primevue/config'
 import BudgetsView from '../BudgetsView.vue'
 import { useBudgetStore } from '@/modules/budgets/application/stores/budgetStore'
 
@@ -31,11 +30,11 @@ describe('BudgetsView.vue', () => {
 
     const wrapper = mount(BudgetsView, {
       global: {
-        plugins: [PrimeVue],
         stubs: {
           BaseButton: true,
           BaseCard: true,
           BaseSummaryItem: true,
+          BudgetDialog: true,
         },
       },
     })
@@ -50,11 +49,11 @@ describe('BudgetsView.vue', () => {
 
     const wrapper = mount(BudgetsView, {
       global: {
-        plugins: [PrimeVue],
         stubs: {
           BaseButton: true,
           BaseCard: true,
           BaseSummaryItem: true,
+          BudgetDialog: true,
         },
       },
     })

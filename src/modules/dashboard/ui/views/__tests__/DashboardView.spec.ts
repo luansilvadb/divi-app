@@ -79,8 +79,8 @@ describe('DashboardView', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Nenhuma transação registrada')
-    expect(wrapper.text()).toContain('Que tal começar agora?')
+    expect(wrapper.text()).toContain('Sem transações')
+    expect(wrapper.text()).toContain('Comece seu controle hoje!')
 
     const ctaButton = wrapper.findAll('button').find((b) => b.text().includes('Começar'))
     expect(ctaButton).toBeDefined()

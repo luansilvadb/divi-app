@@ -31,7 +31,7 @@ describe('BaseButton.vue', () => {
     // In our mock, severity might not pass through easily unless we use the real component.
     // Let's test the class directly or simply test that it mounts without crashing.
     // For now we check the base classes.
-    expect(wrapper.classes()).toContain('font-bold')
+    expect(wrapper.classes()).toContain('!font-bold')
     expect(wrapper.classes()).toContain('transition-all')
     expect(wrapper.classes()).toContain('shadow-lg') // Not outline or ghost
   })

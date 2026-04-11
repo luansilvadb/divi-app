@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { NSkeleton } from 'naive-ui'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     width?: string | number
     height?: string | number
