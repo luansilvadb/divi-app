@@ -25,7 +25,16 @@
   /* Apple Shadows - Light Mode */
   --apple-shadow-low: 0 1px 3px rgba(0, 0, 0, 0.1);
   --apple-shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --apple-shadow-high: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 1px rgba(0, 0, 0, 0.1);
+  --apple-shadow-high:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 1px rgba(0, 0, 0, 0.1);
+
+  /* Apple Materials (Blur & Vibrancy) */
+  --apple-vibrancy: saturate(180%);
+  --apple-blur-ultra-thin: 10px;
+  --apple-blur-thin: 20px;
+  --apple-blur-regular: 40px;
+  --apple-blur-thick: 50px;
 
   /* Brand Tokens - Hex Reference for SSoT Alignment */
   --color-primary-base: var(--apple-system-blue);
@@ -60,7 +69,7 @@
   --apple-system-tertiary-background: #2c2c2e;
 
   /* Apple Semantic Labels - Dark Mode */
-  --apple-label: #FFFFFF;
+  --apple-label: #ffffff;
   --apple-secondary-label: rgba(235, 235, 245, 0.6);
   --apple-tertiary-label: rgba(235, 235, 245, 0.3);
   --apple-quaternary-label: rgba(235, 235, 245, 0.18);
@@ -74,7 +83,6 @@
   --color-primary-base: var(--apple-system-blue);
   --color-secondary-base: var(--apple-system-green);
   --color-accent-base: var(--apple-system-orange);
-
 
   /* Glassmorphism Tokens - Unique to Divi */
   --color-glass-bg: rgba(19, 24, 36, 0.6);
