@@ -26,6 +26,6 @@ Garantir que os dados sejam sincronizados com o backend e realizar o polimento f
 - [x] **TASK-05: Sincronização de Orçamentos (SyncEngine)** (020b3b1)
   - **Goal:** Integrar a tabela de orçamentos ao `SyncEngine` para persistência no Supabase.
   - **Details:** Atualizar `src/core/sync/SyncEngine.ts` para incluir a nova tabela. Criar as políticas de RLS necessárias no Supabase (se acessível).
-- [ ] **TASK-06: Testes de Integração e Mobile**
+- [x] **TASK-06: Testes de Integração e Mobile** (980f5b8)
   - **Goal:** Validar o fluxo completo em diferentes cenários e dispositivos.
   - **Details:** Escrever testes em `src/modules/budgets/__tests__/` e validar a responsividade no mobile.
