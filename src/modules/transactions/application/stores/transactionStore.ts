@@ -1,3 +1,4 @@
+import { v7 as uuidv7 } from 'uuid'
 import { defineStore } from 'pinia'
 import { ref, shallowRef, computed, watch } from 'vue' // watch adicionado
 import { container } from '@/core/di'
@@ -164,6 +165,29 @@ export const useTransactionStore = defineStore('transactions', () => {
     categoryMap.value = map
   }
 
+  async function saveCategory(category: Category) {
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const enriched: Category = {
+      ...category,
+      id: category.id || uuidv7(),
+      user_id: category.user_id || activeUserId,
+      sync_status: 'pending',
+      deleted: false,
+      client_updated_at: new Date().toISOString(),
+      version: category.version || 1
+    }
+
+    try {
+      await categoryRepo.save(enriched)
+      await fetchCategories()
+    } catch (err) {
+      console.error('Erro ao salvar categoria:', err)
+      throw err
+    }
+  }
+
   async function saveTransaction(transaction: Transaction) {
     // 1. Validação de Domínio (Previne "gohorse")
     if (transaction.amount < 0) {
@@ -176,7 +200,7 @@ export const useTransactionStore = defineStore('transactions', () => {
 
     const enriched: Transaction = {
       ...transaction,
-      id: transaction.id || crypto.randomUUID(),
+      id: transaction.id || uuidv7(),
       user_id: transaction.user_id || activeUserId,
       date: transaction.date || new Date().toISOString().slice(0, 10),
       sync_status: 'pending',
@@ -295,6 +319,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     groupedTransactions,
     fetchWallets,
     fetchCategories,
+    saveCategory,
     fetchTransactionsByMonth,
     saveTransaction,
     deleteTransaction,
