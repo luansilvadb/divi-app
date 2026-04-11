@@ -1,12 +1,14 @@
 :root {
   /* Apple System Colors - Light Mode */
   --apple-system-blue: #007aff;
+  --apple-system-blue-rgb: 0, 122, 255;
   --apple-system-green: #34c759;
   --apple-system-indigo: #5856d6;
   --apple-system-orange: #ff9500;
   --apple-system-pink: #ff2d55;
   --apple-system-purple: #af52de;
   --apple-system-red: #ff3b30;
+  --apple-system-red-rgb: 255, 59, 48;
   --apple-system-teal: #5ac8fa;
   --apple-system-yellow: #ffcc00;
   --apple-system-gray: #8e8e93;
@@ -56,12 +58,14 @@
 .dark {
   /* Apple System Colors - Dark Mode */
   --apple-system-blue: #0a84ff;
+  --apple-system-blue-rgb: 10, 132, 255;
   --apple-system-green: #30d158;
   --apple-system-indigo: #5e5ce6;
   --apple-system-orange: #ff9f0a;
   --apple-system-pink: #ff375f;
   --apple-system-purple: #bf5af2;
   --apple-system-red: #ff453a;
+  --apple-system-red-rgb: 255, 69, 58;
   --apple-system-teal: #64d2ff;
   --apple-system-yellow: #ffd60a;
   --apple-system-gray: #8e8e93;

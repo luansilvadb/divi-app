@@ -96,6 +96,31 @@
     -webkit-backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-thick));
   }
 
+  /* Apple Buttons */
+  .apple-button-filled {
+    background-color: var(--apple-system-blue) !important;
+    color: #ffffff !important;
+    box-shadow: var(--apple-shadow-low) !important;
+  }
+
+  .apple-button-tinted {
+    background-color: rgba(var(--apple-system-blue-rgb), 0.15) !important;
+    color: var(--apple-system-blue) !important;
+    border: none !important;
+  }
+
+  .apple-button-danger-filled {
+    background-color: var(--apple-system-red) !important;
+    color: #ffffff !important;
+    box-shadow: var(--apple-shadow-low) !important;
+  }
+
+  .apple-button-danger-tinted {
+    background-color: rgba(var(--apple-system-red-rgb), 0.15) !important;
+    color: var(--apple-system-red) !important;
+    border: none !important;
+  }
+
   /* Global Dashboard View Standardization */
   .view-wrapper {
     width: 100%;

@@ -9,8 +9,9 @@
     v-bind="$attrs"
     :class="[
       'font-bold rounded-xl transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
-      { 'shadow-lg': !['outline', 'ghost'].includes(variant) },
-      { '!bg-surface-700 hover:!bg-surface-600 !text-white !border-none': variant === 'primary' },
+      { 'apple-button-filled': variant === 'primary' },
+      { 'apple-button-tinted': variant === 'secondary' },
+      { 'apple-button-danger-filled': variant === 'danger' },
     ]"
   >
     <slot />
