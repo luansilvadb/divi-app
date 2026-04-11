@@ -1,46 +1,60 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
-import type { IBudgetLogicService } from '../../domain/contracts/IBudgetLogicService'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import type { Subscription } from 'rxjs'
 
 export const useBudgetStore = defineStore('budgets', () => {
   const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.BudgetRepository)
-  const budgetLogic = container.resolve<IBudgetLogicService>(DI_TOKENS.BudgetLogicService)
   const transactionStore = useTransactionStore()
 
   const budgets = ref<Budget[]>([])
   const isLoading = ref(false)
-  const searchQuery = ref('')
+  let budgetSubscription: Subscription | null = null
 
-  const fetchBudgets = async () => {
+  function initialize() {
     isLoading.value = true
-    try {
-      budgets.value = await budgetRepo.getAllActive()
-    } finally {
-      isLoading.value = false
-    }
+    budgetSubscription = budgetRepo.watchAll().subscribe({
+      next: (data) => {
+        budgets.value = data
+        isLoading.value = false
+      },
+      error: (err) => {
+        console.error('BudgetStore: Error watching budgets', err)
+        isLoading.value = false
+      }
+    })
+  }
+
+  function dispose() {
+    budgetSubscription?.unsubscribe()
   }
 
   const getConsumed = (budget: Budget) => {
-    return budgetLogic.calculateConsumption(budget, transactionStore.transactions)
+    // Current month transactions from transactionStore (which are already filtered/reactive)
+    return transactionStore.transactions
+      .filter(t => t.category_id === budget.category_id && !t.deleted)
+      .reduce((acc, t) => acc + t.amount, 0)
   }
 
-  const totalBudgeted = computed(() => budgets.value.reduce((sum, b) => sum + b.limit_value, 0))
+  async function saveBudget(budget: Budget) {
+    await budgetRepo.save(budget)
+  }
 
-  const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
+  async function deleteBudget(id: string) {
+    await budgetRepo.delete(id)
+  }
 
   return {
     budgets,
     isLoading,
-    searchQuery,
-    fetchBudgets,
+    initialize,
+    dispose,
     getConsumed,
-    totalBudgeted,
-    totalConsumed,
+    saveBudget,
+    deleteBudget
   }
 })
-
