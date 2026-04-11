@@ -29,11 +29,11 @@ Estilização minuciosa dos componentes do PrimeUI para refletir a estética da 
 - [x] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS. (b4e3e51)
 - [x] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
 
-## Phase 4: Typography & Motion (Details & Refinement)
+## Phase 4: Typography & Motion (Details & Refinement) [checkpoint: b6de8b2]
 
 Ajustes finais na tipografia e inclusão de animações fluidas típicas da Apple.
 
 - [x] Task: Ajustar pesos de fonte, kerning e escalas tipográficas para o estilo SF Pro. (0045c30)
 - [x] Task: Implementar transições suaves de hover e feedbacks visuais em componentes interativos. (5a463cd)
 - [x] Task: Realizar auditoria visual completa em Light e Dark Mode para garantir contraste e estética. (6e72490)
-- [ ] Task: Conductor - User Manual Verification 'Phase 4: Typography & Motion' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4: Typography & Motion' (Protocol in workflow.md)
