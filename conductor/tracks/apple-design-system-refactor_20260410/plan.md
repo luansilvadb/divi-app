@@ -2,14 +2,14 @@
 
 ## Context7 MCP: https://developer.apple.com/design/human-interface-guidelines/
 
-## Phase 1: Foundation (Apple System Tokens)
+## Phase 1: Foundation (Apple System Tokens) [checkpoint: e5a6e0b]
 
 Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para alinhar a paleta de cores e os princípios básicos de design com os da Apple.
 
 - [x] Task: Definir cores nativas da Apple (SystemBlue, SystemPink, SystemGray, etc.) no `theme.css`. (5503cf3)
 - [x] Task: Configurar tokens de sombra (shadows) suaves no Tailwind CSS v4 (`main.css`). (d4573f9)
 - [x] Task: Definir variáveis globais de `backdrop-blur` e `vibrancy` para glassmorphism. (ab75eb3)
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Layout & Surfaces (Glassmorphism & Squircle)
 
