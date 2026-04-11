@@ -361,4 +361,44 @@
     border: 0.5px solid rgba(0, 0, 0, 0.04) !important;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15) !important;
   }
+
+  /* PrimeVue Badges - Apple Tinted Style */
+  .p-badge {
+    font-weight: 800 !important;
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.5rem !important;
+    border-radius: 6px !important;
+    border: none !important;
+  }
+
+  .p-badge-success {
+    background: rgba(var(--apple-system-green-rgb), 0.15) !important;
+    color: var(--apple-system-green) !important;
+  }
+
+  .p-badge-danger {
+    background: rgba(var(--apple-system-red-rgb), 0.15) !important;
+    color: var(--apple-system-red) !important;
+  }
+
+  .p-badge-warn {
+    background: rgba(var(--apple-system-orange-rgb), 0.15) !important;
+    color: var(--apple-system-orange) !important;
+  }
+
+  .p-badge-info {
+    background: rgba(var(--apple-system-blue-rgb), 0.15) !important;
+    color: var(--apple-system-blue) !important;
+  }
+
+  .p-badge-secondary {
+    background: rgba(var(--apple-system-gray-rgb), 0.15) !important;
+    color: var(--apple-system-gray) !important;
+  }
+
+  /* PrimeVue ProgressBar - Apple Style */
+  .p-progressbar {
+    background: rgba(var(--apple-system-gray-rgb), 0.1) !important;
+    border-radius: 9999px !important;
+  }
 }
