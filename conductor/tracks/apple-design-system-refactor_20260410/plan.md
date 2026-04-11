@@ -1,14 +1,18 @@
 # Implementation Plan: Apple-Style Design System Refactor
 
+## Context7 MCP: https://developer.apple.com/design/human-interface-guidelines/
+
 ## Phase 1: Foundation (Apple System Tokens)
+
 Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para alinhar a paleta de cores e os princípios básicos de design com os da Apple.
 
-- [ ] Task: Definir cores nativas da Apple (SystemBlue, SystemPink, SystemGray, etc.) no `theme.css`.
+- [x] Task: Definir cores nativas da Apple (SystemBlue, SystemPink, SystemGray, etc.) no `theme.css`. (5503cf3)
 - [ ] Task: Configurar tokens de sombra (shadows) suaves no Tailwind CSS v4 (`main.css`).
 - [ ] Task: Definir variáveis globais de `backdrop-blur` e `vibrancy` para glassmorphism.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
 
 ## Phase 2: Layout & Surfaces (Glassmorphism & Squircle)
+
 Aplicação dos princípios de curvatura contínua (squircle) e transparência em containers principais.
 
 - [ ] Task: Refatorar o container `glass-card` para usar o raio de curvatura "Squircle Apple Style".
@@ -17,6 +21,7 @@ Aplicação dos princípios de curvatura contínua (squircle) e transparência e
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
 
 ## Phase 3: UI Controls & Components (PrimeUI Styling)
+
 Estilização minuciosa dos componentes do PrimeUI para refletir a estética da Apple usando classes Tailwind.
 
 - [ ] Task: Estilizar botões (Primary, Secondary, Tertiary) com cantos arredondados e estados táteis.
@@ -25,6 +30,7 @@ Estilização minuciosa dos componentes do PrimeUI para refletir a estética da 
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
 
 ## Phase 4: Typography & Motion (Details & Refinement)
+
 Ajustes finais na tipografia e inclusão de animações fluidas típicas da Apple.
 
 - [ ] Task: Ajustar pesos de fonte, kerning e escalas tipográficas para o estilo SF Pro.
