@@ -13,7 +13,9 @@
 
   /* Apple Semantic Backgrounds - Light Mode */
   --apple-system-background: #ffffff;
+  --apple-system-background-rgb: 255, 255, 255;
   --apple-system-secondary-background: #f2f2f7;
+  --apple-system-secondary-background-rgb: 242, 242, 247;
   --apple-system-tertiary-background: #ffffff;
 
   /* Apple Semantic Labels - Light Mode */
@@ -66,8 +68,11 @@
 
   /* Apple Semantic Backgrounds - Dark Mode */
   --apple-system-background: #000000;
+  --apple-system-background-rgb: 0, 0, 0;
   --apple-system-secondary-background: #1c1c1e;
+  --apple-system-secondary-background-rgb: 28, 28, 30;
   --apple-system-tertiary-background: #2c2c2e;
+  --apple-system-tertiary-background-rgb: 44, 44, 46;
 
   /* Apple Semantic Labels - Dark Mode */
   --apple-label: #ffffff;

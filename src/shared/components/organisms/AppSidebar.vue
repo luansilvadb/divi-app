@@ -279,8 +279,6 @@ const menuItems = computed(() => [
   width: var(--sidebar-width);
   height: 100vh;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(40px) saturate(1.6);
   border-right: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.4),
@@ -294,7 +292,6 @@ const menuItems = computed(() => [
 }
 
 :is(.dark) .sidebar {
-  background: rgba(19, 24, 36, 0.7);
   border-right-color: rgba(255, 255, 255, 0.04);
   box-shadow:
     1px 0 0 0 rgba(255, 255, 255, 0.02),

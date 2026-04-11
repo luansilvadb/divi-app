@@ -2,7 +2,7 @@
   <header class="global-header sticky top-0 z-40">
     <!-- Synced Glass Background Plate -->
     <div
-      class="absolute inset-0 bg-surface-0/80 dark:bg-surface-900/80 backdrop-blur-lg border-b border-surface-200/50 dark:border-surface-800 pointer-events-none transition-none"
+      class="absolute inset-0 apple-material-thin border-b border-surface-200/50 dark:border-surface-800 pointer-events-none transition-none"
       :style="{ opacity: stickyTitleOpacity }"
     ></div>
 

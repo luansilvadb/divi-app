@@ -71,6 +71,31 @@
 }
 
 @layer components {
+  /* Apple Materials */
+  .apple-material-ultra-thin {
+    background-color: rgba(var(--apple-system-background-rgb), 0.4);
+    backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-ultra-thin));
+    -webkit-backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-ultra-thin));
+  }
+
+  .apple-material-thin {
+    background-color: rgba(var(--apple-system-background-rgb), 0.6);
+    backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-thin));
+    -webkit-backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-thin));
+  }
+
+  .apple-material-regular {
+    background-color: rgba(var(--apple-system-background-rgb), 0.7);
+    backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-regular));
+    -webkit-backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-regular));
+  }
+
+  .apple-material-thick {
+    background-color: rgba(var(--apple-system-background-rgb), 0.9);
+    backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-thick));
+    -webkit-backdrop-filter: var(--apple-vibrancy) blur(var(--apple-blur-thick));
+  }
+
   /* Global Dashboard View Standardization */
   .view-wrapper {
     width: 100%;
