@@ -24,10 +24,8 @@
         v-bind="$attrs"
         class="w-full"
         :inputClass="[
-          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
           'py-3.5 pr-4 pl-10',
-          'hover:border-primary/30',
-          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
           'placeholder:text-surface-400/60 dark:text-surface-400/60',
         ]"
       />
@@ -43,10 +41,8 @@
         fluid
         v-bind="$attrs"
         :class="[
-          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
           'py-3.5 pr-4 pl-10',
-          'hover:border-primary/30',
-          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
           'placeholder:text-surface-400/60 dark:text-surface-400/60',
         ]"
       />
@@ -65,10 +61,8 @@
         v-bind="$attrs"
         class="w-full"
         :inputClass="[
-          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
           'py-3.5 px-4',
-          'hover:border-primary/30',
-          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
           'placeholder:text-surface-400/60 dark:text-surface-400/60',
         ]"
       />
@@ -84,10 +78,8 @@
         fluid
         v-bind="$attrs"
         :class="[
-          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
           'py-3.5 px-4',
-          'hover:border-primary/30',
-          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
           'placeholder:text-surface-400/60 dark:text-surface-400/60',
         ]"
       />
