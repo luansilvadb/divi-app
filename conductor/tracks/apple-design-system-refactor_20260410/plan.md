@@ -7,7 +7,7 @@
 Nesta fase, estabeleceremos as variáveis CSS e os tokens do Tailwind v4 para alinhar a paleta de cores e os princípios básicos de design com os da Apple.
 
 - [x] Task: Definir cores nativas da Apple (SystemBlue, SystemPink, SystemGray, etc.) no `theme.css`. (5503cf3)
-- [ ] Task: Configurar tokens de sombra (shadows) suaves no Tailwind CSS v4 (`main.css`).
+- [x] Task: Configurar tokens de sombra (shadows) suaves no Tailwind CSS v4 (`main.css`). (d4573f9)
 - [ ] Task: Definir variáveis globais de `backdrop-blur` e `vibrancy` para glassmorphism.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation' (Protocol in workflow.md)
 
