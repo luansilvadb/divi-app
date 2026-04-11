@@ -33,7 +33,7 @@ Estilização minuciosa dos componentes do PrimeUI para refletir a estética da 
 
 Ajustes finais na tipografia e inclusão de animações fluidas típicas da Apple.
 
-- [ ] Task: Ajustar pesos de fonte, kerning e escalas tipográficas para o estilo SF Pro.
+- [x] Task: Ajustar pesos de fonte, kerning e escalas tipográficas para o estilo SF Pro. (0045c30)
 - [ ] Task: Implementar transições suaves de hover e feedbacks visuais em componentes interativos.
 - [ ] Task: Realizar auditoria visual completa em Light e Dark Mode para garantir contraste e estética.
 - [ ] Task: Conductor - User Manual Verification 'Phase 4: Typography & Motion' (Protocol in workflow.md)
