@@ -13,7 +13,7 @@ Implementação da camada de dados local (Dexie) e lógica de negócio inicial.
 ## Phase 2: UI e Componentização
 Criação dos componentes visuais e integração com a interface do usuário.
 
-- [ ] **TASK-03: Componente BudgetProgressBar**
+- [x] **TASK-03: Componente BudgetProgressBar** (a237a01)
   - **Goal:** Criar um componente de barra de progresso reutilizável que mude de cor conforme o consumo.
   - **Details:** Criar `src/modules/budgets/ui/components/BudgetProgressBar.vue` usando PrimeVue ou Vanilla CSS conforme os guidelines.
 - [ ] **TASK-04: Tela de Gestão de Orçamentos**
