@@ -6,7 +6,7 @@ Implementação da camada de dados local (Dexie) e lógica de negócio inicial.
 - [x] **TASK-01: Esquema de Budgets no Dexie** (f821dc6)
   - **Goal:** Adicionar a tabela `budgets` ao Dexie e atualizar os repositórios para suportar o novo modelo.
   - **Details:** Definir o esquema no `src/core/db.ts` e criar a entidade em `src/infrastructure/db/entities/BudgetEntity.ts` (seguindo os padrões do projeto).
-- [ ] **TASK-02: BudgetStore e Reatividade**
+- [x] **TASK-02: BudgetStore e Reatividade** (5a4b799)
   - **Goal:** Implementar Store para gerenciar orçamentos e calcular saldos derivados via `liveQuery`.
   - **Details:** Criar `src/modules/budgets/application/stores/budgetStore.ts`. Garantir que o cálculo de saldo (`calculateRemaining`) seja reativo às mudanças nas transações.
 
