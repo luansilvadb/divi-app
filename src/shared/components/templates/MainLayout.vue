@@ -2,12 +2,13 @@
   <div
     class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50"
   >
-    <!-- Desktop Sidebar -->
-    <AppSidebar class="!hidden md:!flex" @logout="emit('logout')" />
+    <!-- Desktop Sidebar (Only on Desktop) -->
+    <AppSidebar v-if="!isMobile" @logout="emit('logout')" />
 
     <!-- Main Content Area -->
     <main
-      class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0 flex flex-col"
+      class="flex-1 h-full overflow-y-auto overflow-x-hidden relative flex flex-col"
+      :class="{ 'pb-[4.5rem] md:pb-0': isMobile }"
     >
       <!-- Top header (Global Status) -->
       <GlobalHeader />
@@ -17,15 +18,15 @@
       </div>
     </main>
 
-    <!-- Mobile Bottom Bar -->
-    <AppBottomBar @open-drawer="isMobileDrawerOpen = true" />
-
-    <!-- Mobile Drawer -->
-    <AppMobileDrawer
-      :is-open="isMobileDrawerOpen"
-      @close="isMobileDrawerOpen = false"
-      @logout="emit('logout')"
-    />
+    <!-- Mobile Navigation (Only on Mobile) -->
+    <template v-if="isMobile">
+      <AppBottomBar @open-drawer="isMobileDrawerOpen = true" />
+      <AppMobileDrawer
+        :is-open="isMobileDrawerOpen"
+        @close="isMobileDrawerOpen = false"
+        @logout="emit('logout')"
+      />
+    </template>
 
     <!-- Global Floating Action Button (FAB) - Premium Fintech Design -->
     <BaseButton

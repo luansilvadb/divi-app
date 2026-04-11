@@ -3,12 +3,7 @@
 Este plano detalha a migração completa do PrimeVue para o Naive UI, focando em uma estética moderna estilo LobeHub.
 
 ## Phase 1: Infraestrutura e Configuração do Naive UI
-- [ ] **Task: Instalação e Configuração Base**
-    - [ ] Instalar `naive-ui` e `vfonts`.
-    - [ ] Configurar o `NConfigProvider` no `App.vue`.
-    - [ ] Criar o arquivo de configuração de tema (`src/core/theme/naiveTheme.ts`) com tokens estilo LobeHub (Glassmorphism, cores modernas).
-    - [ ] Configurar suporte a Dark/Light mode integrado com o Naive UI.
-    - [ ] Remover dependências do PrimeVue do `package.json`.
+- [x] **Task: Instalação e Configuração Base**
 - [ ] **Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)**
 
 ## Phase 2: Componentes Compartilhados e Layout Principal
