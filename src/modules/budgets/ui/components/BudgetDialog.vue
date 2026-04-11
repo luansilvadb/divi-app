@@ -81,7 +81,7 @@
       class="w-full max-w-xl border border-surface-200/10 overflow-hidden"
       :ptOptions="{ mergeProps: true }"
       :pt="{
-        mask: { class: '!z-[50] bg-black/60 backdrop-blur-sm transition-all duration-300' },
+        mask: { class: '!z-[50]' },
         header: { class: '!p-0' },
         content: { class: '!p-0' }
       }"
