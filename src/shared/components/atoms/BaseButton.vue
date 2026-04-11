@@ -8,7 +8,7 @@
     :loading="loading"
     v-bind="$attrs"
     :class="[
-      'font-bold rounded-xl transition-all duration-300 outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
+      'font-bold rounded-xl transition-all duration-apple-fast ease-apple outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
       { 'apple-button-filled': variant === 'primary' },
       { 'apple-button-tinted': variant === 'secondary' },
       { 'apple-button-danger-filled': variant === 'danger' },

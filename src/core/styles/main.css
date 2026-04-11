@@ -20,6 +20,12 @@
   --tracking-apple-body: -0.022em; /* 16-17px */
   --tracking-apple-headline: -0.016em; /* 15px */
   --tracking-apple-display: 0.014em; /* 20px+ */
+
+  /* Apple Motion & Transitions */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-apple-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-apple: 400ms;
+  --duration-apple-fast: 200ms;
 }
 
 /*

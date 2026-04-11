@@ -1,9 +1,9 @@
 <template>
   <Card
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-300"
+    class="glass-card overflow-hidden transition-all duration-apple ease-apple"
     :class="{
-      'cursor-pointer hover-glow active:scale-[0.98]': clickable,
+      'cursor-pointer hover:scale-[1.01] hover:brightness-[1.02] active:scale-[0.99]': clickable,
       'border-error-main/50 animate-pulse-error': error,
       'h-full flex flex-col': hFull,
     }"
