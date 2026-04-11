@@ -32,3 +32,4 @@ Garantir que os dados sejam sincronizados com o backend e realizar o polimento f
 
 ## Phase: Review Fixes
 - [x] Task: Apply review suggestions fbf33c4
+- [x] Task: Fix budget consumption calculation to filter by expense type 5b80af2
