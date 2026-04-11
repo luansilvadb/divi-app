@@ -3,89 +3,43 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50"
+      class="block text-sm font-medium mb-1 text-zinc-800 dark:text-zinc-50"
       >{{ label }}</label
     >
 
-    <IconField v-if="icon" class="w-full relative">
-      <InputIcon
-        :class="icon"
-        class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-400 z-10"
-      />
-      <InputNumber
-        v-if="type === 'number'"
-        :id="id"
-        :modelValue="numericValue"
-        @update:modelValue="handleUpdate"
-        :placeholder="placeholder"
-        :invalid="!!error"
-        :aria-describedby="error ? `${id}-error` : undefined"
-        fluid
-        v-bind="$attrs"
-        class="w-full"
-        :inputClass="[
-          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
-          'py-3.5 pr-4 pl-10',
-          'placeholder:text-surface-400/60 dark:text-surface-400/60',
-        ]"
-      />
-      <InputText
-        v-else
-        :id="id"
-        :type="type"
-        :modelValue="textValue"
-        @update:modelValue="handleUpdateText"
-        :placeholder="placeholder"
-        :invalid="!!error"
-        :aria-describedby="error ? `${id}-error` : undefined"
-        fluid
-        v-bind="$attrs"
-        :class="[
-          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
-          'py-3.5 pr-4 pl-10',
-          'placeholder:text-surface-400/60 dark:text-surface-400/60',
-        ]"
-      />
-    </IconField>
+    <NInputNumber
+      v-if="type === 'number'"
+      :id="id"
+      :value="numericValue"
+      @update:value="handleUpdateNumber"
+      :placeholder="placeholder"
+      :status="error ? 'error' : undefined"
+      v-bind="$attrs"
+      class="!rounded-xl"
+    >
+      <template v-if="icon" #prefix>
+        <i :class="icon" class="text-zinc-400"></i>
+      </template>
+    </NInputNumber>
 
-    <template v-else>
-      <InputNumber
-        v-if="type === 'number'"
-        :id="id"
-        :modelValue="numericValue"
-        @update:modelValue="handleUpdate"
-        :placeholder="placeholder"
-        :invalid="!!error"
-        :aria-describedby="error ? `${id}-error` : undefined"
-        fluid
-        v-bind="$attrs"
-        class="w-full"
-        :inputClass="[
-          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
-          'py-3.5 px-4',
-          'placeholder:text-surface-400/60 dark:text-surface-400/60',
-        ]"
-      />
-      <InputText
-        v-else
-        :id="id"
-        :type="type"
-        :modelValue="textValue"
-        @update:modelValue="handleUpdateText"
-        :placeholder="placeholder"
-        :invalid="!!error"
-        :aria-describedby="error ? `${id}-error` : undefined"
-        fluid
-        v-bind="$attrs"
-        :class="[
-          'w-full apple-input text-surface-800 dark:text-surface-50 text-sm outline-none',
-          'py-3.5 px-4',
-          'placeholder:text-surface-400/60 dark:text-surface-400/60',
-        ]"
-      />
-    </template>
+    <NInput
+      v-else
+      :id="id"
+      :type="type === 'password' ? 'password' : 'text'"
+      :value="textValue"
+      @update:value="handleUpdateText"
+      :placeholder="placeholder"
+      :status="error ? 'error' : undefined"
+      v-bind="$attrs"
+      class="!rounded-xl"
+      show-password-on="mousedown"
+    >
+      <template v-if="icon" #prefix>
+        <i :class="icon" class="text-zinc-400"></i>
+      </template>
+    </NInput>
 
-    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-error">
+    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-red-500">
       {{ error }}
     </p>
   </div>
@@ -93,10 +47,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import InputText from 'primevue/inputtext'
-import InputNumber from 'primevue/inputnumber'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
+import { NInput, NInputNumber } from 'naive-ui'
 
 const props = defineProps<{
   id: string
@@ -117,30 +68,26 @@ const numericValue = computed(() => {
 })
 
 const textValue = computed(() => {
-  if (props.modelValue === null || props.modelValue === undefined) return undefined
+  if (props.modelValue === null || props.modelValue === undefined) return null
   return String(props.modelValue)
 })
 
-function handleUpdate(val: number | null) {
+function handleUpdateNumber(val: number | null) {
   emit('update:modelValue', val)
 }
 
-function handleUpdateText(val: string | undefined) {
+function handleUpdateText(val: string) {
   emit('update:modelValue', val)
 }
 </script>
 
 <style scoped>
-/* Chrome, Safari, Edge, Opera */
-:deep(input::-webkit-outer-spin-button),
-:deep(input::-webkit-inner-spin-button) {
-  -webkit-appearance: none;
-  margin: 0;
+:deep(.n-input) {
+  --n-border-radius: 12px !important;
+  background-color: rgba(var(--color-zinc-500-rgb), 0.05);
 }
 
-/* Firefox */
-:deep(input[type='number']) {
-  -moz-appearance: textfield;
-  appearance: textfield;
+:is(.dark) :deep(.n-input) {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 </style>

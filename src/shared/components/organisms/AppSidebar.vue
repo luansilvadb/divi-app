@@ -1,217 +1,143 @@
 <template>
-  <aside
-    class="sidebar transition-all duration-300 ease-in-out"
-    :class="{ 'sidebar--collapsed': isCollapsed }"
+  <NLayoutSider
+    collapse-mode="width"
+    :collapsed-width="80"
+    :width="260"
+    :collapsed="isCollapsed"
+    show-trigger="arrow-circle"
+    @collapse="isCollapsed = true"
+    @expand="isCollapsed = false"
+    bordered
+    class="!bg-zinc-50 dark:!bg-zinc-950 !transition-all !duration-300"
   >
-    <div class="sidebar-header">
-      <RouterLink to="/" class="sidebar-brand">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-black shadow-sm">
+    <div class="flex flex-col h-full">
+      <div class="h-16 flex items-center px-6">
+        <RouterLink to="/" class="flex items-center gap-3 no-underline">
+          <div class="w-8 h-8 rounded-lg bg-violet-500 flex items-center justify-center text-white font-black shadow-sm">
             D
           </div>
-          <span class="sidebar-brand-text" v-if="!isCollapsed">Divi</span>
-        </div>
-      </RouterLink>
-
-      <button
-        @click="isCollapsed = !isCollapsed"
-        class="sidebar-toggle-btn"
-      >
-        <i class="pi pi-bars"></i>
-      </button>
-    </div>
-
-    <div class="flex-1 overflow-y-auto pt-2 pb-6 custom-scrollbar">
-      <Menu 
-        :model="menuItems" 
-        class="border-none bg-transparent w-full"
-        :pt="{
-          list: { class: 'p-0 m-0 list-none' },
-          itemContent: { class: 'p-0 bg-transparent' },
-          itemLink: { class: 'p-0 bg-transparent' },
-          submenuHeader: { class: 'px-6 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-p-surface-400 dark:text-p-surface-500 mt-4 mb-2' }
-        }"
-      >
-        <template #item="{ item }">
-          <RouterLink
-            v-if="item.to"
-            v-slot="{ href, navigate }"
-            :to="item.to"
-            custom
-          >
-            <a
-              :href="href"
-              @click="navigate"
-              class="flex items-center px-4 py-3 cursor-pointer rounded-xl mx-2 mb-1 transition-all duration-200 outline-none select-none no-underline gap-3"
-              :class="[
-                isPageActive(item.to)
-                  ? 'bg-p-primary-500/10 text-p-primary-500'
-                  : 'text-p-surface-600 dark:text-p-surface-200 hover:bg-p-surface-100 dark:hover:bg-p-surface-800/50',
-              ]"
-            >
-              <i
-                :class="[item.icon, { 'scale-110': isPageActive(item.to) }]"
-                class="text-xl transition-transform duration-200"
-              ></i>
-              <span
-                class="truncate font-bold text-[0.95rem] transition-all duration-200"
-                :class="{ 'opacity-0 w-0 hidden': isCollapsed }"
-                >{{ item.label }}</span
-              >
-              <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
-            </a>
-          </RouterLink>
-        </template>
-      </Menu>
-    </div>
-
-    <div class="sidebar-footer border-t border-surface-200 dark:border-surface-800/20 p-2">
-      <div class="flex flex-col gap-1 mb-4">
-        <button @click="toggleTheme" class="footer-btn">
-          <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="text-xl"></i>
-          <span v-if="!isCollapsed" class="ml-3 font-bold text-[0.95rem]">Mudar Tema</span>
-        </button>
-        
-        <button @click="emit('logout')" class="footer-btn text-error/70 hover:text-error hover:bg-error/10">
-          <i class="pi pi-sign-out text-xl"></i>
-          <span v-if="!isCollapsed" class="ml-3 font-bold text-[0.95rem]">Sair do App</span>
-        </button>
+          <span v-if="!isCollapsed" class="text-xl font-black bg-gradient-to-br from-violet-500 to-indigo-600 bg-clip-text text-transparent">
+            Divi
+          </span>
+        </RouterLink>
       </div>
 
-      <RouterLink to="/profile" class="profile-card" :class="{ 'justify-center mx-0': isCollapsed }">
-        <div class="w-10 h-10 rounded-full bg-surface-100 dark:bg-surface-800 flex items-center justify-center font-black text-primary border border-black/5">
-          LS
+      <div class="flex-1 overflow-y-auto py-4">
+        <NMenu
+          :collapsed="isCollapsed"
+          :collapsed-width="80"
+          :collapsed-icon-size="22"
+          :options="menuOptions"
+          :value="activeKey"
+          @update:value="handleMenuClick"
+        />
+      </div>
+
+      <div class="p-4 border-t border-zinc-200 dark:border-zinc-800">
+        <div class="flex flex-col gap-2 mb-4">
+          <NButton quaternary circle @click="toggleTheme" class="!w-full !justify-start !px-3">
+            <template #icon>
+              <i :class="isDark ? 'i-lucide-sun' : 'i-lucide-moon'" class="text-xl"></i>
+            </template>
+            <span v-if="!isCollapsed" class="ml-2 font-bold">Mudar Tema</span>
+          </NButton>
+          
+          <NButton quaternary circle @click="emit('logout')" class="!w-full !justify-start !px-3 !text-red-500 hover:!bg-red-500/10">
+            <template #icon>
+              <i class="i-lucide-log-out text-xl"></i>
+            </template>
+            <span v-if="!isCollapsed" class="ml-2 font-bold">Sair</span>
+          </NButton>
         </div>
-        <div v-if="!isCollapsed" class="ml-3 flex-1 min-w-0">
-          <p class="text-[0.85rem] font-bold text-surface-800 dark:text-surface-50 truncate">Luan Silva</p>
-          <p class="text-[0.65rem] font-medium text-surface-400 truncate uppercase">Premium</p>
-        </div>
-      </RouterLink>
+
+        <RouterLink to="/profile" class="flex items-center p-2 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors no-underline">
+          <div class="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center font-black text-violet-500 border border-violet-500/20">
+            LS
+          </div>
+          <div v-if="!isCollapsed" class="ml-3 flex-1 min-w-0">
+            <p class="text-sm font-bold text-zinc-800 dark:text-zinc-50 truncate">Luan Silva</p>
+            <p class="text-[10px] font-medium text-zinc-400 truncate uppercase tracking-wider">Premium</p>
+          </div>
+        </RouterLink>
+      </div>
     </div>
-  </aside>
+  </NLayoutSider>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { computed, h, ref, watch } from 'vue'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
+import { NLayoutSider, NMenu, NButton, NIcon, type MenuOption } from 'naive-ui'
 import { useTheme } from '../../../core/theme'
 import { useSidebarStore } from '../../stores/sidebarStore'
-import Menu from 'primevue/menu'
-import Badge from 'primevue/badge'
 
 const emit = defineEmits(['logout'])
 const sidebarStore = useSidebarStore()
 const { isDark, toggle: toggleTheme } = useTheme()
 const route = useRoute()
+const router = useRouter()
 
 const isCollapsed = computed({
   get: () => !sidebarStore.isExpanded,
   set: (val: boolean) => sidebarStore.setExpanded(!val),
 })
 
-const isPageActive = (itemTo: string | undefined) => {
-  if (!itemTo) return false
-  if (itemTo === '/') return route.path === '/'
-  return route.path.startsWith(itemTo)
+const activeKey = ref<string>(route.path)
+watch(() => route.path, (newPath) => {
+  activeKey.value = newPath
+})
+
+function renderIcon(iconClass: string) {
+  return () => h('i', { class: iconClass + ' text-xl' })
 }
 
-const menuItems = computed(() => [
+const menuOptions: MenuOption[] = [
   {
     label: 'Menu Principal',
-    items: [
-      { label: 'Dashboard', icon: 'pi pi-th-large', to: '/' },
-      { label: 'Transações', icon: 'pi pi-arrow-right-arrow-left', to: '/transactions' },
-      { label: 'Orçamentos', icon: 'pi pi-dollar', to: '/budgets' },
-      { label: 'Metas', icon: 'pi pi-bullseye', to: '/goals' },
-      { label: 'Empréstimos', icon: 'pi pi-credit-card', to: '/loans' },
-      { label: 'Assinaturas', icon: 'pi pi-history', to: '/subscriptions' },
-    ],
+    key: 'main-group',
+    type: 'group',
+    children: [
+      { label: 'Dashboard', key: '/', icon: renderIcon('i-lucide-layout-dashboard') },
+      { label: 'Transações', key: '/transactions', icon: renderIcon('i-lucide-arrow-left-right') },
+      { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-wallet') },
+      { label: 'Metas', key: '/goals', icon: renderIcon('i-lucide-target') },
+      { label: 'Empréstimos', key: '/loans', icon: renderIcon('i-lucide-banknote') },
+      { label: 'Assinaturas', key: '/subscriptions', icon: renderIcon('i-lucide-refresh-cw') },
+    ]
   },
   {
     label: 'Análise',
-    items: [
-      { label: 'Calendário', icon: 'pi pi-calendar', to: '/calendar' },
-      { label: 'Relatórios', icon: 'pi pi-chart-line', to: '/reports' },
-    ],
+    key: 'analysis-group',
+    type: 'group',
+    children: [
+      { label: 'Calendário', key: '/calendar', icon: renderIcon('i-lucide-calendar') },
+      { label: 'Relatórios', key: '/reports', icon: renderIcon('i-lucide-bar-chart-3') },
+    ]
   },
   {
     label: 'Preferências',
-    items: [
-      { label: 'Meu Perfil', icon: 'pi pi-user', to: '/profile' },
-      { label: 'Configurações', icon: 'pi pi-cog', to: '/settings' },
-    ],
-  },
-])
+    key: 'settings-group',
+    type: 'group',
+    children: [
+      { label: 'Configurações', key: '/settings', icon: renderIcon('i-lucide-settings') },
+    ]
+  }
+]
+
+function handleMenuClick(key: string) {
+  router.push(key)
+}
 </script>
 
 <style scoped>
-.sidebar {
-  width: 260px;
-  height: 100vh;
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--surface-0);
-  border-right: 1px solid var(--surface-200);
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+:deep(.n-menu-item-content--selected) {
+  background-color: rgba(139, 92, 246, 0.1) !important;
 }
-
-:is(.dark) .sidebar {
-  background-color: var(--surface-950);
-  border-right-color: var(--surface-800);
+:deep(.n-menu-item-content--selected .n-menu-item-content-header) {
+  color: #8b5cf6 !important;
+  font-weight: 700;
 }
-
-.sidebar--collapsed { width: 80px; }
-
-/* ... Rest of the styles remain the same ... */
-.sidebar-header {
-  height: 80px;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sidebar--collapsed .sidebar-header { padding: 0; justify-content: center; }
-
-.sidebar-brand-text {
-  font-size: 1.5rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #10b981 0%, #0284c7 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.sidebar-toggle-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  color: var(--surface-400);
-}
-
-.footer-btn {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
-  width: 100%;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  color: var(--surface-500);
-}
-
-.profile-card {
-  display: flex;
-  align-items: center;
-  padding: 0.75rem;
-  margin: 0 0.5rem;
-  border-radius: 1rem;
-  cursor: pointer;
-  text-decoration: none;
+:deep(.n-menu-item-content--selected .n-menu-item-content__icon) {
+  color: #8b5cf6 !important;
 }
 </style>

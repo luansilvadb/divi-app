@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-100 dark:bg-surface-950"
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-50 dark:bg-zinc-950"
   >
     <!-- Noise texture overlay -->
     <div
@@ -34,16 +34,14 @@
               <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.6" />
               <defs>
                 <linearGradient id="logoGradient" x1="0" y1="0" x2="44" y2="44">
-                  <stop stop-color="#10b981" />
-                  <!-- Premium Emerald -->
-                  <stop offset="1" stop-color="#0284c7" />
-                  <!-- Deep Ocean Blue -->
+                  <stop stop-color="#8b5cf6" />
+                  <stop offset="1" stop-color="#6366f1" />
                 </linearGradient>
               </defs>
             </svg>
           </div>
           <h1
-            class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-br from-[#10b981] to-[#0284c7] drop-shadow-[0_4px_24px_rgba(2,132,199,0.15)]"
+            class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none text-transparent bg-clip-text bg-gradient-to-br from-violet-500 to-indigo-600 drop-shadow-[0_4px_24px_rgba(139,92,246,0.15)]"
           >
             Divi
           </h1>
@@ -51,10 +49,10 @@
 
         <!-- Tagline -->
         <p
-          class="text-center text-[1.1rem] leading-relaxed text-surface-600 dark:text-surface-200 m-0 animate-fade-in [animation-delay:250ms]"
+          class="text-center text-[1.1rem] leading-relaxed text-zinc-600 dark:text-zinc-400 m-0 animate-fade-in [animation-delay:250ms]"
         >
           Suas finanças pessoais,<br />
-          <span class="font-bold text-surface-800 dark:text-surface-50">simplificadas.</span>
+          <span class="font-bold text-zinc-800 dark:text-zinc-50">simplificadas.</span>
         </p>
 
         <!-- Auth Form -->
@@ -65,53 +63,50 @@
           <div class="flex flex-col gap-2">
             <label
               for="email"
-              class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1"
+              class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 ml-1"
               >E-mail</label
             >
-            <InputText
+            <NInput
               id="email"
-              v-model="email"
-              type="email"
+              v-model:value="email"
+              type="text"
               placeholder="seu@email.com"
-              class="w-full"
+              class="!rounded-xl"
               required
-            />
+              size="large"
+            >
+              <template #prefix>
+                <i class="i-lucide-mail text-zinc-400"></i>
+              </template>
+            </NInput>
           </div>
 
           <div class="flex flex-col gap-2">
             <label
               for="password"
-              class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1"
+              class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 ml-1"
               >Senha</label
             >
-            <Password
-              v-model="password"
-              toggleMask
-              :feedback="isRegister"
+            <NInput
+              id="password"
+              v-model:value="password"
+              type="password"
+              show-password-on="mousedown"
               placeholder="••••••••"
-              class="w-full"
-              inputClass="w-full"
+              class="!rounded-xl"
               required
+              size="large"
             >
-              <template v-if="isRegister" #header>
-                <div class="font-semibold text-sm mb-4">Escolha uma senha</div>
+              <template #prefix>
+                <i class="i-lucide-lock text-zinc-400"></i>
               </template>
-              <template v-if="isRegister" #footer>
-                <Divider />
-                <ul class="pl-2 ml-2 mt-0 line-height-3">
-                  <li>Ao menos uma letra minúscula</li>
-                  <li>Ao menos uma letra maiúscula</li>
-                  <li>Ao menos um número</li>
-                  <li>Mínimo de 8 caracteres</li>
-                </ul>
-              </template>
-            </Password>
+            </NInput>
           </div>
 
           <BaseButton
             type="submit"
             variant="primary"
-            class="w-full mt-2"
+            class="w-full mt-2 !h-12 shadow-lg shadow-violet-500/20"
             :loading="isLoading"
             :disabled="isLoading"
           >
@@ -122,44 +117,29 @@
             type="button"
             id="toggle-auth-mode"
             @click="isRegister = !isRegister"
-            class="text-xs font-medium text-surface-600 dark:text-surface-200 hover:text-primary transition-colors duration-200 text-center"
+            class="text-xs font-bold text-zinc-500 hover:text-violet-500 transition-colors duration-200 text-center border-none bg-transparent cursor-pointer"
           >
             {{ isRegister ? 'Já tem uma conta? Entrar' : 'Não tem uma conta? Criar conta' }}
           </button>
         </form>
 
         <!-- Divider -->
-        <div class="flex items-center gap-4 w-full animate-fade-in [animation-delay:450ms]">
-          <div
-            class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"
-          ></div>
-          <span
-            class="text-xs font-semibold uppercase tracking-widest text-surface-400 dark:text-surface-400 whitespace-nowrap"
-            >ou use</span
-          >
-          <div
-            class="flex-1 h-px bg-gradient-to-r from-transparent via-border-main to-transparent"
-          ></div>
+        <div class="w-full animate-fade-in [animation-delay:450ms]">
+          <NDivider title-placement="center">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">ou use</span>
+          </NDivider>
         </div>
 
         <!-- Google button -->
         <BaseButton
           variant="outline"
           id="login-google-btn"
-          :aria-busy="isLoading"
-          :pt="{
-            root: {
-              class:
-                'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-surface-200 dark:border-surface-500 bg-surface-0 dark:bg-surface-800 cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none',
-            },
-          }"
+          class="w-full !h-12 !rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 hover:!border-violet-500 transition-all"
           @click="handleGoogleLogin"
           :disabled="isLoading"
           :loading="isLoading"
         >
-          <div
-            class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-surface-800 dark:text-surface-50"
-          >
+          <div class="flex items-center justify-center gap-3 font-bold text-zinc-800 dark:text-zinc-50">
             <svg
               v-if="!isLoading"
               class="w-5 h-5 shrink-0"
@@ -184,31 +164,24 @@
                 fill="#EA4335"
               />
             </svg>
-            <div
-              v-else
-              aria-hidden="true"
-              class="w-5 h-5 border-[2.5px] border-surface-200 dark:border-surface-500 border-t-primary-main rounded-full animate-spin shrink-0"
-            ></div>
             <span>{{ isLoading ? 'Conectando...' : 'Continuar com Google' }}</span>
           </div>
         </BaseButton>
 
         <!-- Terms -->
         <p
-          class="text-center text-[0.72rem] leading-relaxed text-surface-400 dark:text-surface-400 m-0 animate-fade-in [animation-delay:650ms]"
+          class="text-center text-[10px] leading-relaxed text-zinc-400 m-0 animate-fade-in [animation-delay:650ms]"
         >
           Ao continuar, você concorda com nossos<br />
           <a
             href="#"
-            aria-label="Termos de Uso"
-            class="text-surface-600 dark:text-surface-200 underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary hover:decoration-primary-main"
+            class="text-zinc-600 dark:text-zinc-200 underline underline-offset-2 transition-colors duration-200 hover:text-violet-500"
             >Termos de Uso</a
           >
           e
           <a
             href="#"
-            aria-label="Política de Privacidade"
-            class="text-surface-600 dark:text-surface-200 underline decoration-black/15 dark:decoration-white/15 underline-offset-2 transition-colors duration-200 hover:text-primary hover:decoration-primary-main"
+            class="text-zinc-600 dark:text-zinc-200 underline underline-offset-2 transition-colors duration-200 hover:text-violet-500"
             >Política de Privacidade</a
           >
         </p>
@@ -216,7 +189,7 @@
 
       <!-- Footer -->
       <div class="animate-fade-in [animation-delay:750ms]">
-        <span class="text-xs text-surface-400 dark:text-surface-400 tracking-[0.02em]"
+        <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest"
           >Divi Finance © {{ currentYear }}</span
         >
       </div>
@@ -226,11 +199,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { NInput, NDivider, useMessage } from 'naive-ui'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import InputText from 'primevue/inputtext'
-import Password from 'primevue/password'
-import Divider from 'primevue/divider'
-import { useToast } from 'primevue/usetoast'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
@@ -239,7 +209,7 @@ const isLoading = ref(false)
 const isRegister = ref(false)
 const email = ref('')
 const password = ref('')
-const toast = useToast()
+const message = useMessage()
 
 const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
 const currentYear = new Date().getFullYear()
@@ -249,24 +219,14 @@ async function handleSubmit() {
   try {
     if (isRegister.value) {
       await authService.registerWithEmail({ email: email.value, password: password.value })
-      toast.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Conta criada com sucesso!',
-        life: 3000,
-      })
+      message.success('Conta criada com sucesso!')
     } else {
       await authService.signInWithEmail({ email: email.value, password: password.value })
-      toast.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Login realizado com sucesso!',
-        life: 3000,
-      })
+      message.success('Login realizado com sucesso!')
     }
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Ocorreu um erro na autenticação.'
-    toast.add({ severity: 'error', summary: 'Erro', detail: message, life: 5000 })
+    const msg = error instanceof Error ? error.message : 'Ocorreu um erro na autenticação.'
+    message.error(msg)
   } finally {
     isLoading.value = false
   }
@@ -277,11 +237,20 @@ async function handleGoogleLogin() {
   try {
     await authService.signInWithGoogle()
   } catch (error: unknown) {
-    const message =
-      error instanceof Error ? error.message : 'Ocorreu um erro ao conectar com Google.'
-    toast.add({ severity: 'error', summary: 'Erro', detail: message, life: 5000 })
+    const msg = error instanceof Error ? error.message : 'Ocorreu um erro ao conectar com Google.'
+    message.error(msg)
   } finally {
     isLoading.value = false
   }
 }
 </script>
+
+<style scoped>
+:deep(.n-input) {
+  --n-border-radius: 12px !important;
+  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
+}
+:is(.dark) :deep(.n-input) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+</style>

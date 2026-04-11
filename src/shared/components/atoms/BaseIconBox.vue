@@ -1,7 +1,7 @@
 <template>
   <div
     class="rounded-xl flex items-center justify-center transition-all duration-300"
-    :class="[sizeClasses[size], customClasses]"
+    :class="[sizeClasses[size]]"
     :style="customStyle"
   >
     <slot />
@@ -20,6 +20,7 @@ const props = withDefaults(
   }>(),
   {
     size: 'md',
+    color: '#8b5cf6',
   },
 )
 
@@ -29,18 +30,11 @@ const sizeClasses: Record<BoxSize, string> = {
   lg: 'w-12 h-12',
 }
 
-const isCssVar = computed(() => props.color?.startsWith('var('))
-
 const customStyle = computed(() => {
-  if (!props.color) return {}
   return {
-    backgroundColor: isCssVar.value ? `rgba(${props.color}, 0.1)` : `${props.color}15`,
+    backgroundColor: `${props.color}15`,
     color: props.color,
+    border: `1px solid ${props.color}25`
   }
-})
-
-const customClasses = computed(() => {
-  if (props.color) return ''
-  return 'bg-primary/10 text-primary'
 })
 </script>

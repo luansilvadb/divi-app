@@ -24,9 +24,9 @@
             <!-- Simple Header -->
             <div class="p-8 text-center">
               <div
-                class="w-16 h-16 rounded-2xl bg-error/10 flex items-center justify-center text-error mx-auto mb-6"
+                class="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 mx-auto mb-6"
               >
-                <i class="pi pi-trash text-2xl"></i>
+                <i class="i-lucide-trash-2 text-2xl"></i>
               </div>
 
               <h3 class="text-xl font-bold text-surface-900 dark:text-surface-50 mb-2">

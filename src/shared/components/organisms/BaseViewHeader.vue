@@ -16,7 +16,7 @@
           <div class="inline-flex items-center flex-wrap md:flex-nowrap gap-x-1.5">
             <template v-if="highlight">
               <span v-if="titleBefore" class="opacity-80">{{ titleBefore }}</span>
-              <span class="text-primary">{{ highlight }}</span>
+              <span class="text-violet-500">{{ highlight }}</span>
               <span v-if="titleAfter" class="opacity-80">{{ titleAfter }}</span>
             </template>
             <template v-else>

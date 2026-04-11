@@ -1,21 +1,21 @@
 <template>
-  <Skeleton
+  <NSkeleton
     :width="width"
     :height="height"
-    :borderRadius="rounded ? '50%' : '8px'"
-    class="relative overflow-hidden bg-surface-50 dark:bg-surface-800/10"
+    :circle="rounded"
+    :sharp="!rounded"
+    class="!bg-zinc-200 dark:!bg-zinc-800"
     :class="customClass"
-  >
-  </Skeleton>
+  />
 </template>
 
 <script setup lang="ts">
-import Skeleton from 'primevue/skeleton'
+import { NSkeleton } from 'naive-ui'
 
 withDefaults(
   defineProps<{
-    width?: string
-    height?: string
+    width?: string | number
+    height?: string | number
     rounded?: boolean
     customClass?: string
   }>(),

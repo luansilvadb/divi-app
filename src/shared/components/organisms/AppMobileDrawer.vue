@@ -1,114 +1,60 @@
 <template>
-  <Drawer
-    :visible="isOpen"
-    @update:visible="$emit('close')"
-    position="right"
-    class="!w-[280px] shadow-2xl border-l border-surface-200 dark:border-surface-800/50"
-    :ptOptions="{ mergeProps: true }"
-    :pt="{
-      mask: { class: '!z-[290]' },
-      root: {
-        class: '!flex !flex-col !overflow-hidden !z-[300] !bg-surface-0 dark:!bg-surface-900',
-      },
-      header: { class: '!p-0 !border-none !hidden' },
-      content: {
-        class: '!p-0 !flex-1 !overflow-y-auto !flex !flex-col !bg-surface-0 dark:!bg-surface-900',
-      },
-    }"
+  <NDrawer
+    :show="isOpen"
+    @update:show="$emit('close')"
+    :width="280"
+    placement="right"
+    class="!bg-zinc-50 dark:!bg-zinc-950"
   >
-    <!-- Custom Luxury Header -->
-    <div
-      class="relative overflow-hidden bg-surface-0 dark:bg-surface-800 border-b border-surface-200 dark:border-surface-800/10"
-    >
-      <div class="absolute inset-0 bg-p-primary-500/[0.04] pointer-events-none"></div>
-
-      <div class="relative z-10 flex items-center justify-between px-6 py-5">
-        <div class="flex flex-col">
-          <span class="text-xl font-black text-p-surface-800 dark:text-p-surface-50 tracking-tighter leading-none mb-1">Mais Opções</span>
-          <div class="flex items-center opacity-50">
-            <span class="text-[0.6rem] font-bold uppercase tracking-[0.15em] text-p-surface-600 dark:text-p-surface-200">EXPLORE O SISTEMA</span>
+    <div class="flex flex-col h-full">
+      <!-- Luxury Header -->
+      <div class="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
+        <div class="flex items-center justify-between">
+          <div class="flex flex-col">
+            <span class="text-xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight leading-none mb-1">Mais Opções</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Explore o Sistema</span>
           </div>
+          <NButton quaternary circle @click="$emit('close')">
+            <template #icon><i class="i-lucide-x text-xl"></i></template>
+          </NButton>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="flex-1 overflow-y-auto py-4">
+        <NMenu
+          :options="menuOptions"
+          :value="activeKey"
+          @update:value="handleMenuClick"
+        />
+      </div>
+
+      <!-- Footer -->
+      <div class="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-4 pb-safe">
+        <div class="flex items-center justify-between px-2">
+          <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Aparência</span>
+          <ThemeToggle />
         </div>
 
-        <button
-          @click="$emit('close')"
-          class="w-10 h-10 flex items-center justify-center text-p-surface-600 dark:text-p-surface-200 hover:text-p-surface-800 dark:text-p-surface-50 rounded-full hover:bg-p-surface-50 dark:hover:bg-p-surface-800/10 transition-all active:scale-95 border-none bg-transparent cursor-pointer"
+        <NButton
+          type="error"
+          ghost
+          @click="handleLogout"
+          class="!w-full !justify-start !rounded-xl !border-none !bg-red-500/5 hover:!bg-red-500/10"
         >
-          <i class="pi pi-times text-xl"></i>
-        </button>
+          <template #icon><i class="i-lucide-log-out text-lg"></i></template>
+          <span class="font-bold">Sair da Conta</span>
+        </NButton>
       </div>
     </div>
-
-    <!-- Scrollable Navigation -->
-    <nav class="flex-1 px-4 py-8 overflow-y-auto custom-scrollbar">
-      <Menu 
-        :model="menuItems" 
-        class="border-none bg-transparent w-full"
-        :pt="{
-          list: { class: 'p-0 m-0 list-none' },
-          itemContent: { class: 'p-0 bg-transparent' },
-          itemLink: { class: 'p-0 bg-transparent' },
-          submenuHeader: { class: 'px-4 mb-3 mt-8 first:mt-0 text-[0.6rem] font-black uppercase tracking-[0.25em] text-p-surface-400 dark:text-p-surface-500/60' }
-        }"
-      >
-        <template #item="{ item }">
-          <RouterLink
-            v-if="item.to"
-            v-slot="{ href, navigate }"
-            :to="item.to"
-            custom
-          >
-            <a
-              :href="href"
-              @click="(e) => { navigate(e); $emit('close'); }"
-              class="flex items-center w-full gap-4 px-4 py-4 rounded-xl transition-all duration-200 outline-none select-none no-underline"
-              :class="[
-                isPageActive(item.to)
-                  ? 'bg-p-primary-500/10 text-p-primary-500 font-black'
-                  : 'text-p-surface-600 dark:text-p-surface-400 hover:bg-p-surface-50 dark:hover:bg-p-surface-800/20',
-              ]"
-            >
-              <i
-                :class="[item.icon, { 'scale-110': isPageActive(item.to) }]"
-                class="text-xl transition-transform duration-200"
-              ></i>
-              <span class="font-black text-[0.85rem] uppercase tracking-widest">{{ item.label }}</span>
-              <Badge v-if="item.badge" class="ml-auto" :value="item.badge" />
-            </a>
-          </RouterLink>
-        </template>
-      </Menu>
-    </nav>
-
-    <!-- Footer Actions -->
-    <div
-      class="p-6 border-t border-p-surface-200 dark:border-p-surface-800/10 flex flex-col gap-4 pb-safe mt-auto"
-    >
-      <div class="flex items-center justify-between">
-        <span class="text-[0.65rem] font-black uppercase tracking-widest text-p-surface-400">Aparência</span>
-        <ThemeToggle />
-      </div>
-
-      <BaseButton
-        variant="ghost"
-        @click="handleLogout"
-        class="!w-full !justify-start !gap-3 !px-4 !py-3.5 !rounded-2xl !text-error !bg-error/5 hover:!bg-error/10 !border-none"
-      >
-        <i class="pi pi-sign-out text-lg"></i>
-        <span class="font-black text-[0.85rem] uppercase tracking-widest">Sair da Conta</span>
-      </BaseButton>
-    </div>
-  </Drawer>
+  </NDrawer>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
-import Drawer from 'primevue/drawer'
-import Menu from 'primevue/menu'
-import Badge from 'primevue/badge'
+import { computed, h, ref, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { NDrawer, NMenu, NButton, type MenuOption } from 'naive-ui'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
-import BaseButton from '../atoms/BaseButton.vue'
 
 defineProps<{
   isOpen: boolean
@@ -120,46 +66,71 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
+
+const activeKey = ref<string>(route.path)
+watch(() => route.path, (newPath) => {
+  activeKey.value = newPath
+})
 
 function handleLogout() {
   emit('close')
   emit('logout')
 }
 
-const isPageActive = (itemTo: string | undefined) => {
-  if (!itemTo) return false
-  if (itemTo === '/') return route.path === '/'
-  return route.path.startsWith(itemTo)
+function renderIcon(iconClass: string) {
+  return () => h('i', { class: iconClass + ' text-xl' })
 }
 
-const menuItems = computed(() => [
+const menuOptions: MenuOption[] = [
   {
     label: 'Outras Opções',
-    items: [
-      { label: 'Metas', icon: 'pi pi-bullseye', to: '/goals' },
-      { label: 'Empréstimos', icon: 'pi pi-credit-card', to: '/loans' },
-      { label: 'Assinaturas', icon: 'pi pi-history', to: '/subscriptions' },
-    ],
+    key: 'others',
+    type: 'group',
+    children: [
+      { label: 'Metas', key: '/goals', icon: renderIcon('i-lucide-target') },
+      { label: 'Empréstimos', key: '/loans', icon: renderIcon('i-lucide-banknote') },
+      { label: 'Assinaturas', key: '/subscriptions', icon: renderIcon('i-lucide-refresh-cw') },
+    ]
   },
   {
     label: 'Análise',
-    items: [
-      { label: 'Calendário', icon: 'pi pi-calendar', to: '/calendar' },
-      { label: 'Relatórios', icon: 'pi pi-chart-line', to: '/reports' },
-    ],
+    key: 'analysis',
+    type: 'group',
+    children: [
+      { label: 'Calendário', key: '/calendar', icon: renderIcon('i-lucide-calendar') },
+      { label: 'Relatórios', key: '/reports', icon: renderIcon('i-lucide-bar-chart-3') },
+    ]
   },
   {
     label: 'Preferências',
-    items: [
-      { label: 'Meu Perfil', icon: 'pi pi-user', to: '/profile' },
-      { label: 'Configurações', icon: 'pi pi-cog', to: '/settings' },
-    ],
-  },
-])
+    key: 'prefs',
+    type: 'group',
+    children: [
+      { label: 'Meu Perfil', key: '/profile', icon: renderIcon('i-lucide-user') },
+      { label: 'Configurações', key: '/settings', icon: renderIcon('i-lucide-settings') },
+    ]
+  }
+]
+
+function handleMenuClick(key: string) {
+  router.push(key)
+  emit('close')
+}
 </script>
 
 <style scoped>
 .pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 1rem);
+  padding-bottom: env(safe-area-inset-bottom, 1.5rem);
+}
+:deep(.n-menu-item-content--selected) {
+  background-color: rgba(139, 92, 246, 0.1) !important;
+}
+:deep(.n-menu-item-content--selected .n-menu-item-content-header) {
+  color: #8b5cf6 !important;
+  font-weight: 700;
+}
+:deep(.n-menu-item-content--selected .n-menu-item-content__icon) {
+  color: #8b5cf6 !important;
 }
 </style>

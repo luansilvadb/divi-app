@@ -1,24 +1,25 @@
 <template>
-  <div
-    class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50"
-  >
-    <!-- Desktop Sidebar (Only on Desktop) -->
+  <NLayout has-sider class="h-screen w-screen !bg-zinc-50 dark:!bg-zinc-950">
+    <!-- Desktop Sidebar -->
     <AppSidebar v-if="!isMobile" @logout="emit('logout')" />
 
-    <!-- Main Content Area -->
-    <main
-      class="flex-1 h-full overflow-y-auto overflow-x-hidden relative flex flex-col"
-      :class="{ 'pb-[4.5rem] md:pb-0': isMobile }"
-    >
-      <!-- Top header (Global Status) -->
-      <GlobalHeader />
+    <NLayout class="!bg-transparent">
+      <NLayoutContent
+        embedded
+        :native-scrollbar="false"
+        class="!bg-transparent h-full flex flex-col"
+        :content-style="{ paddingBottom: isMobile ? '5rem' : '0' }"
+      >
+        <!-- Top header -->
+        <GlobalHeader />
 
-      <div id="main-scroll-container" class="flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden">
-        <slot />
-      </div>
-    </main>
+        <div id="main-scroll-container" class="flex-1 p-6 md:p-12">
+          <slot />
+        </div>
+      </NLayoutContent>
+    </NLayout>
 
-    <!-- Mobile Navigation (Only on Mobile) -->
+    <!-- Mobile Navigation -->
     <template v-if="isMobile">
       <AppBottomBar @open-drawer="isMobileDrawerOpen = true" />
       <AppMobileDrawer
@@ -28,35 +29,33 @@
       />
     </template>
 
-    <!-- Global Floating Action Button (FAB) - Premium Fintech Design -->
-    <BaseButton
+    <!-- Global Floating Action Button -->
+    <NButton
       v-if="isMobile"
-      variant="primary"
-      :pt="{
-        root: {
-          class:
-            'group fixed bottom-[6.5rem] right-6 !w-[3.5rem] !h-[3.5rem] !rounded-full !p-0 flex items-center justify-center bg-white dark:bg-surface-900 border border-surface-100 dark:border-surface-700 text-surface-900 dark:text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] hover:bg-surface-50 dark:hover:bg-surface-800 hover:-translate-y-0.5 active:!scale-95 transition-all duration-200 z-[110] cursor-pointer',
-        },
-      }"
+      type="primary"
+      circle
+      size="large"
+      class="fixed bottom-24 right-6 !w-14 !h-14 shadow-xl z-50 hover:scale-110 active:scale-95 transition-transform"
       @click="isTransactionDialogOpen = true"
-      aria-label="Nova Transação"
     >
-      <i class="pi pi-plus text-xl transition-transform duration-200 group-hover:rotate-90"></i>
-    </BaseButton>
+      <template #icon>
+        <i class="i-lucide-plus text-2xl"></i>
+      </template>
+    </NButton>
 
     <!-- Global Transaction Dialog -->
     <TransactionDialog :show="isTransactionDialogOpen" @close="isTransactionDialogOpen = false" />
-  </div>
+  </NLayout>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { NLayout, NLayoutContent, NButton } from 'naive-ui'
 import AppSidebar from '@/shared/components/organisms/AppSidebar.vue'
 import AppBottomBar from '@/shared/components/organisms/AppBottomBar.vue'
 import AppMobileDrawer from '@/shared/components/organisms/AppMobileDrawer.vue'
 import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
 import GlobalHeader from '@/shared/components/organisms/GlobalHeader.vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import { ref } from 'vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 
 const isMobile = useIsMobile()

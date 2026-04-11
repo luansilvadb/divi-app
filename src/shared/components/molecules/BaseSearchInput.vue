@@ -1,50 +1,26 @@
 <template>
   <div class="base-search-input w-full relative group">
-    <IconField class="w-full">
-      <InputIcon
-        v-if="loading"
-        class="pi pi-spinner pi-spin text-lg transition-all duration-300 !text-secondary absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0"
-      />
-      <InputIcon
-        v-else
-        class="pi pi-search text-lg transition-all duration-300 absolute !top-1/2 !-translate-y-1/2 left-4 z-10 !mt-0 !text-surface-400 dark:text-surface-400"
-        :class="{ '!text-slate-500 dark:!text-slate-400 scale-110 !opacity-100': localValue }"
-      />
-
-      <InputText
-        v-model="localValue"
-        :placeholder="placeholder"
-        class="w-full pl-12 pr-12 py-4 !rounded-xl transition-all duration-300 !bg-surface-700 !border border-surface-200/10 shadow-lg hover:!border-white/10 focus:!border-primary/30 focus:!ring-0 outline-none !text-surface-800 dark:text-surface-50 placeholder:!text-surface-600/40 dark:text-surface-200/40 placeholder:!font-medium placeholder:!tracking-tight"
-        @input="onInput(($event.target as HTMLInputElement).value)"
-      />
-
-      <transition
-        enter-active-class="transform transition duration-300 ease-out"
-        enter-from-class="opacity-0 translate-x-2"
-        enter-to-class="opacity-100 translate-x-0"
-        leave-active-class="transform transition duration-200 ease-in"
-        leave-from-class="opacity-100 translate-x-0"
-        leave-to-class="opacity-0 translate-x-2"
-      >
-        <button
-          v-if="localValue"
-          class="absolute inset-y-0 right-4 flex items-center text-surface-400 dark:text-surface-400 hover:text-secondary transition-colors z-10 p-2 cursor-pointer"
-          aria-label="Limpar busca"
-          @click="clear"
-        >
-          <i class="pi pi-times" />
-        </button>
-      </transition>
-    </IconField>
+    <NInput
+      v-model:value="localValue"
+      :placeholder="placeholder"
+      size="large"
+      class="!rounded-2xl !bg-zinc-100 dark:!bg-zinc-900 !border-zinc-200 dark:!border-zinc-800 transition-all duration-300"
+      @input="onInput"
+      clearable
+      @clear="clear"
+    >
+      <template #prefix>
+        <i v-if="loading" class="i-lucide-loader-2 animate-spin text-lg text-violet-500"></i>
+        <i v-else class="i-lucide-search text-lg text-zinc-400 group-focus-within:text-violet-500 transition-colors"></i>
+      </template>
+    </NInput>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import IconField from 'primevue/iconfield'
-import InputIcon from 'primevue/inputicon'
-import InputText from 'primevue/inputtext'
+import { NInput } from 'naive-ui'
 
 const props = defineProps<{
   modelValue: string
@@ -57,7 +33,6 @@ const emit = defineEmits(['update:modelValue'])
 
 const localValue = ref(props.modelValue)
 
-// Update local value when prop changes externally
 watch(
   () => props.modelValue,
   (newVal) => {
@@ -82,3 +57,13 @@ const clear = () => {
   emit('update:modelValue', '')
 }
 </script>
+
+<style scoped>
+:deep(.n-input) {
+  --n-border-radius: 16px !important;
+  --n-placeholder-color: #a1a1aa !important;
+}
+:deep(.n-input__border) {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+</style>

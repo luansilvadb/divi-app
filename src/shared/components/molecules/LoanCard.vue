@@ -1,77 +1,82 @@
 <template>
-  <BaseCard class="loan-card" clickable>
+  <BaseCard class="loan-card hover-glow" clickable>
     <div class="card-top flex justify-between items-start">
       <div class="loan-identity flex gap-4 items-center">
-        <BaseIconBox color="var(--color-secondary-main)" size="lg">
-          <i class="pi pi-briefcase text-2xl"></i>
+        <BaseIconBox color="#3b82f6" size="lg">
+          <i class="i-lucide-briefcase text-2xl"></i>
         </BaseIconBox>
         <div class="flex flex-col gap-0.5">
           <h3
-            class="loan-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight leading-tight"
+            class="loan-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight leading-tight"
           >
             {{ loan.name }}
           </h3>
-          <ItemSyncIndicator :status="loan.sync_status" />
-          <span class="loan-due text-xs font-semibold text-surface-400 dark:text-surface-400"
-            >Vence: {{ formatDate(loan.due_date) }}</span
-          >
+          <div class="flex items-center gap-2">
+            <ItemSyncIndicator :status="loan.sync_status" />
+            <span class="loan-due text-[10px] font-bold text-zinc-400 uppercase tracking-widest"
+              >Vence: {{ formatDate(loan.due_date) }}</span
+            >
+          </div>
         </div>
       </div>
     </div>
 
     <div
-      class="loan-metrics grid grid-cols-2 gap-4 bg-surface-50/50 dark:bg-surface-800/5 p-4 rounded-xl mt-4"
+      class="loan-metrics grid grid-cols-2 gap-4 bg-zinc-100/50 dark:bg-zinc-800/20 p-4 rounded-2xl mt-5 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner"
     >
       <div class="metric flex flex-col gap-1">
         <span
-          class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
+          class="label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
           >Saldo Devedor</span
         >
-        <span class="value text-lg font-black text-error leading-none">{{
+        <span class="value text-lg font-black text-red-500 leading-none">{{
           formatCurrency(loan.remaining_value)
         }}</span>
       </div>
       <div class="metric flex flex-col gap-1">
         <span
-          class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
-          >Taxa</span
+          class="label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
+          >Taxa Mensal</span
         >
         <div class="flex items-center">
-          <BaseBadge variant="subtle" color="var(--color-primary-main)">
-            {{ loan.interest_rate || '0' }}% a.m.
+          <BaseBadge variant="subtle" color="#8b5cf6">
+            {{ loan.interest_rate || '0' }}%
           </BaseBadge>
         </div>
       </div>
     </div>
 
-    <div class="loan-progress-section flex flex-col gap-2 mt-4">
+    <div class="loan-progress-section flex flex-col gap-2 mt-5">
       <div
-        class="progress-info flex justify-between text-xs font-bold text-surface-600 dark:text-surface-200"
+        class="progress-info flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest"
       >
         <span>{{ getProgress(loan).toFixed(1) }}% pago</span>
         <span class="opacity-60">de {{ formatCurrency(loan.total_value) }}</span>
       </div>
-      <BaseProgressBar :percentage="getProgress(loan)" color="var(--color-primary-main)" />
+      <BaseProgressBar :percentage="getProgress(loan)" color="#3b82f6" />
     </div>
 
-    <div class="card-footer pt-4 border-t border-surface-200 dark:border-surface-800/10 mt-2">
-      <div class="card-actions flex justify-end gap-2">
-        <BaseButton
-          variant="ghost"
-          class="!px-4 !py-1.5 text-xs text-error"
-          @click="$emit('delete', loan.id)"
+    <div class="card-footer pt-4 border-t border-zinc-100 dark:border-zinc-800 mt-4">
+      <div class="card-actions flex justify-end gap-3">
+        <NButton
+          quaternary
+          size="small"
+          class="!text-red-500 font-bold !rounded-xl"
+          @click.stop="$emit('delete', loan.id)"
         >
           Remover
-        </BaseButton>
-        <BaseButton variant="outline" class="!px-4 !py-1.5 text-xs"> Registrar Parcela </BaseButton>
+        </NButton>
+        <NButton secondary size="small" class="!rounded-xl font-bold"> 
+          Registrar Parcela 
+        </NButton>
       </div>
     </div>
   </BaseCard>
 </template>
 
 <script setup lang="ts">
+import { NButton } from 'naive-ui'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
 import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'

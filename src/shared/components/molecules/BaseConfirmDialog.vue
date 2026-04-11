@@ -1,163 +1,92 @@
 <template>
-  <component
-    :is="isMobile ? Drawer : Dialog"
-    :visible="show"
-    @update:visible="$emit('cancel')"
-    :position="isMobile ? 'bottom' : undefined"
-    :modal="true"
-    :dismissableMask="true"
-    :closable="false"
-    :showHeader="false"
-    :class="[
-      '!bg-transparent !border-none !shadow-none',
-      isMobile ? '!h-auto' : 'w-[95%] max-w-[400px]',
-    ]"
-    :pt="isMobile ? bottomSheetPt : modalPt"
-  >
-    <template v-if="!isMobile">
-      <BaseCard
-        class="w-full apple-material-thick shadow-apple-high border border-surface-200/10 overflow-hidden flex flex-col relative"
-        padding="none"
-      >
-        <div class="p-8 text-center flex flex-col items-center">
-          <div
-            class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center text-error mb-6 border border-error-main/20 shadow-inner"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              <line x1="10" y1="11" x2="10" y2="17"></line>
-              <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
-          </div>
+  <template v-if="isMobile">
+    <NDrawer
+      :show="show"
+      @update:show="handleClose"
+      placement="bottom"
+      :height="'auto'"
+      class="!rounded-t-[2.5rem] !bg-zinc-50 dark:!bg-zinc-950 overflow-hidden"
+    >
+      <div class="p-8 text-center flex flex-col items-center">
+        <div class="w-12 h-1.5 bg-zinc-300 dark:bg-zinc-700 rounded-full mb-8 opacity-50 shrink-0"></div>
 
-          <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
-            {{ title || 'Tem certeza?' }}
-          </h3>
-          <p
-            class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70"
-          >
-            {{
-              message ||
-              'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
-            }}
-          </p>
+        <div class="w-16 h-16 rounded-3xl bg-red-500/10 flex items-center justify-center text-red-500 mb-6 border border-red-500/20 shadow-inner">
+          <i class="i-lucide-trash-2 text-3xl"></i>
         </div>
 
-        <div class="flex border-t border-surface-200/10">
-          <BaseButton
-            variant="ghost"
-            class="flex-1 !py-5 font-black uppercase text-[0.7rem] tracking-widest text-surface-600 dark:text-surface-200 hover:bg-white/5 transition-all border-r border-surface-200/10 !rounded-none"
-            @click="$emit('cancel')"
-          >
-            {{ cancelText || 'Cancelar' }}
-          </BaseButton>
-          <BaseButton
-            variant="danger"
-            class="flex-1 !py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] transition-all flex items-center justify-center gap-2 group !rounded-none"
-            @click="$emit('confirm')"
-          >
-            {{ confirmText || 'Excluir' }}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="group-hover:translate-x-0.5 transition-transform"
-            >
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </BaseButton>
-        </div>
-      </BaseCard>
-    </template>
-    <template v-else>
-      <div
-        class="apple-material-thick rounded-t-[2rem] p-8 text-center flex flex-col items-center shadow-[0_-10px_40px_rgba(0,0,0,0.4)]"
-      >
-        <!-- Drag Handle for Visual Cue -->
-        <div class="w-12 h-1.5 bg-white/10 rounded-full mb-8 shrink-0"></div>
-
-        <!-- Icon/Warning -->
-        <div
-          class="w-16 h-16 rounded-full bg-error/10 flex items-center justify-center text-error mb-6 border border-error-main/20 shadow-inner"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M3 6h18"></path>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            <line x1="10" y1="11" x2="10" y2="17"></line>
-            <line x1="14" y1="11" x2="14" y2="17"></line>
-          </svg>
-        </div>
-
-        <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
+        <h3 class="text-xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight mb-2">
           {{ title || 'Tem certeza?' }}
         </h3>
-        <p
-          class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70 mb-8"
-        >
-          {{
-            message ||
-            'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
-          }}
+        <p class="text-sm font-medium text-zinc-500 dark:text-zinc-400 leading-relaxed mb-8 px-4">
+          {{ message || 'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.' }}
         </p>
 
-        <!-- Action Buttons -->
         <div class="w-full space-y-3 pb-safe">
           <BaseButton
             variant="danger"
-            class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-[0.15em]"
+            class="w-full !h-14 !rounded-2xl"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}
           </BaseButton>
           <BaseButton
             variant="ghost"
-            class="w-full !py-4 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100"
+            class="w-full !h-12 !rounded-2xl opacity-50"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
           </BaseButton>
         </div>
       </div>
-    </template>
-  </component>
+    </NDrawer>
+  </template>
+
+  <template v-else>
+    <NModal
+      :show="show"
+      @update:show="handleClose"
+      preset="card"
+      class="!max-w-[400px] !rounded-[2.5rem] !bg-zinc-50 dark:!bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-2xl"
+      :header-style="{ display: 'none' }"
+      :content-style="{ padding: '0' }"
+    >
+      <div class="p-10 text-center flex flex-col items-center">
+        <div class="w-20 h-20 rounded-[2rem] bg-red-500/10 flex items-center justify-center text-red-500 mb-8 border border-red-500/20 shadow-inner">
+          <i class="i-lucide-trash-2 text-4xl"></i>
+        </div>
+
+        <h3 class="text-2xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight mb-3">
+          {{ title || 'Tem certeza?' }}
+        </h3>
+        <p class="text-sm font-medium text-zinc-500 dark:text-zinc-400 leading-relaxed mb-10 px-2">
+          {{ message || 'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.' }}
+        </p>
+
+        <div class="grid grid-cols-2 gap-4 w-full">
+          <BaseButton
+            variant="ghost"
+            class="!h-12 !rounded-xl text-zinc-400"
+            @click="$emit('cancel')"
+          >
+            {{ cancelText || 'Cancelar' }}
+          </BaseButton>
+          <BaseButton
+            variant="danger"
+            class="!h-12 !rounded-xl shadow-lg shadow-red-500/20"
+            @click="$emit('confirm')"
+          >
+            {{ confirmText || 'Excluir' }}
+          </BaseButton>
+        </div>
+      </div>
+    </NModal>
+  </template>
 </template>
 
 <script setup lang="ts">
+import { NModal, NDrawer } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
-import Dialog from 'primevue/dialog'
-import Drawer from 'primevue/drawer'
-import BaseCard from '../atoms/BaseCard.vue'
 import BaseButton from '../atoms/BaseButton.vue'
-import { useOverlayPt } from '@/shared/composables/usePrimeOverlay'
 
 defineProps<{
   show: boolean
@@ -167,15 +96,16 @@ defineProps<{
   cancelText?: string
 }>()
 
-defineEmits(['confirm', 'cancel'])
-
+const emit = defineEmits(['confirm', 'cancel'])
 const isMobile = useIsMobile()
 
-const { modalPt, bottomSheetPt } = useOverlayPt()
+function handleClose(val: boolean) {
+  if (!val) emit('cancel')
+}
 </script>
 
 <style scoped>
 .pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 2rem);
+  padding-bottom: env(safe-area-inset-bottom, 1.5rem);
 }
 </style>

@@ -5,15 +5,15 @@
     subtitle="Defina metas e controle seus gastos mensais."
     :loading="store.isLoading"
   >
-    <!-- Header Actions -->
     <template #action>
       <div class="flex items-center justify-start md:justify-end gap-3 w-full">
         <BaseButton
           v-if="!isMobile"
           variant="primary"
-          class="!rounded-xl px-6 h-10 w-full md:w-auto"
+          class="!rounded-xl px-6 h-10 w-full md:w-auto shadow-lg shadow-violet-500/20"
           @click="showAddBudgetModal = true"
         >
+          <template #icon><i class="i-lucide-plus text-lg"></i></template>
           Novo Orçamento
         </BaseButton>
       </div>
@@ -22,40 +22,23 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-32 md:pb-0">
       <!-- MAIN COLUMN -->
       <main class="lg:col-span-2 space-y-8 order-2 lg:order-1">
-        <!-- Search Bar -->
         <BaseSearchInput
           v-model="store.searchQuery"
           placeholder="Buscar por nome do orçamento..."
         />
 
-        <!-- Empty State (Matches TransactionsView Style) -->
+        <!-- Empty State -->
         <div
           v-if="store.budgets.length === 0 && !store.isLoading && !store.searchQuery"
-          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
+          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-fade-in"
         >
-          <div
-            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
+          <div class="w-24 h-24 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-8 text-violet-500">
+            <i class="i-lucide-wallet text-5xl"></i>
           </div>
-          <h3
-            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
-          >
+          <h3 class="text-xl font-black uppercase tracking-widest mb-4 text-zinc-800 dark:text-zinc-50">
             Nenhum orçamento
           </h3>
-          <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs mb-8">
+          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400 leading-relaxed max-w-xs mb-8">
             Você ainda não criou planejamentos de gastos ou metas de economia.
           </p>
           <BaseButton
@@ -72,43 +55,19 @@
           v-else-if="filteredBudgets.length === 0 && !store.isLoading && store.searchQuery"
           class="flex flex-col items-center justify-center py-20 text-center opacity-40"
         >
-          <div
-            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+          <div class="w-20 h-20 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-6">
+            <i class="i-lucide-search-x text-4xl text-zinc-400"></i>
           </div>
-          <h3 class="text-lg font-black uppercase tracking-widest mb-2">Nenhum resultado</h3>
-          <p class="text-xs font-bold uppercase tracking-widest">{{ searchEmptySubtitle }}</p>
-          <BaseButton
-            variant="secondary"
-            class="!rounded-xl px-8 mt-8 h-10"
-            @click="store.searchQuery = ''"
-          >
+          <h3 class="text-lg font-black uppercase tracking-widest mb-2 text-zinc-800 dark:text-zinc-50">Nenhum resultado</h3>
+          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400">{{ searchEmptySubtitle }}</p>
+          <NButton quaternary circle class="mt-8 text-violet-500 font-bold" @click="store.searchQuery = ''">
             Limpar Busca
-          </BaseButton>
+          </NButton>
         </div>
 
         <!-- Loading State -->
-        <div v-else-if="store.isLoading" class="flex flex-col gap-6">
-          <!-- Skeleton items could go here if available -->
-          <div class="flex justify-center py-20">
-            <div
-              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
-            ></div>
-          </div>
+        <div v-else-if="store.isLoading" class="flex justify-center py-20">
+          <i class="i-lucide-loader-2 animate-spin text-4xl text-violet-500"></i>
         </div>
 
         <!-- Budget List Grid -->
@@ -128,79 +87,41 @@
 
       <!-- SIDEBAR COLUMN -->
       <aside class="side-column space-y-8 order-1 lg:order-2">
-        <!-- Performance Overview -->
-        <BaseCard>
+        <BaseCard class="hover-glow">
           <template #header>Visão Geral</template>
           <div class="flex flex-col gap-6 pt-2">
             <BaseSummaryItem
               label="Total Orçado"
               :value="formatCurrency(store.totalBudgeted)"
-              color="var(--color-primary-main)"
+              color="#8b5cf6"
               status="info"
             />
 
-            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
+            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
 
             <BaseSummaryItem
               label="Total Consumido"
               :value="formatCurrency(store.totalConsumed)"
-              :color="
-                store.totalConsumed > store.totalBudgeted
-                  ? 'var(--color-error-main)'
-                  : 'var(--color-success-main)'
-              "
-              :status="store.totalConsumed > store.totalBudgeted ? 'error' : 'normal'"
+              :color="store.totalConsumed > store.totalBudgeted ? '#ef4444' : '#10b981'"
+              :status="store.totalConsumed > store.totalBudgeted ? 'error' : 'success'"
             />
 
-            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
+            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
 
-            <!-- Health Status Indicator (Standardized Highlight Box) -->
-            <div
-              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
-            >
-              <span
-                class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
-                >Status de Saúde</span
-              >
+            <div class="w-full p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-950 flex flex-col items-center text-center shadow-inner border border-zinc-200 dark:border-zinc-800">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Status de Saúde</span>
               <div
                 v-if="store.totalConsumed > store.totalBudgeted"
-                class="text-error font-black flex items-center gap-2 uppercase text-xs tracking-widest"
+                class="text-red-500 font-black flex items-center gap-2 uppercase text-xs tracking-widest"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
+                <i class="i-lucide-alert-triangle text-lg"></i>
                 Limite Excedido
               </div>
               <div
                 v-else
-                class="text-success-main font-black flex items-center gap-2 uppercase text-xs tracking-widest"
+                class="text-emerald-500 font-black flex items-center gap-2 uppercase text-xs tracking-widest"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+                <i class="i-lucide-check-circle text-lg"></i>
                 Dentro do Planejado
               </div>
             </div>
@@ -208,29 +129,16 @@
         </BaseCard>
 
         <!-- Insights -->
-        <BaseCard>
-          <template #header>Sinais Relevantes</template>
+        <BaseCard class="hover-glow">
+          <template #header>Insights de IA</template>
           <div class="flex flex-col gap-4 pt-2">
-            <!-- Insight Item -->
-            <div
-              class="flex gap-4 p-5 rounded-3xl bg-surface-50 dark:bg-surface-950/50 border border-surface-200 dark:border-surface-800/10 relative overflow-hidden group"
-            >
-              <!-- Animated Accent Glow -->
-              <div
-                class="absolute -right-4 -top-4 w-12 h-12 bg-primary/10 blur-2xl rounded-full transition-all group-hover:scale-150"
-              ></div>
-
+            <div class="flex gap-4 p-5 rounded-3xl bg-violet-500/5 border border-violet-500/10 relative overflow-hidden group">
+              <div class="absolute -right-4 -top-4 w-12 h-12 bg-violet-500/10 blur-2xl rounded-full transition-all group-hover:scale-150"></div>
               <div class="flex flex-col gap-1 relative z-10">
-                <span
-                  class="text-[0.6rem] font-black uppercase tracking-[0.2em] text-primary opacity-80"
-                  >Insight de IA</span
-                >
-                <p
-                  class="text-[0.8rem] font-bold text-surface-600 dark:text-surface-300 leading-relaxed"
-                >
-                  Você economizou <span class="text-primary font-black">R$ 340,00</span> em
-                  <span class="text-surface-900 dark:text-surface-50">Lazer</span>
-                  comparado ao mês passado. Ótima performance!
+                <p class="text-sm font-bold text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                  Você economizou <span class="text-violet-500 font-black">R$ 340,00</span> em
+                  <span class="text-zinc-800 dark:text-zinc-50 font-black">Lazer</span>
+                  comparado ao mês passado.
                 </p>
               </div>
             </div>
@@ -239,13 +147,13 @@
       </aside>
     </div>
 
-    <!-- Budget Dialog -->
     <BudgetDialog :show="showAddBudgetModal" :budget="selectedBudget" @close="handleCloseModal" />
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { NButton } from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'

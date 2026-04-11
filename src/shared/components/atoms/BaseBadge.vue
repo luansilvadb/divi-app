@@ -1,12 +1,18 @@
 <template>
-  <Badge :value="label" :severity="primeSeverity">
+  <NTag
+    :type="naiveType"
+    :bordered="variant === 'outline'"
+    :round="true"
+    class="!font-bold !px-3"
+    size="small"
+  >
     <slot>{{ label }}</slot>
-  </Badge>
+  </NTag>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import Badge from 'primevue/badge'
+import { NTag } from 'naive-ui'
 import type { UIStatus } from '@/shared/types/ui'
 
 type BadgeVariant = 'subtle' | 'outline' | 'solid'
@@ -24,18 +30,18 @@ const props = withDefaults(
   },
 )
 
-const primeSeverity = computed(() => {
+const naiveType = computed(() => {
   switch (props.status) {
     case 'success':
       return 'success'
     case 'error':
-      return 'danger'
+      return 'error'
     case 'warning':
-      return 'warn'
+      return 'warning'
     case 'info':
       return 'info'
     default:
-      return undefined
+      return 'default'
   }
 })
 </script>

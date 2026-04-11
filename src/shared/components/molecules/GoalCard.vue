@@ -1,20 +1,20 @@
 <template>
-  <BaseCard class="goal-card" clickable>
+  <BaseCard class="goal-card hover-glow" clickable>
     <template #header>
       <div class="header-content flex justify-between items-center w-full">
         <div class="goal-title-area flex items-center gap-4">
-          <BaseIconBox :color="goal.color || 'var(--color-primary-main)'">
+          <BaseIconBox :color="goal.color || '#8b5cf6'">
             <span class="emoji-icon text-xl leading-none" v-if="goal.icon">{{ goal.icon }}</span>
-            <i class="pi pi-bullseye text-xl"></i>
+            <i v-else class="i-lucide-target text-xl"></i>
           </BaseIconBox>
           <span
-            class="goal-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight"
+            class="goal-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight"
             >{{ goal.name }}</span
           >
           <ItemSyncIndicator :status="goal.sync_status" />
         </div>
 
-        <BaseBadge :color="goal.color || 'var(--color-primary-main)'" variant="subtle">
+        <BaseBadge :color="goal.color || '#8b5cf6'" variant="subtle">
           {{ goal.type === 'saving' ? 'Acumular' : 'Quitação' }}
         </BaseBadge>
       </div>
@@ -24,17 +24,17 @@
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-2">
           <span
-            class="consumed text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter"
+            class="consumed text-2xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter"
             >{{ formatCurrency(goal.current_value) }}</span
           >
           <span
-            class="limit text-sm font-semibold text-surface-600 dark:text-surface-200 opacity-70"
+            class="limit text-sm font-semibold text-zinc-400 opacity-70"
             >/ {{ formatCurrency(goal.target_value) }}</span
           >
         </div>
         <div
-          class="percentage-pill text-xs font-black bg-surface-100 dark:bg-surface-950 bg-surface-800/10 px-3 py-1.5 rounded-lg shadow-xs border border-white/10"
-          :style="{ color: goal.color || 'var(--color-primary-main)' }"
+          class="percentage-pill text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800"
+          :style="{ color: goal.color || '#8b5cf6' }"
         >
           {{ Math.round(percentage) }}%
         </div>
@@ -43,17 +43,17 @@
       <BaseProgressBar :percentage="percentage" :color="goal.color" />
 
       <div
-        class="goal-footer-details flex justify-between items-center pt-4 border-t border-surface-200 dark:border-surface-200/10"
+        class="goal-footer-details flex justify-between items-center pt-4 border-t border-zinc-100 dark:border-zinc-800"
       >
         <div class="insight-group flex flex-col gap-0.5">
           <span
-            class="insight-label text-[0.7rem] font-bold text-surface-600 dark:text-surface-200 uppercase tracking-widest"
+            class="insight-label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
           >
             {{ percentage < 100 ? 'Faltam' : 'Objetivo' }}
           </span>
           <span
-            class="insight-value text-base font-black text-surface-800 dark:text-surface-50 tracking-tight"
-            :class="{ 'text-success-main': percentage >= 100 }"
+            class="insight-value text-base font-black text-zinc-800 dark:text-zinc-50 tracking-tight"
+            :class="{ '!text-emerald-500': percentage >= 100 }"
           >
             {{
               percentage < 100
@@ -64,9 +64,9 @@
         </div>
 
         <div
-          class="date-badge flex items-center gap-2 text-[0.75rem] font-bold text-surface-600 dark:text-surface-200 bg-black/3 bg-surface-800/10 px-3 py-2 rounded-xl border border-black/2 dark:border-white/2"
+          class="date-badge flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-xl"
         >
-          <i class="pi pi-calendar text-xs"></i>
+          <i class="i-lucide-calendar-days text-sm"></i>
           {{ formatDate(goal.created_at) }}
         </div>
       </div>
@@ -100,7 +100,7 @@ const formatCurrency = (value: number) => {
 }
 
 const formatDate = (dateString?: string) => {
-  if (!dateString) return 'Data não disponível'
-  return new Date(dateString).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
+  if (!dateString) return '---'
+  return new Date(dateString).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' }).toUpperCase()
 }
 </script>

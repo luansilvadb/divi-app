@@ -1,47 +1,58 @@
 <template>
-  <Button
-    v-ripple
-    :severity="primeSeverity"
-    :outlined="variant === 'outline'"
-    :text="variant === 'ghost'"
+  <NButton
+    :type="naiveType"
+    :ghost="variant === 'outline' || variant === 'ghost'"
+    :quaternary="variant === 'ghost'"
     :disabled="disabled || loading"
     :loading="loading"
     v-bind="$attrs"
+    class="!font-bold !rounded-xl transition-all duration-modern ease-modern active:scale-95"
     :class="[
-      'font-bold rounded-xl transition-all duration-apple-fast ease-apple outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-surface-main active:scale-95 px-6 py-2.5',
-      { 'apple-button-filled': variant === 'primary' },
-      { 'apple-button-tinted': variant === 'secondary' },
-      { 'apple-button-danger-filled': variant === 'danger' },
-      { 'apple-button-danger-tinted': variant === 'danger-tinted' },
+      { '!px-6 !py-2.5': size === 'medium' },
+      { '!px-4 !py-1.5': size === 'small' },
+      { 'glass-button': variant === 'secondary' }
     ]"
   >
+    <template v-if="$slots.icon" #icon>
+      <slot name="icon" />
+    </template>
     <slot />
-  </Button>
+  </NButton>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import Button from 'primevue/button'
+import { NButton } from 'naive-ui'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'danger-tinted'
+type ButtonSize = 'small' | 'medium' | 'large'
 
 const props = withDefaults(
   defineProps<{
     variant?: ButtonVariant
+    size?: ButtonSize
     disabled?: boolean
     loading?: boolean
   }>(),
   {
     variant: 'primary',
+    size: 'medium',
     disabled: false,
     loading: false,
   },
 )
 
-const primeSeverity = computed(() => {
-  if (props.variant === 'danger' || props.variant === 'danger-tinted') return 'danger'
-  if (props.variant === 'secondary') return 'secondary'
-  if (props.variant === 'ghost' || props.variant === 'outline') return 'secondary'
-  return undefined // Primary is default
+const naiveType = computed(() => {
+  if (props.variant === 'danger' || props.variant === 'danger-tinted') return 'error'
+  if (props.variant === 'primary') return 'primary'
+  if (props.variant === 'secondary') return 'info'
+  return 'default'
 })
 </script>
+
+<style scoped>
+.glass-button {
+  background: rgba(var(--color-zinc-500-rgb), 0.1);
+  backdrop-filter: blur(8px);
+}
+</style>

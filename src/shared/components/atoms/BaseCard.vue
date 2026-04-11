@@ -1,119 +1,102 @@
 <template>
-  <Card
+  <NCard
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-apple ease-apple"
+    class="glass-card overflow-hidden transition-all duration-modern ease-modern"
     :class="{
-      'cursor-pointer hover:scale-[1.01] hover:brightness-[1.02] active:scale-[0.99]': clickable,
-      'border-error-main/50 animate-pulse-error': error,
+      'cursor-pointer hover:scale-[1.01] hover:brightness-[1.02] active:scale-[0.99] hover-glow': clickable,
+      'border-red-500/50 animate-pulse': error,
       'h-full flex flex-col': hFull,
     }"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"
     @click="clickable && $emit('click')"
-    @keydown.enter="clickable && $emit('click')"
-    @keydown.space.prevent="clickable && $emit('click')"
   >
-    <template #header v-if="$slots.header">
-      <div
-        class="px-6 py-4 border-b border-surface-200 dark:border-surface-200/10 font-bold text-surface-800 dark:text-surface-50 text-lg tracking-tight flex items-center justify-between"
-      >
+    <template v-if="$slots.header" #header>
+      <div class="font-bold text-lg tracking-tight">
         <slot name="header" />
       </div>
     </template>
 
-    <template #content>
-      <!-- Error State -->
-      <div
-        v-if="error"
-        class="p-8 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
-      >
-        <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
-          <i class="pi pi-exclamation-circle text-2xl"></i>
-        </div>
-        <div class="flex flex-col gap-1">
-          <h3 class="text-error font-bold">Erro ao carregar dados</h3>
-          <p class="text-surface-600 dark:text-surface-200 text-sm max-w-[200px]">
-            {{ errorMsg || 'Não foi possível carregar as informações agora.' }}
-          </p>
-        </div>
-        <button
-          v-if="retryable"
-          @click.stop="$emit('retry')"
-          class="mt-2 px-4 py-2 bg-error text-white rounded-xl text-sm font-bold hover:opacity-90 active:scale-95 transition-all"
-        >
-          Tentar novamente
-        </button>
-      </div>
-
-      <!-- Loading State -->
-      <div v-else-if="isLoading" class="p-6 flex flex-col gap-4 animate-fade-in">
-        <div class="flex items-center gap-4">
-          <BaseSkeleton width="40px" height="40px" rounded />
-          <div class="flex flex-col gap-2 flex-1">
-            <BaseSkeleton width="40%" height="12px" />
-            <BaseSkeleton width="70%" height="20px" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Empty State -->
-      <div
-        v-else-if="isEmpty"
-        class="p-12 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
-      >
-        <BaseIconBox :color="emptyColor" size="lg" class="opacity-50 mb-2">
-          <slot name="empty-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-              <path d="M21 3v5h-5" />
-            </svg>
-          </slot>
-        </BaseIconBox>
-        <div class="flex flex-col gap-1">
-          <h3 class="text-surface-800 dark:text-surface-50 font-bold text-lg">
-            {{ emptyTitle || 'Sem dados' }}
-          </h3>
-          <p class="text-surface-600 dark:text-surface-200 text-sm max-w-[250px] leading-relaxed">
-            {{ emptySubtitle || 'Não há informações disponíveis para exibir neste momento.' }}
-          </p>
-        </div>
-        <slot name="empty-action" />
-      </div>
-
-      <!-- Default content -->
-      <div
-        v-else
-        class="p-6 text-surface-800 dark:text-surface-50"
-        :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }"
-      >
-        <slot />
-      </div>
+    <template v-if="$slots.headerExtra" #header-extra>
+      <slot name="headerExtra" />
     </template>
 
-    <template #footer v-if="$slots.footer">
-      <div
-        class="px-6 py-4 bg-surface-50 dark:bg-surface-800/10 border-t border-surface-200 dark:border-surface-200/10 text-surface-600 dark:text-surface-200 text-sm font-medium"
+    <!-- Error State -->
+    <div
+      v-if="error"
+      class="p-8 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
+    >
+      <div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500">
+        <i class="i-lucide-alert-circle text-2xl"></i>
+      </div>
+      <div class="flex flex-col gap-1">
+        <h3 class="text-red-500 font-bold">Erro ao carregar dados</h3>
+        <p class="text-zinc-600 dark:text-zinc-400 text-sm max-w-[200px]">
+          {{ errorMsg || 'Não foi possível carregar as informações agora.' }}
+        </p>
+      </div>
+      <NButton
+        v-if="retryable"
+        type="error"
+        size="small"
+        @click.stop="$emit('retry')"
+        class="mt-2 !rounded-xl font-bold"
       >
+        Tentar novamente
+      </NButton>
+    </div>
+
+    <!-- Loading State -->
+    <div v-else-if="isLoading" class="p-6 flex flex-col gap-4 animate-fade-in">
+      <div class="flex items-center gap-4">
+        <NSkeleton circle size="medium" />
+        <div class="flex flex-col gap-2 flex-1">
+          <NSkeleton text width="40%" />
+          <NSkeleton text width="70%" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      v-else-if="isEmpty"
+      class="p-12 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
+    >
+      <div class="opacity-50 mb-2">
+        <slot name="empty-icon">
+          <i class="i-lucide-search-x text-4xl"></i>
+        </slot>
+      </div>
+      <div class="flex flex-col gap-1">
+        <h3 class="text-zinc-800 dark:text-zinc-50 font-bold text-lg">
+          {{ emptyTitle || 'Sem dados' }}
+        </h3>
+        <p class="text-zinc-600 dark:text-zinc-400 text-sm max-w-[250px] leading-relaxed">
+          {{ emptySubtitle || 'Não há informações disponíveis para exibir neste momento.' }}
+        </p>
+      </div>
+      <slot name="empty-action" />
+    </div>
+
+    <!-- Default content -->
+    <div
+      v-else
+      class="text-zinc-800 dark:text-zinc-50"
+      :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }"
+    >
+      <slot />
+    </div>
+
+    <template v-if="$slots.footer" #footer>
+      <div class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">
         <slot name="footer" />
       </div>
     </template>
-  </Card>
+  </NCard>
 </template>
 
 <script setup lang="ts">
-import Card from 'primevue/card'
-import BaseIconBox from './BaseIconBox.vue'
-import BaseSkeleton from './BaseSkeleton.vue'
+import { NCard, NSkeleton, NButton } from 'naive-ui'
 
 defineProps<{
   clickable?: boolean

@@ -1,8 +1,8 @@
 <template>
   <header class="global-header sticky top-0 z-40">
-    <!-- Synced Glass Background Plate -->
+    <!-- Modern Glass Background Plate -->
     <div
-      class="absolute inset-0 apple-material-thin border-b border-surface-200/50 dark:border-surface-800 pointer-events-none transition-none"
+      class="absolute inset-0 bg-white/70 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-zinc-200/50 dark:border-zinc-800 pointer-events-none transition-opacity duration-300"
       :style="{ opacity: stickyTitleOpacity }"
     ></div>
 
@@ -13,7 +13,7 @@
       <div class="flex items-center gap-2 md:gap-4 flex-1 min-w-0 h-8">
         <h2
           v-show="pageTitle"
-          class="text-[1.1rem] font-black tracking-tight text-surface-800 dark:text-surface-50 truncate flex items-center gap-1.5 origin-left"
+          class="text-[1.1rem] font-bold tracking-tight text-zinc-800 dark:text-zinc-50 truncate flex items-center gap-1.5 origin-left"
           :style="{
             opacity: stickyTitleOpacity,
             transform: `translateY(${stickyTitleY}px)`,
@@ -21,9 +21,9 @@
           }"
         >
           <template v-if="pageHighlight">
-            <span v-if="titleBefore" class="opacity-80">{{ titleBefore }}</span>
-            <span class="text-primary">{{ pageHighlight }}</span>
-            <span v-if="titleAfter" class="opacity-80">{{ titleAfter }}</span>
+            <span v-if="titleBefore" class="opacity-60">{{ titleBefore }}</span>
+            <span class="text-violet-500">{{ pageHighlight }}</span>
+            <span v-if="titleAfter" class="opacity-60">{{ titleAfter }}</span>
           </template>
           <template v-else>
             {{ pageTitle }}
@@ -34,14 +34,13 @@
       <div class="flex items-center gap-3">
         <SyncStatusIndicator />
 
-        <!-- Placeholder for other global actions like notifications -->
-        <div class="h-8 w-[1px] bg-surface-50 dark:bg-surface-800/10 mx-1"></div>
+        <div class="h-6 w-[1px] bg-zinc-200 dark:bg-zinc-800 mx-1"></div>
 
-        <button
-          class="flex items-center justify-center w-9 h-9 rounded-xl bg-white/50 dark:bg-surface-800/10 border border-surface-200 dark:border-surface-800/10 text-surface-600 dark:text-surface-200 hover:text-surface-800 dark:text-surface-50 transition-colors"
-        >
-          <i class="pi pi-bell text-[1.1rem]"></i>
-        </button>
+        <NButton quaternary circle size="small">
+          <template #icon>
+            <i class="i-lucide-bell text-lg"></i>
+          </template>
+        </NButton>
       </div>
     </div>
   </header>
@@ -49,20 +48,21 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { NButton } from 'naive-ui'
 import SyncStatusIndicator from '@/shared/components/molecules/SyncStatusIndicator.vue'
 import { useViewHeader } from '@/shared/composables/useViewHeader'
 
 const { pageTitle, pageHighlight, pageScrollY } = useViewHeader()
 
 const stickyTitleOpacity = computed(() => {
-  if (pageScrollY.value <= 60) return 0
-  const opacity = (pageScrollY.value - 60) / 20 // Reaches 1 at 80
+  if (pageScrollY.value <= 40) return 0
+  const opacity = (pageScrollY.value - 40) / 20
   return Math.max(0, Math.min(1, opacity))
 })
 
 const stickyTitleY = computed(() => {
-  if (pageScrollY.value > 80) return 0
-  const y = 5 - ((pageScrollY.value - 60) / 20) * 5
+  if (pageScrollY.value > 60) return 0
+  const y = 5 - ((pageScrollY.value - 40) / 20) * 5
   return Math.max(0, y)
 })
 

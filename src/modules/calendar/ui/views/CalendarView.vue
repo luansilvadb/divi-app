@@ -5,21 +5,19 @@
     subtitle="Visualize seus compromissos e transações em uma linha do tempo mensal."
   >
     <template #action>
-      <!-- Standardized Month Switcher -->
       <BaseMonthSwitcher :month="monthName" @prev="prevMonth" @next="nextMonth" />
     </template>
 
-    <!-- Content Grid (Holy Grail) -->
     <div class="view-content-grid">
       <!-- MAIN COLUMN: Calendar -->
       <main class="main-column">
-        <div class="glass-card p-6 shadow-sm overflow-hidden">
+        <div class="glass-card p-6 shadow-sm overflow-hidden bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md border border-zinc-200 dark:border-zinc-800">
           <!-- Weekdays Header -->
           <div class="grid grid-cols-7 mb-4">
             <div
               v-for="day in ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']"
               :key="day"
-              class="text-center text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 py-2"
+              class="text-center text-[10px] font-black uppercase tracking-widest text-zinc-400 py-2"
             >
               {{ day }}
             </div>
@@ -33,20 +31,20 @@
               class="relative aspect-square rounded-2xl p-2 border border-transparent transition-all duration-300 flex flex-col items-center cursor-pointer group"
               :class="[
                 day.isCurrentMonth
-                  ? 'bg-white/40 dark:bg-black/10 hover:bg-white dark:hover:bg-white/10 hover:border-surface-200 dark:hover:border-white/10'
+                  ? 'bg-zinc-100/50 dark:bg-zinc-800/50 hover:bg-white dark:hover:bg-zinc-800 hover:border-zinc-200 dark:hover:border-zinc-700'
                   : 'opacity-20 cursor-default',
                 isSelected(day.date)
-                  ? 'ring-2 ring-primary/40 border-primary/20 bg-white/80 bg-surface-800/10'
+                  ? 'ring-2 ring-violet-500/40 border-violet-500/20 bg-white dark:bg-zinc-800 shadow-lg'
                   : '',
               ]"
               @click="day.isCurrentMonth && selectDate(day.date)"
             >
               <span
-                class="text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+                class="text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300"
                 :class="
                   isToday(day.date)
-                    ? 'bg-primary text-white shadow-lg shadow-primary-main/20'
-                    : 'text-surface-800 dark:text-surface-50'
+                    ? 'bg-violet-500 text-white shadow-lg shadow-violet-500/20 scale-110'
+                    : 'text-zinc-800 dark:text-zinc-50'
                 "
               >
                 {{ day.dayNumber }}
@@ -60,11 +58,11 @@
                   v-for="(t, i) in getTransactionsForDate(day.date).slice(0, 3)"
                   :key="t.id || i"
                   class="w-1.5 h-1.5 rounded-full shadow-sm"
-                  :class="t.type === 'income' ? 'bg-success-main' : 'bg-error'"
+                  :class="t.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'"
                 ></div>
                 <span
                   v-if="getTransactionsForDate(day.date).length > 3"
-                  class="text-[8px] font-black text-surface-400 dark:text-surface-400"
+                  class="text-[8px] font-black text-zinc-400"
                 >
                   +{{ getTransactionsForDate(day.date).length - 3 }}
                 </span>
@@ -76,12 +74,12 @@
 
       <!-- SIDEBAR COLUMN: Day Details -->
       <aside class="side-column">
-        <BaseCard>
+        <BaseCard class="hover-glow">
           <template #header>
             <div class="flex flex-col gap-1">
-              <span class="text-surface-800 dark:text-surface-50">Atividade do Dia</span>
+              <span class="text-zinc-800 dark:text-zinc-50">Atividade do Dia</span>
               <span
-                class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
                 >{{ formatDateFull(selectedDate) }}</span
               >
             </div>
@@ -91,23 +89,7 @@
             v-if="selectedDateTransactions.length === 0"
             class="flex flex-col items-center justify-center py-16 opacity-40 text-center"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36"
-              height="36"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="mb-4"
-            >
-              <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-              <line x1="16" x2="16" y1="2" y2="6" />
-              <line x1="8" x2="8" y1="2" y2="6" />
-              <line x1="3" x2="21" y1="10" y2="10" />
-            </svg>
+            <i class="i-lucide-calendar-x text-4xl text-zinc-400 mb-4"></i>
             <span class="text-[10px] font-black uppercase tracking-widest">Nenhuma transação</span>
           </div>
 
@@ -115,56 +97,27 @@
             <li
               v-for="t in selectedDateTransactions"
               :key="t.id || t.localId"
-              class="flex items-center gap-4 p-3 rounded-xl hover:bg-surface-50 dark:hover:bg-white/5 transition-colors"
+              class="flex items-center gap-4 p-3 rounded-2xl hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700"
             >
               <BaseIconBox
-                :color="
-                  t.type === 'expense' ? 'var(--color-error-main)' : 'var(--color-success-main)'
-                "
+                :color="t.type === 'expense' ? '#ef4444' : '#10b981'"
                 size="sm"
               >
-                <svg
-                  v-if="t.type === 'expense'"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 5v14M5 12l7 7 7-7" />
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 19V5M5 12l7-7 7 7" />
-                </svg>
+                <i :class="t.type === 'expense' ? 'i-lucide-arrow-down' : 'i-lucide-arrow-up'" class="text-sm"></i>
               </BaseIconBox>
               <div class="flex-1 min-w-0">
-                <div class="font-bold text-sm text-surface-800 dark:text-surface-50 truncate">
+                <div class="font-bold text-sm text-zinc-800 dark:text-zinc-50 truncate">
                   {{ t.title }}
                 </div>
                 <div
-                  class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                  class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
                 >
-                  {{ t.category_id || 'Geral' }}
+                  {{ store.categoryMap[t.category_id]?.name || 'Geral' }}
                 </div>
               </div>
               <span
-                class="font-black text-sm tracking-tight"
-                :class="t.type === 'expense' ? 'text-error' : 'text-success-main'"
+                class="font-black text-sm tracking-tighter"
+                :class="t.type === 'expense' ? 'text-red-500' : 'text-emerald-500'"
               >
                 {{ formatCurrency(t.amount) }}
               </span>
@@ -173,34 +126,38 @@
         </BaseCard>
 
         <!-- Day Summary -->
-        <BaseCard v-if="selectedDateTransactions.length > 0">
+        <BaseCard v-if="selectedDateTransactions.length > 0" class="hover-glow">
           <template #header>Resumo do Dia</template>
           <div class="flex flex-col gap-6 pt-2">
             <BaseSummaryItem
               label="Entradas"
               :value="formatCurrency(selectedDateIncome)"
-              color="var(--color-success-main)"
+              color="#10b981"
               status="success"
-            />
+            >
+              <template #icon><i class="i-lucide-arrow-up-circle"></i></template>
+            </BaseSummaryItem>
             <BaseSummaryItem
               label="Saídas"
               :value="formatCurrency(selectedDateExpense)"
-              color="var(--color-error-main)"
+              color="#ef4444"
               status="error"
-            />
+            >
+              <template #icon><i class="i-lucide-arrow-down-circle"></i></template>
+            </BaseSummaryItem>
 
-            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
+            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
 
             <div
-              class="w-full p-4 rounded-2xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center"
+              class="w-full p-5 rounded-3xl bg-zinc-100 dark:bg-zinc-950 flex flex-col items-center text-center shadow-inner border border-zinc-200 dark:border-zinc-800"
             >
               <span
-                class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-1"
+                class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-2"
                 >Saldo do Dia</span
               >
               <div
-                class="text-2xl font-black tracking-tight"
-                :class="selectedDateBalance >= 0 ? 'text-primary' : 'text-error'"
+                class="text-3xl font-black tracking-tighter"
+                :class="selectedDateBalance >= 0 ? 'text-violet-500' : 'text-red-500'"
               >
                 {{ formatCurrency(Math.abs(selectedDateBalance)) }}
               </div>
@@ -231,10 +188,11 @@ const currentMonth = computed(() => currentDate.value.getMonth())
 const currentYear = computed(() => currentDate.value.getFullYear())
 
 const monthName = computed(() => {
-  return currentDate.value.toLocaleString('pt-BR', { month: 'long' })
+  return currentDate.value.toLocaleString('pt-BR', { month: 'long' }).replace(/^\w/, (c) => c.toUpperCase())
 })
 
 onMounted(async () => {
+  if (Object.keys(store.categoryMap).length === 0) await store.fetchCategories()
   await fetchMonthData()
 })
 

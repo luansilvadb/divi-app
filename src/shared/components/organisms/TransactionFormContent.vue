@@ -1,57 +1,51 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="p-5 space-y-4 bg-surface-0 dark:bg-surface-800 h-full max-h-none pb-4"
+    class="p-6 space-y-6 bg-transparent h-full"
   >
-    <!-- Type Switcher -->
+    <!-- Type Switcher (LobeHub Style) -->
     <div
-      class="flex p-1.5 bg-surface-50 dark:bg-surface-800/40 rounded-xl gap-1.5 border border-surface-200 dark:border-surface-800/10 shadow-inner w-full mb-2"
+      class="flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-2xl gap-1 border border-zinc-200 dark:border-zinc-800 shadow-inner w-full"
     >
       <button
         type="button"
-        class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
+        class="flex-1 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
         :class="
           form.type === 'expense'
-            ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10'
-            : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'
+            ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm'
+            : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-transparent'
         "
         @click="form.type = 'expense'"
       >
-        <i
-          class="pi pi-arrow-down text-sm transition-colors duration-300"
-          :class="form.type === 'expense' ? 'text-error' : ''"
-        ></i>
+        <i class="i-lucide-arrow-down-circle text-sm" :class="form.type === 'expense' ? 'text-red-500' : ''"></i>
         Despesa
       </button>
       <button
         type="button"
-        class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
+        class="flex-1 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none"
         :class="
           form.type === 'income'
-            ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10'
-            : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'
+            ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-50 shadow-sm'
+            : 'text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 bg-transparent'
         "
         @click="form.type = 'income'"
       >
-        <i
-          class="pi pi-arrow-up text-sm transition-colors duration-300"
-          :class="form.type === 'income' ? 'text-success-main' : ''"
-        ></i>
+        <i class="i-lucide-arrow-up-circle text-sm" :class="form.type === 'income' ? 'text-emerald-500' : ''"></i>
         Receita
       </button>
     </div>
 
-    <div class="space-y-4">
+    <div class="space-y-5">
       <BaseInput
         id="title"
         label="Título da Transação"
         v-model="form.title"
         placeholder="Ex: Netflix, Supermercado..."
-        class="premium-input-group"
+        icon="i-lucide-tag"
         @input="handleTitleInput"
       />
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <BaseInput
           id="amount"
           label="Valor (R$)"
@@ -60,30 +54,23 @@
           :min="0"
           v-model="form.amount"
           placeholder="0,00"
+          icon="i-lucide-banknote"
           class="!mb-0"
         />
 
-        <div class="w-full relative">
-          <label
-            for="date"
-            class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50"
-            >Data do Lançamento</label
-          >
-          <div class="relative w-full">
-            <DatePicker
-              id="date"
-              v-model="parsedDate"
-              dateFormat="dd/mm/yy"
-              showIcon
-              iconDisplay="input"
-              fluid
-              class="premium-date"
-            />
-          </div>
+        <div class="w-full">
+          <label class="block text-sm font-medium mb-1 text-zinc-800 dark:text-zinc-50">Data</label>
+          <NDatePicker
+            v-model:value="timestampDate"
+            type="date"
+            format="dd/MM/yyyy"
+            class="!rounded-xl"
+            input-readonly
+          />
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <BaseSelect
           id="category"
           label="Categoria"
@@ -106,23 +93,23 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex items-center gap-4 pt-4 shrink-0">
-      <BaseButton
-        variant="ghost"
-        type="button"
-        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest opacity-40 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10 transition-all"
+    <div class="flex items-center gap-4 pt-6 mt-4">
+      <NButton
+        quaternary
+        circle
+        class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest text-zinc-400"
         @click="$emit('close')"
       >
         Cancelar
-      </BaseButton>
-      <BaseButton
-        type="submit"
+      </NButton>
+      <NButton
+        type="primary"
         :loading="isSubmitting"
-        class="flex-[2] !py-3 font-black uppercase text-[0.7rem] tracking-[0.15em] transition-all"
-        variant="primary"
+        class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
+        @click="handleSubmit"
       >
         Salvar Lançamento
-      </BaseButton>
+      </NButton>
     </div>
   </form>
 </template>
@@ -130,14 +117,13 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { v7 as uuidv7 } from 'uuid'
+import { NDatePicker, NButton, useMessage } from 'naive-ui'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/modules/transactions/domain/entities/Category'
+import type { Category } from '@/shared/domain/entities/Category'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import DatePicker from 'primevue/datepicker'
 
 const props = defineProps<{
   initialData?: Transaction | null
@@ -146,30 +132,12 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'saved'])
 const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
+const message = useMessage()
 
 const isSubmitting = ref(false)
 
 const colors = [
-  '#ef4444',
-  '#f97316',
-  '#f59e0b',
-  '#eab308',
-  '#84cc16',
-  '#22c55e',
-  '#10b981',
-  '#14b8a6',
-  '#06b6d4',
-  '#0ea5e9',
-  '#0ea5e9',
-  '#3b82f6',
-  '#6366f1',
-  '#8b5cf6',
-  '#a855f7',
-  '#d946ef',
-  '#d946ef',
-  '#f43f5e',
-  '#f43f5e',
-  '#e11d48',
+  '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'
 ]
 
 interface TransactionForm {
@@ -184,10 +152,17 @@ interface TransactionForm {
 const form = reactive<TransactionForm>({
   title: '',
   amount: 0,
-  type: 'expense' as 'income' | 'expense',
+  type: 'expense',
   category_id: '',
   wallet_id: '',
   date: new Date().toISOString().slice(0, 10),
+})
+
+const timestampDate = computed({
+  get: () => new Date(form.date).getTime(),
+  set: (val: number) => {
+    form.date = new Date(val).toISOString().slice(0, 10)
+  }
 })
 
 watch(
@@ -200,36 +175,10 @@ watch(
       form.category_id = newData.category_id
       form.wallet_id = newData.wallet_id
       form.date = new Date(newData.date).toISOString().slice(0, 10)
-    } else {
-      form.title = ''
-      form.amount = 0
-      form.type = 'expense'
-      form.category_id = ''
-      form.wallet_id = ''
-      form.date = new Date().toISOString().slice(0, 10)
     }
   },
   { immediate: true },
 )
-
-const parsedDate = computed({
-  get: () => {
-    if (!form.date) return new Date()
-    const parts = form.date.split('-')
-    const year = Number(parts[0])
-    const month = Number(parts[1]) || 1
-    const day = Number(parts[2]) || 1
-    return new Date(year, month - 1, day)
-  },
-  set: (val: Date | Date[] | (Date | null)[] | null | undefined) => {
-    if (val && !Array.isArray(val)) {
-      const year = val.getFullYear()
-      const month = String(val.getMonth() + 1).padStart(2, '0')
-      const day = String(val.getDate()).padStart(2, '0')
-      form.date = `${year}-${month}-${day}`
-    }
-  },
-})
 
 onMounted(async () => {
   if (store.wallets.length === 0) await store.fetchWallets()
@@ -247,12 +196,12 @@ async function handleSubmit() {
   if (isSubmitting.value) return
 
   if (!form.title.trim()) {
-    alert('O título da transação é obrigatório.')
+    message.error('O título da transação é obrigatório.')
     return
   }
 
   if (form.amount <= 0) {
-    alert('O valor da transação deve ser maior que zero.')
+    message.error('O valor da transação deve ser maior que zero.')
     return
   }
 
@@ -260,64 +209,41 @@ async function handleSubmit() {
   try {
     let finalCategoryId = form.category_id
 
-    // Lógica de criação de categoria inline
-    if (finalCategoryId) {
-      const isExistingCategory = store.categories.some((c) => c.id === finalCategoryId)
-
-      if (!isExistingCategory) {
-        const existingByName = store.categories.find(
-          (c) => c.name.toLowerCase() === finalCategoryId.toLowerCase(),
-        )
-        if (existingByName) {
-          finalCategoryId = existingByName.id
-        } else {
-          const randomColor = colors[Math.floor(Math.random() * colors.length)]
-          await store.saveCategory({
-            name: finalCategoryId,
-            color: randomColor,
-          } as Category)
-
-          const newlyCreated = store.categories.find((c) => c.name === finalCategoryId)
-          if (newlyCreated) {
-            finalCategoryId = newlyCreated.id
-          }
-        }
+    if (finalCategoryId && !store.categories.some(c => c.id === finalCategoryId)) {
+      const existingByName = store.categories.find(
+        (c) => c.name.toLowerCase() === finalCategoryId.toLowerCase(),
+      )
+      if (existingByName) {
+        finalCategoryId = existingByName.id
+      } else {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        await store.saveCategory({
+          name: finalCategoryId,
+          color: randomColor,
+        } as Category)
+        const newlyCreated = store.categories.find((c) => c.name === finalCategoryId)
+        if (newlyCreated) finalCategoryId = newlyCreated.id
       }
     }
 
-    const isEditing = !!props.initialData?.id
-
-    if (isEditing) {
-      const transactionData = {
-        ...props.initialData,
-        ...form,
-        category_id: finalCategoryId,
-        sync_status: props.initialData.sync_status || 'pending',
-        deleted: props.initialData.deleted || false,
-        client_updated_at: new Date().toISOString(),
-        version: props.initialData.version || 1,
-      }
-      await store.saveTransaction(transactionData as Transaction)
-    } else {
-      const transactionData = {
-        ...form,
-        category_id: finalCategoryId,
-        id: uuidv7(),
-        user_id: '', // Will be filled by repo/service
-        sync_status: 'pending',
-        deleted: false,
-        client_updated_at: new Date().toISOString(),
-        version: 1,
-      }
-      await store.saveTransaction(transactionData as Transaction)
+    const transactionData = {
+      ...(props.initialData || {}),
+      ...form,
+      category_id: finalCategoryId,
+      id: props.initialData?.id || uuidv7(),
+      user_id: props.initialData?.user_id || '',
+      sync_status: 'pending' as const,
+      deleted: props.initialData?.deleted || false,
+      client_updated_at: new Date().toISOString(),
+      version: (props.initialData?.version || 0) + 1,
     }
 
+    await store.saveTransaction(transactionData as Transaction)
     emit('saved')
     emit('close')
-  } catch (error: unknown) {
-    console.error('Save error:', error)
-    const message = error instanceof Error ? error.message : 'Erro ao salvar transação.'
-    alert(message)
+    message.success('Transação salva com sucesso!')
+  } catch (error: any) {
+    message.error(error.message || 'Erro ao salvar transação.')
   } finally {
     isSubmitting.value = false
   }
@@ -325,44 +251,11 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
-:deep(.premium-date .p-inputtext) {
-  width: 100%;
-  border-radius: 0.75rem;
-  padding: 0.875rem 1rem;
-  padding-right: 2.5rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  background-color: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-  transition: all 0.3s;
-  color: var(--p-surface-0);
+:deep(.n-input), :deep(.n-input-number), :deep(.n-date-picker) {
+  --n-border-radius: 12px !important;
+  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
 }
-@media (prefers-color-scheme: light) {
-  :deep(.premium-date .p-inputtext) {
-    background-color: rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    color: var(--p-surface-900);
-  }
-  :deep(.premium-date .p-datepicker-input-icon) {
-    color: rgba(0, 0, 0, 0.4);
-  }
-}
-:deep(.premium-date .p-inputtext:hover) {
-  border-color: rgba(74, 111, 165, 0.3);
-}
-:deep(.premium-date .p-inputtext:focus) {
-  border-color: #4a6fa5;
-  box-shadow: 0 0 0 4px rgba(74, 111, 165, 0.1);
-  background-color: rgba(0, 0, 0, 0.6);
-  outline: none;
-}
-:deep(.premium-date .p-datepicker-input-icon) {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.3);
-  pointer-events: none;
+:is(.dark) :deep(.n-input), :is(.dark) :deep(.n-input-number), :is(.dark) :deep(.n-date-picker) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 </style>

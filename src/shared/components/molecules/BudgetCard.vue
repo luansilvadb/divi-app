@@ -1,13 +1,13 @@
 <template>
-  <BaseCard class="budget-card" clickable v-bind="$attrs">
+  <BaseCard class="budget-card hover-glow" clickable v-bind="$attrs">
     <template #header>
       <div class="header-content flex justify-between items-center w-full">
         <div class="budget-title-area flex items-center gap-4">
-          <BaseIconBox color="var(--p-primary-color)">
-            <i class="pi pi-chart-line text-xl"></i>
+          <BaseIconBox color="#8b5cf6">
+            <i class="i-lucide-line-chart text-xl"></i>
           </BaseIconBox>
           <span
-            class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight"
+            class="budget-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight"
           >
             {{ budget.name || categoryName }}
           </span>
@@ -22,17 +22,17 @@
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-1.5">
           <span
-            class="consumed text-3xl font-extrabold text-surface-800 dark:text-surface-50 tracking-tighter"
-            :class="{ 'text-error': isOverBudget }"
+            class="consumed text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter"
+            :class="{ '!text-red-500': isOverBudget }"
             >{{ formatCurrency(consumed) }}</span
           >
-          <span class="limit text-base font-medium text-surface-600 dark:text-surface-200"
+          <span class="limit text-base font-medium text-zinc-400"
             >/ {{ formatCurrency(budget.limit_value) }}</span
           >
         </div>
         <div
-          class="percentage-pill text-sm font-bold bg-surface-50 dark:bg-white/10 text-surface-600 dark:text-surface-200 px-2.5 py-1 rounded-lg"
-          :class="{ 'over-budget !bg-error/10 !text-error': isOverBudget }"
+          class="percentage-pill text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-2.5 py-1 rounded-lg"
+          :class="{ '!bg-red-500/10 !text-red-500': isOverBudget }"
         >
           {{ Math.round(percentage) }}%
         </div>
@@ -41,34 +41,34 @@
       <BudgetProgressBar :spent="consumed" :limit="budget.limit_value" />
 
       <div
-        class="budget-footer-details flex justify-between items-center pt-4 border-t border-surface-200 dark:border-surface-200/10"
+        class="budget-footer-details flex justify-between items-center pt-4 border-t border-zinc-100 dark:border-zinc-800"
       >
         <div
-          class="cadence flex items-center gap-2 text-sm"
+          class="cadence flex items-center gap-2 text-xs"
           v-if="daysRemaining > 0 && !isOverBudget"
         >
-          <span class="cadence-label text-surface-600 dark:text-surface-200"
-            >Sugerido por dia:</span
+          <span class="cadence-label text-zinc-400 font-bold uppercase tracking-widest text-[9px]"
+            >Sugestão diária:</span
           >
           <span
-            class="cadence-value font-bold text-surface-800 dark:text-surface-50 bg-surface-50 dark:bg-white/10 px-2 py-0.5 rounded-md"
+            class="cadence-value font-black text-zinc-800 dark:text-zinc-50 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md"
           >
             {{ formatCurrency(dailyCadence) }}
           </span>
         </div>
         <div
-          class="cadence over-alert flex items-center gap-2 text-sm text-error font-semibold"
+          class="cadence over-alert flex items-center gap-2 text-xs text-red-500 font-bold uppercase tracking-widest text-[9px]"
           v-else-if="isOverBudget"
         >
-          <span class="cadence-label">Orçamento estourado</span>
-          <i class="pi pi-exclamation-circle text-sm"></i>
+          <i class="i-lucide-alert-circle text-sm"></i>
+          <span>Orçamento estourado</span>
         </div>
 
         <div
-          class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-surface-600 dark:text-surface-200 bg-surface-50 dark:bg-surface-800/10 px-2.5 py-1 rounded-lg"
+          class="days-remaining flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-lg"
         >
-          <i class="pi pi-clock text-sm"></i>
-          {{ daysRemaining }} dias restantes
+          <i class="i-lucide-calendar-days text-sm"></i>
+          {{ daysRemaining }} dias
         </div>
       </div>
     </div>

@@ -5,15 +5,15 @@
     subtitle="Transforme seus sonhos em planos concretos. Pequenos passos, grandes conquistas."
     :loading="store.isLoading"
   >
-    <!-- Header Actions -->
     <template #action>
       <div class="flex items-center justify-end gap-3 w-full lg:min-w-[420px]">
         <BaseButton
           v-if="!isMobile"
           variant="primary"
-          class="!rounded-xl px-6 h-10"
+          class="!rounded-xl px-6 h-10 shadow-lg shadow-violet-500/20"
           @click="showAddGoalModal = true"
         >
+          <template #icon><i class="i-lucide-plus text-lg"></i></template>
           Nova Meta
         </BaseButton>
       </div>
@@ -22,39 +22,20 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- MAIN COLUMN -->
       <main class="lg:col-span-2 space-y-8">
-        <!-- Search Bar -->
         <BaseSearchInput v-model="store.searchQuery" placeholder="Buscar por nome da meta..." />
 
-        <!-- Empty State (Matches TransactionsView Style) -->
+        <!-- Empty State -->
         <div
           v-if="store.goals.length === 0 && !store.isLoading && !store.searchQuery"
-          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-in fade-in zoom-in-95 duration-700"
+          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-fade-in"
         >
-          <div
-            class="w-24 h-24 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-8 text-primary"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
+          <div class="w-24 h-24 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-8 text-violet-500">
+            <i class="i-lucide-target text-5xl"></i>
           </div>
-          <h3
-            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
-          >
+          <h3 class="text-xl font-black uppercase tracking-widest mb-4 text-zinc-800 dark:text-zinc-50">
             Sem metas ativas
           </h3>
-          <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
+          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400 leading-relaxed max-w-xs">
             Você ainda não definiu nenhum objetivo financeiro. Que tal começar a poupar hoje?
           </p>
         </div>
@@ -62,44 +43,21 @@
         <!-- Search Empty State -->
         <div
           v-else-if="filteredGoals.length === 0 && !store.isLoading && store.searchQuery"
-          class="flex flex-col items-center justify-center py-20 text-center opacity-40"
+          class="flex flex-col items-center justify-center py-20 text-center opacity-40 animate-fade-in"
         >
-          <div
-            class="w-20 h-20 bg-surface-50 dark:bg-surface-800/10 rounded-full flex items-center justify-center mb-6"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="40"
-              height="40"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
+          <div class="w-20 h-20 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-6">
+            <i class="i-lucide-search-x text-4xl text-zinc-400"></i>
           </div>
-          <h3 class="text-lg font-black uppercase tracking-widest mb-2">Nenhum resultado</h3>
-          <p class="text-xs font-bold uppercase tracking-widest">{{ searchEmptySubtitle }}</p>
-          <BaseButton
-            variant="secondary"
-            class="!rounded-xl px-8 mt-8 h-10"
-            @click="store.searchQuery = ''"
-          >
+          <h3 class="text-lg font-black uppercase tracking-widest mb-2 text-zinc-800 dark:text-zinc-50">Nenhum resultado</h3>
+          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400">{{ searchEmptySubtitle }}</p>
+          <NButton quaternary circle class="mt-8 text-violet-500 font-bold" @click="store.searchQuery = ''">
             Limpar Busca
-          </BaseButton>
+          </NButton>
         </div>
 
         <!-- Loading State -->
-        <div v-else-if="store.isLoading" class="flex flex-col gap-6">
-          <div class="flex justify-center py-20">
-            <div
-              class="w-8 h-8 border-4 border-primary/20 border-t-primary-main rounded-full animate-spin"
-            ></div>
-          </div>
+        <div v-else-if="store.isLoading" class="flex justify-center py-20">
+          <i class="i-lucide-loader-2 animate-spin text-4xl text-violet-500"></i>
         </div>
 
         <!-- Goals Grid -->
@@ -110,124 +68,64 @@
 
       <!-- SIDEBAR COLUMN -->
       <aside class="side-column space-y-8">
-        <!-- Performance Overview -->
-        <BaseCard>
+        <BaseCard class="hover-glow">
           <template #header>Desempenho Geral</template>
           <div class="flex flex-col gap-6 pt-2">
             <BaseSummaryItem
               label="Total Acumulado"
               :value="formatCurrency(store.totalSaved)"
-              color="var(--color-success-main)"
+              color="#10b981"
               status="success"
             >
-              <template #icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-              </template>
+              <template #icon><i class="i-lucide-piggy-bank"></i></template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
+            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
 
             <BaseSummaryItem
               label="Objetivo Total"
               :value="formatCurrency(store.totalTarget)"
-              color="var(--color-primary-main)"
+              color="#8b5cf6"
               status="info"
             >
-              <template #icon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-              </template>
+              <template #icon><i class="i-lucide-target"></i></template>
             </BaseSummaryItem>
 
-            <div class="h-px bg-surface-50 dark:bg-surface-800/10"></div>
+            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
 
-            <!-- Global Progress Highlight -->
-            <div
-              class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
-            >
-              <span
-                class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
-                >Progresso Consolidado</span
-              >
-              <div class="text-3xl font-black tracking-tighter text-primary mb-4">
+            <div class="w-full p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-950 flex flex-col items-center text-center shadow-inner border border-zinc-200 dark:border-zinc-800">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Progresso Consolidado</span>
+              <div class="text-3xl font-black tracking-tighter text-violet-500 mb-4">
                 {{ globalProgress }}%
               </div>
-              <BaseProgressBar :percentage="globalProgress" color="var(--color-primary-main)" />
+              <BaseProgressBar :percentage="globalProgress" color="#8b5cf6" />
             </div>
           </div>
         </BaseCard>
 
-        <!-- Insights -->
-        <BaseCard>
+        <BaseCard class="hover-glow">
           <template #header>Insights de IA</template>
           <div class="p-2 space-y-4">
-            <div class="flex gap-4 p-4 rounded-2xl bg-info-main/5 border border-info-main/10">
-              <div
-                class="w-10 h-10 rounded-xl bg-info-main/10 text-info-main flex-shrink-0 flex items-center justify-center shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path
-                    d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"
-                  />
-                  <path
-                    d="M12 6a1 1 0 0 0-1 1v5a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V7a1 1 0 0 0-1-1z"
-                  />
-                </svg>
+            <div class="flex gap-4 p-4 rounded-2xl bg-violet-500/5 border border-violet-500/10 relative overflow-hidden group">
+              <div class="absolute -right-4 -top-4 w-12 h-12 bg-violet-500/10 blur-2xl rounded-full transition-all group-hover:scale-150"></div>
+              <div class="flex flex-col gap-1 relative z-10">
+                <p class="text-sm font-bold text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                  Mantendo o ritmo atual, você alcançará a meta
+                  <span class="text-violet-500 font-black">"Viagem Japão"</span> em
+                  <span class="text-emerald-500 font-black">4 meses</span>.
+                </p>
               </div>
-              <p
-                class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1"
-              >
-                Mantendo o ritmo atual, você alcançará a meta
-                <span class="text-info-main font-black">"Viagem Japão"</span> em
-                <span class="text-success-main font-black">4 meses</span>.
-              </p>
             </div>
           </div>
         </BaseCard>
       </aside>
     </div>
-
-    <!-- Future: GoalForm Component -->
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
+import { NButton } from 'naive-ui'
 import { useGoalStore } from '../../application/stores/goalStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
