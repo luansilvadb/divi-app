@@ -4,6 +4,11 @@
     class="p-5 space-y-4 bg-surface-0 dark:bg-surface-800 h-full max-h-none pb-4"
   >
     <div class="space-y-4">
+      <div v-if="transactionStore.categories.length === 0" class="p-3 bg-error/10 text-error rounded-xl text-sm font-bold flex items-center gap-2">
+        <i class="pi pi-exclamation-triangle"></i>
+        Você precisa criar pelo menos uma categoria antes de adicionar orçamentos.
+      </div>
+
       <BaseInput
         id="name"
         label="Nome do Orçamento (Opcional)"
@@ -33,6 +38,7 @@
           placeholder="Selecionar Categoria"
           required
           class="!mb-0"
+          :disabled="transactionStore.categories.length === 0"
         />
       </div>
     </div>
@@ -52,7 +58,7 @@
         :loading="isSubmitting"
         class="flex-[2] !py-3 font-black uppercase text-[0.7rem] tracking-[0.15em] transition-all"
         variant="primary"
-        :disabled="!form.limit_value || !form.category_id"
+        :disabled="!form.limit_value || !form.category_id || transactionStore.categories.length === 0"
       >
         Salvar Orçamento
       </BaseButton>
@@ -125,6 +131,7 @@ const handleSubmit = async () => {
     emit('close')
   } catch (error) {
     console.error('Failed to save budget:', error)
+    alert('Erro ao salvar o orçamento: ' + (error instanceof Error ? error.message : String(error)))
   } finally {
     isSubmitting.value = false
   }
