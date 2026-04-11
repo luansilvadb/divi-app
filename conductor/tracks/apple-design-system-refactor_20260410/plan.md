@@ -20,14 +20,14 @@ Aplicação dos princípios de curvatura contínua (squircle) e transparência e
 - [x] Task: Refinar modais e sobreposições com sombras profundas e bordas sutis. (082e29b)
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Layout & Surfaces' (Protocol in workflow.md)
 
-## Phase 3: UI Controls & Components (PrimeUI Styling)
+## Phase 3: UI Controls & Components (PrimeUI Styling) [checkpoint: a0b5716]
 
 Estilização minuciosa dos componentes do PrimeUI para refletir a estética da Apple usando classes Tailwind.
 
 - [x] Task: Estilizar botões (Primary, Secondary, Tertiary) com cantos arredondados e estados táteis. (ecad3b5)
 - [x] Task: Refatorar campos de formulário (Inputs, Selects, Textareas) com foco e bordas suaves. (e85543c)
 - [x] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS. (b4e3e51)
-- [ ] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
 
 ## Phase 4: Typography & Motion (Details & Refinement)
 
