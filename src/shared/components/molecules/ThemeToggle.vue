@@ -5,7 +5,10 @@
     :aria-label="isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
     :title="isDark ? 'Tema Claro' : 'Tema Escuro'"
   >
-    <span :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" class="w-5 h-5 flex items-center justify-center text-lg transition-transform duration-300"></span>
+    <span
+      :class="isDark ? 'pi pi-sun' : 'pi pi-moon'"
+      class="w-5 h-5 flex items-center justify-center text-lg transition-transform duration-300"
+    ></span>
   </button>
 </template>
 
@@ -20,4 +23,3 @@ const { isDark, toggle: toggleTheme } = useTheme()
   transform: scale(1.1);
 }
 </style>
-

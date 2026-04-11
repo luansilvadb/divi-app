@@ -23,10 +23,7 @@
       <!-- MAIN COLUMN -->
       <main class="lg:col-span-2 space-y-8">
         <!-- Search Bar -->
-        <BaseSearchInput
-          v-model="store.searchQuery"
-          placeholder="Buscar por nome da meta..."
-        />
+        <BaseSearchInput v-model="store.searchQuery" placeholder="Buscar por nome da meta..." />
 
         <!-- Empty State (Matches TransactionsView Style) -->
         <div
@@ -52,7 +49,9 @@
               <line x1="12" y1="16" x2="12.01" y2="16"></line>
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
+          <h3
+            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
+          >
             Sem metas ativas
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -171,7 +170,8 @@
             <div
               class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
+              <span
+                class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Progresso Consolidado</span
               >
               <div class="text-3xl font-black tracking-tighter text-primary mb-4">
@@ -201,11 +201,17 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-                  <path d="M12 6a1 1 0 0 0-1 1v5a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V7a1 1 0 0 0-1-1z" />
+                  <path
+                    d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"
+                  />
+                  <path
+                    d="M12 6a1 1 0 0 0-1 1v5a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V7a1 1 0 0 0-1-1z"
+                  />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
+              <p
+                class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1"
+              >
                 Mantendo o ritmo atual, você alcançará a meta
                 <span class="text-info-main font-black">"Viagem Japão"</span> em
                 <span class="text-success-main font-black">4 meses</span>.
@@ -256,5 +262,3 @@ onMounted(async () => {
   await store.fetchGoals()
 })
 </script>
-
-

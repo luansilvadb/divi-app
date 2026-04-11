@@ -9,11 +9,11 @@ export class DexieWalletRepository implements IWalletRepository {
   async getAll(): Promise<Wallet[]> {
     try {
       const list = await db.wallets.toArray()
-      return list.map(item => ({
+      return list.map((item) => ({
         ...item,
         sync_status: item.sync_status,
         client_updated_at: item.client_updated_at,
-        version: item.version || 1
+        version: item.version || 1,
       })) as Wallet[]
     } catch (err) {
       throw new InfrastructureError('Failed to get wallets from local DB', err)
@@ -22,11 +22,11 @@ export class DexieWalletRepository implements IWalletRepository {
 
   async save(wallet: Wallet): Promise<void> {
     try {
-      await db.wallets.put({ 
-        ...wallet, 
+      await db.wallets.put({
+        ...wallet,
         sync_status: wallet.sync_status || 'pending',
         client_updated_at: wallet.client_updated_at || new Date().toISOString(),
-        version: wallet.version || 1
+        version: wallet.version || 1,
       } as LocalWallet)
     } catch (err) {
       throw new InfrastructureError('Failed to save wallet to local DB', err)
@@ -47,11 +47,11 @@ export class DexieCategoryRepository implements ICategoryRepository {
   async getAll(): Promise<Category[]> {
     try {
       const list = await db.categories.toArray()
-      return list.map(item => ({
+      return list.map((item) => ({
         ...item,
         sync_status: item.sync_status,
         client_updated_at: item.client_updated_at,
-        version: item.version || 1
+        version: item.version || 1,
       })) as Category[]
     } catch (err) {
       throw new InfrastructureError('Failed to get categories from local DB', err)
@@ -60,15 +60,14 @@ export class DexieCategoryRepository implements ICategoryRepository {
 
   async save(category: Category): Promise<void> {
     try {
-      await db.categories.put({ 
-        ...category, 
+      await db.categories.put({
+        ...category,
         sync_status: category.sync_status || 'pending',
         client_updated_at: category.client_updated_at || new Date().toISOString(),
-        version: category.version || 1
+        version: category.version || 1,
       } as LocalCategory)
     } catch (err) {
       throw new InfrastructureError('Failed to save category to local DB', err)
     }
   }
 }
-

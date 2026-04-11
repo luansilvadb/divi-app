@@ -7,16 +7,17 @@ describe('ProfileView.vue', () => {
   it('renders user information and logs correctly', async () => {
     const wrapper = mount(ProfileView, {
       global: {
-        plugins: [createTestingPinia({
-          createSpy: vi.fn,
-          initialState: {
-            auth: { user: { email: 'luan@example.com' } }
-          }
-        })]
-      }
+        plugins: [
+          createTestingPinia({
+            createSpy: vi.fn,
+            initialState: {
+              auth: { user: { email: 'luan@example.com' } },
+            },
+          }),
+        ],
+      },
     })
 
     expect(wrapper.text()).toContain('luan@example.com')
   })
 })
-

@@ -11,4 +11,3 @@ export interface IGoalLogicService {
    */
   estimateCompletionDate(goal: Goal, averageMonthlySaving: number): Date | null
 }
-

@@ -8,4 +8,3 @@ export interface ITransactionRepository {
   delete(id: string): Promise<void>
   watchAll(): Observable<Transaction[]>
 }
-

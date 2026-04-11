@@ -59,4 +59,3 @@ describe('BaseIconBox.vue', () => {
     expect(wrapper.classes()).toContain('text-primary')
   })
 })
-

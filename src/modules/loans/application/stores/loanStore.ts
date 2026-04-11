@@ -42,5 +42,4 @@ export const useLoanStore = defineStore('loans', () => {
     deleteLoan,
     totalDebt,
   }
-  })
-
+})

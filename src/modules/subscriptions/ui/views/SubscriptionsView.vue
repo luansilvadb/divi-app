@@ -23,10 +23,7 @@
       <!-- MAIN COLUMN -->
       <main class="lg:col-span-2 space-y-8">
         <!-- Search Bar -->
-        <BaseSearchInput
-          v-model="store.searchQuery"
-          placeholder="Buscar por nome do serviço..."
-        />
+        <BaseSearchInput v-model="store.searchQuery" placeholder="Buscar por nome do serviço..." />
 
         <!-- Empty State (Matches TransactionsView Style) -->
         <div
@@ -53,7 +50,9 @@
               <path d="M11 15h.01" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
+          <h3
+            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
+          >
             Sem assinaturas
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -124,9 +123,10 @@
                 </div>
                 <div class="flex flex-col">
                   <div class="flex items-center gap-2">
-                    <span class="font-black text-surface-800 dark:text-surface-50 text-[1.05rem] tracking-tight">{{
-                      sub.name
-                    }}</span>
+                    <span
+                      class="font-black text-surface-800 dark:text-surface-50 text-[1.05rem] tracking-tight"
+                      >{{ sub.name }}</span
+                    >
                     <ItemSyncIndicator :status="sub.sync_status" />
                   </div>
                   <span
@@ -139,7 +139,9 @@
                 <div class="font-black text-xl text-primary tracking-tighter">
                   {{ formatCurrency(sub.amount) }}
                 </div>
-                <div class="text-[9px] font-black uppercase tracking-[0.1em] text-surface-400 dark:text-surface-400">
+                <div
+                  class="text-[9px] font-black uppercase tracking-[0.1em] text-surface-400 dark:text-surface-400"
+                >
                   Vencimento: dia {{ sub.billing_day }}
                 </div>
               </div>
@@ -184,13 +186,16 @@
               class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
               <div class="flex justify-between items-center w-full mb-3 px-1">
-                <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400"
+                <span
+                  class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400"
                   >Comprometimento</span
                 >
                 <span class="text-sm font-black text-primary tracking-tighter">8.4%</span>
               </div>
               <BaseProgressBar :percentage="8.4" color="var(--color-primary-main)" />
-              <p class="text-[9px] font-bold text-surface-400 dark:text-surface-400 uppercase mt-5 tracking-widest">
+              <p
+                class="text-[9px] font-bold text-surface-400 dark:text-surface-400 uppercase mt-5 tracking-widest"
+              >
                 Baseado na sua renda declarada
               </p>
             </div>
@@ -216,12 +221,17 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                  />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
-                Identificamos <span class="text-accent font-black">2 serviços</span> com baixo
-                uso este mês. Considere cancelar para economizar <span class="text-surface-800 dark:text-surface-50">R$ 54,00</span>.
+              <p
+                class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1"
+              >
+                Identificamos <span class="text-accent font-black">2 serviços</span> com baixo uso
+                este mês. Considere cancelar para economizar
+                <span class="text-surface-800 dark:text-surface-50">R$ 54,00</span>.
               </p>
             </div>
           </div>
@@ -262,5 +272,3 @@ onMounted(async () => {
   await store.fetchSubscriptions()
 })
 </script>
-
-

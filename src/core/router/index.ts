@@ -101,8 +101,14 @@ router.beforeEach(async (to, _from) => {
 
 // Navigation Error Handler (Critical for Offline/PWA)
 router.onError((error, to) => {
-  if (error.message.includes('Failed to fetch dynamically imported module') || error.message.includes('Importing a shadowed module')) {
-    console.error(`[Router] Falha ao carregar a página "${String(to.name)}" devido à falta de conexão.`, error)
+  if (
+    error.message.includes('Failed to fetch dynamically imported module') ||
+    error.message.includes('Importing a shadowed module')
+  ) {
+    console.error(
+      `[Router] Falha ao carregar a página "${String(to.name)}" devido à falta de conexão.`,
+      error,
+    )
     // Aqui poderíamos redirecionar para uma página de "Offline" customizada se desejado
   } else {
     console.error('[Router] Erro inesperado na navegação:', error)
@@ -110,4 +116,3 @@ router.onError((error, to) => {
 })
 
 export default router
-

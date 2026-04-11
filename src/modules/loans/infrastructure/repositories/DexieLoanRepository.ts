@@ -24,7 +24,10 @@ export class DexieLoanRepository implements ILoanRepository {
       }
       await db.loans.put(data)
     } catch (err) {
-      throw new InfrastructureError('Failed to save loan to local DB', err instanceof Error ? err : new Error(String(err)))
+      throw new InfrastructureError(
+        'Failed to save loan to local DB',
+        err instanceof Error ? err : new Error(String(err)),
+      )
     }
   }
 
@@ -32,7 +35,10 @@ export class DexieLoanRepository implements ILoanRepository {
     try {
       await db.loans.delete(id)
     } catch (err) {
-      throw new InfrastructureError('Failed to delete loan', err instanceof Error ? err : new Error(String(err)))
+      throw new InfrastructureError(
+        'Failed to delete loan',
+        err instanceof Error ? err : new Error(String(err)),
+      )
     }
   }
 
@@ -50,8 +56,7 @@ export class DexieLoanRepository implements ILoanRepository {
       version: item.version,
       deleted: item.deleted,
       created_at: item.created_at || new Date().toISOString(),
-      status: 'active' // Default status if not present in LocalLoan
+      status: 'active', // Default status if not present in LocalLoan
     }
   }
 }
-

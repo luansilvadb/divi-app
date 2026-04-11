@@ -10,7 +10,7 @@
     :showHeader="false"
     :class="[
       '!bg-transparent !border-none !shadow-none',
-      isMobile ? '!h-auto' : 'w-[95%] max-w-[400px]'
+      isMobile ? '!h-auto' : 'w-[95%] max-w-[400px]',
     ]"
     :pt="isMobile ? bottomSheetPt : modalPt"
   >
@@ -45,7 +45,9 @@
           <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
             {{ title || 'Tem certeza?' }}
           </h3>
-          <p class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70">
+          <p
+            class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70"
+          >
             {{
               message ||
               'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
@@ -118,7 +120,9 @@
         <h3 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
           {{ title || 'Tem certeza?' }}
         </h3>
-        <p class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70 mb-8">
+        <p
+          class="text-sm font-medium text-surface-600 dark:text-surface-200 leading-relaxed opacity-70 mb-8"
+        >
           {{
             message ||
             'Esta ação não poderá ser desfeita e os dados serão removidos permanentemente.'
@@ -175,5 +179,3 @@ const { modalPt, bottomSheetPt } = useOverlayPt()
   padding-bottom: env(safe-area-inset-bottom, 2rem);
 }
 </style>
-
-

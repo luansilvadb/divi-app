@@ -111,4 +111,3 @@ const chartOptions = {
   width: 100%;
 }
 </style>
-

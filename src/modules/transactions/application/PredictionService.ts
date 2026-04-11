@@ -13,7 +13,7 @@ export class PredictionService implements IPredictionService {
     const recentTransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter(t => t.date >= thirtyDaysAgo && !t.deleted)
+      .filter((t) => t.date >= thirtyDaysAgo && !t.deleted)
       .toArray()
 
     if (recentTransactions.length > 0) {
@@ -24,7 +24,7 @@ export class PredictionService implements IPredictionService {
     const allTransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter(t => !t.deleted)
+      .filter((t) => !t.deleted)
       .toArray()
 
     if (allTransactions.length > 0) {
@@ -33,7 +33,7 @@ export class PredictionService implements IPredictionService {
 
     // 3. Fallback: Se for novo payee, buscar a categoria mais usada globalmente
     const globalTransactions = await this.db.transactions
-      .filter(t => !t.deleted)
+      .filter((t) => !t.deleted)
       .limit(100) // Limitar para performance
       .toArray()
 
@@ -46,7 +46,7 @@ export class PredictionService implements IPredictionService {
     return {
       categoryId: 'geral',
       walletId: 'default',
-      confidence: 0
+      confidence: 0,
     }
   }
 
@@ -54,7 +54,7 @@ export class PredictionService implements IPredictionService {
     const categoryCounts: Record<string, number> = {}
     const walletCounts: Record<string, number> = {}
 
-    transactions.forEach(t => {
+    transactions.forEach((t) => {
       categoryCounts[t.category_id] = (categoryCounts[t.category_id] || 0) + 1
       walletCounts[t.wallet_id] = (walletCounts[t.wallet_id] || 0) + 1
     })
@@ -66,15 +66,14 @@ export class PredictionService implements IPredictionService {
       return {
         categoryId: 'geral',
         walletId: 'default',
-        confidence: 0
+        confidence: 0,
       }
     }
 
     return {
       categoryId: bestCategory[0],
       walletId: bestWallet[0],
-      confidence: bestCategory[1] / transactions.length
+      confidence: bestCategory[1] / transactions.length,
     }
   }
 }
-

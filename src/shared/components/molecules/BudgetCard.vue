@@ -1,20 +1,20 @@
 <template>
-  <BaseCard class="budget-card" clickable>
+  <BaseCard class="budget-card" clickable v-bind="$attrs">
     <template #header>
       <div class="header-content flex justify-between items-center w-full">
         <div class="budget-title-area flex items-center gap-4">
           <BaseIconBox color="var(--p-primary-color)">
             <i class="pi pi-chart-line text-xl"></i>
           </BaseIconBox>
-          <span class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">
+          <span
+            class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight"
+          >
             {{ budget.name || categoryName }}
           </span>
           <ItemSyncIndicator :status="budget.sync_status" />
         </div>
 
-        <BaseBadge status="info" variant="subtle">
-          Mensal
-        </BaseBadge>
+        <BaseBadge status="info" variant="subtle"> Mensal </BaseBadge>
       </div>
     </template>
 
@@ -38,10 +38,7 @@
         </div>
       </div>
 
-      <BudgetProgressBar
-        :spent="consumed"
-        :limit="budget.limit_value"
-      />
+      <BudgetProgressBar :spent="consumed" :limit="budget.limit_value" />
 
       <div
         class="budget-footer-details flex justify-between items-center pt-4 border-t border-surface-200 dark:border-surface-200/10"
@@ -50,7 +47,9 @@
           class="cadence flex items-center gap-2 text-sm"
           v-if="daysRemaining > 0 && !isOverBudget"
         >
-          <span class="cadence-label text-surface-600 dark:text-surface-200">Sugerido por dia:</span>
+          <span class="cadence-label text-surface-600 dark:text-surface-200"
+            >Sugerido por dia:</span
+          >
           <span
             class="cadence-value font-bold text-surface-800 dark:text-surface-50 bg-surface-50 dark:bg-white/10 px-2 py-0.5 rounded-md"
           >

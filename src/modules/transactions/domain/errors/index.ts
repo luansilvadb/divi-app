@@ -14,4 +14,3 @@ export class InfrastructureError extends DomainError {
     this.name = 'InfrastructureError'
   }
 }
-

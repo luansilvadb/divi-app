@@ -5,4 +5,3 @@ export interface ISubscriptionRepository {
   save(subscription: Subscription): Promise<void>
   delete(id: string): Promise<void>
 }
-

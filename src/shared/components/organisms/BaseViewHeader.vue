@@ -1,14 +1,17 @@
 <template>
-  <header
-    ref="headerRef"
-    class="view-header-wrapper mb-6 md:mb-10 relative flex flex-col md:block"
-  >
+  <header ref="headerRef" class="view-header-wrapper mb-6 md:mb-10 relative flex flex-col md:block">
     <!-- Page title and subtitle -->
-    <div 
+    <div
       class="title-section flex flex-col gap-2 md:gap-3 w-full md:w-auto mt-2 origin-left transition-none z-10"
-      :style="{ opacity: headerOpacity, transform: `scale(${headerScale})`, willChange: 'opacity, transform' }"
+      :style="{
+        opacity: headerOpacity,
+        transform: `scale(${headerScale})`,
+        willChange: 'opacity, transform',
+      }"
     >
-      <h1 class="page-title text-[1.6rem] xs:text-[1.8rem] md:text-[2.5rem] font-black tracking-tighter text-surface-800 dark:text-surface-50 m-0 leading-[1.1] md:leading-none whitespace-normal md:whitespace-nowrap overflow-hidden text-ellipsis">
+      <h1
+        class="page-title text-[1.6rem] xs:text-[1.8rem] md:text-[2.5rem] font-black tracking-tighter text-surface-800 dark:text-surface-50 m-0 leading-[1.1] md:leading-none whitespace-normal md:whitespace-nowrap overflow-hidden text-ellipsis"
+      >
         <slot name="title">
           <div class="inline-flex items-center flex-wrap md:flex-nowrap gap-x-1.5">
             <template v-if="highlight">
@@ -31,7 +34,10 @@
     </div>
 
     <!-- Action slot -->
-    <div v-if="$slots.action" class="header-actions flex justify-start md:justify-end transition-transform duration-300 w-full md:w-auto mt-6 md:mt-0 md:absolute md:right-0 md:top-0 h-auto md:h-10">
+    <div
+      v-if="$slots.action"
+      class="header-actions flex justify-start md:justify-end transition-transform duration-300 w-full md:w-auto mt-6 md:mt-0 md:absolute md:right-0 md:top-0 h-auto md:h-10"
+    >
       <slot name="action" />
     </div>
   </header>
@@ -68,13 +74,13 @@ watch(scrollY, (val) => {
 
 const headerOpacity = computed(() => {
   if (scrollY.value <= 40) return 1
-  const opacity = 1 - ((scrollY.value - 40) / 20) // Fades entirely to 0 at 60px
+  const opacity = 1 - (scrollY.value - 40) / 20 // Fades entirely to 0 at 60px
   return Math.max(0, Math.min(1, opacity))
 })
 
 const headerScale = computed(() => {
   if (scrollY.value <= 40) return 1
-  const scale = 1 - ((scrollY.value - 40) / 250) // Shrinks very slightly for a subtle "sinking" depth effect
+  const scale = 1 - (scrollY.value - 40) / 250 // Shrinks very slightly for a subtle "sinking" depth effect
   return Math.max(0.85, scale)
 })
 
@@ -83,7 +89,7 @@ watch(
   ([t, h, s]) => {
     setHeaderState(t as string, h as string, s as string)
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onMounted(() => {
@@ -96,7 +102,7 @@ onMounted(() => {
         setInView(entry.isIntersecting)
       }
     },
-    { threshold: 0, rootMargin: '-10px 0px 0px 0px' }
+    { threshold: 0, rootMargin: '-10px 0px 0px 0px' },
   )
 })
 
@@ -114,4 +120,3 @@ const titleAfter = computed(() => {
   return props.title.substring(index + props.highlight.length).trim()
 })
 </script>
-

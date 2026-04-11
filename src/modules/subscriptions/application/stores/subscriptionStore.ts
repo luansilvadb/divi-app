@@ -49,4 +49,3 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
     totalMonthlyCost,
   }
 })
-

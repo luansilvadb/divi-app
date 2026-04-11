@@ -29,19 +29,20 @@ if (import.meta.env.PROD) {
     ({ request }) => request.mode === 'navigate',
     new NetworkFirst({
       cacheName: 'dev-navigation',
-    })
+    }),
   )
 }
 
 // 2. Runtime Caching: Google Fonts e Assets Externos
 registerRoute(
-  ({ url }) => url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
+  ({ url }) =>
+    url.origin === 'https://fonts.googleapis.com' || url.origin === 'https://fonts.gstatic.com',
   new CacheFirst({
     cacheName: 'google-fonts',
     plugins: [
-      new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 }) // 1 ano
-    ]
-  })
+      new ExpirationPlugin({ maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 }), // 1 ano
+    ],
+  }),
 )
 
 // 3. Cache de imagens (Avatares, etc)
@@ -50,9 +51,9 @@ registerRoute(
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
-      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 }) // 30 dias
-    ]
-  })
+      new ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30 }), // 30 dias
+    ],
+  }),
 )
 
 // Logic for generating transactions from subscriptions
@@ -88,14 +89,14 @@ async function processSubscriptions() {
             deleted: false,
             client_updated_at: today.toISOString(),
             created_at: today.toISOString(),
-            version: 1
+            version: 1,
           })
 
           // Update subscription last billed date
           await db.table('subscriptions').update(sub.id, {
             last_billed_at: today.toISOString(),
             sync_status: 'pending',
-            client_updated_at: today.toISOString()
+            client_updated_at: today.toISOString(),
           })
         }
       }
@@ -131,5 +132,3 @@ self.addEventListener('activate', (event) => {
 })
 
 console.log('Divi Service Worker Initialized.')
-
-

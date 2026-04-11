@@ -28,7 +28,9 @@
           </svg>
         </div>
         <div>
-          <h3 class="text-lg font-black text-surface-800 dark:text-surface-50 tracking-tight leading-tight">
+          <h3
+            class="text-lg font-black text-surface-800 dark:text-surface-50 tracking-tight leading-tight"
+          >
             Maiores Gastos
           </h3>
           <p
@@ -40,7 +42,9 @@
       </div>
 
       <div class="text-right">
-        <div class="text-xs font-black text-surface-800/60 dark:text-surface-50/60 tracking-widest uppercase">
+        <div
+          class="text-xs font-black text-surface-800/60 dark:text-surface-50/60 tracking-widest uppercase"
+        >
           Total Mensal
         </div>
         <div class="text-xl font-black text-error tracking-tighter">
@@ -51,18 +55,16 @@
 
     <!-- Bars Container -->
     <div class="flex flex-col gap-6 relative z-10">
-      <div 
-        v-for="cat in topCategories" 
-        :key="cat.id"
-        class="group/bar"
-      >
+      <div v-for="cat in topCategories" :key="cat.id" class="group/bar">
         <div class="flex justify-between items-end mb-2">
           <div class="flex items-center gap-3">
-            <div 
+            <div
               class="w-2 h-2 rounded-full shadow-[0_0_8px_currentColor]"
               :style="{ color: cat.color }"
             ></div>
-            <span class="text-[0.7rem] font-black uppercase tracking-[0.1em] text-surface-800/80 dark:text-surface-50/80 group-hover/bar:text-surface-800 dark:text-surface-50 transition-colors">
+            <span
+              class="text-[0.7rem] font-black uppercase tracking-[0.1em] text-surface-800/80 dark:text-surface-50/80 group-hover/bar:text-surface-800 dark:text-surface-50 transition-colors"
+            >
               {{ cat.name }}
             </span>
           </div>
@@ -70,26 +72,30 @@
             <span class="text-[0.8rem] font-black text-surface-800 dark:text-surface-50">
               R$ {{ Math.abs(cat.total).toLocaleString('pt-BR', { minimumFractionDigits: 0 }) }}
             </span>
-            <span class="text-[0.6rem] font-black text-surface-600 dark:text-surface-200 opacity-40">
+            <span
+              class="text-[0.6rem] font-black text-surface-600 dark:text-surface-200 opacity-40"
+            >
               {{ cat.percent.toFixed(1) }}%
             </span>
           </div>
         </div>
 
         <!-- Progress Bar SVG -->
-        <div class="relative h-2 w-full bg-white/5 rounded-full overflow-hidden border border-surface-200/10">
+        <div
+          class="relative h-2 w-full bg-white/5 rounded-full overflow-hidden border border-surface-200/10"
+        >
           <transition
             appear
             enter-active-class="transition-all duration-1000 ease-out"
             enter-from-class="w-0"
             enter-to-class="w-full"
           >
-            <div 
+            <div
               class="absolute left-0 top-0 h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_12px_rgba(0,0,0,0.1)]"
-              :style="{ 
+              :style="{
                 width: cat.percent + '%',
                 backgroundColor: cat.color,
-                boxShadow: `0 0 10px ${cat.color}44`
+                boxShadow: `0 0 10px ${cat.color}44`,
               }"
             >
               <!-- Gloss Effect -->
@@ -100,7 +106,7 @@
       </div>
 
       <!-- Empty State -->
-      <div 
+      <div
         v-if="topCategories.length === 0"
         class="py-12 flex flex-col items-center text-center gap-4 opacity-30"
       >
@@ -113,8 +119,8 @@
 
     <!-- Footer Action -->
     <div class="mt-8 pt-6 border-t border-surface-200/10 flex justify-center">
-      <BaseButton 
-        variant="ghost" 
+      <BaseButton
+        variant="ghost"
         class="!text-[0.6rem] !font-black !uppercase !tracking-[0.2em] !text-surface-600/60 dark:text-surface-200/60 hover:!text-surface-800 dark:text-surface-50 transition-all"
         @click="$router.push('/transactions')"
       >
@@ -142,5 +148,3 @@ const totalExpense = computed(() => transactionStore.totalExpense)
   -webkit-backdrop-filter: blur(24px);
 }
 </style>
-
-

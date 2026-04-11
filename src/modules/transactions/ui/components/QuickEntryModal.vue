@@ -33,7 +33,7 @@ const walletId = ref('')
 
 const isUserInteracted = ref({
   category: false,
-  wallet: false
+  wallet: false,
 })
 
 const close = () => {
@@ -57,7 +57,7 @@ const handleSave = async () => {
         deleted: false,
         client_updated_at: new Date().toISOString(),
         version: 1,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       })
 
       // Disparar sincronização
@@ -68,14 +68,14 @@ const handleSave = async () => {
         severity: 'success',
         summary: 'Transação Salva',
         detail: `R$ ${amount.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} - ${payee.value}`,
-        life: 3000
+        life: 3000,
       })
 
       emit('save', {
         amount: amount.value,
         payee: payee.value,
         categoryId: categoryId.value,
-        walletId: walletId.value
+        walletId: walletId.value,
       })
       reset()
       close()
@@ -85,7 +85,7 @@ const handleSave = async () => {
         severity: 'error',
         summary: 'Erro ao Salvar',
         detail: 'Não foi possível salvar a transação localmente.',
-        life: 5000
+        life: 5000,
       })
     }
   }
@@ -111,7 +111,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 watch(payee, async (newPayee) => {
   if (newPayee.length >= 3 && amount.value) {
     const prediction = await predictionService.predict(newPayee, amount.value)
-    
+
     if (!isUserInteracted.value.category && prediction.categoryId) {
       categoryId.value = prediction.categoryId
     }
@@ -122,18 +122,21 @@ watch(payee, async (newPayee) => {
 })
 
 // Foco automático no campo de valor ao abrir
-watch(() => props.visible, (newVal) => {
-  if (newVal) {
-    if (transactionStore.categories.length === 0) transactionStore.fetchCategories()
-    if (transactionStore.wallets.length === 0) transactionStore.fetchWallets()
-    
-    // Timeout para garantir que o modal renderizou
-    setTimeout(() => {
-      const input = document.querySelector('.quick-entry-amount input') as HTMLElement
-      input?.focus()
-    }, 100)
-  }
-})
+watch(
+  () => props.visible,
+  (newVal) => {
+    if (newVal) {
+      if (transactionStore.categories.length === 0) transactionStore.fetchCategories()
+      if (transactionStore.wallets.length === 0) transactionStore.fetchWallets()
+
+      // Timeout para garantir que o modal renderizou
+      setTimeout(() => {
+        const input = document.querySelector('.quick-entry-amount input') as HTMLElement
+        input?.focus()
+      }, 100)
+    }
+  },
+)
 
 // Expor para testes
 defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInteracted })
@@ -175,12 +178,7 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
         <label for="payee" class="text-sm font-semibold">Beneficiário (Payee)</label>
         <IconField>
           <InputIcon class="pi pi-shop" />
-          <InputText
-            v-model="payee"
-            id="payee"
-            placeholder="Ex: Starbucks"
-            fluid
-          />
+          <InputText v-model="payee" id="payee" placeholder="Ex: Starbucks" fluid />
         </IconField>
       </div>
 
@@ -200,7 +198,9 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center gap-2">
               <i class="pi pi-tags opacity-70"></i>
-              <span>{{ transactionStore.categories.find(c => c.id === slotProps.value)?.name }}</span>
+              <span>{{
+                transactionStore.categories.find((c) => c.id === slotProps.value)?.name
+              }}</span>
             </div>
             <span v-else class="opacity-60 flex items-center gap-2">
               <i class="pi pi-tags"></i>
@@ -231,7 +231,9 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center gap-2">
               <i class="pi pi-wallet opacity-70"></i>
-              <span>{{ transactionStore.wallets.find(w => w.id === slotProps.value)?.name }}</span>
+              <span>{{
+                transactionStore.wallets.find((w) => w.id === slotProps.value)?.name
+              }}</span>
             </div>
             <span v-else class="opacity-60 flex items-center gap-2">
               <i class="pi pi-wallet"></i>
@@ -254,11 +256,14 @@ defineExpose({ amount, payee, categoryId, walletId, handleSave, close, isUserInt
         </span>
         <div class="flex gap-2">
           <Button label="Cancelar" severity="secondary" text @click="close" />
-          <Button label="Salvar" icon="pi pi-check" @click="handleSave" :disabled="!amount || !payee" />
+          <Button
+            label="Salvar"
+            icon="pi pi-check"
+            @click="handleSave"
+            :disabled="!amount || !payee"
+          />
         </div>
       </div>
     </template>
   </Dialog>
 </template>
-
-

@@ -7,11 +7,7 @@
     <template #action>
       <div class="flex items-center justify-end w-full lg:min-w-[420px]">
         <!-- Month Switcher Molecule -->
-        <BaseMonthSwitcher
-          :month="currentMonth"
-          @prev="prevMonth"
-          @next="nextMonth"
-        />
+        <BaseMonthSwitcher :month="currentMonth" @prev="prevMonth" @next="nextMonth" />
       </div>
     </template>
 
@@ -27,9 +23,10 @@
               <div class="flex justify-between items-end">
                 <div class="flex items-center gap-3">
                   <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: cat.color }"></div>
-                  <span class="text-xs font-black uppercase tracking-widest text-surface-800 dark:text-surface-50">{{
-                    cat.name
-                  }}</span>
+                  <span
+                    class="text-xs font-black uppercase tracking-widest text-surface-800 dark:text-surface-50"
+                    >{{ cat.name }}</span
+                  >
                 </div>
                 <div class="flex items-baseline gap-2">
                   <span class="text-sm font-black text-surface-800 dark:text-surface-50">{{
@@ -65,9 +62,10 @@
                     :style="{ height: `${item.expense}%` }"
                   ></div>
                 </div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">{{
-                  item.label
-                }}</span>
+                <span
+                  class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                  >{{ item.label }}</span
+                >
               </div>
             </div>
             <!-- Flow Legend -->
@@ -76,13 +74,15 @@
             >
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-primary/40"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                <span
+                  class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                   >Entradas</span
                 >
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-2 h-2 rounded-full bg-error/40"></div>
-                <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                <span
+                  class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                   >Saídas</span
                 >
               </div>
@@ -110,7 +110,8 @@
                 <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Média Diária</span
             >
           </div>
@@ -153,7 +154,8 @@
                 <path d="M12 6v6l4 2"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Maior Gasto Único</span
             >
           </div>
@@ -161,7 +163,9 @@
             <h3 class="text-3xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">
               {{ formatCurrency(maxExpense) }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
+            <p
+              class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+            >
               Supermercado em 15/03
             </p>
           </div>
@@ -182,7 +186,8 @@
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
               </svg>
             </BaseIconBox>
-            <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+            <span
+              class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
               >Economia Potencial</span
             >
           </div>
@@ -190,7 +195,9 @@
             <h3 class="text-3xl font-black text-success-main tracking-tighter">
               {{ formatCurrency(potentialSavings) }}
             </h3>
-            <p class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
+            <p
+              class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+            >
               Se reduzir lazer em 20%
             </p>
           </div>
@@ -212,9 +219,7 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 const activeDate = ref(new Date())
 
 const currentMonth = computed(() => {
-  return activeDate.value
-    .toLocaleString('pt-BR', { month: 'long' })
-    .toUpperCase()
+  return activeDate.value.toLocaleString('pt-BR', { month: 'long' }).toUpperCase()
 })
 
 function prevMonth() {
@@ -247,4 +252,3 @@ const flowData = [
   { label: 'Mar', income: 75, expense: 65 },
 ]
 </script>
-

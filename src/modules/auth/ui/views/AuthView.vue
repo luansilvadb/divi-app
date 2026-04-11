@@ -28,7 +28,7 @@ const handleSubmit = async () => {
   loading.value = true
   errorMessage.value = ''
   successMessage.value = ''
-  
+
   try {
     if (isLoginMode.value) {
       await authService.signInWithEmail({ email: email.value, password: password.value })
@@ -73,14 +73,16 @@ const handleGoogleLogin = async () => {
       <Message v-if="errorMessage" severity="error" :closable="false" class="mb-4">
         {{ errorMessage }}
       </Message>
-      
+
       <Message v-if="successMessage" severity="success" :closable="false" class="mb-4">
         {{ successMessage }}
       </Message>
 
       <form @submit.prevent="handleSubmit" class="flex flex-col gap-4">
         <div class="flex flex-col gap-2">
-          <label for="email" class="text-sm font-medium text-surface-700 dark:text-surface-100">Email</label>
+          <label for="email" class="text-sm font-medium text-surface-700 dark:text-surface-100"
+            >Email</label
+          >
           <InputText
             id="email"
             v-model="email"
@@ -92,7 +94,9 @@ const handleGoogleLogin = async () => {
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="password" class="text-sm font-medium text-surface-700 dark:text-surface-100">Password</label>
+          <label for="password" class="text-sm font-medium text-surface-700 dark:text-surface-100"
+            >Password</label
+          >
           <Password
             id="password"
             v-model="password"
@@ -142,4 +146,3 @@ const handleGoogleLogin = async () => {
     </div>
   </div>
 </template>
-

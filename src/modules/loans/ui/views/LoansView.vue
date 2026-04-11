@@ -51,7 +51,9 @@
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
+          <h3
+            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
+          >
             Nenhum empréstimo
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs">
@@ -150,11 +152,17 @@
             <div
               class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
+              <span
+                class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Próximo Vencimento</span
               >
-              <div class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50">15 de Abril</div>
-              <span class="text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest mt-2"
+              <div
+                class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50"
+              >
+                15 de Abril
+              </div>
+              <span
+                class="text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest mt-2"
                 >R$ 1.250,40 agendado</span
               >
             </div>
@@ -180,10 +188,14 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01" />
+                  <path
+                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"
+                  />
                 </svg>
               </div>
-              <p class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1">
+              <p
+                class="text-xs font-bold text-surface-600 dark:text-surface-200 leading-relaxed pt-1"
+              >
                 Atenção: seus juros médios subiram <span class="text-error font-black">2.1%</span>
                 neste trimestre. Avalie portabilidades.
               </p>
@@ -259,5 +271,3 @@ const cancelDelete = () => {
   loanToDelete.value = null
 }
 </script>
-
-

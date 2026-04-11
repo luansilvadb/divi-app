@@ -20,4 +20,3 @@ export const DI_TOKENS = {
   SyncEngine: 'ISyncEngine',
   PredictionService: 'IPredictionService',
 } as const
-

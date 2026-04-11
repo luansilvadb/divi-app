@@ -45,4 +45,3 @@ export const useGoalStore = defineStore('goals', () => {
     totalTarget,
   }
 })
-

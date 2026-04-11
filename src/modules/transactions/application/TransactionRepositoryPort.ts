@@ -7,4 +7,3 @@ export interface TransactionRepositoryPort {
   getByMonth(year: number, month: number): Promise<Transaction[]>
   watchAll(): Observable<Transaction[]> // Dexie liveQuery return type is technically Observable-compatible
 }
-

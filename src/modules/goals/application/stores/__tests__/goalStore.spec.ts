@@ -6,9 +6,9 @@ import { useGoalStore } from '../goalStore'
 vi.mock('@/core/di', () => ({
   container: {
     resolve: vi.fn().mockReturnValue({
-      getAll: vi.fn().mockResolvedValue([])
-    })
-  }
+      getAll: vi.fn().mockResolvedValue([]),
+    }),
+  },
 }))
 
 describe('goalStore', () => {
@@ -27,4 +27,3 @@ describe('goalStore', () => {
     expect(store.searchQuery).toBe('Dream')
   })
 })
-

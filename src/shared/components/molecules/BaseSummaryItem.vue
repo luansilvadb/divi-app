@@ -74,4 +74,3 @@ const statusClass = computed(() => {
   }
 })
 </script>
-

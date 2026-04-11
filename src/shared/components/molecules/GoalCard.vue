@@ -7,9 +7,10 @@
             <span class="emoji-icon text-xl leading-none" v-if="goal.icon">{{ goal.icon }}</span>
             <i class="pi pi-bullseye text-xl"></i>
           </BaseIconBox>
-          <span class="goal-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">{{
-            goal.name
-          }}</span>
+          <span
+            class="goal-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight"
+            >{{ goal.name }}</span
+          >
           <ItemSyncIndicator :status="goal.sync_status" />
         </div>
 
@@ -22,10 +23,12 @@
     <div class="goal-info flex flex-col gap-5 pt-2">
       <div class="values-row flex justify-between items-end">
         <div class="values-main flex items-baseline gap-2">
-          <span class="consumed text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter">{{
-            formatCurrency(goal.current_value)
-          }}</span>
-          <span class="limit text-sm font-semibold text-surface-600 dark:text-surface-200 opacity-70"
+          <span
+            class="consumed text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tighter"
+            >{{ formatCurrency(goal.current_value) }}</span
+          >
+          <span
+            class="limit text-sm font-semibold text-surface-600 dark:text-surface-200 opacity-70"
             >/ {{ formatCurrency(goal.target_value) }}</span
           >
         </div>
@@ -101,5 +104,3 @@ const formatDate = (dateString?: string) => {
   return new Date(dateString).toLocaleDateString('pt-BR', { month: 'short', year: 'numeric' })
 }
 </script>
-
-

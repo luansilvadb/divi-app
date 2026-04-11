@@ -38,7 +38,7 @@ describe('GoalsView', () => {
 
   it('exposes searchEmptySubtitle computed property', () => {
     storeMock.searchQuery = 'Japão'
-    
+
     const wrapper = mount(GoalsView, {
       global: {
         stubs: {
@@ -53,7 +53,8 @@ describe('GoalsView', () => {
     })
 
     // This should fail initially because searchEmptySubtitle is not defined in the component
-    expect((wrapper.vm as unknown as { searchEmptySubtitle: string }).searchEmptySubtitle).toBe('Não encontramos metas para "Japão"')
+    expect((wrapper.vm as unknown as { searchEmptySubtitle: string }).searchEmptySubtitle).toBe(
+      'Não encontramos metas para "Japão"',
+    )
   })
 })
-

@@ -14,7 +14,7 @@ describe('Transaction Domain Model', () => {
       date: '2026-04-07T12:00:00Z',
       deleted: false,
       created_at: '2026-04-07T12:00:00Z',
-      updated_at: '2026-04-07T12:00:00Z'
+      updated_at: '2026-04-07T12:00:00Z',
     }
 
     const transaction = createTransaction(transactionData)
@@ -34,10 +34,9 @@ describe('Transaction Domain Model', () => {
       date: '2026-04-07T12:00:00Z',
       deleted: false,
       created_at: '2026-04-07T12:00:00Z',
-      updated_at: '2026-04-07T12:00:00Z'
+      updated_at: '2026-04-07T12:00:00Z',
     }
 
     expect(() => createTransaction(transactionData)).toThrow('Amount must be positive')
   })
 })
-

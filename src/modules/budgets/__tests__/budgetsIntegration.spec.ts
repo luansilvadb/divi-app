@@ -3,26 +3,29 @@ import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { db } from '@/core/db'
+import type { Budget } from '@/shared/domain/entities/Budget'
+import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { Category } from '@/shared/domain/entities/Category'
 
 // Mock SyncEngine
 vi.mock('@/core/sync/SyncEngine', () => {
   class MockSyncEngine {
     static getInstance = vi.fn(() => ({
-      enqueueSync: vi.fn()
+      enqueueSync: vi.fn(),
     }))
     enqueueSync = vi.fn()
   }
   return {
     SyncEngine: MockSyncEngine,
-    default: MockSyncEngine
+    default: MockSyncEngine,
   }
 })
 
 // Mock AuthStore
 vi.mock('@/modules/auth/application/authStore', () => ({
   useAuthStore: vi.fn(() => ({
-    user: { id: 'u1' }
-  }))
+    user: { id: 'u1' },
+  })),
 }))
 
 describe('Budgets Integration', () => {
@@ -35,7 +38,7 @@ describe('Budgets Integration', () => {
 
   it('should reactively update budget consumption when transactions change', async () => {
     // 1. Setup Data
-    const category = { id: 'c1', name: 'Food', user_id: 'u1', deleted: false } as any
+    const category = { id: 'c1', name: 'Food', user_id: 'u1', deleted: false } as Category
     await db.categories.add(category)
 
     const budgetStore = useBudgetStore()
@@ -50,11 +53,11 @@ describe('Budgets Integration', () => {
       category_id: 'c1',
       limit_value: 1000,
       period: 'monthly',
-      user_id: 'u1'
-    } as any)
+      user_id: 'u1',
+    } as Budget)
 
     // Wait for liveQuery
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise((resolve) => setTimeout(resolve, 100))
     expect(budgetStore.budgets.length).toBe(1)
 
     // 4. Initial Consumption (0)
@@ -67,17 +70,17 @@ describe('Budgets Integration', () => {
       amount: 150,
       category_id: 'c1',
       date: new Date().toISOString(),
-      type: 'expense'
-    } as any)
+      type: 'expense',
+    } as Transaction)
 
     // 6. Verify Reactive Update
     // In a real integration, we'd wait for transactionStore to update its internal 'transactions' ref
     // But transactionStore update logic might be complex.
     // For this test, let's assume transactionStore.transactions is updated by saveTransaction call.
-    
+
     // Wait for any async effects
-    await new Promise(resolve => setTimeout(resolve, 100))
-    
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
     // Check if consumed increased
     const consumed = budgetStore.getConsumed(budgetStore.budgets[0]!)
     expect(consumed).toBe(150)

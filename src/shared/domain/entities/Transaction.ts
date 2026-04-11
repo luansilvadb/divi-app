@@ -11,5 +11,3 @@ export interface Transaction extends SyncMetadata {
   payee_id?: string
   notes?: string
 }
-
-

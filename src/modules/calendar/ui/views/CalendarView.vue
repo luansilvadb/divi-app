@@ -5,12 +5,8 @@
     subtitle="Visualize seus compromissos e transações em uma linha do tempo mensal."
   >
     <template #action>
-        <!-- Standardized Month Switcher -->
-        <BaseMonthSwitcher
-          :month="monthName"
-          @prev="prevMonth"
-          @next="nextMonth"
-        />
+      <!-- Standardized Month Switcher -->
+      <BaseMonthSwitcher :month="monthName" @prev="prevMonth" @next="nextMonth" />
     </template>
 
     <!-- Content Grid (Holy Grail) -->
@@ -84,9 +80,10 @@
           <template #header>
             <div class="flex flex-col gap-1">
               <span class="text-surface-800 dark:text-surface-50">Atividade do Dia</span>
-              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">{{
-                formatDateFull(selectedDate)
-              }}</span>
+              <span
+                class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                >{{ formatDateFull(selectedDate) }}</span
+              >
             </div>
           </template>
 
@@ -156,8 +153,12 @@
                 </svg>
               </BaseIconBox>
               <div class="flex-1 min-w-0">
-                <div class="font-bold text-sm text-surface-800 dark:text-surface-50 truncate">{{ t.title }}</div>
-                <div class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400">
+                <div class="font-bold text-sm text-surface-800 dark:text-surface-50 truncate">
+                  {{ t.title }}
+                </div>
+                <div
+                  class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
+                >
                   {{ t.category_id || 'Geral' }}
                 </div>
               </div>
@@ -193,7 +194,8 @@
             <div
               class="w-full p-4 rounded-2xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center"
             >
-              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-1"
+              <span
+                class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-1"
                 >Saldo do Dia</span
               >
               <div
@@ -324,5 +326,3 @@ const formatDateFull = (date: Date) => {
   return date.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 </script>
-
-

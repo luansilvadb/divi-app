@@ -19,7 +19,7 @@ export const useSyncStore = defineStore('sync', {
     isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     error: null as string | null,
     logs: [] as SyncLog[],
-    updateCounter: 0 // Sinalizador reativo de mudança
+    updateCounter: 0, // Sinalizador reativo de mudança
   }),
   actions: {
     notifyChange() {
@@ -48,7 +48,7 @@ export const useSyncStore = defineStore('sync', {
       const newLog: SyncLog = {
         ...log,
         id: crypto.randomUUID(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       }
       this.logs.unshift(newLog)
       // Keep only last 50 logs
@@ -58,7 +58,6 @@ export const useSyncStore = defineStore('sync', {
     },
     clearLogs() {
       this.logs = []
-    }
-  }
+    },
+  },
 })
-

@@ -6,7 +6,9 @@
           <i class="pi pi-briefcase text-2xl"></i>
         </BaseIconBox>
         <div class="flex flex-col gap-0.5">
-          <h3 class="loan-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight leading-tight">
+          <h3
+            class="loan-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight leading-tight"
+          >
             {{ loan.name }}
           </h3>
           <ItemSyncIndicator :status="loan.sync_status" />
@@ -17,9 +19,12 @@
       </div>
     </div>
 
-    <div class="loan-metrics grid grid-cols-2 gap-4 bg-surface-50/50 dark:bg-surface-800/5 p-4 rounded-xl mt-4">
+    <div
+      class="loan-metrics grid grid-cols-2 gap-4 bg-surface-50/50 dark:bg-surface-800/5 p-4 rounded-xl mt-4"
+    >
       <div class="metric flex flex-col gap-1">
-        <span class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
+        <span
+          class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
           >Saldo Devedor</span
         >
         <span class="value text-lg font-black text-error leading-none">{{
@@ -27,7 +32,8 @@
         }}</span>
       </div>
       <div class="metric flex flex-col gap-1">
-        <span class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
+        <span
+          class="label text-[0.7rem] font-bold text-surface-400 dark:text-surface-400 uppercase tracking-widest"
           >Taxa</span
         >
         <div class="flex items-center">
@@ -39,7 +45,9 @@
     </div>
 
     <div class="loan-progress-section flex flex-col gap-2 mt-4">
-      <div class="progress-info flex justify-between text-xs font-bold text-surface-600 dark:text-surface-200">
+      <div
+        class="progress-info flex justify-between text-xs font-bold text-surface-600 dark:text-surface-200"
+      >
         <span>{{ getProgress(loan).toFixed(1) }}% pago</span>
         <span class="opacity-60">de {{ formatCurrency(loan.total_value) }}</span>
       </div>
@@ -95,4 +103,3 @@ const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('pt-BR')
 }
 </script>
-

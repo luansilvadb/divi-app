@@ -22,18 +22,18 @@ describe('Auth Persistence Integration', () => {
       signOut: vi.fn(),
       signInWithGoogle: vi.fn(),
       signInWithEmail: vi.fn(),
-      registerWithEmail: vi.fn()
+      registerWithEmail: vi.fn(),
     }
   })
 
   it('should recover user session from service on initialization', async () => {
     const mockUser: User = { id: '123', email: 'persisted@test.com' }
     authService.getCurrentUser.mockResolvedValueOnce(mockUser)
-    
+
     const store = useAuthStore()
-    
+
     await store.initialize(authService as IAuthService)
-    
+
     expect(store.user).toEqual(mockUser)
     expect(store.isAuthenticated).toBe(true)
   })
@@ -47,16 +47,15 @@ describe('Auth Persistence Integration', () => {
     })
 
     await store.initialize(authService as IAuthService)
-    
+
     const newUser: User = { id: '456', email: 'new@test.com' }
     authCallback(newUser)
-    
+
     expect(store.user).toEqual(newUser)
     expect(store.isAuthenticated).toBe(true)
-    
+
     authCallback(null)
     expect(store.user).toBeNull()
     expect(store.isAuthenticated).toBe(false)
   })
 })
-

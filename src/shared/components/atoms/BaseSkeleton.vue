@@ -6,7 +6,6 @@
     class="relative overflow-hidden bg-surface-50 dark:bg-surface-800/10"
     :class="customClass"
   >
-
   </Skeleton>
 </template>
 
@@ -27,5 +26,3 @@ withDefaults(
   },
 )
 </script>
-
-

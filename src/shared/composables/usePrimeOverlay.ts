@@ -2,9 +2,7 @@ export function useOverlayPt() {
   const modalPt = {
     root: { class: 'modal-wrapper flex items-center justify-center overflow-hidden' },
     mask: {
-      class: [
-        'modal-backdrop transition-all duration-500 z-[150] bg-black/60'
-      ]
+      class: ['modal-backdrop transition-all duration-500 z-[150] bg-black/60'],
     },
     content: { class: 'modal-content relative w-full z-[160] !p-0 !bg-transparent' },
   }
@@ -18,4 +16,3 @@ export function useOverlayPt() {
 
   return { modalPt, bottomSheetPt }
 }
-

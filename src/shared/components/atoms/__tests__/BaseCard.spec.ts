@@ -9,7 +9,7 @@ describe('BaseCard.vue', () => {
     stubs: {
       BaseIconBox: true,
       BaseSkeleton: true,
-    }
+    },
   }
 
   it('renders default slot content normally', () => {
@@ -110,4 +110,3 @@ describe('BaseCard.vue', () => {
     expect(wrapper.emitted('click')).toBeTruthy()
   })
 })
-

@@ -6,9 +6,9 @@ import { useLoanStore } from '../loanStore'
 vi.mock('@/core/di', () => ({
   container: {
     resolve: vi.fn().mockReturnValue({
-      getAll: vi.fn().mockResolvedValue([])
-    })
-  }
+      getAll: vi.fn().mockResolvedValue([]),
+    }),
+  },
 }))
 
 describe('loanStore', () => {
@@ -27,4 +27,3 @@ describe('loanStore', () => {
     expect(store.searchQuery).toBe('Bank')
   })
 })
-

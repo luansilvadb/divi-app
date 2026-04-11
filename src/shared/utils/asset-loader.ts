@@ -60,4 +60,3 @@ export class AssetLoader implements IAssetLoader {
     }
   }
 }
-

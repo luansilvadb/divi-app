@@ -50,7 +50,9 @@
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
             </svg>
           </div>
-          <h3 class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50">
+          <h3
+            class="text-xl font-black uppercase tracking-[0.2em] mb-4 text-surface-800 dark:text-surface-50"
+          >
             Nenhum orçamento
           </h3>
           <p class="text-xs font-bold uppercase tracking-widest leading-relaxed max-w-xs mb-8">
@@ -110,12 +112,16 @@
         </div>
 
         <!-- Budget List Grid -->
-        <div v-else-if="filteredBudgets.length > 0" class="budgets-list grid grid-cols-1 xl:grid-cols-2 gap-8">
+        <div
+          v-else-if="filteredBudgets.length > 0"
+          class="budgets-list grid grid-cols-1 xl:grid-cols-2 gap-8"
+        >
           <BudgetCard
             v-for="budget in filteredBudgets"
             :key="budget.id"
             :budget="budget"
             :consumed="store.getConsumed(budget)"
+            @click="handleEditBudget(budget)"
           />
         </div>
       </main>
@@ -152,7 +158,8 @@
             <div
               class="w-full p-6 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
+              <span
+                class="text-[10px] font-black uppercase tracking-[0.2em] text-surface-400 dark:text-surface-400 mb-3"
                 >Status de Saúde</span
               >
               <div
@@ -205,14 +212,24 @@
           <template #header>Sinais Relevantes</template>
           <div class="flex flex-col gap-4 pt-2">
             <!-- Insight Item -->
-            <div class="flex gap-4 p-5 rounded-3xl bg-surface-50 dark:bg-surface-950/50 border border-surface-200 dark:border-surface-800/10 relative overflow-hidden group">
+            <div
+              class="flex gap-4 p-5 rounded-3xl bg-surface-50 dark:bg-surface-950/50 border border-surface-200 dark:border-surface-800/10 relative overflow-hidden group"
+            >
               <!-- Animated Accent Glow -->
-              <div class="absolute -right-4 -top-4 w-12 h-12 bg-primary/10 blur-2xl rounded-full transition-all group-hover:scale-150"></div>
-              
+              <div
+                class="absolute -right-4 -top-4 w-12 h-12 bg-primary/10 blur-2xl rounded-full transition-all group-hover:scale-150"
+              ></div>
+
               <div class="flex flex-col gap-1 relative z-10">
-                <span class="text-[0.6rem] font-black uppercase tracking-[0.2em] text-primary opacity-80">Insight de IA</span>
-                <p class="text-[0.8rem] font-bold text-surface-600 dark:text-surface-300 leading-relaxed">
-                  Você economizou <span class="text-primary font-black">R$ 340,00</span> em <span class="text-surface-900 dark:text-surface-50">Lazer</span> 
+                <span
+                  class="text-[0.6rem] font-black uppercase tracking-[0.2em] text-primary opacity-80"
+                  >Insight de IA</span
+                >
+                <p
+                  class="text-[0.8rem] font-bold text-surface-600 dark:text-surface-300 leading-relaxed"
+                >
+                  Você economizou <span class="text-primary font-black">R$ 340,00</span> em
+                  <span class="text-surface-900 dark:text-surface-50">Lazer</span>
                   comparado ao mês passado. Ótima performance!
                 </p>
               </div>
@@ -223,10 +240,7 @@
     </div>
 
     <!-- Budget Dialog -->
-    <BudgetDialog
-      :show="showAddBudgetModal"
-      @close="showAddBudgetModal = false"
-    />
+    <BudgetDialog :show="showAddBudgetModal" :budget="selectedBudget" @close="handleCloseModal" />
   </StandardPageLayout>
 </template>
 
@@ -243,11 +257,23 @@ import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import BudgetCard from '@/shared/components/molecules/BudgetCard.vue'
 import BudgetDialog from '../components/BudgetDialog.vue'
+import type { Budget } from '@/shared/domain/entities/Budget'
 
 const store = useBudgetStore()
 const transactionStore = useTransactionStore()
 const isMobile = useIsMobile()
 const showAddBudgetModal = ref(false)
+const selectedBudget = ref<Budget | null>(null)
+
+const handleEditBudget = (budget: Budget) => {
+  selectedBudget.value = budget
+  showAddBudgetModal.value = true
+}
+
+const handleCloseModal = () => {
+  showAddBudgetModal.value = false
+  selectedBudget.value = null
+}
 
 const filteredBudgets = computed(() => {
   if (!store.searchQuery) return store.budgets
@@ -277,5 +303,3 @@ onUnmounted(() => {
   store.dispose()
 })
 </script>
-
-

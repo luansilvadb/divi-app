@@ -18,15 +18,15 @@ vi.mock('../../infrastructure/SupabaseAuth', () => {
       signInWithEmail = mockSignInWithEmail
       registerWithEmail = mockRegisterWithEmail
       signInWithGoogle = mockSignInWithGoogle
-    }
+    },
   }
 })
 
 const mockPush = vi.fn()
 vi.mock('vue-router', () => ({
   useRouter: () => ({
-    push: mockPush
-  })
+    push: mockPush,
+  }),
 }))
 
 describe('AuthView.vue', () => {
@@ -38,10 +38,10 @@ describe('AuthView.vue', () => {
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     expect(wrapper.text()).toContain('Login')
     expect(wrapper.find('input[type="email"]').exists()).toBe(true)
     expect(wrapper.find('input[type="password"]').exists()).toBe(true)
@@ -52,14 +52,14 @@ describe('AuthView.vue', () => {
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     expect(wrapper.text()).toContain('Need an account? Register')
-    
+
     await wrapper.find('a.toggle-mode').trigger('click')
-    
+
     expect(wrapper.text()).toContain('Register')
     expect(wrapper.text()).toContain('Already have an account? Login')
   })
@@ -68,17 +68,17 @@ describe('AuthView.vue', () => {
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     await wrapper.find('input[type="email"]').setValue('test@example.com')
     await wrapper.find('input[type="password"]').setValue('password123')
     await wrapper.find('form').trigger('submit.prevent')
-    
+
     expect(mockSignInWithEmail).toHaveBeenCalledWith({
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     })
   })
 
@@ -86,38 +86,38 @@ describe('AuthView.vue', () => {
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     await wrapper.find('a.toggle-mode').trigger('click')
-    
+
     await wrapper.find('input[type="email"]').setValue('test@example.com')
     await wrapper.find('input[type="password"]').setValue('password123')
     await wrapper.find('form').trigger('submit.prevent')
-    
+
     expect(mockRegisterWithEmail).toHaveBeenCalledWith({
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     })
   })
 
   it('displays error message when login fails', async () => {
     mockSignInWithEmail.mockRejectedValue(new Error('Invalid credentials'))
-    
+
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     await wrapper.find('input[type="email"]').setValue('test@example.com')
     await wrapper.find('input[type="password"]').setValue('wrong')
     await wrapper.find('form').trigger('submit.prevent')
-    
-    await new Promise(resolve => setTimeout(resolve, 0)) // Wait for promises to resolve
-    
+
+    await new Promise((resolve) => setTimeout(resolve, 0)) // Wait for promises to resolve
+
     expect(wrapper.text()).toContain('Invalid credentials')
   })
 
@@ -125,13 +125,12 @@ describe('AuthView.vue', () => {
     const wrapper = mount(AuthView, {
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn }), PrimeVue],
-        components: { InputText, Password, Button, Message }
-      }
+        components: { InputText, Password, Button, Message },
+      },
     })
-    
+
     await wrapper.find('.google-btn').trigger('click')
-    
+
     expect(mockSignInWithGoogle).toHaveBeenCalled()
   })
 })
-

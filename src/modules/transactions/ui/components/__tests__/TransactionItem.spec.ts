@@ -29,7 +29,7 @@ describe('TransactionItem.vue', () => {
     deleted: false,
     client_updated_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
-    version: 1
+    version: 1,
   }
 
   const props = {
@@ -66,4 +66,3 @@ describe('TransactionItem.vue', () => {
     expect(wrapper.find('[data-test^="sync-indicator-"]').exists()).toBe(false)
   })
 })
-

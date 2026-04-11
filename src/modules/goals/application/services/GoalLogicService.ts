@@ -26,4 +26,3 @@ export class GoalLogicService implements IGoalLogicService {
     return completionDate
   }
 }
-

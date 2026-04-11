@@ -35,28 +35,30 @@ describe('SyncEngine Error Handling', () => {
   beforeEach(async () => {
     setActivePinia(createPinia())
     SyncEngine._resetInstance()
-    await Promise.all(
-      Object.values(db.tables).map(table => table.clear())
-    )
+    await Promise.all(Object.values(db.tables).map((table) => table.clear()))
     engine = SyncEngine.getInstance()
     vi.clearAllMocks()
-    vi.mocked(supabase.auth.getUser).mockResolvedValue({ 
+    vi.mocked(supabase.auth.getUser).mockResolvedValue({
       data: {
         user: {
           id: 'u1',
           app_metadata: {},
           user_metadata: {},
           aud: 'authenticated',
-          created_at: new Date().toISOString()
-        }
+          created_at: new Date().toISOString(),
+        } as unknown as Awaited<ReturnType<typeof supabase.auth.getUser>>['data']['user'],
       },
-      error: null 
-    } as any)
+      error: null,
+    } as unknown as Awaited<ReturnType<typeof supabase.auth.getUser>>)
 
     vi.mocked(supabase.auth.getSession).mockResolvedValue({
-      data: { session: { user: { id: 'u1' } } },
-      error: null
-    } as any)
+      data: {
+        session: { user: { id: 'u1' } } as unknown as Awaited<
+          ReturnType<typeof supabase.auth.getSession>
+        >['data']['session'],
+      },
+      error: null,
+    } as unknown as Awaited<ReturnType<typeof supabase.auth.getSession>>)
     Object.defineProperty(navigator, 'onLine', { value: true, configurable: true })
   })
 
@@ -76,18 +78,20 @@ describe('SyncEngine Error Handling', () => {
       client_updated_at: now,
       created_at: now,
       deleted: false,
-      version: 1
+      version: 1,
     })
 
     const mockTable = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-      upsert: vi.fn().mockResolvedValue({ 
-        error: { message: 'Network Timeout', code: 'TIMEOUT' } 
-      })
+      upsert: vi.fn().mockResolvedValue({
+        error: { message: 'Network Timeout', code: 'TIMEOUT' },
+      }),
     }
-    vi.mocked(supabase.from).mockReturnValue(mockTable as unknown as ReturnType<typeof supabase.from>)
+    vi.mocked(supabase.from).mockReturnValue(
+      mockTable as unknown as ReturnType<typeof supabase.from>,
+    )
 
     await engine.pushDirtyRecords()
 
@@ -95,4 +99,3 @@ describe('SyncEngine Error Handling', () => {
     expect(record?.sync_status).toBe('failed')
   })
 })
-

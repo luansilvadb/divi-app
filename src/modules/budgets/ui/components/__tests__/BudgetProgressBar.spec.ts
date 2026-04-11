@@ -8,8 +8,8 @@ describe('BudgetProgressBar.vue', () => {
     const wrapper = mount(BudgetProgressBar, {
       props: {
         spent: 400,
-        limit: 1000
-      }
+        limit: 1000,
+      },
     })
 
     // 40% spent
@@ -22,8 +22,8 @@ describe('BudgetProgressBar.vue', () => {
     const wrapper = mount(BudgetProgressBar, {
       props: {
         spent: 600,
-        limit: 1000
-      }
+        limit: 1000,
+      },
     })
     // 60% spent
     const baseProgress = wrapper.findComponent(BaseProgressBar)
@@ -35,8 +35,8 @@ describe('BudgetProgressBar.vue', () => {
     const wrapper = mount(BudgetProgressBar, {
       props: {
         spent: 1100,
-        limit: 1000
-      }
+        limit: 1000,
+      },
     })
     // Over budget
     const baseProgress = wrapper.findComponent(BaseProgressBar)

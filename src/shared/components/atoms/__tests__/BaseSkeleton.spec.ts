@@ -9,7 +9,8 @@ describe('BaseSkeleton.vue', () => {
     stubs: {
       Skeleton: {
         props: ['width', 'height', 'borderRadius'],
-        template: '<div class="p-skeleton" :data-width="width" :data-height="height" :data-radius="borderRadius"><slot /></div>',
+        template:
+          '<div class="p-skeleton" :data-width="width" :data-height="height" :data-radius="borderRadius"><slot /></div>',
       },
     },
   }
@@ -65,4 +66,3 @@ describe('BaseSkeleton.vue', () => {
     expect(wrapper.find('.p-skeleton').classes()).toContain('my-custom-class')
   })
 })
-

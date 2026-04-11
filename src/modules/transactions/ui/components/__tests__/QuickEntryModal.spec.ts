@@ -24,10 +24,10 @@ Object.defineProperty(window, 'matchMedia', {
 
 describe('QuickEntryModal', () => {
   const mockPredictionService = {
-    predict: vi.fn()
+    predict: vi.fn(),
   }
   const mockSyncEngine = {
-    enqueueSync: vi.fn()
+    enqueueSync: vi.fn(),
   }
 
   beforeEach(() => {
@@ -41,7 +41,7 @@ describe('QuickEntryModal', () => {
         wallets: [],
         fetchCategories: vi.fn(),
         fetchWallets: vi.fn(),
-        saveTransaction: vi.fn().mockResolvedValue({})
+        saveTransaction: vi.fn().mockResolvedValue({}),
       }
     })
   })
@@ -50,21 +50,21 @@ describe('QuickEntryModal', () => {
     return mount(QuickEntryModal, {
       props: {
         visible: true,
-        ...props
+        ...props,
       },
       global: {
         plugins: [PrimeVue, ToastService, createTestingPinia({ createSpy: vi.fn })],
         stubs: {
           Dialog: {
             template: '<div v-if="visible"><slot /></div>',
-            props: ['visible']
+            props: ['visible'],
           },
           InputNumber: true,
           InputText: true,
           Select: true,
-          Button: true
-        }
-      }
+          Button: true,
+        },
+      },
     })
   }
 
@@ -72,32 +72,40 @@ describe('QuickEntryModal', () => {
     mockPredictionService.predict.mockResolvedValue({
       categoryId: 'cat-predita',
       walletId: 'wallet-predita',
-      confidence: 0.8
+      confidence: 0.8,
     })
 
     const wrapper = mountComponent()
-    const vm = wrapper.vm as unknown as { amount: number | null; payee: string; categoryId: string; walletId: string }
-    
+    const vm = wrapper.vm as unknown as {
+      amount: number | null
+      payee: string
+      categoryId: string
+      walletId: string
+    }
+
     vm.amount = 100
     vm.payee = 'Starbucks'
-    
+
     await vi.waitFor(() => expect(mockPredictionService.predict).toHaveBeenCalled())
-    
+
     expect(vm.categoryId).toBe('cat-predita')
     expect(vm.walletId).toBe('wallet-predita')
   })
 
   it('deve chamar saveTransaction e enqueueSync ao salvar', async () => {
     const wrapper = mountComponent()
-    const vm = wrapper.vm as unknown as { amount: number | null; payee: string; handleSave(): Promise<void> }
-    
+    const vm = wrapper.vm as unknown as {
+      amount: number | null
+      payee: string
+      handleSave(): Promise<void>
+    }
+
     vm.amount = 100
     vm.payee = 'Starbucks'
-    
+
     await vm.handleSave()
-    
+
     expect(mockSyncEngine.enqueueSync).toHaveBeenCalled()
     expect(wrapper.emitted('save')).toBeTruthy()
   })
 })
-

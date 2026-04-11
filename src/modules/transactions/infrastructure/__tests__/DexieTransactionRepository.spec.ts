@@ -8,9 +8,9 @@ import 'fake-indexeddb/auto'
 vi.mock('@/core/sync/SyncEngine', () => ({
   SyncEngine: {
     getInstance: vi.fn(() => ({
-      enqueueSync: vi.fn()
-    }))
-  }
+      enqueueSync: vi.fn(),
+    })),
+  },
 }))
 
 describe('DexieTransactionRepository', () => {
@@ -18,9 +18,7 @@ describe('DexieTransactionRepository', () => {
 
   beforeEach(async () => {
     // Limpa todas as tabelas antes de cada teste
-    await Promise.all(
-      Object.values(db.tables).map(table => table.clear())
-    )
+    await Promise.all(Object.values(db.tables).map((table) => table.clear()))
     repository = new DexieTransactionRepository()
   })
 
@@ -34,14 +32,14 @@ describe('DexieTransactionRepository', () => {
       type: 'expense',
       category_id: 'cat-1',
       wallet_id: 'wallet-1',
-      date: '2026-04-07T10:00:00Z'
+      date: '2026-04-07T10:00:00Z',
     }
 
     await repository.save(transaction)
 
     const all = await repository.getAll()
     expect(all).toHaveLength(1)
-    
+
     // Verifica se os hooks preencheram os dados de sync
     const savedLocal = await db.transactions.get('tx-1')
     expect(savedLocal?.sync_status).toBe('pending')
@@ -50,6 +48,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should hide deleted transactions from all fetching methods', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t1: any = {
       id: 'tx-active',
       user_id: 'user-1',
@@ -59,8 +58,9 @@ describe('DexieTransactionRepository', () => {
       category_id: 'c1',
       wallet_id: 'w1',
       date: '2026-04-07T10:00:00Z',
-      deleted: false
+      deleted: false,
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t2: any = {
       id: 'tx-deleted',
       user_id: 'user-1',
@@ -70,7 +70,7 @@ describe('DexieTransactionRepository', () => {
       category_id: 'c1',
       wallet_id: 'w1',
       date: '2026-04-07T10:00:00Z',
-      deleted: true
+      deleted: true,
     }
 
     await db.transactions.bulkAdd([t1, t2])
@@ -87,6 +87,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should mark for sync when a transaction is deleted (soft delete)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t1: any = {
       id: 'tx-to-delete',
       user_id: 'user-1',
@@ -97,7 +98,7 @@ describe('DexieTransactionRepository', () => {
       wallet_id: 'w1',
       date: '2026-04-07T10:00:00Z',
       sync_status: 'synced',
-      deleted: false
+      deleted: false,
     }
     await db.transactions.add(t1)
 
@@ -109,6 +110,7 @@ describe('DexieTransactionRepository', () => {
   })
 
   it('should update last_modified_at and sync_status on update', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t1: any = {
       id: 'tx-update',
       user_id: 'user-1',
@@ -120,7 +122,7 @@ describe('DexieTransactionRepository', () => {
       date: '2026-04-07T10:00:00Z',
       sync_status: 'synced',
       client_updated_at: '2000-01-01T00:00:00Z',
-      deleted: false
+      deleted: false,
     }
     await db.transactions.add(t1)
 
@@ -130,7 +132,8 @@ describe('DexieTransactionRepository', () => {
     const updated = await db.transactions.get('tx-update')
     expect(updated?.title).toBe('Updated Title')
     expect(updated?.sync_status).toBe('pending')
-    expect(new Date(updated!.client_updated_at).getTime()).toBeGreaterThan(new Date('2000-01-01').getTime())
+    expect(new Date(updated!.client_updated_at).getTime()).toBeGreaterThan(
+      new Date('2000-01-01').getTime(),
+    )
   })
 })
-

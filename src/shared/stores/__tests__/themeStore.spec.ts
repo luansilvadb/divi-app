@@ -7,8 +7,8 @@ describe('Theme Store', () => {
     setActivePinia(createPinia())
     localStorage.clear()
     vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
-        cb(performance.now())
-        return 0
+      cb(performance.now())
+      return 0
     })
 
     const isDarkMatches = false
@@ -57,4 +57,3 @@ describe('Theme Store', () => {
     expect(store.isDark).toBe(true)
   })
 })
-

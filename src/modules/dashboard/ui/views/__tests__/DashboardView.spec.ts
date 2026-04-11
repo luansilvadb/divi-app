@@ -9,31 +9,30 @@ import { DI_TOKENS } from '@/core/di-tokens'
 // Mock dependencies
 vi.mock('@/core/di', () => ({
   container: {
-    resolve: vi.fn()
+    resolve: vi.fn(),
   },
-  useService: vi.fn()
+  useService: vi.fn(),
 }))
 
 vi.mock('@/shared/utils/asset-loader', () => ({
-  AssetLoader: vi.fn()
+  AssetLoader: vi.fn(),
 }))
 
 describe('DashboardView', () => {
-
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     // Mock AssetLoader
     const mockAssetLoader = {
-      sanitize: vi.fn(i => i),
-      getFallback: vi.fn(() => 'fallback.png')
+      sanitize: vi.fn((i) => i),
+      getFallback: vi.fn(() => 'fallback.png'),
     }
-    
+
     // Mock TransactionRepository
     const mockRepo = {
       getAll: vi.fn().mockResolvedValue([]),
       getByMonth: vi.fn().mockResolvedValue([]),
-      watchAll: vi.fn(() => ({ subscribe: vi.fn(), unsubscribe: vi.fn() }))
+      watchAll: vi.fn(() => ({ subscribe: vi.fn(), unsubscribe: vi.fn() })),
     }
 
     vi.mocked(container.resolve).mockImplementation((token: unknown) => {
@@ -60,13 +59,13 @@ describe('DashboardView', () => {
                 categoryMap: {},
                 walletMap: {},
                 totalIncome: 0,
-                totalExpense: 0
+                totalExpense: 0,
               },
               dashboard: {
                 // Mock dashboard store state if needed
-              }
-            }
-          })
+              },
+            },
+          }),
         ],
         stubs: {
           StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
@@ -75,16 +74,15 @@ describe('DashboardView', () => {
           AccountCarousel: true,
           PatrimonialChart: true,
           SelectButton: true,
-          QuickEntryModal: true
-        }
-      }
+          QuickEntryModal: true,
+        },
+      },
     })
-
 
     expect(wrapper.text()).toContain('Nenhuma transação registrada')
     expect(wrapper.text()).toContain('Que tal começar agora?')
-    
-    const ctaButton = wrapper.findAll('button').find(b => b.text().includes('Começar'))
+
+    const ctaButton = wrapper.findAll('button').find((b) => b.text().includes('Começar'))
     expect(ctaButton).toBeDefined()
   })
 
@@ -96,9 +94,9 @@ describe('DashboardView', () => {
             createSpy: vi.fn,
             initialState: {
               transactions: { transactions: [], categoryMap: {}, walletMap: {} },
-              dashboard: { initializationError: true }
-            }
-          })
+              dashboard: { initializationError: true },
+            },
+          }),
         ],
         stubs: {
           StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
@@ -107,9 +105,9 @@ describe('DashboardView', () => {
           AccountCarousel: true,
           PatrimonialChart: true,
           SelectButton: true,
-          QuickEntryModal: true
-        }
-      }
+          QuickEntryModal: true,
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('O modo anônimo pode limitar algumas funcionalidades')
@@ -126,17 +124,16 @@ describe('DashboardView', () => {
           AccountCarousel: true,
           PatrimonialChart: true,
           SelectButton: true,
-          QuickEntryModal: true
-        }
-      }
+          QuickEntryModal: true,
+        },
+      },
     })
 
     const transactionStore = useTransactionStore()
-    const ctaButton = wrapper.findAll('button').find(b => b.text().includes('Começar'))
-    
+    const ctaButton = wrapper.findAll('button').find((b) => b.text().includes('Começar'))
+
     await ctaButton?.trigger('click')
-    
+
     expect(transactionStore.saveTransaction).toHaveBeenCalled()
   })
 })
-

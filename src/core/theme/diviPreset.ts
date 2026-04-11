@@ -145,10 +145,10 @@ const DiviPreset = definePreset(Aura, {
     },
     carousel: {
       // @ts-expect-error Types in primevue theme might be incomplete
-      root: { borderRadius: '1.25rem' }
+      root: { borderRadius: '1.25rem' },
     },
     selectbutton: {
-      root: { borderRadius: '0.5rem' }
+      root: { borderRadius: '0.5rem' },
     },
     menu: {
       root: { borderRadius: '1rem' },
@@ -157,4 +157,3 @@ const DiviPreset = definePreset(Aura, {
 })
 
 export default DiviPreset
-

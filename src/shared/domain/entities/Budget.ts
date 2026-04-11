@@ -6,4 +6,3 @@ export interface Budget extends SyncMetadata {
   period: 'monthly'
   name?: string
 }
-

@@ -18,4 +18,3 @@ export const useTheme = () => {
     toggle: store.toggle,
   }
 }
-

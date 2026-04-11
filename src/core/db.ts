@@ -87,7 +87,7 @@ export class DiviDatabase extends Dexie {
   constructor() {
     // New database name for the fresh sync engine foundation
     super('DiviDB_v2')
-    
+
     this.version(1).stores({
       transactions: 'id, user_id, date, sync_status, deleted, payee_id',
       wallets: 'id, user_id, name, sync_status, deleted',
@@ -97,7 +97,7 @@ export class DiviDatabase extends Dexie {
       subscriptions: 'id, user_id, name, sync_status, deleted',
       activities: 'id, user_id, timestamp',
       budgets: 'id, user_id, name, sync_status, deleted',
-      goals: 'id, user_id, name, sync_status, deleted'
+      goals: 'id, user_id, name, sync_status, deleted',
     })
 
     this.setupSyncHooks()
@@ -105,11 +105,17 @@ export class DiviDatabase extends Dexie {
 
   private setupSyncHooks() {
     const syncableTables = [
-      this.transactions, this.wallets, this.categories, this.payees,
-      this.loans, this.subscriptions, this.budgets, this.goals
+      this.transactions,
+      this.wallets,
+      this.categories,
+      this.payees,
+      this.loans,
+      this.subscriptions,
+      this.budgets,
+      this.goals,
     ]
 
-    syncableTables.forEach(table => {
+    syncableTables.forEach((table) => {
       // Trigger sync after any change
       table.hook('creating', (_, obj: SyncMetadata) => {
         if (!obj.sync_status) {
@@ -125,7 +131,7 @@ export class DiviDatabase extends Dexie {
           return {
             ...mods,
             sync_status: 'pending',
-            client_updated_at: new Date().toISOString()
+            client_updated_at: new Date().toISOString(),
           }
         }
       })
@@ -134,4 +140,3 @@ export class DiviDatabase extends Dexie {
 }
 
 export const db = new DiviDatabase()
-

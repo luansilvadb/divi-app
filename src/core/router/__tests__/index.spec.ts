@@ -10,8 +10,8 @@ vi.mock('../../../modules/auth/ui/views/LoginView.vue', () => ({ default: {} }))
 
 vi.mock('../../di', () => ({
   container: {
-    resolve: vi.fn()
-  }
+    resolve: vi.fn(),
+  },
 }))
 
 describe('Router Auth Guards', () => {
@@ -19,9 +19,9 @@ describe('Router Auth Guards', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     mockAuthService = {
-      getCurrentUser: vi.fn()
+      getCurrentUser: vi.fn(),
     } as unknown as IAuthService
 
     vi.mocked(container.resolve).mockReturnValue(mockAuthService)
@@ -29,20 +29,19 @@ describe('Router Auth Guards', () => {
 
   it('should redirect to login if route requires auth and no user is present', async () => {
     vi.mocked(mockAuthService.getCurrentUser).mockResolvedValue(null)
-    
+
     await router.push('/') // '/' requires auth (dashboard)
     expect(router.currentRoute.value.name).toBe('login')
   })
 
   it('should redirect to dashboard if route is guestOnly and user is logged in', async () => {
-    vi.mocked(mockAuthService.getCurrentUser).mockResolvedValue({ 
-      id: '1', 
-      email: 'test@test.com', 
-      name: 'Test' 
+    vi.mocked(mockAuthService.getCurrentUser).mockResolvedValue({
+      id: '1',
+      email: 'test@test.com',
+      name: 'Test',
     } as User)
-    
+
     await router.push({ path: '/login', query: { redirect: 'true' } }) // '/login' is guestOnly
     expect(router.currentRoute.value.name).toBe('dashboard')
   })
 })
-

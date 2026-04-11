@@ -6,4 +6,3 @@ export interface Wallet extends SyncMetadata {
   currency: string
   icon?: string
 }
-

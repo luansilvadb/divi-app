@@ -1,31 +1,36 @@
 <template>
   <!-- PWA Update Toast -->
   <Transition name="slide-up">
-    <div 
-      v-if="needRefresh" 
+    <div
+      v-if="needRefresh"
       class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 p-5 rounded-2xl bg-surface-0/80 dark:bg-surface-800/80 backdrop-blur-xl border border-white/10 shadow-2xl max-w-sm"
     >
       <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+        <div
+          class="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+        >
           <i class="pi pi-sparkles text-primary text-xl animate-pulse"></i>
         </div>
         <div>
-          <h3 class="font-bold text-surface-800 dark:text-surface-50 text-sm mb-1">Nova versão disponível!</h3>
+          <h3 class="font-bold text-surface-800 dark:text-surface-50 text-sm mb-1">
+            Nova versão disponível!
+          </h3>
           <p class="text-xs text-surface-600 dark:text-surface-200 opacity-70 leading-relaxed">
-            Atualizamos o Divi com novas melhorias. Deseja atualizar agora para aproveitar as novidades?
+            Atualizamos o Divi com novas melhorias. Deseja atualizar agora para aproveitar as
+            novidades?
           </p>
         </div>
       </div>
       <div class="flex gap-2 mt-2">
-        <Button 
-          label="Atualizar Agora" 
-          icon="pi pi-refresh" 
+        <Button
+          label="Atualizar Agora"
+          icon="pi pi-refresh"
           size="small"
           class="flex-1 rounded-xl"
           @click="updateServiceWorker(true)"
         />
-        <Button 
-          label="Depois" 
+        <Button
+          label="Depois"
           text
           size="small"
           severity="secondary"
@@ -41,8 +46,13 @@
   </MainLayout>
 
   <!-- Fallback full-screen for Login and Unauthenticated paths -->
-  <div v-else class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
-    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-surface-100 dark:bg-surface-950">
+  <div
+    v-else
+    class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50"
+  >
+    <main
+      class="flex-1 h-full overflow-y-auto overflow-x-hidden relative bg-surface-100 dark:bg-surface-950"
+    >
       <RouterView />
     </main>
   </div>
@@ -69,10 +79,7 @@ const route = useRoute()
 useTheme()
 
 // PWA Logic
-const {
-  needRefresh,
-  updateServiceWorker,
-} = useRegisterSW()
+const { needRefresh, updateServiceWorker } = useRegisterSW()
 
 const closeUpdateToast = () => {
   needRefresh.value = false
@@ -124,4 +131,3 @@ async function handleLogout() {
   transform: translateY(10px) scale(0.95);
 }
 </style>
-

@@ -44,4 +44,3 @@ const customClasses = computed(() => {
   return 'bg-primary/10 text-primary'
 })
 </script>
-

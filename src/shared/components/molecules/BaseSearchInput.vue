@@ -62,7 +62,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     localValue.value = newVal
-  }
+  },
 )
 
 const debouncedEmit = useDebounceFn((val: string) => {
@@ -82,6 +82,3 @@ const clear = () => {
   emit('update:modelValue', '')
 }
 </script>
-
-
-

@@ -4,4 +4,3 @@ export interface ICategoryRepository {
   getAll(): Promise<Category[]>
   save(category: Category): Promise<void>
 }
-

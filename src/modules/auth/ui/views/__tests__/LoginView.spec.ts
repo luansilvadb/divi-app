@@ -25,8 +25,8 @@ describe('LoginView.vue', () => {
   it('renders login view with proper accessibility attributes', async () => {
     const wrapper = mount(LoginView, {
       global: {
-        plugins: [PrimeVue, ToastService]
-      }
+        plugins: [PrimeVue, ToastService],
+      },
     })
 
     const googleBtn = wrapper.find('#login-google-btn')
@@ -58,8 +58,8 @@ describe('LoginView.vue', () => {
   it('svg and loading spinner should have aria-hidden', async () => {
     const wrapper = mount(LoginView, {
       global: {
-        plugins: [PrimeVue, ToastService]
-      }
+        plugins: [PrimeVue, ToastService],
+      },
     })
 
     // Initial state SVG
@@ -86,8 +86,8 @@ describe('LoginView.vue', () => {
   it('terms and privacy links should have aria-labels', () => {
     const wrapper = mount(LoginView, {
       global: {
-        plugins: [PrimeVue, ToastService]
-      }
+        plugins: [PrimeVue, ToastService],
+      },
     })
     const links = wrapper.findAll('a')
 
@@ -103,4 +103,3 @@ describe('LoginView.vue', () => {
     expect(privacyLink?.attributes('aria-label')).toBe('Política de Privacidade')
   })
 })
-

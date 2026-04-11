@@ -5,14 +5,14 @@ import ItemSyncIndicator from '../ItemSyncIndicator.vue'
 describe('ItemSyncIndicator.vue', () => {
   it('does not render when status is synced', () => {
     const wrapper = mount(ItemSyncIndicator, {
-      props: { status: 'synced' }
+      props: { status: 'synced' },
     })
     expect(wrapper.find('.item-sync-indicator').exists()).toBe(false)
   })
 
   it('renders pending icon when status is pending', () => {
     const wrapper = mount(ItemSyncIndicator, {
-      props: { status: 'pending' }
+      props: { status: 'pending' },
     })
     expect(wrapper.find('[data-test="sync-indicator-pending"]').exists()).toBe(true)
     expect(wrapper.attributes('title')).toBe('Sincronização pendente')
@@ -20,7 +20,7 @@ describe('ItemSyncIndicator.vue', () => {
 
   it('renders failed icon when status is failed', () => {
     const wrapper = mount(ItemSyncIndicator, {
-      props: { status: 'failed' }
+      props: { status: 'failed' },
     })
     expect(wrapper.find('[data-test="sync-indicator-failed"]').exists()).toBe(true)
     expect(wrapper.attributes('title')).toBe('Erro na sincronização')
@@ -32,4 +32,3 @@ describe('ItemSyncIndicator.vue', () => {
     expect(wrapper.find('svg').exists()).toBe(false)
   })
 })
-

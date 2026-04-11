@@ -6,7 +6,7 @@ import BaseSelect from '../BaseSelect.vue'
 // Mock matchMedia for PrimeVue Select component
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -78,4 +78,3 @@ describe('BaseSelect.vue', () => {
     expect(errorMsg.text()).toBe('This is an error message')
   })
 })
-

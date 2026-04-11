@@ -53,8 +53,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
       sync_status: item.sync_status,
       deleted: !!item.deleted,
       client_updated_at: item.client_updated_at,
-      version: item.version || 1
+      version: item.version || 1,
     }
   }
 }
-

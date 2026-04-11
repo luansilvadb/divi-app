@@ -15,7 +15,12 @@
           @prev="prevMonth"
           @next="nextMonth"
         />
-        <BaseButton v-if="!isMobile" variant="primary" @click="openNewForm" class="!rounded-xl px-6 h-10">
+        <BaseButton
+          v-if="!isMobile"
+          variant="primary"
+          @click="openNewForm"
+          class="!rounded-xl px-6 h-10"
+        >
           Adicionar
         </BaseButton>
       </div>
@@ -26,10 +31,7 @@
       <main class="lg:col-span-2 space-y-8 order-2 lg:order-1">
         <!-- Search Bar -->
         <div class="px-1">
-          <BaseSearchInput
-            v-model="searchQuery"
-            placeholder="Buscar transações..."
-          />
+          <BaseSearchInput v-model="searchQuery" placeholder="Buscar transações..." />
         </div>
 
         <!-- Transactions List -->
@@ -66,18 +68,18 @@
           <div v-for="(group, day) in groupedTransactions as any" :key="day" class="space-y-4">
             <div class="flex items-center justify-between px-2">
               <div class="flex items-center gap-3">
-                <span class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50">{{
-                  String(day).split('-')[2]
-                }}</span>
+                <span
+                  class="text-2xl font-black tracking-tighter text-surface-800 dark:text-surface-50"
+                  >{{ String(day).split('-')[2] }}</span
+                >
                 <div class="flex flex-col -space-y-1">
                   <span
                     class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400"
                     >{{ getRelativeDayLabel(String(day)) }}</span
                   >
-                  <span
-                    class="text-[10px] font-black uppercase tracking-[0.2em] text-primary"
-                    >{{ formatDateMonth(String(day)) }}</span
-                  >
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{{
+                    formatDateMonth(String(day))
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -172,7 +174,8 @@
             <div
               class="w-full p-5 rounded-3xl bg-surface-100 dark:bg-surface-950 flex flex-col items-center text-center shadow-inner border border-surface-200 dark:border-surface-200/10"
             >
-              <span class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-2"
+              <span
+                class="text-[10px] font-black uppercase tracking-widest text-surface-400 dark:text-surface-400 mb-2"
                 >Resultado Líquido</span
               >
               <div
@@ -229,9 +232,10 @@
                     >{{ cat.name }}</span
                   >
                 </div>
-                <span class="text-[11px] font-black tracking-tight text-surface-400 dark:text-surface-400">{{
-                  formatCurrency(cat.total)
-                }}</span>
+                <span
+                  class="text-[11px] font-black tracking-tight text-surface-400 dark:text-surface-400"
+                  >{{ formatCurrency(cat.total) }}</span
+                >
               </div>
               <BaseProgressBar :percentage="cat.percent" :color="cat.color" />
             </div>
@@ -374,5 +378,3 @@ function formatDateMonth(dateStr: string) {
   return date.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '').toUpperCase()
 }
 </script>
-
-

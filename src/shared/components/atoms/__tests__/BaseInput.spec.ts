@@ -9,7 +9,7 @@ describe('BaseInput.vue', () => {
     stubs: {
       IconField: true,
       InputIcon: true,
-    }
+    },
   }
 
   it('renders a label if provided', () => {
@@ -89,4 +89,3 @@ describe('BaseInput.vue', () => {
     expect(errorMsg.text()).toBe('This is an error message')
   })
 })
-

@@ -1,7 +1,10 @@
 <template>
   <div class="standard-page-layout w-full pb-8 md:pb-12">
     <!-- View Header -->
-    <div v-if="loading" class="absolute top-0 left-0 w-full h-[3px] z-50 overflow-hidden bg-primary/10 -mt-6 md:-mt-12">
+    <div
+      v-if="loading"
+      class="absolute top-0 left-0 w-full h-[3px] z-50 overflow-hidden bg-primary/10 -mt-6 md:-mt-12"
+    >
       <div class="h-full bg-primary animate-progress-glow"></div>
     </div>
 
@@ -44,9 +47,15 @@ defineProps<{
 }
 
 @keyframes progress-glow {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(0); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .animate-progress-glow {
@@ -54,4 +63,3 @@ defineProps<{
   width: 100%;
 }
 </style>
-

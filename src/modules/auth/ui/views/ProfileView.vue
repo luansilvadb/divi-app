@@ -8,22 +8,34 @@ const authStore = useAuthStore()
 <template>
   <div class="profile-page p-6 max-w-5xl mx-auto">
     <header class="mb-8">
-      <h1 class="text-4xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">Meu Perfil</h1>
-      <p class="text-surface-600 dark:text-surface-200 opacity-60">Gerencie as informações da sua conta.</p>
+      <h1 class="text-4xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
+        Meu Perfil
+      </h1>
+      <p class="text-surface-600 dark:text-surface-200 opacity-60">
+        Gerencie as informações da sua conta.
+      </p>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- User Info Card -->
-      <Card class="md:col-span-1 overflow-hidden border-none shadow-xl bg-surface-0/50 dark:bg-surface-800/50 backdrop-blur-md">
+      <Card
+        class="md:col-span-1 overflow-hidden border-none shadow-xl bg-surface-0/50 dark:bg-surface-800/50 backdrop-blur-md"
+      >
         <template #content>
           <div class="flex flex-col items-center text-center py-6">
-            <div class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mb-4 border-4 border-primary/10">
+            <div
+              class="w-24 h-24 rounded-full bg-primary/20 flex items-center justify-center mb-4 border-4 border-primary/10"
+            >
               <span class="text-3xl font-black text-primary">
                 {{ authStore.user?.email?.charAt(0).toUpperCase() || 'U' }}
               </span>
             </div>
-            <h2 class="text-xl font-bold text-surface-800 dark:text-surface-50">{{ authStore.user?.email?.split('@')[0] || 'Usuário' }}</h2>
-            <p class="text-sm text-surface-600 dark:text-surface-200 opacity-60">{{ authStore.user?.email }}</p>
+            <h2 class="text-xl font-bold text-surface-800 dark:text-surface-50">
+              {{ authStore.user?.email?.split('@')[0] || 'Usuário' }}
+            </h2>
+            <p class="text-sm text-surface-600 dark:text-surface-200 opacity-60">
+              {{ authStore.user?.email }}
+            </p>
           </div>
         </template>
       </Card>
@@ -41,4 +53,3 @@ const authStore = useAuthStore()
   padding: 1.5rem;
 }
 </style>
-

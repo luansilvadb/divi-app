@@ -9,7 +9,6 @@ import AnimateOnScroll from 'primevue/animateonscroll'
 import ToastService from 'primevue/toastservice'
 import 'primeicons/primeicons.css'
 
-
 import './core/styles/main.css'
 import App from './App.vue'
 import router from './core/router'
@@ -41,7 +40,7 @@ app.use(PrimeVue, {
         name: 'primevue',
         order: 'theme, base, primevue',
       },
-    }
+    },
   },
   locale: {
     startsWith: 'Começa com',
@@ -73,8 +72,34 @@ app.use(PrimeVue, {
     dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
     dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
     dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
-    monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    monthNames: [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ],
+    monthNamesShort: [
+      'Jan',
+      'Fev',
+      'Mar',
+      'Abr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Set',
+      'Out',
+      'Nov',
+      'Dez',
+    ],
     today: 'Hoje',
     weekHeader: 'Sem',
     firstDayOfWeek: 0,
@@ -85,9 +110,8 @@ app.use(PrimeVue, {
     passwordPrompt: 'Digite a senha',
     emptyMessage: 'Nenhuma opção disponível',
     emptyFilterMessage: 'Nenhuma opção disponível',
-  }
+  },
 })
 app.use(ToastService)
 
 app.mount('#app')
-

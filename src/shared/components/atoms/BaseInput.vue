@@ -1,11 +1,17 @@
 <template>
   <div class="mb-2">
-    <label v-if="label" :for="id" class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50">{{
-      label
-    }}</label>
+    <label
+      v-if="label"
+      :for="id"
+      class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50"
+      >{{ label }}</label
+    >
 
     <IconField v-if="icon" class="w-full relative">
-      <InputIcon :class="icon" class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-400 z-10" />
+      <InputIcon
+        :class="icon"
+        class="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 dark:text-surface-400 z-10"
+      />
       <InputNumber
         v-if="type === 'number'"
         :id="id"
@@ -17,7 +23,13 @@
         fluid
         v-bind="$attrs"
         class="w-full"
-        :inputClass="['w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 pr-4 pl-10', 'hover:border-primary/30', 'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60', 'placeholder:text-surface-400/60 dark:text-surface-400/60']"
+        :inputClass="[
+          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'py-3.5 pr-4 pl-10',
+          'hover:border-primary/30',
+          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
+          'placeholder:text-surface-400/60 dark:text-surface-400/60',
+        ]"
       />
       <InputText
         v-else
@@ -30,7 +42,13 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :class="['w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 pr-4 pl-10', 'hover:border-primary/30', 'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60', 'placeholder:text-surface-400/60 dark:text-surface-400/60']"
+        :class="[
+          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'py-3.5 pr-4 pl-10',
+          'hover:border-primary/30',
+          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
+          'placeholder:text-surface-400/60 dark:text-surface-400/60',
+        ]"
       />
     </IconField>
 
@@ -46,7 +64,13 @@
         fluid
         v-bind="$attrs"
         class="w-full"
-        :inputClass="['w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 px-4', 'hover:border-primary/30', 'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60', 'placeholder:text-surface-400/60 dark:text-surface-400/60']"
+        :inputClass="[
+          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'py-3.5 px-4',
+          'hover:border-primary/30',
+          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
+          'placeholder:text-surface-400/60 dark:text-surface-400/60',
+        ]"
       />
       <InputText
         v-else
@@ -59,7 +83,13 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         fluid
         v-bind="$attrs"
-        :class="['w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none', 'py-3.5 px-4', 'hover:border-primary/30', 'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60', 'placeholder:text-surface-400/60 dark:text-surface-400/60']"
+        :class="[
+          'w-full bg-surface-50 dark:bg-surface-800/40 border border-surface-200 dark:border-surface-200/10 rounded-xl text-surface-800 dark:text-surface-50 text-sm shadow-inner transition-all duration-300 outline-none',
+          'py-3.5 px-4',
+          'hover:border-primary/30',
+          'focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-surface-100 dark:focus:bg-surface-700/60',
+          'placeholder:text-surface-400/60 dark:text-surface-400/60',
+        ]"
       />
     </template>
 
@@ -106,8 +136,6 @@ function handleUpdate(val: number | null) {
 function handleUpdateText(val: string | undefined) {
   emit('update:modelValue', val)
 }
-
-
 </script>
 
 <style scoped>
@@ -124,5 +152,3 @@ function handleUpdateText(val: string | undefined) {
   appearance: textfield;
 }
 </style>
-
-

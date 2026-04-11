@@ -18,8 +18,11 @@ export class SupabaseAuthService implements IAuthService {
 
   async getCurrentUser(): Promise<User | null> {
     // 1. Obter a sessão local (rápido e funciona offline)
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession()
+
     if (sessionError || !session) return null
 
     // 2. Limpar o hash da URL (proteção contra token leak)
@@ -30,15 +33,20 @@ export class SupabaseAuthService implements IAuthService {
     // 3. Se estivermos online, podemos validar o usuário no servidor para maior segurança
     // Se estivermos offline, confiamos na sessão local para não travar o app
     let user = session.user
-    
+
     if (typeof navigator !== 'undefined' && navigator.onLine) {
       try {
-        const { data: { user: verifiedUser }, error: userError } = await supabase.auth.getUser()
+        const {
+          data: { user: verifiedUser },
+          error: userError,
+        } = await supabase.auth.getUser()
         if (!userError && verifiedUser) {
           user = verifiedUser
         }
       } catch {
-        console.warn('[AuthService] Falha ao verificar usuário no servidor (offline?), usando sessão local.')
+        console.warn(
+          '[AuthService] Falha ao verificar usuário no servidor (offline?), usando sessão local.',
+        )
       }
     }
 
@@ -53,16 +61,16 @@ export class SupabaseAuthService implements IAuthService {
   async signInWithEmail(credentials: Credentials): Promise<void> {
     const { error } = await supabase.auth.signInWithPassword({
       email: credentials.email,
-      password: credentials.password
+      password: credentials.password,
     })
-    
+
     if (error) throw error
   }
 
   async registerWithEmail(credentials: Credentials): Promise<void> {
     const { error } = await supabase.auth.signUp({
       email: credentials.email,
-      password: credentials.password
+      password: credentials.password,
     })
 
     if (error) throw error
@@ -90,4 +98,3 @@ export class SupabaseAuthService implements IAuthService {
     if (error) throw error
   }
 }
-

@@ -16,16 +16,16 @@ export class SupabaseAuth implements IAuthService {
   async signInWithEmail(credentials: Credentials): Promise<void> {
     const { error } = await supabase.auth.signInWithPassword({
       email: credentials.email,
-      password: credentials.password
+      password: credentials.password,
     })
-    
+
     if (error) throw error
   }
 
   async registerWithEmail(credentials: Credentials): Promise<void> {
     const { error } = await supabase.auth.signUp({
       email: credentials.email,
-      password: credentials.password
+      password: credentials.password,
     })
 
     if (error) throw error
@@ -36,8 +36,10 @@ export class SupabaseAuth implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    const { data: { user } } = await supabase.auth.getUser()
-    
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
     if (!user) return null
 
     return {
@@ -63,4 +65,3 @@ export class SupabaseAuth implements IAuthService {
     })
   }
 }
-

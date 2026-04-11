@@ -39,7 +39,7 @@ vi.mock('@/core/db', () => ({
     },
     payees: { hook: vi.fn() },
     loans: { hook: vi.fn() },
-    subscriptions: { hook: vi.fn() }
+    subscriptions: { hook: vi.fn() },
   },
 }))
 
@@ -79,7 +79,7 @@ describe('TransactionsView', () => {
 
         stubs: {
           BaseButton: {
-            template: '<button><slot /></button>'
+            template: '<button><slot /></button>',
           },
           TransactionItem: true,
           BaseCard: true,
@@ -90,7 +90,7 @@ describe('TransactionsView', () => {
           BaseConfirmDialog: true,
           TransactionModal: true,
           TransactionBottomSheet: true,
-          Teleport: true
+          Teleport: true,
         },
       },
     })
@@ -119,7 +119,7 @@ describe('TransactionsView', () => {
           BaseConfirmDialog: true,
           TransactionModal: true,
           TransactionBottomSheet: true,
-          Teleport: { template: '<div><slot /></div>' }
+          Teleport: { template: '<div><slot /></div>' },
         },
       },
     })
@@ -130,7 +130,4 @@ describe('TransactionsView', () => {
     // Mobile: Should have NO 'Adicionar' button
     expect(wrapper.html()).not.toContain('Adicionar')
   })
-
-
 })
-

@@ -9,9 +9,7 @@ import { liveQuery } from 'dexie'
 export class DexieTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<Transaction[]> {
     try {
-      const list = await db.transactions
-        .filter(t => !t.deleted)
-        .toArray()
+      const list = await db.transactions.filter((t) => !t.deleted).toArray()
       return list.map((item) => this.mapToEntity(item))
     } catch (err) {
       throw new InfrastructureError('Failed to get transactions from local DB', err)
@@ -45,18 +43,18 @@ export class DexieTransactionRepository implements ITransactionRepository {
     try {
       // GARANTE IDENTIDADE: Toda transação nasce com UUID no cliente
       const id = transaction.id || uuidv7()
-      
+
       const localData: LocalTransaction = {
         ...transaction,
         id, // UUID Estável
         sync_status: transaction.sync_status || 'pending',
         client_updated_at: transaction.client_updated_at || new Date().toISOString(),
         deleted: !!transaction.deleted,
-        version: transaction.version || 1
+        version: transaction.version || 1,
       }
 
       await db.transactions.put(localData)
-      
+
       SyncEngine.getInstance().enqueueSync()
       console.debug('[DexieTransactionRepository] Transação salva localmente. Sync disparado.')
     } catch (err) {
@@ -67,10 +65,10 @@ export class DexieTransactionRepository implements ITransactionRepository {
   async delete(id: string): Promise<void> {
     try {
       // Soft delete locally with State-Based flags
-      await db.transactions.update(id, { 
-        deleted: true 
+      await db.transactions.update(id, {
+        deleted: true,
       })
-      
+
       SyncEngine.getInstance().enqueueSync()
       console.debug('[DexieTransactionRepository] Transação marcada para deleção. Sync disparado.')
     } catch (err) {
@@ -86,7 +84,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
       sync_status: item.sync_status,
       client_updated_at: item.client_updated_at,
       deleted: !!item.deleted,
-      version: item.version || 1
+      version: item.version || 1,
     }
     // Pre-calculate derivations to optimize UI rendering
     return {
@@ -97,4 +95,3 @@ export class DexieTransactionRepository implements ITransactionRepository {
     }
   }
 }
-

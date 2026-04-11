@@ -8,18 +8,16 @@ import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieBudgetRepository implements IBudgetRepository {
   async getAllActive(): Promise<Budget[]> {
-    const list = await db.budgets
-      .filter(b => !b.deleted)
-      .toArray()
+    const list = await db.budgets.filter((b) => !b.deleted).toArray()
     return list as Budget[]
   }
 
   watchAll(): Observable<Budget[]> {
-    return from(liveQuery(() => 
-      db.budgets
-        .filter(b => !b.deleted)
-        .toArray()
-    ) as unknown as Observable<Budget[]>)
+    return from(
+      liveQuery(() => db.budgets.filter((b) => !b.deleted).toArray()) as unknown as Observable<
+        Budget[]
+      >,
+    )
   }
 
   async save(budget: Budget): Promise<void> {
@@ -31,17 +29,17 @@ export class DexieBudgetRepository implements IBudgetRepository {
       client_updated_at: budget.client_updated_at || new Date().toISOString(),
       created_at: budget.created_at || new Date().toISOString(),
       deleted: !!budget.deleted,
-      version: budget.version || 1
+      version: budget.version || 1,
     }
     await db.budgets.put(data)
     SyncEngine.getInstance().enqueueSync()
   }
 
   async delete(id: string): Promise<void> {
-    await db.budgets.update(id, { 
-      deleted: true, 
+    await db.budgets.update(id, {
+      deleted: true,
       sync_status: 'pending',
-      client_updated_at: new Date().toISOString()
+      client_updated_at: new Date().toISOString(),
     })
     SyncEngine.getInstance().enqueueSync()
   }

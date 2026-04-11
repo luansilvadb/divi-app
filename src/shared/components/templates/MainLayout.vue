@@ -1,13 +1,17 @@
 <template>
-  <div class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50">
+  <div
+    class="flex h-screen w-screen overflow-hidden bg-surface-100 dark:bg-surface-950 text-surface-800 dark:text-surface-50"
+  >
     <!-- Desktop Sidebar -->
     <AppSidebar class="!hidden md:!flex" @logout="emit('logout')" />
 
     <!-- Main Content Area -->
-    <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0 flex flex-col">
+    <main
+      class="flex-1 h-full overflow-y-auto overflow-x-hidden relative pb-[4.5rem] md:pb-0 flex flex-col"
+    >
       <!-- Top header (Global Status) -->
       <GlobalHeader />
-      
+
       <div id="main-scroll-container" class="flex-1 p-6 md:p-12 overflow-y-auto overflow-x-hidden">
         <slot />
       </div>
@@ -29,8 +33,9 @@
       variant="primary"
       :pt="{
         root: {
-          class: 'group fixed bottom-[6.5rem] right-6 !w-[3.5rem] !h-[3.5rem] !rounded-full !p-0 flex items-center justify-center bg-white dark:bg-surface-900 border border-surface-100 dark:border-surface-700 text-surface-900 dark:text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] hover:bg-surface-50 dark:hover:bg-surface-800 hover:-translate-y-0.5 active:!scale-95 transition-all duration-200 z-[110] cursor-pointer'
-        }
+          class:
+            'group fixed bottom-[6.5rem] right-6 !w-[3.5rem] !h-[3.5rem] !rounded-full !p-0 flex items-center justify-center bg-white dark:bg-surface-900 border border-surface-100 dark:border-surface-700 text-surface-900 dark:text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.6)] hover:bg-surface-50 dark:hover:bg-surface-800 hover:-translate-y-0.5 active:!scale-95 transition-all duration-200 z-[110] cursor-pointer',
+        },
       }"
       @click="isTransactionDialogOpen = true"
       aria-label="Nova Transação"
@@ -39,10 +44,7 @@
     </BaseButton>
 
     <!-- Global Transaction Dialog -->
-    <TransactionDialog
-      :show="isTransactionDialogOpen"
-      @close="isTransactionDialogOpen = false"
-    />
+    <TransactionDialog :show="isTransactionDialogOpen" @close="isTransactionDialogOpen = false" />
   </div>
 </template>
 
@@ -64,4 +66,3 @@ const emit = defineEmits<{
   (e: 'logout'): void
 }>()
 </script>
-

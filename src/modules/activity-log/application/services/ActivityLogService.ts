@@ -17,4 +17,3 @@ export class ActivityLogService implements IActivityLogService {
     await db.activities.add(newActivity)
   }
 }
-

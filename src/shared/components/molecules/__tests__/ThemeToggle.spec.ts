@@ -10,8 +10,8 @@ describe('ThemeToggle.vue', () => {
     localStorage.clear()
 
     vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => {
-        cb(performance.now())
-        return 0
+      cb(performance.now())
+      return 0
     })
 
     Object.defineProperty(window, 'matchMedia', {
@@ -72,4 +72,3 @@ describe('ThemeToggle.vue', () => {
     expect(store.theme).toBe('light')
   })
 })
-

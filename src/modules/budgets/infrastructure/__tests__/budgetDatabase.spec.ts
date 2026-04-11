@@ -18,7 +18,7 @@ describe('Budget Database (Dexie)', () => {
       client_updated_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
       version: 1,
-      deleted: false
+      deleted: false,
     }
 
     await db.budgets.add(budget)
@@ -36,7 +36,7 @@ describe('Budget Database (Dexie)', () => {
       user_id: 'user-1',
       category_id: 'cat-2',
       limit_value: 500,
-      period: 'monthly'
+      period: 'monthly',
     }
 
     await db.budgets.add(budget as LocalBudget)
@@ -57,14 +57,14 @@ describe('Budget Database (Dexie)', () => {
       client_updated_at: '2026-01-01T00:00:00.000Z',
       created_at: '2026-01-01T00:00:00.000Z',
       version: 1,
-      deleted: false
+      deleted: false,
     }
 
     await db.budgets.add(budget)
-    
+
     // Update without setting sync_status
     await db.budgets.update('budget-3', { limit_value: 900 })
-    
+
     const retrieved = await db.budgets.get('budget-3')
     expect(retrieved?.limit_value).toBe(900)
     expect(retrieved?.sync_status).toBe('pending')

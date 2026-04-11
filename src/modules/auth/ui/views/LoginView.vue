@@ -1,5 +1,7 @@
 <template>
-  <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-100 dark:bg-surface-950">
+  <div
+    class="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-100 dark:bg-surface-950"
+  >
     <!-- Noise texture overlay -->
     <div
       class="absolute inset-0 z-10 opacity-[0.03] pointer-events-none bg-[url('/assets/noise-overlay.svg')] bg-repeat"
@@ -32,8 +34,10 @@
               <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.6" />
               <defs>
                 <linearGradient id="logoGradient" x1="0" y1="0" x2="44" y2="44">
-                  <stop stop-color="#10b981" /> <!-- Premium Emerald -->
-                  <stop offset="1" stop-color="#0284c7" /> <!-- Deep Ocean Blue -->
+                  <stop stop-color="#10b981" />
+                  <!-- Premium Emerald -->
+                  <stop offset="1" stop-color="#0284c7" />
+                  <!-- Deep Ocean Blue -->
                 </linearGradient>
               </defs>
             </svg>
@@ -54,24 +58,35 @@
         </p>
 
         <!-- Auth Form -->
-        <form @submit.prevent="handleSubmit" class="w-full flex flex-col gap-4 animate-fade-in [animation-delay:350ms]">
+        <form
+          @submit.prevent="handleSubmit"
+          class="w-full flex flex-col gap-4 animate-fade-in [animation-delay:350ms]"
+        >
           <div class="flex flex-col gap-2">
-            <label for="email" class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1">E-mail</label>
-            <InputText 
-              id="email" 
-              v-model="email" 
-              type="email" 
-              placeholder="seu@email.com" 
+            <label
+              for="email"
+              class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1"
+              >E-mail</label
+            >
+            <InputText
+              id="email"
+              v-model="email"
+              type="email"
+              placeholder="seu@email.com"
               class="w-full"
-              required 
+              required
             />
           </div>
-          
+
           <div class="flex flex-col gap-2">
-            <label for="password" class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1">Senha</label>
-            <Password 
-              v-model="password" 
-              toggleMask 
+            <label
+              for="password"
+              class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-400 ml-1"
+              >Senha</label
+            >
+            <Password
+              v-model="password"
+              toggleMask
               :feedback="isRegister"
               placeholder="••••••••"
               class="w-full"
@@ -93,20 +108,20 @@
             </Password>
           </div>
 
-          <BaseButton 
-            type="submit" 
-            variant="primary" 
-            class="w-full mt-2" 
-            :loading="isLoading" 
+          <BaseButton
+            type="submit"
+            variant="primary"
+            class="w-full mt-2"
+            :loading="isLoading"
             :disabled="isLoading"
           >
             {{ isRegister ? 'Criar conta' : 'Entrar' }}
           </BaseButton>
 
-          <button 
+          <button
             type="button"
             id="toggle-auth-mode"
-            @click="isRegister = !isRegister" 
+            @click="isRegister = !isRegister"
             class="text-xs font-medium text-surface-600 dark:text-surface-200 hover:text-primary transition-colors duration-200 text-center"
           >
             {{ isRegister ? 'Já tem uma conta? Entrar' : 'Não tem uma conta? Criar conta' }}
@@ -128,7 +143,20 @@
         </div>
 
         <!-- Google button -->
-        <BaseButton variant="outline" id="login-google-btn" :aria-busy="isLoading" :pt="{ root: { class: 'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-surface-200 dark:border-surface-500 bg-surface-0 dark:bg-surface-800 cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none' } }" @click="handleGoogleLogin" :disabled="isLoading" :loading="isLoading">
+        <BaseButton
+          variant="outline"
+          id="login-google-btn"
+          :aria-busy="isLoading"
+          :pt="{
+            root: {
+              class:
+                'w-full relative overflow-hidden px-6 py-3.5 rounded-[0.875rem] border border-surface-200 dark:border-surface-500 bg-surface-0 dark:bg-surface-800 cursor-pointer transition-all duration-[250ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.5)] hover:border-primary active:translate-y-0 active:shadow-[0_2px_8px_-4px_rgba(0,0,0,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-main disabled:opacity-60 disabled:cursor-not-allowed animate-fade-in [animation-delay:550ms] border-none',
+            },
+          }"
+          @click="handleGoogleLogin"
+          :disabled="isLoading"
+          :loading="isLoading"
+        >
           <div
             class="relative z-10 flex items-center justify-center gap-3 text-[0.95rem] font-semibold text-surface-800 dark:text-surface-50"
           >
@@ -221,10 +249,20 @@ async function handleSubmit() {
   try {
     if (isRegister.value) {
       await authService.registerWithEmail({ email: email.value, password: password.value })
-      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Conta criada com sucesso!', life: 3000 })
+      toast.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Conta criada com sucesso!',
+        life: 3000,
+      })
     } else {
       await authService.signInWithEmail({ email: email.value, password: password.value })
-      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Login realizado com sucesso!', life: 3000 })
+      toast.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Login realizado com sucesso!',
+        life: 3000,
+      })
     }
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Ocorreu um erro na autenticação.'
@@ -239,11 +277,11 @@ async function handleGoogleLogin() {
   try {
     await authService.signInWithGoogle()
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : 'Ocorreu um erro ao conectar com Google.'
+    const message =
+      error instanceof Error ? error.message : 'Ocorreu um erro ao conectar com Google.'
     toast.add({ severity: 'error', summary: 'Erro', detail: message, life: 5000 })
   } finally {
     isLoading.value = false
   }
 }
 </script>
-

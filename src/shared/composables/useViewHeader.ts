@@ -13,19 +13,19 @@ export function useViewHeader() {
     pageSubtitle,
     isHeaderVisible,
     pageScrollY,
-    
+
     setHeaderState(title: string, highlight?: string, subtitle?: string) {
       pageTitle.value = title
       pageHighlight.value = highlight || ''
       pageSubtitle.value = subtitle || ''
     },
-    
+
     setInView(isVisible: boolean) {
       isHeaderVisible.value = isVisible
     },
 
     setScrollY(y: number) {
       pageScrollY.value = y
-    }
+    },
   }
 }

@@ -52,10 +52,14 @@
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
-            <h3 class="text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2">
+            <h3
+              class="text-2xl font-black text-surface-800 dark:text-surface-50 tracking-tight mb-2"
+            >
               Nenhuma atividade registrada
             </h3>
-            <p class="text-sm text-surface-600 dark:text-surface-200 font-medium leading-relaxed max-w-xs">
+            <p
+              class="text-sm text-surface-600 dark:text-surface-200 font-medium leading-relaxed max-w-xs"
+            >
               Seu log de operações está vazio no momento.
             </p>
           </div>
@@ -142,7 +146,9 @@
                 class="activity-content-box flex-1 flex flex-col gap-2 p-5 rounded-2xl border border-surface-200 dark:border-surface-200/10 hover:bg-white/40 dark:hover:bg-black/20 transition-all duration-300"
               >
                 <div class="activity-header flex justify-between items-start gap-4">
-                  <h3 class="action-title text-base font-black text-surface-800 dark:text-surface-50 tracking-tight">
+                  <h3
+                    class="action-title text-base font-black text-surface-800 dark:text-surface-50 tracking-tight"
+                  >
                     {{ activity.action }}
                   </h3>
                   <div
@@ -282,5 +288,3 @@ const formatDateTime = (timestamp: string) => {
   return `${dateString.toUpperCase()}, ${timeString}`
 }
 </script>
-
-

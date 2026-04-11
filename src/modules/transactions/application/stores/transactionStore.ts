@@ -29,7 +29,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const wallets = shallowRef<Wallet[]>([])
   const categories = shallowRef<Category[]>([])
   const isLoading = ref(false)
-  
+
   // RASTREIO DE CONTEXTO: Guarda o que a UI está vendo no momento
   const currentYear = ref(new Date().getFullYear())
   const currentMonth = ref(new Date().getMonth() + 1)
@@ -40,7 +40,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     isLoading.value = true
     currentYear.value = year
     currentMonth.value = month
-    
+
     try {
       const raw = await transactionRepo.getByMonth(year, month)
       raw.sort((a, b) => {
@@ -54,13 +54,16 @@ export const useTransactionStore = defineStore('transactions', () => {
     }
   }
 
-  // REATIVIDADE AUTOMÁTICA: 
+  // REATIVIDADE AUTOMÁTICA:
   // Sempre que o SyncEngine notificar que "algo mudou fisicamente no banco",
   // nós refazemos a busca local para manter a UI em dia com o Supabase.
-  watch(() => syncStore.updateCounter, () => {
-    console.log('[TransactionStore] Re-buscando dados devido a mudança no Sync...')
-    fetchTransactionsByMonth(currentYear.value, currentMonth.value)
-  })
+  watch(
+    () => syncStore.updateCounter,
+    () => {
+      console.log('[TransactionStore] Re-buscando dados devido a mudança no Sync...')
+      fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+    },
+  )
 
   // UI State
   const searchQuery = ref('')
@@ -69,11 +72,10 @@ export const useTransactionStore = defineStore('transactions', () => {
   const categoryMap = shallowRef<Record<string, Category>>({})
   const walletMap = shallowRef<Record<string, Wallet>>({})
 
-
   // 2. GETTERS DERIVADOS (O que a UI realmente consome)
   // A UI NUNCA usa o array 'transactions' diretamente para exibição.
   const activeTransactions = computed(() => {
-    return (transactions.value as UITransaction[]).filter(t => !t.deleted)
+    return (transactions.value as UITransaction[]).filter((t) => !t.deleted)
   })
 
   // Gráficos e Saldos derivam de activeTransactions.
@@ -176,7 +178,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       sync_status: 'pending',
       deleted: false,
       client_updated_at: new Date().toISOString(),
-      version: category.version || 1
+      version: category.version || 1,
     }
 
     try {
@@ -206,7 +208,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       sync_status: 'pending',
       deleted: false,
       client_updated_at: new Date().toISOString(),
-      version: transaction.version || 1
+      version: transaction.version || 1,
     }
 
     // 3. ATUALIZAÇÃO OTIMISTA
@@ -223,13 +225,13 @@ export const useTransactionStore = defineStore('transactions', () => {
     try {
       // 4. Persistência Local (Dexie)
       await transactionRepo.save(enriched)
-      
+
       // 5. Audit Log (Automatizado)
       await activityLogService.logActivity({
         action: isNew ? 'Nova Transação' : 'Transação Atualizada',
         description: `R$ ${Math.abs(enriched.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} : ${enriched.title}`,
         type: 'success',
-        user_id: activeUserId
+        user_id: activeUserId,
       })
 
       // 6. Refetch para garantir integridade
@@ -250,7 +252,12 @@ export const useTransactionStore = defineStore('transactions', () => {
       const target = transactions.value[index]!
       deletedTitle = target.title
       const newArray = [...transactions.value]
-      newArray[index] = { ...target, deleted: true, sync_status: 'pending', client_updated_at: new Date().toISOString() }
+      newArray[index] = {
+        ...target,
+        deleted: true,
+        sync_status: 'pending',
+        client_updated_at: new Date().toISOString(),
+      }
       transactions.value = newArray
     }
 
@@ -264,7 +271,7 @@ export const useTransactionStore = defineStore('transactions', () => {
           action: 'Transação Removida',
           description: `Remoção da transação: ${deletedTitle}`,
           type: 'warning',
-          user_id: authStore.user.id
+          user_id: authStore.user.id,
         })
       }
     } catch (err) {
@@ -325,4 +332,3 @@ export const useTransactionStore = defineStore('transactions', () => {
     deleteTransaction,
   }
 })
-

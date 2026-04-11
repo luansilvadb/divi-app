@@ -1,10 +1,5 @@
 <template>
-  <Badge
-    :value="label"
-    :severity="primeSeverity"
-
-
-  >
+  <Badge :value="label" :severity="primeSeverity">
     <slot>{{ label }}</slot>
   </Badge>
 </template>
@@ -31,16 +26,16 @@ const props = withDefaults(
 
 const primeSeverity = computed(() => {
   switch (props.status) {
-    case 'success': return 'success'
-    case 'error': return 'danger'
-    case 'warning': return 'warn'
-    case 'info': return 'info'
-    default: return undefined
+    case 'success':
+      return 'success'
+    case 'error':
+      return 'danger'
+    case 'warning':
+      return 'warn'
+    case 'info':
+      return 'info'
+    default:
+      return undefined
   }
 })
-
-
-
-
 </script>
-

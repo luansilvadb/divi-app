@@ -35,4 +35,3 @@ export class ExportService {
     document.body.removeChild(link)
   }
 }
-

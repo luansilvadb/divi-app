@@ -16,11 +16,11 @@ const mockAuthService: IAuthService = {
 }
 
 const mockToast = {
-  add: vi.fn()
+  add: vi.fn(),
 }
 
 vi.mock('primevue/usetoast', () => ({
-  useToast: () => mockToast
+  useToast: () => mockToast,
 }))
 
 describe('LoginView.vue - Email/Password Form', () => {
@@ -31,65 +31,64 @@ describe('LoginView.vue - Email/Password Form', () => {
 
   const mountOptions = {
     global: {
-      plugins: [PrimeVue]
-    }
+      plugins: [PrimeVue],
+    },
   }
 
   it('renders email and password inputs', () => {
     const wrapper = mount(LoginView, mountOptions)
-    
+
     const emailInput = wrapper.find('input[type="email"]')
     const passwordInput = wrapper.find('input[type="password"]')
-    
+
     expect(emailInput.exists()).toBe(true)
     expect(passwordInput.exists()).toBe(true)
   })
 
   it('calls signInWithEmail when login button is clicked', async () => {
     const wrapper = mount(LoginView, mountOptions)
-    
+
     const emailInput = wrapper.find('input[type="email"]')
     const passwordInput = wrapper.find('input[type="password"]')
     const form = wrapper.find('form')
-    
+
     await emailInput.setValue('test@example.com')
     await passwordInput.setValue('password123')
     await form.trigger('submit')
-    
+
     expect(mockAuthService.signInWithEmail).toHaveBeenCalledWith({
       email: 'test@example.com',
-      password: 'password123'
+      password: 'password123',
     })
   })
 
   it('switches between Login and Register modes', async () => {
     const wrapper = mount(LoginView, mountOptions)
-    
+
     // Initially in login mode
     const submitBtn = wrapper.find('button[type="submit"]')
     expect(submitBtn.text()).toBe('Entrar')
-    
+
     const toggleBtn = wrapper.find('#toggle-auth-mode')
     expect(toggleBtn.exists()).toBe(true)
-    
+
     await toggleBtn.trigger('click')
-    
+
     // Now in register mode
     expect(submitBtn.text()).toBe('Criar conta')
-    
+
     // Should call registerWithEmail when form submitted in register mode
     const emailInput = wrapper.find('input[type="email"]')
     const passwordInput = wrapper.find('input[type="password"]')
     const form = wrapper.find('form')
-    
+
     await emailInput.setValue('new@example.com')
     await passwordInput.setValue('newpassword')
     await form.trigger('submit')
-    
+
     expect(mockAuthService.registerWithEmail).toHaveBeenCalledWith({
       email: 'new@example.com',
-      password: 'newpassword'
+      password: 'newpassword',
     })
   })
 })
-

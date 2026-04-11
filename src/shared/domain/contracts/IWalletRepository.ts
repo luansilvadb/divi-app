@@ -5,4 +5,3 @@ export interface IWalletRepository {
   save(wallet: Wallet): Promise<void>
   getById(id: string): Promise<Wallet | null>
 }
-

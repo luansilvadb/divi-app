@@ -64,4 +64,3 @@ export function getRelativeDayLabel(dateStr: string): string {
 
   return date.getDate().toString().padStart(2, '0')
 }
-

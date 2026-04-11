@@ -7,13 +7,13 @@ import { useBudgetStore } from '@/modules/budgets/application/stores/budgetStore
 
 // Mock components
 vi.mock('@/shared/components/templates/StandardPageLayout.vue', () => ({
-  default: { template: '<div><slot /><slot name="action" /></div>' }
+  default: { template: '<div><slot /><slot name="action" /></div>' },
 }))
 vi.mock('@/shared/components/molecules/BudgetCard.vue', () => ({
-  default: { template: '<div class="budget-card-mock"></div>' }
+  default: { template: '<div class="budget-card-mock"></div>' },
 }))
 vi.mock('@/shared/components/molecules/BaseSearchInput.vue', () => ({
-  default: { template: '<input />' }
+  default: { template: '<input />' },
 }))
 
 describe('BudgetsView.vue', () => {
@@ -24,7 +24,8 @@ describe('BudgetsView.vue', () => {
   it('renders budgets when they exist', async () => {
     const budgetStore = useBudgetStore()
     budgetStore.budgets = [
-      { id: 'b1', category_id: 'c1', limit_value: 1000, period: 'monthly' } as any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      { id: 'b1', category_id: 'c1', limit_value: 1000, period: 'monthly' } as any,
     ]
     budgetStore.isLoading = false
 
@@ -34,9 +35,9 @@ describe('BudgetsView.vue', () => {
         stubs: {
           BaseButton: true,
           BaseCard: true,
-          BaseSummaryItem: true
-        }
-      }
+          BaseSummaryItem: true,
+        },
+      },
     })
 
     expect(wrapper.findAll('.budget-card-mock').length).toBe(1)
@@ -53,9 +54,9 @@ describe('BudgetsView.vue', () => {
         stubs: {
           BaseButton: true,
           BaseCard: true,
-          BaseSummaryItem: true
-        }
-      }
+          BaseSummaryItem: true,
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('Nenhum orçamento')

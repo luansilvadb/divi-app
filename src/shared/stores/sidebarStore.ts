@@ -18,11 +18,18 @@ export const useSidebarStore = defineStore('sidebar', () => {
    * Inicializa a detecção de performance e recursos do sistema.
    */
   const initPerformanceDetection = async () => {
-
     // Monitoramento reativo do status da bateria se disponível
     if ('getBattery' in navigator) {
       try {
-        await (navigator as unknown as { getBattery: () => Promise<{ charging: boolean, level: number, addEventListener: (event: string, callback: () => void) => void }> }).getBattery()
+        await (
+          navigator as unknown as {
+            getBattery: () => Promise<{
+              charging: boolean
+              level: number
+              addEventListener: (event: string, callback: () => void) => void
+            }>
+          }
+        ).getBattery()
       } catch {
         // Falha silenciosa se a API não puder ser acessada
       }
@@ -37,7 +44,9 @@ export const useSidebarStore = defineStore('sidebar', () => {
     if (prefetchQueue.has(to)) return
 
     // Verificação básica de economia de dados se disponível
-    const connection = (navigator as unknown as { connection?: { saveData: boolean; effectiveType: string } }).connection
+    const connection = (
+      navigator as unknown as { connection?: { saveData: boolean; effectiveType: string } }
+    ).connection
     if (connection && (connection.saveData || /2g|3g/.test(connection.effectiveType))) {
       return
     }
@@ -80,4 +89,3 @@ export const useSidebarStore = defineStore('sidebar', () => {
     prefetchRoute,
   }
 })
-

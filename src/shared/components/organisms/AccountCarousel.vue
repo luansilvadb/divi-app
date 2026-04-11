@@ -61,7 +61,9 @@
       class="!p-0 h-[140px] flex flex-col items-center justify-center overflow-hidden bg-surface-0 dark:bg-surface-800 border border-surface-200 dark:border-surface-200/10 shadow-2xl mx-1 my-1 text-center"
     >
       <span class="text-2xl mb-3 opacity-50">🏦</span>
-      <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-surface-600 dark:text-surface-200 opacity-60">
+      <p
+        class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-surface-600 dark:text-surface-200 opacity-60"
+      >
         Nenhuma conta cadastrada
       </p>
     </BaseCard>
@@ -84,21 +86,21 @@ defineProps<{
 }>()
 
 const responsiveOptions = ref([
-    {
-        breakpoint: '1024px',
-        numVisible: 1,
-        numScroll: 1
-    },
-    {
-        breakpoint: '768px',
-        numVisible: 1,
-        numScroll: 1
-    },
-    {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1
-    }
+  {
+    breakpoint: '1024px',
+    numVisible: 1,
+    numScroll: 1,
+  },
+  {
+    breakpoint: '768px',
+    numVisible: 1,
+    numScroll: 1,
+  },
+  {
+    breakpoint: '560px',
+    numVisible: 1,
+    numScroll: 1,
+  },
 ])
 
 function getWalletIcon(wallet: Wallet) {
@@ -128,5 +130,3 @@ function formatCurrency(amount: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(amount)
 }
 </script>
-
-

@@ -1,18 +1,24 @@
 <template>
   <header class="global-header sticky top-0 z-40">
     <!-- Synced Glass Background Plate -->
-    <div 
+    <div
       class="absolute inset-0 bg-surface-0/80 dark:bg-surface-900/80 backdrop-blur-lg border-b border-surface-200/50 dark:border-surface-800 pointer-events-none transition-none"
       :style="{ opacity: stickyTitleOpacity }"
     ></div>
 
     <!-- Content -->
-    <div class="relative z-10 flex items-center justify-between px-4 md:px-6 py-3 md:py-4 w-full h-full">
+    <div
+      class="relative z-10 flex items-center justify-between px-4 md:px-6 py-3 md:py-4 w-full h-full"
+    >
       <div class="flex items-center gap-2 md:gap-4 flex-1 min-w-0 h-8">
         <h2
           v-show="pageTitle"
           class="text-[1.1rem] font-black tracking-tight text-surface-800 dark:text-surface-50 truncate flex items-center gap-1.5 origin-left"
-          :style="{ opacity: stickyTitleOpacity, transform: `translateY(${stickyTitleY}px)`, pointerEvents: stickyTitleOpacity > 0 ? 'auto' : 'none' }"
+          :style="{
+            opacity: stickyTitleOpacity,
+            transform: `translateY(${stickyTitleY}px)`,
+            pointerEvents: stickyTitleOpacity > 0 ? 'auto' : 'none',
+          }"
         >
           <template v-if="pageHighlight">
             <span v-if="titleBefore" class="opacity-80">{{ titleBefore }}</span>
@@ -86,4 +92,3 @@ const titleAfter = computed(() => {
   }
 }
 </style>
-

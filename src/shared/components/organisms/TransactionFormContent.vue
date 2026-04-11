@@ -4,22 +4,40 @@
     class="p-5 space-y-4 bg-surface-0 dark:bg-surface-800 h-full max-h-none pb-4"
   >
     <!-- Type Switcher -->
-    <div class="flex p-1.5 bg-surface-50 dark:bg-surface-800/40 rounded-xl gap-1.5 border border-surface-200 dark:border-surface-800/10 shadow-inner w-full mb-2">
-      <button 
-        type="button" 
+    <div
+      class="flex p-1.5 bg-surface-50 dark:bg-surface-800/40 rounded-xl gap-1.5 border border-surface-200 dark:border-surface-800/10 shadow-inner w-full mb-2"
+    >
+      <button
+        type="button"
         class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
-        :class="form.type === 'expense' ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10' : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'"
+        :class="
+          form.type === 'expense'
+            ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10'
+            : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'
+        "
         @click="form.type = 'expense'"
       >
-        <i class="pi pi-arrow-down text-sm transition-colors duration-300" :class="form.type === 'expense' ? 'text-error' : ''"></i> Despesa
+        <i
+          class="pi pi-arrow-down text-sm transition-colors duration-300"
+          :class="form.type === 'expense' ? 'text-error' : ''"
+        ></i>
+        Despesa
       </button>
-      <button 
-        type="button" 
+      <button
+        type="button"
         class="flex-1 py-2.5 px-4 rounded-lg font-black text-[0.7rem] uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-2 cursor-pointer"
-        :class="form.type === 'income' ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10' : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'"
+        :class="
+          form.type === 'income'
+            ? 'bg-surface-700 text-white shadow-md ring-1 ring-white/10'
+            : 'text-surface-600 dark:text-surface-200 opacity-60 hover:opacity-100 hover:bg-surface-50 dark:hover:bg-surface-800/10'
+        "
         @click="form.type = 'income'"
       >
-        <i class="pi pi-arrow-up text-sm transition-colors duration-300" :class="form.type === 'income' ? 'text-success-main' : ''"></i> Receita
+        <i
+          class="pi pi-arrow-up text-sm transition-colors duration-300"
+          :class="form.type === 'income' ? 'text-success-main' : ''"
+        ></i>
+        Receita
       </button>
     </div>
 
@@ -46,7 +64,11 @@
         />
 
         <div class="w-full relative">
-          <label for="date" class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50">Data do Lançamento</label>
+          <label
+            for="date"
+            class="block text-sm font-medium mb-1 text-surface-800 dark:text-surface-50"
+            >Data do Lançamento</label
+          >
           <div class="relative w-full">
             <DatePicker
               id="date"
@@ -111,6 +133,7 @@ import { v7 as uuidv7 } from 'uuid'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { Category } from '@/modules/transactions/domain/entities/Category'
 import BaseInput from '@/shared/components/atoms/BaseInput.vue'
 import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
 import BaseButton from '@/shared/components/atoms/BaseButton.vue'
@@ -127,9 +150,26 @@ const autoCatService = new AutoCategorizationService()
 const isSubmitting = ref(false)
 
 const colors = [
-  '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981', '#14b8a6', 
-  '#06b6d4', '#0ea5e9', '#0ea5e9', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', 
-  '#d946ef', '#f43f5e', '#f43f5e', '#e11d48'
+  '#ef4444',
+  '#f97316',
+  '#f59e0b',
+  '#eab308',
+  '#84cc16',
+  '#22c55e',
+  '#10b981',
+  '#14b8a6',
+  '#06b6d4',
+  '#0ea5e9',
+  '#0ea5e9',
+  '#3b82f6',
+  '#6366f1',
+  '#8b5cf6',
+  '#a855f7',
+  '#d946ef',
+  '#d946ef',
+  '#f43f5e',
+  '#f43f5e',
+  '#e11d48',
 ]
 
 interface TransactionForm {
@@ -188,7 +228,7 @@ const parsedDate = computed({
       const day = String(val.getDate()).padStart(2, '0')
       form.date = `${year}-${month}-${day}`
     }
-  }
+  },
 })
 
 onMounted(async () => {
@@ -205,7 +245,7 @@ function handleTitleInput() {
 
 async function handleSubmit() {
   if (isSubmitting.value) return
-  
+
   if (!form.title.trim()) {
     alert('O título da transação é obrigatório.')
     return
@@ -215,27 +255,29 @@ async function handleSubmit() {
     alert('O valor da transação deve ser maior que zero.')
     return
   }
-  
+
   isSubmitting.value = true
   try {
     let finalCategoryId = form.category_id
 
     // Lógica de criação de categoria inline
     if (finalCategoryId) {
-      const isExistingCategory = store.categories.some(c => c.id === finalCategoryId)
-      
+      const isExistingCategory = store.categories.some((c) => c.id === finalCategoryId)
+
       if (!isExistingCategory) {
-        const existingByName = store.categories.find(c => c.name.toLowerCase() === finalCategoryId.toLowerCase())
+        const existingByName = store.categories.find(
+          (c) => c.name.toLowerCase() === finalCategoryId.toLowerCase(),
+        )
         if (existingByName) {
           finalCategoryId = existingByName.id
         } else {
           const randomColor = colors[Math.floor(Math.random() * colors.length)]
           await store.saveCategory({
             name: finalCategoryId,
-            color: randomColor
-          } as any)
-          
-          const newlyCreated = store.categories.find(c => c.name === finalCategoryId)
+            color: randomColor,
+          } as Category)
+
+          const newlyCreated = store.categories.find((c) => c.name === finalCategoryId)
           if (newlyCreated) {
             finalCategoryId = newlyCreated.id
           }
@@ -253,7 +295,7 @@ async function handleSubmit() {
         sync_status: props.initialData.sync_status || 'pending',
         deleted: props.initialData.deleted || false,
         client_updated_at: new Date().toISOString(),
-        version: props.initialData.version || 1
+        version: props.initialData.version || 1,
       }
       await store.saveTransaction(transactionData as Transaction)
     } else {
@@ -265,7 +307,7 @@ async function handleSubmit() {
         sync_status: 'pending',
         deleted: false,
         client_updated_at: new Date().toISOString(),
-        version: 1
+        version: 1,
       }
       await store.saveTransaction(transactionData as Transaction)
     }
@@ -324,5 +366,3 @@ async function handleSubmit() {
   pointer-events: none;
 }
 </style>
-
-

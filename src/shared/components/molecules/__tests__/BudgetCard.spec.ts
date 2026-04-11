@@ -3,10 +3,11 @@ import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import BudgetCard from '../BudgetCard.vue'
+import type { Budget } from '@/shared/domain/entities/Budget'
 
 // Mock components
 vi.mock('@/shared/components/atoms/ItemSyncIndicator.vue', () => ({
-  default: { template: '<div></div>' }
+  default: { template: '<div></div>' },
 }))
 
 describe('BudgetCard.vue', () => {
@@ -16,8 +17,8 @@ describe('BudgetCard.vue', () => {
     limit_value: 1000,
     period: 'monthly',
     name: 'Test Budget',
-    sync_status: 'synced'
-  } as any
+    sync_status: 'synced',
+  } as unknown as Budget
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -27,7 +28,7 @@ describe('BudgetCard.vue', () => {
     const wrapper = mount(BudgetCard, {
       props: {
         budget,
-        consumed: 400
+        consumed: 400,
       },
       global: {
         plugins: [PrimeVue],
@@ -35,9 +36,9 @@ describe('BudgetCard.vue', () => {
           BaseCard: { template: '<div><slot name="header" /><slot /></div>' },
           BaseBadge: true,
           BaseIconBox: true,
-          BudgetProgressBar: true
-        }
-      }
+          BudgetProgressBar: true,
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('Test Budget')
@@ -50,7 +51,7 @@ describe('BudgetCard.vue', () => {
     const wrapper = mount(BudgetCard, {
       props: {
         budget,
-        consumed: 1200
+        consumed: 1200,
       },
       global: {
         plugins: [PrimeVue],
@@ -58,9 +59,9 @@ describe('BudgetCard.vue', () => {
           BaseCard: { template: '<div><slot name="header" /><slot /></div>' },
           BaseBadge: true,
           BaseIconBox: true,
-          BudgetProgressBar: true
-        }
-      }
+          BudgetProgressBar: true,
+        },
+      },
     })
 
     expect(wrapper.text()).toContain('Orçamento estourado')

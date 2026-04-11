@@ -5,9 +5,36 @@ import type { Category } from '@/shared/domain/entities/Category'
 describe('AutoCategorizationService', () => {
   const service = new AutoCategorizationService()
   const categories: Category[] = [
-    { id: '1', name: 'Entertainment', sync_status: 'synced', user_id: '1', client_updated_at: '', created_at: '', version: 1, deleted: false },
-    { id: '2', name: 'Food', sync_status: 'synced', user_id: '1', client_updated_at: '', created_at: '', version: 1, deleted: false },
-    { id: '3', name: 'Transportation', sync_status: 'synced', user_id: '1', client_updated_at: '', created_at: '', version: 1, deleted: false },
+    {
+      id: '1',
+      name: 'Entertainment',
+      sync_status: 'synced',
+      user_id: '1',
+      client_updated_at: '',
+      created_at: '',
+      version: 1,
+      deleted: false,
+    },
+    {
+      id: '2',
+      name: 'Food',
+      sync_status: 'synced',
+      user_id: '1',
+      client_updated_at: '',
+      created_at: '',
+      version: 1,
+      deleted: false,
+    },
+    {
+      id: '3',
+      name: 'Transportation',
+      sync_status: 'synced',
+      user_id: '1',
+      client_updated_at: '',
+      created_at: '',
+      version: 1,
+      deleted: false,
+    },
   ]
 
   it('should suggest Entertainment for Netflix', () => {
@@ -25,4 +52,3 @@ describe('AutoCategorizationService', () => {
     expect(result).toBeNull()
   })
 })
-

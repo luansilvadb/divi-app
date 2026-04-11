@@ -5,13 +5,27 @@
     subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
   >
     <template #action>
-      <BaseButton 
-        variant="primary" 
+      <BaseButton
+        variant="primary"
         class="!hidden md:!flex !rounded-2xl !px-6 !py-3 shadow-2xl hover:shadow-primary-main/30 transition-all duration-500 group/quick"
         @click="showQuickEntry = true"
       >
         <span class="flex items-center gap-2 text-[0.7rem] font-black uppercase tracking-[0.2em]">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover/quick:rotate-90 transition-transform duration-500"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="group-hover/quick:rotate-90 transition-transform duration-500"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
           Entrada Rápida
         </span>
       </BaseButton>
@@ -22,16 +36,39 @@
       v-if="dashboardStore.initializationError"
       class="mb-8 p-4 rounded-2xl bg-error/10 border border-error-main/20 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-500"
     >
-      <div class="w-10 h-10 rounded-xl bg-error/10 flex items-center justify-center text-error shrink-0 shadow-inner">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div
+        class="w-10 h-10 rounded-xl bg-error/10 flex items-center justify-center text-error shrink-0 shadow-inner"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
       </div>
       <div class="flex-1">
-        <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-error mb-1">Limitação de Sistema Detectada</h4>
+        <h4 class="text-[0.65rem] font-black uppercase tracking-widest text-error mb-1">
+          Limitação de Sistema Detectada
+        </h4>
         <p class="text-xs font-bold text-surface-800/70 dark:text-surface-50/70 leading-relaxed">
-          O modo anônimo pode limitar algumas funcionalidades locais. Recomendamos o uso do modo padrão para uma experiência completa e persistente.
+          O modo anônimo pode limitar algumas funcionalidades locais. Recomendamos o uso do modo
+          padrão para uma experiência completa e persistente.
         </p>
       </div>
-      <BaseButton variant="ghost" class="!px-4 !py-2 text-[0.6rem] font-black uppercase tracking-widest text-error hover:bg-error/10" @click="dashboardStore.initializationError = false">
+      <BaseButton
+        variant="ghost"
+        class="!px-4 !py-2 text-[0.6rem] font-black uppercase tracking-widest text-error hover:bg-error/10"
+        @click="dashboardStore.initializationError = false"
+      >
         Entendi
       </BaseButton>
     </div>
@@ -114,7 +151,9 @@
                     <path d="M12 19V5" />
                   </svg>
                 </span>
-                <p class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight">
+                <p
+                  class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight"
+                >
                   <span class="text-success-main">+12%</span> em relação ao mês anterior
                 </p>
               </div>
@@ -191,7 +230,9 @@
                     <path d="M12 5v14" />
                   </svg>
                 </span>
-                <p class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight">
+                <p
+                  class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight"
+                >
                   Economize <span class="text-error">R$ 45,00/dia</span> para manter a meta
                 </p>
               </div>
@@ -222,7 +263,7 @@
                     {{
                       Math.abs(dashboardStore.totalBalance).toLocaleString('pt-BR', {
                         minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+                        maximumFractionDigits: 2,
                       })
                     }}
                   </div>
@@ -268,7 +309,9 @@
                     <path d="M6 9l6 6 6-6" />
                   </svg>
                 </span>
-                <p class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight">
+                <p
+                  class="text-[0.62rem] font-bold text-surface-600/80 dark:text-surface-200/80 uppercase tracking-tight"
+                >
                   <span class="text-accent">Parabéns!</span> Caminho certo para a meta
                 </p>
               </div>
@@ -277,15 +320,19 @@
         </div>
 
         <!-- Accounts (Carousel) -->
-        <section
-          class="flex flex-col gap-6"
-        >
+        <section class="flex flex-col gap-6">
           <div class="flex items-center justify-between px-2">
-            <h2 class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight flex items-center gap-3">
+            <h2
+              class="text-xl font-black text-surface-800 dark:text-surface-50 tracking-tight flex items-center gap-3"
+            >
               <span class="w-1.5 h-6 bg-accent-main rounded-full"></span>
               Minhas Contas
             </h2>
-            <BaseButton variant="ghost" class="!text-[0.7rem] !font-black !uppercase !tracking-[0.2em] !text-accent !p-0 hover:!text-surface-800 dark:text-surface-50 transition-all flex items-center gap-2 group" @click="$router.push('/wallets')">
+            <BaseButton
+              variant="ghost"
+              class="!text-[0.7rem] !font-black !uppercase !tracking-[0.2em] !text-accent !p-0 hover:!text-surface-800 dark:text-surface-50 transition-all flex items-center gap-2 group"
+              @click="$router.push('/wallets')"
+            >
               Ver Todas
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +364,9 @@
           ></div>
 
           <template #header>
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full relative z-10 px-2 gap-4">
+            <div
+              class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full relative z-10 px-2 gap-4"
+            >
               <div class="flex items-center gap-4">
                 <div
                   class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner"
@@ -338,7 +387,9 @@
                   </svg>
                 </div>
                 <div>
-                  <h3 class="text-lg font-black text-surface-800 dark:text-surface-50 tracking-tight leading-tight">
+                  <h3
+                    class="text-lg font-black text-surface-800 dark:text-surface-50 tracking-tight leading-tight"
+                  >
                     Evolução Patrimonial
                   </h3>
                   <p
@@ -348,7 +399,13 @@
                   </p>
                 </div>
               </div>
-              <SelectButton v-model="chartRange" :options="chartRangeOptions" optionLabel="label" optionValue="value" class="w-full sm:w-auto text-[0.6rem] font-black uppercase tracking-widest" />
+              <SelectButton
+                v-model="chartRange"
+                :options="chartRangeOptions"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full sm:w-auto text-[0.6rem] font-black uppercase tracking-widest"
+              />
             </div>
           </template>
 
@@ -359,9 +416,7 @@
       </main>
 
       <!-- SIDEBAR COLUMN -->
-      <aside
-        class="flex flex-col gap-6 h-full"
-      >
+      <aside class="flex flex-col gap-6 h-full">
         <!-- Recent Activity -->
         <BaseCard
           h-full
@@ -393,20 +448,45 @@
             v-if="filteredTransactions.length === 0"
             class="flex flex-col items-center justify-center flex-1 py-10 px-6 text-center"
           >
-            <div class="text-5xl mb-6 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700">✨</div>
-            <h3 class="text-sm font-black text-surface-800 dark:text-surface-50 uppercase tracking-widest mb-2">Nenhuma transação registrada</h3>
+            <div
+              class="text-5xl mb-6 grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
+            >
+              ✨
+            </div>
+            <h3
+              class="text-sm font-black text-surface-800 dark:text-surface-50 uppercase tracking-widest mb-2"
+            >
+              Nenhuma transação registrada
+            </h3>
 
-            <p class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-surface-600 dark:text-surface-200 opacity-40 mb-8 leading-relaxed">
-              Sua jornada financeira começa com o primeiro lançamento. <br>Que tal começar agora?
+            <p
+              class="text-[0.65rem] font-black uppercase tracking-[0.2em] text-surface-600 dark:text-surface-200 opacity-40 mb-8 leading-relaxed"
+            >
+              Sua jornada financeira começa com o primeiro lançamento. <br />Que tal começar agora?
             </p>
             <BaseButton
               variant="primary"
               class="group/btn relative overflow-hidden !rounded-xl !px-8 !py-3 shadow-2xl hover:shadow-primary-main/20 transition-all duration-300"
               @click="simulateAddTransaction"
             >
-              <span class="relative z-10 flex items-center gap-2 text-[0.65rem] font-black uppercase tracking-widest">
+              <span
+                class="relative z-10 flex items-center gap-2 text-[0.65rem] font-black uppercase tracking-widest"
+              >
                 Começar
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover/btn:translate-x-1"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="transition-transform duration-300 group-hover/btn:translate-x-1"
+                >
+                  <path d="M5 12h14m-7-7 7 7-7 7" />
+                </svg>
               </span>
             </BaseButton>
           </div>
@@ -505,7 +585,12 @@
 
             <!-- Footer Button - Pushed to bottom -->
             <div class="flex justify-center mt-auto pt-8 pb-4 flex-none">
-              <BaseButton variant="ghost" class="w-full text-xs border border-surface-200 dark:border-surface-200/10" @click="$router.push('/transactions')">Ver todas as transações</BaseButton>
+              <BaseButton
+                variant="ghost"
+                class="w-full text-xs border border-surface-200 dark:border-surface-200/10"
+                @click="$router.push('/transactions')"
+                >Ver todas as transações</BaseButton
+              >
             </div>
           </div>
         </BaseCard>
@@ -520,14 +605,14 @@
 const chartRange = ref('6m')
 const chartRangeOptions = [
   { label: 'Últimos 6 meses', value: '6m' },
-  { label: 'Anual', value: '1y' }
+  { label: 'Anual', value: '1y' },
 ]
 
 const transactionFilter = ref('all')
 const transactionFilterOptions = [
   { label: 'Todos', value: 'all' },
   { label: 'Despesa', value: 'expense' },
-  { label: 'Renda', value: 'income' }
+  { label: 'Renda', value: 'income' },
 ]
 
 import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
@@ -551,19 +636,21 @@ import type { TransactionRepositoryPort } from '@/modules/transactions/applicati
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
-const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
+const transactionRepo = container.resolve<TransactionRepositoryPort>(
+  DI_TOKENS.TransactionRepository,
+)
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
 
 // Reactive binding to Dexie via useObservable
-const liveTransactions = useObservable(transactionRepo.watchAll()) as { value: Transaction[] | undefined }
+const liveTransactions = useObservable(transactionRepo.watchAll()) as {
+  value: Transaction[] | undefined
+}
 
 const filteredTransactions = computed(() => {
   const transactions = liveTransactions.value || []
   if (transactionFilter.value === 'all') return transactions.slice(0, 25)
-  return transactions
-    .filter((t: Transaction) => t.type === transactionFilter.value)
-    .slice(0, 25)
+  return transactions.filter((t: Transaction) => t.type === transactionFilter.value).slice(0, 25)
 })
 
 async function simulateAddTransaction() {
@@ -581,7 +668,7 @@ async function simulateAddTransaction() {
     deleted: false,
     client_updated_at: now.toISOString(),
     created_at: now.toISOString(),
-    version: 1
+    version: 1,
   })
 }
 
@@ -611,5 +698,3 @@ async function refreshDashboard() {
   ])
 }
 </script>
-
-

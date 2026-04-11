@@ -18,7 +18,7 @@ describe('PredictionService', () => {
     await db.transactions.clear()
     await db.categories.clear()
     await db.wallets.clear()
-    
+
     service = new PredictionService(db)
   })
 
@@ -45,7 +45,7 @@ describe('PredictionService', () => {
         user_id: 'test-user',
         client_updated_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
-        version: 1
+        version: 1,
       })
     }
 
@@ -60,11 +60,11 @@ describe('PredictionService', () => {
       payee_id: payeeId,
       date: new Date().toISOString(),
       sync_status: 'synced',
-        deleted: false,
-        user_id: 'test-user',
-        client_updated_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        version: 1
+      deleted: false,
+      user_id: 'test-user',
+      client_updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      version: 1,
     })
 
     // When
@@ -81,7 +81,7 @@ describe('PredictionService', () => {
     const payeeId = 'payee-1'
     const catAntiga = 'cat-antiga'
     const catRecente = 'cat-recente'
-    
+
     // 5 transações antigas (> 30 dias)
     for (let i = 0; i < 5; i++) {
       await db.transactions.add({
@@ -98,7 +98,7 @@ describe('PredictionService', () => {
         user_id: 'test-user',
         client_updated_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
-        version: 1
+        version: 1,
       })
     }
 
@@ -118,7 +118,7 @@ describe('PredictionService', () => {
         user_id: 'test-user',
         client_updated_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
-        version: 1
+        version: 1,
       })
     }
 
@@ -143,4 +143,3 @@ describe('PredictionService', () => {
     expect(result.confidence).toBe(0)
   })
 })
-

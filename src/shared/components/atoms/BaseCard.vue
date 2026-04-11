@@ -1,6 +1,5 @@
 <template>
   <Card
-
     v-bind="$attrs"
     class="glass-card overflow-hidden transition-all duration-300 dark:!bg-surface-700"
     :class="{
@@ -10,9 +9,9 @@
     }"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"
+    @click="clickable && $emit('click')"
     @keydown.enter="clickable && $emit('click')"
     @keydown.space.prevent="clickable && $emit('click')"
-
   >
     <template #header v-if="$slots.header">
       <div
@@ -28,9 +27,7 @@
         v-if="error"
         class="p-8 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
       >
-        <div
-          class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error"
-        >
+        <div class="w-12 h-12 rounded-full bg-error/10 flex items-center justify-center text-error">
           <i class="pi pi-exclamation-circle text-2xl"></i>
         </div>
         <div class="flex flex-col gap-1">
@@ -66,13 +63,26 @@
       >
         <BaseIconBox :color="emptyColor" size="lg" class="opacity-50 mb-2">
           <slot name="empty-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
             </svg>
           </slot>
         </BaseIconBox>
         <div class="flex flex-col gap-1">
-          <h3 class="text-surface-800 dark:text-surface-50 font-bold text-lg">{{ emptyTitle || 'Sem dados' }}</h3>
+          <h3 class="text-surface-800 dark:text-surface-50 font-bold text-lg">
+            {{ emptyTitle || 'Sem dados' }}
+          </h3>
           <p class="text-surface-600 dark:text-surface-200 text-sm max-w-[250px] leading-relaxed">
             {{ emptySubtitle || 'Não há informações disponíveis para exibir neste momento.' }}
           </p>
@@ -121,5 +131,3 @@ defineProps<{
 
 defineEmits(['click', 'retry'])
 </script>
-
-

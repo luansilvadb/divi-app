@@ -10,8 +10,7 @@ export const SYNCABLE_TABLES = [
   'loans',
   'subscriptions',
   'budgets',
-  'goals'
+  'goals',
 ] as const
 
 export type SyncableTable = (typeof SYNCABLE_TABLES)[number]
-

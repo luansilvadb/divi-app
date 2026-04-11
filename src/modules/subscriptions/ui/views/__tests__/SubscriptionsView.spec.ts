@@ -31,12 +31,14 @@ describe('SubscriptionsView', () => {
       totalMonthlyCost: 0,
       fetchSubscriptions: vi.fn(),
     }
-    vi.mocked(useSubscriptionStore).mockReturnValue(storeMock as unknown as ReturnType<typeof useSubscriptionStore>)
+    vi.mocked(useSubscriptionStore).mockReturnValue(
+      storeMock as unknown as ReturnType<typeof useSubscriptionStore>,
+    )
   })
 
   it('exposes searchEmptySubtitle computed property', () => {
     storeMock.searchQuery = 'Netflix'
-    
+
     const wrapper = mount(SubscriptionsView, {
       global: {
         stubs: {
@@ -51,7 +53,8 @@ describe('SubscriptionsView', () => {
     })
 
     // This should fail initially because searchEmptySubtitle is not defined in the component
-    expect((wrapper.vm as unknown as { searchEmptySubtitle: string }).searchEmptySubtitle).toBe('Não encontramos assinaturas para "Netflix"')
+    expect((wrapper.vm as unknown as { searchEmptySubtitle: string }).searchEmptySubtitle).toBe(
+      'Não encontramos assinaturas para "Netflix"',
+    )
   })
 })
-

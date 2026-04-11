@@ -81,7 +81,9 @@
 
         <span v-if="walletName" class="text-black/20 dark:text-white/20">&bull;</span>
 
-        <span class="truncate max-w-[80px] text-surface-600 dark:text-surface-200">{{ categoryName }}</span>
+        <span class="truncate max-w-[80px] text-surface-600 dark:text-surface-200">{{
+          categoryName
+        }}</span>
 
         <template v-if="showTime">
           <span class="text-black/20 dark:text-white/20">&bull;</span>
@@ -242,5 +244,3 @@ function formatTime(dateStr: string) {
   return new Date(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
 }
 </script>
-
-
