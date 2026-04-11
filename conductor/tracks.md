@@ -8,14 +8,16 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Fix Lucide Icons Rendering**
-*Link: [./tracks/fix-lucide-icons_20260411/](./tracks/fix-lucide-icons_20260411/)*
-
----
-
 ---
 
 ## Archived Tracks
+
+### [x] Track: Fix Lucide Icons Rendering (Archived 2026-04-11)
+
+Fix Lucide Icons Rendering
+Link: [./archive/fix-lucide-icons_20260411/](./archive/fix-lucide-icons_20260411/)
+
+---
 
 ### [x] Track: Refatorar toda UI utilizando Naive UI com estética LobeHub em Vue vite (Archived 2026-04-11)
 
