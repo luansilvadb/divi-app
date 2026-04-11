@@ -135,7 +135,7 @@
       >
         <button
           aria-label="Excluir transação"
-          class="w-10 h-10 rounded-full flex items-center justify-center text-surface-400 dark:text-surface-400 hover:bg-error/10 hover:text-error transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main cursor-pointer"
+          class="w-10 h-10 rounded-full flex items-center justify-center apple-button-danger-tinted transition-all active:scale-90 outline-hidden focus-visible:ring-2 focus-visible:ring-error-main cursor-pointer"
           @click.stop="$emit('delete', transaction.id)"
         >
           <svg

@@ -101,9 +101,9 @@
     <div class="flex items-center gap-4 pt-4 shrink-0">
       <BaseButton
         v-if="props.initialData"
-        variant="ghost"
+        variant="danger-tinted"
         type="button"
-        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest text-error opacity-60 hover:opacity-100 hover:bg-error/5 transition-all"
+        class="flex-1 !py-3 font-black uppercase text-[0.7rem] tracking-widest"
         @click="handleDelete"
       >
         Excluir

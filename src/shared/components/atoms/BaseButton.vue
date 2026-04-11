@@ -12,6 +12,7 @@
       { 'apple-button-filled': variant === 'primary' },
       { 'apple-button-tinted': variant === 'secondary' },
       { 'apple-button-danger-filled': variant === 'danger' },
+      { 'apple-button-danger-tinted': variant === 'danger-tinted' },
     ]"
   >
     <slot />
@@ -22,7 +23,7 @@
 import { computed } from 'vue'
 import Button from 'primevue/button'
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'danger-tinted'
 
 const props = withDefaults(
   defineProps<{
@@ -38,7 +39,7 @@ const props = withDefaults(
 )
 
 const primeSeverity = computed(() => {
-  if (props.variant === 'danger') return 'danger'
+  if (props.variant === 'danger' || props.variant === 'danger-tinted') return 'danger'
   if (props.variant === 'secondary') return 'secondary'
   if (props.variant === 'ghost' || props.variant === 'outline') return 'secondary'
   return undefined // Primary is default

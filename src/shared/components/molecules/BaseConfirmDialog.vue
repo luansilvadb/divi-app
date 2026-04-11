@@ -56,16 +56,16 @@
         </div>
 
         <div class="flex border-t border-surface-200/10">
-          <button
-            type="button"
-            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-widest text-surface-600 dark:text-surface-200 hover:bg-white/5 transition-all border-r border-surface-200/10"
+          <BaseButton
+            variant="ghost"
+            class="flex-1 !py-5 font-black uppercase text-[0.7rem] tracking-widest text-surface-600 dark:text-surface-200 hover:bg-white/5 transition-all border-r border-surface-200/10 !rounded-none"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
-          </button>
-          <button
-            type="button"
-            class="flex-1 py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] text-error hover:bg-error/10 transition-all flex items-center justify-center gap-2 group"
+          </BaseButton>
+          <BaseButton
+            variant="danger"
+            class="flex-1 !py-5 font-black uppercase text-[0.7rem] tracking-[0.15em] transition-all flex items-center justify-center gap-2 group !rounded-none"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}
@@ -83,7 +83,7 @@
             >
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg>
-          </button>
+          </BaseButton>
         </div>
       </BaseCard>
     </template>

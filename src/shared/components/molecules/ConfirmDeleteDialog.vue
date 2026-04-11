@@ -39,18 +39,12 @@
 
             <!-- Crisp Action Buttons -->
             <div class="px-8 pb-8 flex flex-col gap-2">
-              <button
-                @click="$emit('confirm')"
-                class="w-full py-3.5 rounded-xl bg-error text-white font-bold text-sm hover:bg-error-main active:scale-[0.98] transition-all"
-              >
+              <BaseButton variant="danger" @click="$emit('confirm')" class="w-full !py-3.5">
                 Confirmar Exclusão
-              </button>
-              <button
-                @click="$emit('cancel')"
-                class="w-full py-3.5 rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-surface-200 font-bold text-sm hover:bg-surface-200 dark:hover:bg-surface-700 active:scale-[0.98] transition-all"
-              >
+              </BaseButton>
+              <BaseButton variant="ghost" @click="$emit('cancel')" class="w-full !py-3.5">
                 Cancelar
-              </button>
+              </BaseButton>
             </div>
           </div>
         </transition>
@@ -60,6 +54,8 @@
 </template>
 
 <script setup lang="ts">
+import BaseButton from '../atoms/BaseButton.vue'
+
 defineProps<{
   show: boolean
 }>()
