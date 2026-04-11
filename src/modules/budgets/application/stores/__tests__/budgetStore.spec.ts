@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../budgetStore'
 import { db } from '@/core/db'
-import { of } from 'rxjs'
 
 // Mock SyncEngine - must be before other imports that use it
 vi.mock('@/core/sync/SyncEngine', () => {

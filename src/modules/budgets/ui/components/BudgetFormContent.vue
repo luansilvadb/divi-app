@@ -113,7 +113,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     const budgetData = {
-      ...(props.initialData || {}),
+      ...props.initialData,
       name: form.name || undefined,
       limit_value: Number(form.limit_value),
       category_id: form.category_id,
