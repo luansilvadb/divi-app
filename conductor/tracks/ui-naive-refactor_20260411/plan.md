@@ -28,4 +28,4 @@ Este plano detalha a migração completa do PrimeVue para o Naive UI, focando em
 - [x] **Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md)**
 
 ## Phase: Review Fixes
-- [~] Task: Apply review suggestions and final polishment
+- [x] Task: Apply review suggestions and final polishment (3ce9eed)
