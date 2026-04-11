@@ -4,6 +4,15 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+## Active Tracks
+
+### [x] Track: Gestão de Orçamentos (Budgets)
+
+Implementar a gestão de budgets reativa para controle financeiro em tempo real, integrando Dexie, Pinia e UI com barra de progresso.
+Link: [./tracks/budget-management_20260410/](./tracks/budget-management_20260410/)
+
+---
+
 ## Archived Tracks
 
 ### [x] Track: Refactor do Design System de Tokens (Fonte Única de Verdade) (Archived 2026-04-10)
