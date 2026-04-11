@@ -75,5 +75,5 @@ Link: [./archive/search-system-harmonization_20260406/](./archive/search-system-
 
 ---
 
-- [~] **Track: Refatoração estética do Design System (Apple Style)**
+- [x] **Track: Refatoração estética do Design System (Apple Style)**
 *Link: [./tracks/apple-design-system-refactor_20260410/](./tracks/apple-design-system-refactor_20260410/)*
