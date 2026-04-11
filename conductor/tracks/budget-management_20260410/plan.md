@@ -1,6 +1,6 @@
 # Implementation Plan - Gestão de Orçamentos (Budgets)
 
-## Phase 1: Fundação e Dados
+## Phase 1: Fundação e Dados [checkpoint: 058f891]
 Implementação da camada de dados local (Dexie) e lógica de negócio inicial.
 
 - [x] **TASK-01: Esquema de Budgets no Dexie** (f821dc6)
