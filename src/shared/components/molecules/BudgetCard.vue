@@ -3,18 +3,17 @@
     <template #header>
       <div class="header-content flex justify-between items-center w-full">
         <div class="budget-title-area flex items-center gap-4">
-          <BaseIconBox :color="budget.color || 'var(--color-primary-main)'">
-            <i class="pi pi-dollar text-xl"></i>
+          <BaseIconBox color="var(--p-primary-color)">
             <i class="pi pi-chart-line text-xl"></i>
           </BaseIconBox>
-          <span class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">{{
-            budget.name
-          }}</span>
+          <span class="budget-name text-lg font-bold text-surface-800 dark:text-surface-50 tracking-tight">
+            {{ budget.name || categoryName }}
+          </span>
           <ItemSyncIndicator :status="budget.sync_status" />
         </div>
 
-        <BaseBadge :color="budget.color || 'var(--color-primary-main)'" variant="subtle">
-          {{ budget.type === 'spending' ? 'Gasto' : 'Reserva' }}
+        <BaseBadge status="info" variant="subtle">
+          Mensal
         </BaseBadge>
       </div>
     </template>
@@ -39,10 +38,9 @@
         </div>
       </div>
 
-      <BaseProgressBar
-        :percentage="percentage"
-        :color="budget.color"
-        :is-over-budget="isOverBudget"
+      <BudgetProgressBar
+        :spent="consumed"
+        :limit="budget.limit_value"
       />
 
       <div
@@ -71,7 +69,7 @@
           class="days-remaining flex items-center gap-1.5 text-[0.8rem] font-semibold text-surface-600 dark:text-surface-200 bg-surface-50 dark:bg-surface-800/10 px-2.5 py-1 rounded-lg"
         >
           <i class="pi pi-clock text-sm"></i>
-          {{ daysRemaining }} dias
+          {{ daysRemaining }} dias restantes
         </div>
       </div>
     </div>
@@ -82,15 +80,23 @@
 import { computed } from 'vue'
 import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
-import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import BudgetProgressBar from '../ui/components/BudgetProgressBar.vue'
 import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import type { Budget } from '../../domain/entities/Budget'
+import type { Budget } from '../domain/entities/Budget'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 
 const props = defineProps<{
   budget: Budget
   consumed: number
 }>()
+
+const transactionStore = useTransactionStore()
+
+const categoryName = computed(() => {
+  const cat = transactionStore.categoryMap[props.budget.category_id]
+  return cat?.name || 'Categoria'
+})
 
 const percentage = computed(() => {
   if (props.budget.limit_value <= 0) return 0
@@ -101,8 +107,8 @@ const isOverBudget = computed(() => props.consumed > props.budget.limit_value)
 
 const daysRemaining = computed(() => {
   const now = new Date()
-  const end = new Date(props.budget.period_end)
-  const diffTime = end.getTime() - now.getTime()
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  const diffTime = lastDayOfMonth.getTime() - now.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   return Math.max(diffDays, 0)
 })
@@ -120,5 +126,3 @@ const formatCurrency = (value: number) => {
   }).format(value)
 }
 </script>
-
-

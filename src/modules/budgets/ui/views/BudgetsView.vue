@@ -220,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useBudgetStore } from '../../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
@@ -240,7 +240,10 @@ const showAddBudgetModal = ref(false)
 const filteredBudgets = computed(() => {
   if (!store.searchQuery) return store.budgets
   const query = store.searchQuery.toLowerCase()
-  return store.budgets.filter((b) => b.name.toLowerCase().includes(query))
+  return store.budgets.filter((b) => {
+    const name = b.name || transactionStore.categoryMap[b.category_id]?.name || ''
+    return name.toLowerCase().includes(query)
+  })
 })
 
 const searchEmptySubtitle = computed(() => {
@@ -252,7 +255,14 @@ onMounted(async () => {
     const now = new Date()
     await transactionStore.fetchTransactionsByMonth(now.getFullYear(), now.getMonth() + 1)
   }
-  await store.fetchBudgets()
+  if (Object.keys(transactionStore.categoryMap).length === 0) {
+    await transactionStore.fetchCategories()
+  }
+  store.initialize()
+})
+
+onUnmounted(() => {
+  store.dispose()
 })
 </script>
 
