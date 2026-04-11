@@ -26,6 +26,7 @@
 
 - **PrimeIcons:** Consistent and comprehensive set of icons for the UI.
 - **Tailwind PrimeUI:** Unified design system integration between PrimeVue and Tailwind CSS, establishing a Single Source of Truth for tokens.
+- **Apple-Style Design System:** Implementation of Human Interface Guidelines (HIG) principles, including Squircle curvature, Glassmorphism (vibrancy/blur), and SF Pro-inspired typography scale.
 - **PostCSS:** Tool for transforming CSS with JavaScript.
 
 ## Testing & Quality Assurance

@@ -7,8 +7,9 @@
 **Action-Oriented:** Use active verbs to guide users through tasks (e.g., "Add," "Create," "Track").
 
 ## Branding & Visual Identity
-**Color Palette:** Clean and modern, with a mix of neutral tones and primary accents (e.g., greens for growth, blues for stability).
-**Typography:** Clear, readable sans-serif fonts suitable for mobile and desktop screens.
+**Design Aesthetic:** Apple-inspired Human Interface Guidelines (HIG), featuring 'Squircle' continuous curvature, sophisticated Glassmorphism (materials and vibrancy), and deep, diffuse shadows for a premium, platform-native feel.
+**Color Palette:** Native Apple System Colors (e.g., SystemBlue, SystemGreen, SystemRed) utilizing Tinted and Filled variations for clear hierarchy and tactile feedback.
+**Typography:** SF Pro-inspired system font stack with specific optical tracking (letter-spacing) and weights to ensure maximum legibility and elegance.
 **Logo & Iconography:** Minimalist and intuitive symbols representing growth, balance, and security.
 
 ## UX Principles
