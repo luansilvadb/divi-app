@@ -1,5 +1,6 @@
 import { liveQuery } from 'dexie'
 import { from, type Observable } from 'rxjs'
+import { v7 as uuidv7 } from 'uuid'
 import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import { db } from '@/core/db'
@@ -22,7 +23,7 @@ export class DexieBudgetRepository implements IBudgetRepository {
   }
 
   async save(budget: Budget): Promise<void> {
-    const id = budget.id || crypto.randomUUID()
+    const id = budget.id || uuidv7()
     const data: Budget = {
       ...budget,
       id,

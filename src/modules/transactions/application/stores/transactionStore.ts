@@ -1,3 +1,4 @@
+import { v7 as uuidv7 } from 'uuid'
 import { defineStore } from 'pinia'
 import { ref, shallowRef, computed, watch } from 'vue' // watch adicionado
 import { container } from '@/core/di'

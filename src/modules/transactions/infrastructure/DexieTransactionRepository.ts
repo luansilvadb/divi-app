@@ -1,3 +1,4 @@
+import { v7 as uuidv7 } from 'uuid'
 import type { Observable } from 'rxjs'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
@@ -43,7 +44,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
   async save(transaction: Transaction): Promise<void> {
     try {
       // GARANTE IDENTIDADE: Toda transação nasce com UUID no cliente
-      const id = transaction.id || crypto.randomUUID()
+      const id = transaction.id || uuidv7()
       
       const localData: LocalTransaction = {
         ...transaction,
