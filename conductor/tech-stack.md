@@ -4,9 +4,9 @@
 
 - **Vue 3:** Reactive and performant frontend framework.
 - **Vite:** High-speed build tool and development server.
-- **PrimeVue:** Comprehensive UI component library for Vue 3.
+- **Naive UI:** Refined and highly customizable UI component library for Vue 3, focusing on modern aesthetics.
 - **Supabase:** Backend-as-a-service for authentication, real-time database (PostgreSQL), and storage.
-- **Tailwind CSS:** Utility-first CSS framework for rapid and consistent styling.
+- **Tailwind CSS (v4):** Utility-first CSS framework for rapid and consistent styling.
 - **TypeScript:** Type-safe development to catch errors early and improve maintainability.
 - **Pinia:** Modern state management for Vue 3.
 - **Vue Router:** Official router for Vue.js applications.
@@ -24,9 +24,8 @@
 
 ## Styling & Icons
 
-- **PrimeIcons:** Consistent and comprehensive set of icons for the UI.
-- **Tailwind PrimeUI:** Unified design system integration between PrimeVue and Tailwind CSS, establishing a Single Source of Truth for tokens.
-- **Apple-Style Design System:** Implementation of Human Interface Guidelines (HIG) principles, including Squircle curvature, Glassmorphism (vibrancy/blur), and SF Pro-inspired typography scale.
+- **Lucide Icons:** Clean and consistent vector icons for the UI via Iconify/UnoCSS integration.
+- **LobeHub-Style Design System:** Modern, "AI-Native" aesthetic focusing on Glassmorphism, deep dark modes, vibrant violet accents, and high-quality typography.
 - **PostCSS:** Tool for transforming CSS with JavaScript.
 
 ## Testing & Quality Assurance
