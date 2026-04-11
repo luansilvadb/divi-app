@@ -26,7 +26,7 @@ Estilização minuciosa dos componentes do PrimeUI para refletir a estética da 
 
 - [x] Task: Estilizar botões (Primary, Secondary, Tertiary) com cantos arredondados e estados táteis. (ecad3b5)
 - [x] Task: Refatorar campos de formulário (Inputs, Selects, Textareas) com foco e bordas suaves. (e85543c)
-- [ ] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS.
+- [x] Task: Estilizar controles de seleção (Switches, Checkboxes, Sliders) seguindo o iOS/macOS. (b4e3e51)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: UI Controls & Components' (Protocol in workflow.md)
 
 ## Phase 4: Typography & Motion (Details & Refinement)
