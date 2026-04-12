@@ -1,5 +1,6 @@
-# Track sprint-03_20260409 Context
+# Track: Sistema de Migrations Completo
 
+## Artefatos
 - [Specification](./spec.md)
 - [Implementation Plan](./plan.md)
 - [Metadata](./metadata.json)

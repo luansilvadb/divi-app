@@ -6,115 +6,104 @@
     :loading="store.isLoading"
   >
     <template #action>
-      <div class="flex items-center justify-end gap-3 w-full lg:min-w-[420px]">
-        <BaseButton
-          v-if="!isMobile"
-          variant="primary"
-          class="!rounded-xl px-6 h-10 shadow-lg shadow-violet-500/20"
-          @click="showAddLoanModal = true"
-        >
-          <template #icon><i class="i-lucide-plus text-lg"></i></template>
-          Novo Registro
-        </BaseButton>
-      </div>
+      <NButton
+        v-if="!isMobile"
+        type="primary"
+        round
+        @click="showAddLoanModal = true"
+      >
+        <template #icon><i class="i-lucide-plus"></i></template>
+        Novo Registro
+      </NButton>
     </template>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- MAIN COLUMN -->
-      <main class="lg:col-span-2 space-y-8">
-        <BaseSearchInput
-          v-model="store.searchQuery"
-          placeholder="Buscar por nome do empréstimo..."
-        />
-
-        <!-- Empty State -->
-        <div
-          v-if="store.loans.length === 0 && !store.isLoading && !store.searchQuery"
-          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-fade-in"
-        >
-          <div class="w-24 h-24 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-8 text-violet-500">
-            <i class="i-lucide-landmark text-5xl"></i>
-          </div>
-          <h3 class="text-xl font-black uppercase tracking-widest mb-4 text-zinc-800 dark:text-zinc-50">
-            Nenhum empréstimo
-          </h3>
-          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400 leading-relaxed max-w-xs">
-            Você está livre de dívidas registradas no momento. Ótimo sinal!
-          </p>
-        </div>
-
-        <!-- Search Empty State -->
-        <div
-          v-else-if="filteredLoans.length === 0 && !store.isLoading && store.searchQuery"
-          class="flex flex-col items-center justify-center py-20 text-center opacity-40 animate-fade-in"
-        >
-          <div class="w-20 h-20 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-6">
-            <i class="i-lucide-search-x text-4xl text-zinc-400"></i>
-          </div>
-          <h3 class="text-lg font-black uppercase tracking-widest mb-2 text-zinc-800 dark:text-zinc-50">Nenhum resultado</h3>
-          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400">{{ searchEmptySubtitle }}</p>
-          <NButton quaternary circle class="mt-8 text-violet-500 font-bold" @click="store.searchQuery = ''">
-            Limpar Busca
-          </NButton>
-        </div>
-
-        <!-- Loading State -->
-        <div v-else-if="store.isLoading" class="flex justify-center py-20">
-          <i class="i-lucide-loader-2 animate-spin text-4xl text-violet-500"></i>
-        </div>
-
-        <!-- Loans Grid -->
-        <div v-else-if="filteredLoans.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          <LoanCard
-            v-for="loan in filteredLoans"
-            :key="loan.id"
-            :loan="loan"
-            @delete="handleDelete"
+      <main class="lg:col-span-2">
+        <NSpace vertical :size="24">
+          <BaseSearchInput
+            v-model="store.searchQuery"
+            placeholder="Buscar por nome do empréstimo..."
           />
-        </div>
+
+          <NEmpty
+            v-if="store.loans.length === 0 && !store.isLoading && !store.searchQuery"
+            description="Você está livre de dívidas registradas no momento. Ótimo sinal!"
+            class="py-24"
+          >
+            <template #icon>
+              <i class="i-lucide-landmark text-5xl text-violet-500/40"></i>
+            </template>
+          </NEmpty>
+
+          <NEmpty
+            v-else-if="filteredLoans.length === 0 && !store.isLoading && store.searchQuery"
+            :description="searchEmptySubtitle"
+            class="py-20"
+          >
+            <template #icon>
+              <i class="i-lucide-search-x text-5xl"></i>
+            </template>
+            <template #extra>
+              <NButton quaternary type="primary" size="small" @click="store.searchQuery = ''">
+                Limpar Busca
+              </NButton>
+            </template>
+          </NEmpty>
+
+          <div v-else-if="store.isLoading" class="flex justify-center py-20">
+            <NSpin size="large" />
+          </div>
+
+          <NGrid
+            v-else-if="filteredLoans.length > 0"
+            :cols="'1 1024:2'"
+            :x-gap="20"
+            :y-gap="20"
+            responsive="screen"
+            item-responsive
+          >
+            <NGridItem v-for="loan in filteredLoans" :key="loan.id">
+              <LoanCard :loan="loan" @delete="handleDelete" />
+            </NGridItem>
+          </NGrid>
+        </NSpace>
       </main>
 
       <!-- SIDEBAR COLUMN -->
-      <aside class="side-column space-y-8">
-        <BaseCard class="hover-glow">
-          <template #header>Panorama de Dívida</template>
-          <div class="flex flex-col gap-6 pt-2">
-            <BaseSummaryItem
-              label="Dívida Total"
-              :value="formatCurrency(store.totalDebt)"
-              color="#ef4444"
-              status="error"
-            >
-              <template #icon><i class="i-lucide-alert-circle"></i></template>
-            </BaseSummaryItem>
+      <aside class="side-column">
+        <NSpace vertical :size="16">
+          <NCard>
+            <template #header><NText strong>Panorama de Dívida</NText></template>
+            <NSpace vertical :size="16">
+              <NStatistic label="Dívida Total">
+                <NText type="error" strong>{{ formatCurrency(store.totalDebt) }}</NText>
+              </NStatistic>
 
-            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
+              <NDivider class="!my-0" />
 
-            <div class="w-full p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-950 flex flex-col items-center text-center shadow-inner border border-zinc-200 dark:border-zinc-800">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Próximo Vencimento</span>
-              <div class="text-2xl font-black tracking-tighter text-zinc-800 dark:text-zinc-50">
-                15 de Abril
-              </div>
-              <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-2">
-                R$ 1.250,40 agendado
-              </span>
-            </div>
-          </div>
-        </BaseCard>
+              <NCard embedded size="small" class="text-center">
+                <NText depth="3" class="text-xs uppercase tracking-widest block mb-2">Próximo Vencimento</NText>
+                <NText strong class="text-xl block">15 de Abril</NText>
+                <NText depth="3" class="text-xs">R$ 1.250,40 agendado</NText>
+              </NCard>
+            </NSpace>
+          </NCard>
 
-        <BaseCard class="hover-glow">
-          <template #header>Sinais Relevantes</template>
-          <div class="p-2 space-y-4">
-            <div class="flex gap-4 p-4 rounded-2xl bg-red-500/5 border border-red-500/10">
-              <div class="w-10 h-10 rounded-xl bg-red-500/10 text-red-500 flex-shrink-0 flex items-center justify-center shadow-sm">
-                <i class="i-lucide-trending-up text-xl"></i>
-              </div>
-              <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 leading-relaxed pt-1">
-                Atenção: seus juros médios subiram <span class="text-red-500 font-black">2.1%</span>. Avalie portabilidades.
-              </p>
-            </div>
-          </div>
-        </BaseCard>
+          <NCard>
+            <template #header><NText strong>Sinais Relevantes</NText></template>
+            <NCard embedded size="small" class="!border-red-500/10 !bg-red-500/5">
+              <NSpace align="start" :size="12">
+                <NTag type="error" size="small" round :bordered="false">
+                  <template #icon><i class="i-lucide-trending-up text-xs"></i></template>
+                </NTag>
+                <NText class="text-xs leading-relaxed">
+                  Atenção: seus juros médios subiram <NText type="error" strong>2.1%</NText>. Avalie portabilidades.
+                </NText>
+              </NSpace>
+            </NCard>
+          </NCard>
+        </NSpace>
       </aside>
     </div>
 
@@ -132,14 +121,23 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { NButton } from 'naive-ui'
+import {
+  NButton,
+  NCard,
+  NStatistic,
+  NSpace,
+  NText,
+  NTag,
+  NEmpty,
+  NDivider,
+  NSpin,
+  NGrid,
+  NGridItem,
+} from 'naive-ui'
 import { useLoanStore } from '../../application/stores/loanStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
-import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import LoanCard from '@/shared/components/molecules/LoanCard.vue'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'

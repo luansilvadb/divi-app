@@ -5,172 +5,148 @@
     subtitle="Descubra para onde seu dinheiro está indo com insights baseados em seus dados."
   >
     <template #action>
-      <div class="flex items-center justify-end w-full lg:min-w-[420px]">
-        <BaseMonthSwitcher :month="currentMonth" @prev="prevMonth" @next="nextMonth" />
-      </div>
+      <BaseMonthSwitcher :month="currentMonth" @prev="prevMonth" @next="nextMonth" />
     </template>
 
-    <div class="view-content-grid">
+    <div class="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
       <!-- MAIN COLUMN: Analytics Charts -->
-      <main class="main-column">
+      <NSpace vertical :size="16">
         <!-- Distribution by Category -->
-        <BaseCard class="hover-glow">
-          <template #header>Distribuição por Categoria</template>
-          <div class="flex flex-col gap-8 pt-4">
-            <div v-for="cat in categorySummary" :key="cat.name" class="flex flex-col gap-3">
-              <div class="flex justify-between items-end">
-                <div class="flex items-center gap-3">
+        <NCard>
+          <template #header><NText strong>Distribuição por Categoria</NText></template>
+          <NSpace vertical :size="20" class="pt-2">
+            <div v-for="cat in categorySummary" :key="cat.name">
+              <NSpace justify="space-between" align="end" class="mb-2">
+                <NSpace align="center" :size="8">
                   <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: cat.color }"></div>
-                  <span
-                    class="text-[10px] font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-50"
-                    >{{ cat.name }}</span
-                  >
-                </div>
-                <div class="flex items-baseline gap-2">
-                  <span class="text-sm font-black text-zinc-800 dark:text-zinc-50">{{
-                    formatCurrency(cat.value)
-                  }}</span>
-                  <span class="text-[10px] font-bold text-zinc-400"
-                    >{{ cat.percentage }}%</span
-                  >
-                </div>
-              </div>
-              <BaseProgressBar :percentage="cat.percentage" :color="cat.color" />
+                  <NText strong class="text-xs uppercase tracking-wider">{{ cat.name }}</NText>
+                </NSpace>
+                <NSpace :size="8" align="baseline">
+                  <NText strong class="text-sm tabular-nums">{{ formatCurrency(cat.value) }}</NText>
+                  <NText depth="3" class="text-xs tabular-nums">{{ cat.percentage }}%</NText>
+                </NSpace>
+              </NSpace>
+              <NProgress
+                type="line"
+                :percentage="cat.percentage"
+                :show-indicator="false"
+                :color="cat.color"
+                :height="5"
+              />
             </div>
-          </div>
-        </BaseCard>
+          </NSpace>
+        </NCard>
 
         <!-- Cash Flow History -->
-        <BaseCard class="hover-glow">
-          <template #header>Fluxo de Caixa (Histórico)</template>
-          <div class="pt-6">
-            <div class="flex items-end justify-around h-48 px-4 gap-4">
+        <NCard>
+          <template #header><NText strong>Fluxo de Caixa (Histórico)</NText></template>
+          <div class="pt-4">
+            <div class="flex items-end justify-around h-48 px-4 gap-3">
               <div
                 v-for="(item, i) in flowData"
                 :key="i"
-                class="flex-1 flex flex-col items-center gap-3 h-full"
+                class="flex-1 flex flex-col items-center gap-2 h-full"
               >
                 <div class="w-full flex gap-1 items-end justify-center h-full pb-2">
                   <div
-                    class="w-4 bg-violet-500/20 rounded-t-lg transition-all duration-700 hover:bg-violet-500/40"
+                    class="w-4 bg-violet-500/20 rounded-t-lg transition-all duration-500 hover:bg-violet-500/40"
                     :style="{ height: `${item.income}%` }"
                   ></div>
                   <div
-                    class="w-4 bg-red-500/20 rounded-t-lg transition-all duration-700 hover:bg-red-500/40"
+                    class="w-4 bg-red-500/20 rounded-t-lg transition-all duration-500 hover:bg-red-500/40"
                     :style="{ height: `${item.expense}%` }"
                   ></div>
                 </div>
-                <span
-                  class="text-[9px] font-black uppercase tracking-widest text-zinc-400"
-                  >{{ item.label }}</span
-                >
+                <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">{{ item.label }}</NText>
               </div>
             </div>
-            <!-- Flow Legend -->
-            <div
-              class="flex items-center justify-center gap-8 border-t border-zinc-100 dark:border-zinc-800 pt-6 mt-4"
-            >
-              <div class="flex items-center gap-2">
+            <NDivider />
+            <NSpace justify="center" :size="24">
+              <NSpace align="center" :size="6">
                 <div class="w-2 h-2 rounded-full bg-violet-500/40"></div>
-                <span
-                  class="text-[9px] font-black uppercase tracking-widest text-zinc-400"
-                  >Entradas</span
-                >
-              </div>
-              <div class="flex items-center gap-2">
+                <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Entradas</NText>
+              </NSpace>
+              <NSpace align="center" :size="6">
                 <div class="w-2 h-2 rounded-full bg-red-500/40"></div>
-                <span
-                  class="text-[9px] font-black uppercase tracking-widest text-zinc-400"
-                  >Saídas</span
-                >
-              </div>
-            </div>
+                <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Saídas</NText>
+              </NSpace>
+            </NSpace>
           </div>
-        </BaseCard>
-      </main>
+        </NCard>
+      </NSpace>
 
       <!-- SIDEBAR COLUMN: Metrics -->
-      <aside class="side-column">
+      <NSpace vertical :size="16">
         <!-- Daily Average -->
-        <BaseCard class="hover-glow">
-          <div class="flex items-center gap-4 mb-4">
-            <BaseIconBox color="#8b5cf6" size="sm">
+        <NCard hoverable>
+          <NSpace align="center" :size="12" class="mb-3">
+            <div class="w-9 h-9 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-500">
               <i class="i-lucide-wallet text-lg"></i>
-            </BaseIconBox>
-            <span
-              class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-              >Média Diária</span
-            >
-          </div>
-          <div class="flex flex-col gap-2">
-            <h3 class="text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter">
-              {{ formatCurrency(dailyAverage) }}
-            </h3>
-            <div class="flex items-center gap-1.5 text-emerald-500">
-              <i class="i-lucide-trending-down text-sm"></i>
-              <span class="text-[10px] font-black uppercase tracking-widest"
-                >5% menor que o mês anterior</span
-              >
             </div>
-          </div>
-        </BaseCard>
+            <NText depth="3" class="text-xs uppercase tracking-widest font-bold">Média Diária</NText>
+          </NSpace>
+          <NStatistic tabular-nums>
+            <NNumberAnimation :from="0" :to="dailyAverage" :precision="2" show-separator />
+            <template #prefix><NText depth="3">R$</NText></template>
+          </NStatistic>
+          <NSpace align="center" :size="4" class="mt-2">
+            <NTag type="success" size="small" round :bordered="false">
+              <template #icon><i class="i-lucide-trending-down text-xs"></i></template>
+              -5%
+            </NTag>
+            <NText depth="3" class="text-xs">menor que o mês anterior</NText>
+          </NSpace>
+        </NCard>
 
         <!-- Max Expense -->
-        <BaseCard class="hover-glow">
-          <div class="flex items-center gap-4 mb-4">
-            <BaseIconBox color="#f59e0b" size="sm">
+        <NCard hoverable>
+          <NSpace align="center" :size="12" class="mb-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500">
               <i class="i-lucide-alert-circle text-lg"></i>
-            </BaseIconBox>
-            <span
-              class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-              >Maior Gasto Único</span
-            >
-          </div>
-          <div class="flex flex-col gap-1">
-            <h3 class="text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter">
-              {{ formatCurrency(maxExpense) }}
-            </h3>
-            <p
-              class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-            >
-              Supermercado em 15/03
-            </p>
-          </div>
-        </BaseCard>
+            </div>
+            <NText depth="3" class="text-xs uppercase tracking-widest font-bold">Maior Gasto Único</NText>
+          </NSpace>
+          <NStatistic tabular-nums>
+            <NNumberAnimation :from="0" :to="maxExpense" :precision="2" show-separator />
+            <template #prefix><NText depth="3">R$</NText></template>
+          </NStatistic>
+          <NText depth="3" class="text-xs block mt-2">Supermercado em 15/03</NText>
+        </NCard>
 
         <!-- Potential Savings -->
-        <BaseCard class="hover-glow">
-          <div class="flex items-center gap-4 mb-4">
-            <BaseIconBox color="#10b981" size="sm">
+        <NCard hoverable>
+          <NSpace align="center" :size="12" class="mb-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
               <i class="i-lucide-piggy-bank text-lg"></i>
-            </BaseIconBox>
-            <span
-              class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-              >Economia Potencial</span
-            >
-          </div>
-          <div class="flex flex-col gap-1">
-            <h3 class="text-3xl font-black text-emerald-500 tracking-tighter">
-              {{ formatCurrency(potentialSavings) }}
-            </h3>
-            <p
-              class="text-[10px] font-black uppercase tracking-widest text-zinc-400"
-            >
-              Se reduzir lazer em 20%
-            </p>
-          </div>
-        </BaseCard>
-      </aside>
+            </div>
+            <NText depth="3" class="text-xs uppercase tracking-widest font-bold">Economia Potencial</NText>
+          </NSpace>
+          <NStatistic tabular-nums>
+            <NText type="success" strong class="text-2xl">
+              <NNumberAnimation :from="0" :to="potentialSavings" :precision="2" show-separator />
+            </NText>
+            <template #prefix><NText depth="3">R$</NText></template>
+          </NStatistic>
+          <NText depth="3" class="text-xs block mt-2">Se reduzir lazer em 20%</NText>
+        </NCard>
+      </NSpace>
     </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import {
+  NCard,
+  NSpace,
+  NText,
+  NTag,
+  NProgress,
+  NStatistic,
+  NNumberAnimation,
+  NDivider,
+} from 'naive-ui'
 import { formatCurrency } from '@/shared/utils/formatters'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
 import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 

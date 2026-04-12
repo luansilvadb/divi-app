@@ -1,85 +1,96 @@
 <template>
-  <BaseCard class="loan-card hover-glow" clickable>
-    <div class="card-top flex justify-between items-start">
-      <div class="loan-identity flex gap-4 items-center">
-        <BaseIconBox color="#3b82f6" size="lg">
-          <i class="i-lucide-briefcase text-2xl"></i>
-        </BaseIconBox>
-        <div class="flex flex-col gap-0.5">
-          <h3
-            class="loan-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight leading-tight"
-          >
-            {{ loan.name }}
-          </h3>
-          <div class="flex items-center gap-2">
-            <ItemSyncIndicator :status="loan.sync_status" />
-            <span class="loan-due text-[10px] font-bold text-zinc-400 uppercase tracking-widest"
-              >Vence: {{ formatDate(loan.due_date) }}</span
-            >
+  <NCard hoverable class="cursor-pointer" v-bind="$attrs">
+    <NSpace vertical :size="20">
+      <!-- Header -->
+      <NSpace justify="space-between" align="start" class="w-full">
+        <NSpace align="center" :size="12">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+            <i class="i-lucide-briefcase text-lg"></i>
           </div>
-        </div>
-      </div>
-    </div>
+          <NSpace vertical :size="2">
+            <NText strong class="text-base leading-tight">{{ loan.name }}</NText>
+            <NSpace align="center" :size="6">
+              <ItemSyncIndicator :status="loan.sync_status" />
+              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">
+                Vence: {{ formatDate(loan.due_date) }}
+              </NText>
+            </NSpace>
+          </NSpace>
+        </NSpace>
+      </NSpace>
 
-    <div
-      class="loan-metrics grid grid-cols-2 gap-4 bg-zinc-100/50 dark:bg-zinc-800/20 p-4 rounded-2xl mt-5 border border-zinc-200/50 dark:border-zinc-800/50 shadow-inner"
-    >
-      <div class="metric flex flex-col gap-1">
-        <span
-          class="label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
-          >Saldo Devedor</span
-        >
-        <span class="value text-lg font-black text-red-500 leading-none">{{
-          formatCurrency(loan.remaining_value)
-        }}</span>
-      </div>
-      <div class="metric flex flex-col gap-1">
-        <span
-          class="label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
-          >Taxa Mensal</span
-        >
-        <div class="flex items-center">
-          <BaseBadge variant="subtle" color="#8b5cf6">
-            {{ loan.interest_rate || '0' }}%
-          </BaseBadge>
-        </div>
-      </div>
-    </div>
+      <!-- Metrics Block -->
+      <NCard embedded size="small" :bordered="false" class="!bg-zinc-100/50 dark:!bg-zinc-800/20">
+        <NGrid :cols="2" :x-gap="16">
+          <NGridItem>
+            <NSpace vertical :size="4">
+              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Saldo Devedor</NText>
+              <NText type="error" strong class="text-lg tabular-nums leading-none">
+                {{ formatCurrency(loan.remaining_value) }}
+              </NText>
+            </NSpace>
+          </NGridItem>
+          <NGridItem>
+            <NSpace vertical :size="4">
+              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Taxa Mensal</NText>
+              <NTag size="small" type="info" round :bordered="false">
+                {{ loan.interest_rate || '0' }}%
+              </NTag>
+            </NSpace>
+          </NGridItem>
+        </NGrid>
+      </NCard>
 
-    <div class="loan-progress-section flex flex-col gap-2 mt-5">
-      <div
-        class="progress-info flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest"
-      >
-        <span>{{ getProgress(loan).toFixed(1) }}% pago</span>
-        <span class="opacity-60">de {{ formatCurrency(loan.total_value) }}</span>
-      </div>
-      <BaseProgressBar :percentage="getProgress(loan)" color="#3b82f6" />
-    </div>
+      <!-- Progress -->
+      <NSpace vertical :size="8">
+        <NSpace justify="space-between" align="center">
+          <NText depth="3" class="text-[10px] uppercase tracking-widest font-bold">
+            {{ getProgress(loan).toFixed(1) }}% pago
+          </NText>
+          <NText depth="3" class="text-[10px] opacity-60 uppercase tracking-widest font-bold">
+            de {{ formatCurrency(loan.total_value) }}
+          </NText>
+        </NSpace>
+        <NProgress
+          type="line"
+          :percentage="Math.min(getProgress(loan), 100)"
+          :show-indicator="false"
+          color="#3b82f6"
+          :height="6"
+        />
+      </NSpace>
 
-    <div class="card-footer pt-4 border-t border-zinc-100 dark:border-zinc-800 mt-4">
-      <div class="card-actions flex justify-end gap-3">
+      <!-- Footer Actions -->
+      <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-end gap-3">
         <NButton
           quaternary
           size="small"
-          class="!text-red-500 font-bold !rounded-xl"
+          type="error"
+          strong
+          round
           @click.stop="$emit('delete', loan.id)"
         >
           Remover
         </NButton>
-        <NButton secondary size="small" class="!rounded-xl font-bold"> 
-          Registrar Parcela 
+        <NButton secondary size="small" type="primary" strong round>
+          Registrar Parcela
         </NButton>
       </div>
-    </div>
-  </BaseCard>
+    </NSpace>
+  </NCard>
 </template>
 
 <script setup lang="ts">
-import { NButton } from 'naive-ui'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
-import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
+import {
+  NCard,
+  NSpace,
+  NText,
+  NTag,
+  NProgress,
+  NGrid,
+  NGridItem,
+  NButton,
+} from 'naive-ui'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import type { Loan } from '../../domain/entities/Loan'
 

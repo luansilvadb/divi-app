@@ -31,37 +31,46 @@ function initChart() {
         {
           label: 'Patrimônio',
           data: props.data,
-          borderColor: '#8b5cf6',
-          borderWidth: 3,
-          pointBackgroundColor: '#8b5cf6',
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6,
+          borderColor: '#8b5cf6', // Violeta intenso (marca principal)
+          borderWidth: 4, // Linha um pouco mais grossa para mais presença
+          pointBackgroundColor: '#18181b', // Fundo escuro do hover
+          pointBorderColor: '#8b5cf6', // Borda do ponto igual a cor da linha
+          pointBorderWidth: 3,
+          pointRadius: 0, // Remove os pontos no estado inativo (linha limpa)
+          pointHoverRadius: 7, // Ponto magnético lindíssimo no mouseover
           fill: true,
           backgroundColor: (context: ScriptableContext<'line'>) => {
             const chart = context.chart
             const { ctx, chartArea } = chart
             if (!chartArea) return undefined
             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-            gradient.addColorStop(0, 'rgba(139, 92, 246, 0.3)')
-            gradient.addColorStop(1, 'rgba(139, 92, 246, 0)')
+            gradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)') // Topo mais vivo
+            gradient.addColorStop(0.5, 'rgba(139, 92, 246, 0.1)') // Transição suave
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)') // Chão invisível
             return gradient
           },
-          tension: 0.4,
+          tension: 0.45, // Curva mais orgânica (spline)
+          cubicInterpolationMode: 'monotone', // Evita "overshoots"
         },
       ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        mode: 'index', // Ativa o tooltip em qualquer lugar da coluna (magnético)
+        intersect: false, // Não precisa bater o mouse cirurgicamente no ponto
+      },
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#18181b',
-          titleColor: '#fafafa',
-          padding: 12,
-          cornerRadius: 12,
+          backgroundColor: 'rgba(24, 24, 27, 0.85)', // Glassmorphism escuro
+          titleColor: '#a1a1aa', // Subtitulo prateado discreto
+          titleFont: { size: 13, weight: 'normal' },
+          bodyColor: '#ffffff', // Valor principal gritante
+          bodyFont: { size: 16, weight: 'bold' },
+          padding: 16,
+          cornerRadius: 16, // Arredondamento premium
           displayColors: false,
           callbacks: {
             label: (context) => {
@@ -70,20 +79,35 @@ function initChart() {
                 currency: 'BRL',
               }).format(context.parsed.y || 0)
             },
+            title: (tooltipItems) => {
+              // Mudei para retornar o mes limpo se necessário
+              return tooltipItems[0].label;
+            }
           },
         },
       },
       scales: {
         y: {
-          grid: { color: 'rgba(161, 161, 170, 0.1)' },
+          border: { display: false }, // Oculta a espinha vertical do eixo Y
+          grid: { 
+            color: 'rgba(161, 161, 170, 0.15)', // Grade muito suave
+            drawTicks: false, // Desliga os tracinhos de eixo
+          }, 
           ticks: {
             color: '#a1a1aa',
+            padding: 12, // Afasta o texto do grafico
+            font: { size: 12, family: 'Inter, sans-serif' },
             callback: (value) => `R$ ${Number(value) / 1000}k`,
           },
         },
         x: {
-          grid: { display: false },
-          ticks: { color: '#a1a1aa' },
+          border: { display: false }, // Oculta a espinha vertical inferior 
+          grid: { display: false }, // Zero linhas verticais pelo fundo
+          ticks: { 
+            color: '#a1a1aa',
+            padding: 12,
+            font: { size: 12, family: 'Inter, sans-serif' },
+          },
         },
       },
     },

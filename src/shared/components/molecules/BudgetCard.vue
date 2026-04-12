@@ -1,86 +1,92 @@
 <template>
-  <BaseCard class="budget-card hover-glow" clickable v-bind="$attrs">
-    <template #header>
-      <div class="header-content flex justify-between items-center w-full">
-        <div class="budget-title-area flex items-center gap-4">
-          <BaseIconBox color="#8b5cf6">
-            <i class="i-lucide-line-chart text-xl"></i>
-          </BaseIconBox>
-          <span
-            class="budget-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight"
-          >
-            {{ budget.name || categoryName }}
-          </span>
-          <ItemSyncIndicator :status="budget.sync_status" />
-        </div>
+  <NCard hoverable class="cursor-pointer" v-bind="$attrs">
+    <NSpace vertical :size="20">
+      <!-- Header -->
+      <NSpace justify="space-between" align="center" class="w-full">
+        <NSpace align="center" :size="12">
+          <div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-500">
+            <i class="i-lucide-line-chart text-lg"></i>
+          </div>
+          <NSpace vertical :size="2">
+            <NSpace align="center" :size="6">
+              <NText strong class="text-base">{{ budget.name || categoryName }}</NText>
+              <ItemSyncIndicator :status="budget.sync_status" />
+            </NSpace>
+            <NTag size="tiny" type="info" round :bordered="false">Mensal</NTag>
+          </NSpace>
+        </NSpace>
+      </NSpace>
 
-        <BaseBadge status="info" variant="subtle"> Mensal </BaseBadge>
+      <!-- Values -->
+      <NSpace vertical :size="8">
+        <NSpace justify="space-between" align="end">
+          <NSpace align="baseline" :size="8">
+            <NText
+              strong
+              class="text-2xl tabular-nums leading-none"
+              :type="isOverBudget ? 'error' : 'default'"
+            >
+              {{ formatCurrency(consumed) }}
+            </NText>
+            <NText depth="3" class="text-sm">
+              / {{ formatCurrency(budget.limit_value) }}
+            </NText>
+          </NSpace>
+          <NTag
+            size="small"
+            :type="isOverBudget ? 'error' : 'default'"
+            round
+            :bordered="false"
+          >
+            {{ Math.round(percentage) }}%
+          </NTag>
+        </NSpace>
+
+        <NProgress
+          type="line"
+          :percentage="Math.min(percentage, 100)"
+          :show-indicator="false"
+          :status="isOverBudget ? 'error' : 'success'"
+          :height="6"
+        />
+      </NSpace>
+
+      <!-- Footer Details -->
+      <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+        <NSpace justify="space-between" align="center">
+          <NSpace v-if="daysRemaining > 0 && !isOverBudget" align="center" :size="6">
+            <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Sugestão diária</NText>
+            <NTag size="small" round :bordered="false">
+              <NText strong class="text-xs">{{ formatCurrency(dailyCadence) }}</NText>
+            </NTag>
+          </NSpace>
+          <NSpace v-else-if="isOverBudget" align="center" :size="6">
+            <i class="i-lucide-alert-circle text-red-500 text-sm"></i>
+            <NText type="error" class="text-[9px] uppercase tracking-widest font-bold">Orçamento estourado</NText>
+          </NSpace>
+          <NSpace v-else>
+            <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Finalizado</NText>
+          </NSpace>
+
+          <NTag size="small" round :bordered="false">
+            <template #icon><i class="i-lucide-calendar-days text-xs"></i></template>
+            <NText depth="3" class="text-xs">{{ daysRemaining }} dias</NText>
+          </NTag>
+        </NSpace>
       </div>
-    </template>
-
-    <div class="budget-info flex flex-col gap-5 pt-2">
-      <div class="values-row flex justify-between items-end">
-        <div class="values-main flex items-baseline gap-1.5">
-          <span
-            class="consumed text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter"
-            :class="{ '!text-red-500': isOverBudget }"
-            >{{ formatCurrency(consumed) }}</span
-          >
-          <span class="limit text-base font-medium text-zinc-400"
-            >/ {{ formatCurrency(budget.limit_value) }}</span
-          >
-        </div>
-        <div
-          class="percentage-pill text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-2.5 py-1 rounded-lg"
-          :class="{ '!bg-red-500/10 !text-red-500': isOverBudget }"
-        >
-          {{ Math.round(percentage) }}%
-        </div>
-      </div>
-
-      <BudgetProgressBar :spent="consumed" :limit="budget.limit_value" />
-
-      <div
-        class="budget-footer-details flex justify-between items-center pt-4 border-t border-zinc-100 dark:border-zinc-800"
-      >
-        <div
-          class="cadence flex items-center gap-2 text-xs"
-          v-if="daysRemaining > 0 && !isOverBudget"
-        >
-          <span class="cadence-label text-zinc-400 font-bold uppercase tracking-widest text-[9px]"
-            >Sugestão diária:</span
-          >
-          <span
-            class="cadence-value font-black text-zinc-800 dark:text-zinc-50 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md"
-          >
-            {{ formatCurrency(dailyCadence) }}
-          </span>
-        </div>
-        <div
-          class="cadence over-alert flex items-center gap-2 text-xs text-red-500 font-bold uppercase tracking-widest text-[9px]"
-          v-else-if="isOverBudget"
-        >
-          <i class="i-lucide-alert-circle text-sm"></i>
-          <span>Orçamento estourado</span>
-        </div>
-
-        <div
-          class="days-remaining flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 rounded-lg"
-        >
-          <i class="i-lucide-calendar-days text-sm"></i>
-          {{ daysRemaining }} dias
-        </div>
-      </div>
-    </div>
-  </BaseCard>
+    </NSpace>
+  </NCard>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
-import BudgetProgressBar from '@/modules/budgets/ui/components/BudgetProgressBar.vue'
-import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
+import {
+  NCard,
+  NSpace,
+  NText,
+  NTag,
+  NProgress,
+} from 'naive-ui'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'

@@ -11,7 +11,7 @@ This track aims to refactor the entire user interface and experience of the `div
 - **Low Coupling:** Design the UI components to be modular and easily replaceable if needed.
 
 ## Non-Functional Requirements
-- **Performance:** The new UI should load quickly and provide smooth interactions.
+- **Performance:** The new UI should load instantly and provide smooth interactions.
 - **Accessibility:** Ensure all new UI elements meet standard accessibility (WCAG) guidelines.
 - **Maintainability:** Use clean, well-documented code that is easy to maintain and extend.
 

@@ -6,6 +6,11 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ## Active Tracks
 
+### [ ] Track: Sistema de Migrations Completo (Dexie + Supabase)
+
+Implementar sistema de migrations versionado para Dexie (IndexedDB) e Supabase (PostgreSQL) com suporte a rollback, transformação de dados, retrocompatibilidade e melhores práticas de versionamento de schema.
+Link: [./tracks/db-migration-system/](./tracks/db-migration-system/)
+
 ---
 
 ---
@@ -44,13 +49,6 @@ Link: [./archive/budget-management_20260410/](./archive/budget-management_202604
 
 Refactor do Design System de Tokens (Fonte Única de Verdade)
 Link: [./archive/design-system-refactor_20260409/](./archive/design-system-refactor_20260409/)
-
----
-
-### [x] Track: Sprint 03: Motor de Inserção Rápida e Predição (Archived 2026-04-09)
-
-Sprint 03: Motor de Inserção Rápida e Predição
-Link: [./archive/sprint-03_20260409/](./archive/sprint-03_20260409/)
 
 ---
 

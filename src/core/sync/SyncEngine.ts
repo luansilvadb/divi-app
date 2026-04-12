@@ -2,6 +2,7 @@ import { supabase } from '../supabase'
 import { db } from '../db'
 import { useSyncStore } from './syncStore'
 import { SYNCABLE_TABLES } from './syncConfig'
+import { v7 as uuidv7 } from 'uuid'
 
 /**
  * SyncEngine: Responsible for bi-directional synchronization between Dexie.js and Supabase.
@@ -85,24 +86,22 @@ export class SyncEngine {
     const store = this.safeStore()
 
     try {
-      // Use getSession instead of getUser to avoid NavigatorLock issues if possible
-      // or at least handle the error
       const {
-        data: { session },
+        data: { user },
         error: authError,
-      } = await supabase.auth.getSession()
-      if (authError || !session?.user) {
+      } = await supabase.auth.getUser()
+
+      if (authError || !user) {
+        console.warn('[SyncEngine] Auth required for sync. Skipping push.')
         this.isPushing = false
         return
       }
-      const user = session.user
 
       store?.setStatus('syncing')
 
       for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
 
-        // Find records that are NOT synced
         const pendingRecords = await table
           .where('sync_status')
           .anyOf(['pending', 'failed'])
@@ -111,31 +110,58 @@ export class SyncEngine {
         if (pendingRecords.length === 0) continue
 
         for (const record of pendingRecords) {
-          // Prevent RLS 403 errors by skipping records that don't belong to current user
-          if (record.user_id && record.user_id !== user.id) {
-            console.error(
-              `[SyncEngine] Abandoning sync for ${tableName}:${record.id} - user_id mismatch. Marking as synced to stop retries.`,
-            )
-            await table.update(record.id, { sync_status: 'synced' })
-            continue
+          // 1. Ensure user_id correctness & Ownership
+          if (!record.user_id || record.user_id === '' || record.user_id !== user.id) {
+            // SECURITY: If record has a different user_id, it's a leak from another session.
+            // We MUST re-generate ID to avoid colliding with the other user's data on Supabase.
+            if (record.user_id && record.user_id !== user.id) {
+               console.warn(`[SyncEngine] Security leak detected: ${tableName}:${record.id} belongs to ${record.user_id}. Re-assigning to ${user.id} with new ID.`)
+               const oldId = record.id
+               const newId = uuidv7()
+               const clonedRecord = { ...record, id: newId, user_id: user.id, sync_status: 'pending' }
+               await table.add(clonedRecord)
+               await table.delete(oldId)
+               continue
+            }
+            
+            // Just missing user_id: safe to just assign
+            record.user_id = user.id
+            await table.update(record.id, { user_id: user.id })
           }
 
-          // 1. Fetch current server state for this ID to check for conflicts
-          const { data: serverRecord, error: fetchError } = await supabase
+          // 2. Conflict check
+          const { data: serverMeta, error: fetchError } = await supabase
             .from(tableName)
-            .select('client_updated_at, version')
+            .select('client_updated_at, user_id')
             .eq('id', record.id)
             .maybeSingle()
 
-          if (!fetchError && serverRecord) {
-            const serverTime = new Date(serverRecord.client_updated_at).getTime()
+          if (fetchError) {
+            console.error(`[SyncEngine] Fetch check error for ${tableName}:${record.id}`, fetchError)
+          }
+
+          if (!fetchError && serverMeta) {
+            // RLS PROTECT: If record belongs to another user on server, we CANNOT upsert it.
+            // This happens if local DB was not cleared properly and RLS allows us to see the ID.
+            if (serverMeta.user_id !== user.id) {
+              console.error(`[SyncEngine] Security conflict: ID ${record.id} in ${tableName} belongs to another user on server. Re-generating local ID.`)
+              
+              const oldId = record.id
+              const newId = uuidv7()
+              
+              // Clone record with new ID
+              const clonedRecord = { ...record, id: newId, user_id: user.id, sync_status: 'pending' }
+              await table.add(clonedRecord)
+              await table.delete(oldId)
+              
+              continue
+            }
+
+            const serverTime = new Date(serverMeta.client_updated_at).getTime()
             const clientTime = new Date(record.client_updated_at).getTime()
 
-            // LWW Strategy: If server is NEWER, we pull and resolve locally
             if (serverTime > clientTime) {
-              console.warn(
-                `[SyncEngine] Conflict detected for ${tableName}:${record.id}. Server is newer. Pulling server version.`,
-              )
+              console.warn(`[SyncEngine] LWW: Server is newer for ${tableName}:${record.id}. Pulling.`)
               const { data: fullServerRecord, error: pullError } = await supabase
                 .from(tableName)
                 .select('*')
@@ -149,34 +175,41 @@ export class SyncEngine {
                   last_synced_at: new Date().toISOString(),
                 })
               }
-              continue // Skip pushing this record
+              continue
             }
           }
 
-          // 2. Push to Supabase
-          // Sanitize record to remove legacy/local-only fields
-          const { sync_status: _sync_status, ...payload } = record as Record<string, unknown>
+          // 3. Prepare Payload
+          const {
+            sync_status: _sync_status,
+            last_synced_at: _last_synced_at,
+            localId: _localId,
+            ...payload
+          } = record as Record<string, unknown>
           delete payload.syncStatus
           delete payload.is_dirty
           delete payload.last_modified_at
-          delete payload.localId
+          delete payload.server_updated_at // Let server or this loop set it freshly
 
-          // Convert empty strings to null for UUID fields (Postgres requirement)
           Object.keys(payload).forEach((key) => {
+            if (key.startsWith('_')) {
+              delete payload[key]
+            }
             if (key.endsWith('_id') && payload[key] === '') {
-              payload[key] = null
+               payload[key] = null
             }
           })
 
+          payload.user_id = user.id
+
           if (payload.deleted) {
-            // HARD DELETE on server if marked as deleted
             const { error: deleteError } = await supabase
               .from(tableName)
               .delete()
               .eq('id', record.id)
 
-            if (!deleteError) {
-              await table.delete(record.id) // Physical delete locally after server confirmation
+            if (!deleteError || deleteError.code === 'PGRST116') { // Success or already gone
+              await table.delete(record.id)
             } else {
               console.error(`[SyncEngine] Delete error in ${tableName}:${record.id}`, deleteError)
               await table.update(record.id, { sync_status: 'failed' })
@@ -184,12 +217,16 @@ export class SyncEngine {
             continue
           }
 
+          console.debug(`[SyncEngine] Pushing ${tableName}:${record.id}`, payload)
+          console.debug(`[SyncEngine] Final Full Payload for ${tableName}:`, {
+            ...payload,
+            server_updated_at: new Date().toISOString(),
+          })
+
           const { error: upsertError } = await supabase.from(tableName).upsert(
             {
               ...payload,
-              user_id: user.id,
               server_updated_at: new Date().toISOString(),
-              sync_status: 'synced', // Clear status on server
             },
             { onConflict: 'id' },
           )
@@ -199,9 +236,72 @@ export class SyncEngine {
               sync_status: 'synced',
               last_synced_at: new Date().toISOString(),
             })
+          } else if (upsertError.code === 'PGRST204') {
+            // Schema mismatch: local has columns that server doesn't yet (pending SQL migration).
+            // Extract unknown column name from error message and retry without it.
+            const columnMatch = upsertError.message.match(/the '(\w+)' column/)
+            if (columnMatch) {
+              const unknownColumn = columnMatch[1]!
+              console.warn(`[SyncEngine] Schema mismatch: stripping '${unknownColumn}' from ${tableName}:${record.id} payload and retrying.`)
+              
+              const strippedPayload = { ...payload, server_updated_at: new Date().toISOString() }
+              delete (strippedPayload as Record<string, unknown>)[unknownColumn]
+
+              const { error: retryError } = await supabase.from(tableName).upsert(
+                strippedPayload,
+                { onConflict: 'id' },
+              )
+
+              if (!retryError) {
+                await table.update(record.id, {
+                  sync_status: 'synced',
+                  last_synced_at: new Date().toISOString(),
+                })
+              } else {
+                console.error(`[SyncEngine] Retry failed for ${tableName}:${record.id}`, retryError)
+                await table.update(record.id, { sync_status: 'failed' })
+              }
+            } else {
+              console.error(`[SyncEngine] PGRST204 but couldn't extract column name for ${tableName}:${record.id}`, upsertError)
+              await table.update(record.id, { sync_status: 'failed' })
+            }
           } else {
-            console.error(`[SyncEngine] Upsert error in ${tableName}:${record.id}`, upsertError)
-            await table.update(record.id, { sync_status: 'failed' })
+            console.error(`[SyncEngine] Upsert error in ${tableName}:${record.id}`, {
+              code: upsertError.code,
+              message: upsertError.message,
+              details: upsertError.details,
+              hint: upsertError.hint,
+              payload: {
+                ...payload,
+                server_updated_at: new Date().toISOString(),
+              },
+              currentUser: user.id
+            })
+
+            // 4. Handle RLS violation (42501)
+            if (upsertError.code === '42501') {
+              // Diagnostic: capture full session state for debugging
+              const { data: sessionData } = await supabase.auth.getSession()
+              console.error(`[SyncEngine] ⛔ RLS VIOLATION for ${tableName}:${record.id}`, {
+                message: upsertError.message,
+                payloadUserId: payload.user_id,
+                authUserId: user.id,
+                sessionExists: !!sessionData?.session,
+                sessionUserId: sessionData?.session?.user?.id,
+                tokenExpiry: sessionData?.session?.expires_at
+                  ? new Date(sessionData.session.expires_at * 1000).toISOString()
+                  : 'N/A',
+                userIdMatch: payload.user_id === sessionData?.session?.user?.id,
+              })
+
+              // DO NOT regenerate ID — that causes infinite loops.
+              // 42501 means the RLS policy itself is blocking the INSERT, not an ID conflict.
+              // Mark as 'failed' so it doesn't retry infinitely.
+              await table.update(record.id, { sync_status: 'failed' })
+              console.warn(`[SyncEngine] Record ${tableName}:${record.id} marked as 'failed'. Check Supabase RLS policies for INSERT on table "${tableName}".`)
+            } else {
+              await table.update(record.id, { sync_status: 'failed' })
+            }
           }
         }
       }
@@ -210,7 +310,7 @@ export class SyncEngine {
       store?.setLastSyncTime(new Date().toISOString())
     } catch (err) {
       if (err instanceof Error && err.name === 'NavigatorLockAcquireTimeoutError') {
-        console.warn('[SyncEngine] Auth lock timeout, will retry later.')
+        console.warn('[SyncEngine] Auth lock timeout.')
       } else {
         console.error('[SyncEngine] Push failed:', err)
       }
@@ -222,7 +322,6 @@ export class SyncEngine {
 
   /**
    * Pulls all data from server that user has access to.
-   * Basic reconciliation: overwrites local ONLY if server is newer or local is synced.
    */
   public async pullFromServer() {
     if (this.isPulling) return
@@ -234,14 +333,13 @@ export class SyncEngine {
 
     try {
       const {
-        data: { session },
+        data: { user },
         error: authError,
-      } = await supabase.auth.getSession()
-      if (authError || !session?.user) {
+      } = await supabase.auth.getUser()
+      if (authError || !user) {
         this.isPulling = false
         return
       }
-      const user = session.user
 
       for (const tableName of SYNCABLE_TABLES) {
         const table = db.table(tableName)
@@ -251,13 +349,17 @@ export class SyncEngine {
           .select('*')
           .eq('user_id', user.id)
 
+        if (error) {
+          console.error(`[SyncEngine] Error pulling from ${tableName}:`, error)
+          continue
+        }
+
         if (error || !serverData) continue
 
         for (const item of serverData) {
           const local = await table.get(item.id)
 
           if (!local) {
-            // New record from server
             await table.add({
               ...item,
               sync_status: 'synced',
@@ -265,8 +367,6 @@ export class SyncEngine {
             })
             hasChanges = true
           } else if (local.sync_status === 'synced') {
-            // Overwrite local if it's already synced (server is ground truth)
-            // But only if server data is actually different or newer
             if (item.server_updated_at !== local.server_updated_at) {
               await table.put({
                 ...item,
@@ -276,7 +376,6 @@ export class SyncEngine {
               hasChanges = true
             }
           } else {
-            // Conflict check for pending local changes
             const serverTime = new Date(item.client_updated_at).getTime()
             const clientTime = new Date(local.client_updated_at).getTime()
 
@@ -291,7 +390,6 @@ export class SyncEngine {
           }
         }
 
-        // Phantom cleanup: Remove local records that were synced but no longer on server
         const localSynced = await table.where('sync_status').equals('synced').toArray()
         const serverIds = new Set(serverData.map((s) => s.id))
 
@@ -306,9 +404,7 @@ export class SyncEngine {
         store?.notifyChange()
       }
     } catch (err) {
-      if (err instanceof Error && err.name === 'NavigatorLockAcquireTimeoutError') {
-        // Silent warning for lock timeout during pull
-      } else {
+      if (!(err instanceof Error && err.name === 'NavigatorLockAcquireTimeoutError')) {
         console.error('[SyncEngine] Pull failed:', err)
       }
     } finally {

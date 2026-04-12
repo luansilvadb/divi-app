@@ -10,4 +10,5 @@ export interface Transaction extends SyncMetadata {
   wallet_id: string
   payee_id?: string
   notes?: string
+  tags?: string[]
 }

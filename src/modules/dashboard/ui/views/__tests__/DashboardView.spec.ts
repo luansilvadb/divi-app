@@ -71,19 +71,16 @@ describe('DashboardView', () => {
           StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
           BaseCard: { template: '<div><slot /></div>' },
           BaseButton: { template: '<button><slot /></button>' },
-          AccountCarousel: true,
+          AccountGrid: true,
           PatrimonialChart: true,
           SelectButton: true,
-          QuickEntryModal: true,
         },
       },
     })
 
-    expect(wrapper.text()).toContain('Sem transações')
-    expect(wrapper.text()).toContain('Comece seu controle hoje!')
+    expect(wrapper.text()).toContain('Nenhuma transação encontrada')
 
-    const ctaButton = wrapper.findAll('button').find((b) => b.text().includes('Começar'))
-    expect(ctaButton).toBeDefined()
+
   })
 
   it('should display an error banner if IndexedDB fails to initialize', async () => {
@@ -102,10 +99,9 @@ describe('DashboardView', () => {
           StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
           BaseCard: { template: '<div><slot /></div>' },
           BaseButton: true,
-          AccountCarousel: true,
+          AccountGrid: true,
           PatrimonialChart: true,
           SelectButton: true,
-          QuickEntryModal: true,
         },
       },
     })
@@ -113,27 +109,4 @@ describe('DashboardView', () => {
     expect(wrapper.text()).toContain('O modo anônimo pode limitar algumas funcionalidades')
   })
 
-  it('should call saveTransaction when CTA button is clicked', async () => {
-    const wrapper = mount(DashboardView, {
-      global: {
-        plugins: [createTestingPinia({ createSpy: vi.fn })],
-        stubs: {
-          StandardPageLayout: { template: '<div><slot name="action" /><slot /></div>' },
-          BaseCard: { template: '<div><slot /></div>' },
-          BaseButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
-          AccountCarousel: true,
-          PatrimonialChart: true,
-          SelectButton: true,
-          QuickEntryModal: true,
-        },
-      },
-    })
-
-    const transactionStore = useTransactionStore()
-    const ctaButton = wrapper.findAll('button').find((b) => b.text().includes('Começar'))
-
-    await ctaButton?.trigger('click')
-
-    expect(transactionStore.saveTransaction).toHaveBeenCalled()
-  })
 })

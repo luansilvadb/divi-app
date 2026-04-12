@@ -1,92 +1,128 @@
 <template>
-  <!-- Confirm Delete Dialog -->
-  <ConfirmDeleteDialog
-    :show="showConfirmDelete"
-    @confirm="confirmDelete"
-    @cancel="showConfirmDelete = false"
-  />
+  <div class="p-6 bg-transparent h-full">
+    <!-- Confirm Delete Dialog (Refined Luxury Pattern) -->
+    <BaseConfirmDialog
+      :show="showConfirmDelete"
+      title="Excluir Orçamento"
+      message="Tem certeza que deseja remover este planejamento? Os dados de limite e categoria serão apagados."
+      confirm-text="Excluir"
+      cancel-text="Manter"
+      @confirm="confirmDelete"
+      @cancel="showConfirmDelete = false"
+    />
 
-  <form
-    @submit.prevent="handleSubmit"
-    class="p-6 space-y-6 bg-transparent h-full"
-  >
-    <div class="space-y-5">
-      <BaseInput
-        id="name"
-        label="Nome do Orçamento (Opcional)"
-        v-model="form.name"
-        placeholder="Ex: Orçamento da Casa"
-        icon="i-lucide-type"
-      />
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <BaseInput
-          id="limit_value"
-          label="Valor Limite (R$)"
-          type="number"
-          :step="0.01"
-          :min="0.01"
-          v-model="form.limit_value"
-          placeholder="0,00"
-          required
-          icon="i-lucide-banknote"
-          class="!mb-0"
+    <NForm
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      size="large"
+      label-placement="top"
+      class="space-y-4"
+    >
+      <!-- Name Input -->
+      <NFormItem label="Nome do Orçamento" path="name">
+        <template #label>
+          <div class="flex items-center gap-2 opacity-60">
+            <i class="i-lucide-type text-xs"></i>
+            <span class="text-[10px] uppercase font-bold tracking-widest">Identificação (Opcional)</span>
+          </div>
+        </template>
+        <NInput
+          v-model:value="form.name"
+          placeholder="Ex: Orçamento Mensal, Viagem..."
+          class="!rounded-xl"
         />
+      </NFormItem>
 
-        <BaseSelect
-          id="category"
-          label="Categoria"
-          v-model="form.category_id"
-          :options="transactionStore.categories.map((cat) => ({ label: cat.name, value: cat.id }))"
-          placeholder="Selecione ou digite nova"
-          required
-          class="!mb-0"
-          editable
-        />
+      <NGrid :x-gap="16" :cols="2">
+        <!-- Limit Value Input (BRL Formatted) -->
+        <NGi>
+          <NFormItem label="Valor Limite" path="limit_value">
+            <template #label>
+              <div class="flex items-center gap-2 opacity-60">
+                <i class="i-lucide-banknote text-xs"></i>
+                <span class="text-[10px] uppercase font-bold tracking-widest">Meta de Gastos</span>
+              </div>
+            </template>
+            <NInput
+              :value="displayLimit"
+              placeholder="0,00"
+              class="w-full !rounded-xl"
+              @input="handleInputLimit"
+            >
+              <template #prefix>
+                <span class="text-xs font-bold opacity-40 mr-1">R$</span>
+              </template>
+            </NInput>
+          </NFormItem>
+        </NGi>
+
+        <!-- Category Selection -->
+        <NGi>
+          <NFormItem label="Categoria" path="category_id">
+            <template #label>
+              <div class="flex items-center gap-2 opacity-60">
+                <i class="i-lucide-layers text-xs"></i>
+                <span class="text-[10px] uppercase font-bold tracking-widest">Categoria</span>
+              </div>
+            </template>
+            <NSelect
+              v-model:value="form.category_id"
+              :options="categoryOptions"
+              filterable
+              tag
+              placeholder="Selecione ou crie..."
+              class="!rounded-xl"
+            />
+          </NFormItem>
+        </NGi>
+      </NGrid>
+
+      <!-- Action Buttons (Clean Layout) -->
+      <div class="flex items-center gap-4 pt-6 mt-4">
+        <NButton
+          v-if="props.initialData"
+          type="error"
+          secondary
+          class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest !bg-red-500/10 !text-red-600 hover:!bg-red-600 hover:!text-white transition-all duration-300"
+          @click="handleDelete"
+        >
+          Excluir Orçamento
+        </NButton>
+        <NButton
+          type="primary"
+          :loading="isSubmitting"
+          class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
+          @click="handleSubmit"
+        >
+          Salvar Orçamento
+        </NButton>
       </div>
-    </div>
 
-    <!-- Action Buttons -->
-    <div class="flex items-center gap-4 pt-6 mt-4">
-      <NButton
-        v-if="props.initialData"
-        type="error"
-        ghost
-        class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest !bg-red-500/5 hover:!bg-red-500/10"
-        @click="handleDelete"
-      >
-        Excluir
-      </NButton>
-      <NButton
-        quaternary
-        circle
-        class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest text-zinc-400"
-        @click="$emit('close')"
-      >
-        Cancelar
-      </NButton>
-      <NButton
-        type="primary"
-        :loading="isSubmitting"
-        class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
-        @click="handleSubmit"
-      >
-        Salvar Orçamento
-      </NButton>
-    </div>
-  </form>
+    </NForm>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
-import { NButton, useMessage } from 'naive-ui'
+import { ref, reactive, watch, computed } from 'vue'
+import {
+  NButton,
+  NForm,
+  NFormItem,
+  NInput,
+  NInputNumber,
+  NSelect,
+  NGrid,
+  NGi,
+  useMessage,
+  type FormInst,
+  type FormRules
+} from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import type { Category } from '@/shared/domain/entities/Category'
-import BaseInput from '@/shared/components/atoms/BaseInput.vue'
-import BaseSelect from '@/shared/components/atoms/BaseSelect.vue'
-import ConfirmDeleteDialog from '@/shared/components/molecules/ConfirmDeleteDialog.vue'
+import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 
 const props = defineProps<{
   initialData?: Budget | null
@@ -97,26 +133,63 @@ const store = useBudgetStore()
 const transactionStore = useTransactionStore()
 const message = useMessage()
 
+const formRef = ref<FormInst | null>(null)
 const isSubmitting = ref(false)
 const showConfirmDelete = ref(false)
 
 const form = reactive({
   name: '',
-  limit_value: 0,
-  category_id: '',
+  limit_value: null as number | null,
+  category_id: null as string | null,
 })
+
+const rules: FormRules = {
+  limit_value: { required: true, type: 'number', min: 0.01, message: 'Defina um valor maior que zero', trigger: 'blur' },
+  category_id: { required: true, message: 'Selecione uma categoria', trigger: 'change' }
+}
+
+const categoryOptions = computed(() =>
+  transactionStore.categories.map(cat => ({ label: cat.name, value: cat.id }))
+)
+
+// --- Live Masking Logic ---
+
+const displayLimit = computed(() => {
+  if (form.limit_value === null) return ''
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(form.limit_value)
+})
+
+function handleInputLimit(val: string) {
+  const digits = val.replace(/\D/g, '')
+  if (!digits) {
+    form.limit_value = null
+    return
+  }
+  form.limit_value = Number(digits) / 100
+}
+
+const formatCurrency = (value: number | null) => {
+  if (value === null || isNaN(value)) return ''
+  return new Intl.NumberFormat('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
+}
 
 watch(
   () => props.initialData,
   (newData) => {
     if (newData) {
       form.name = newData.name || ''
-      form.limit_value = newData.limit_value || 0
-      form.category_id = newData.category_id || ''
+      form.limit_value = newData.limit_value || null
+      form.category_id = newData.category_id || null
     } else {
       form.name = ''
-      form.limit_value = 0
-      form.category_id = ''
+      form.limit_value = null
+      form.category_id = null
     }
   },
   { immediate: true },
@@ -148,55 +221,83 @@ const confirmDelete = async () => {
 }
 
 const handleSubmit = async () => {
-  if (!form.category_id) {
-    message.error('Por favor, selecione uma categoria.')
-    return
-  }
+  formRef.value?.validate(async (errors) => {
+    if (errors) return
 
-  if (!form.limit_value || form.limit_value <= 0) {
-    message.error('O valor limite deve ser maior que zero.')
-    return
-  }
+    isSubmitting.value = true
+    try {
+      let finalCategoryId = form.category_id
 
-  isSubmitting.value = true
-  try {
-    let finalCategoryId = form.category_id
-    const isExistingCategory = transactionStore.categories.some((c) => c.id === finalCategoryId)
+      if (finalCategoryId && !transactionStore.categories.some(c => c.id === finalCategoryId)) {
+        const existingByName = transactionStore.categories.find(
+          (c) => c.name.toLowerCase() === finalCategoryId?.toLowerCase(),
+        )
 
-    if (!isExistingCategory) {
-      const existingByName = transactionStore.categories.find(
-        (c) => c.name.toLowerCase() === form.category_id.toLowerCase(),
-      )
-
-      if (existingByName) {
-        finalCategoryId = existingByName.id
-      } else {
-        const randomColor = colors[Math.floor(Math.random() * colors.length)]
-        await transactionStore.saveCategory({
-          name: form.category_id,
-          color: randomColor,
-        } as Category)
-        const newlyCreated = transactionStore.categories.find((c) => c.name === form.category_id)
-        if (newlyCreated) finalCategoryId = newlyCreated.id
+        if (existingByName) {
+          finalCategoryId = existingByName.id
+        } else {
+          const randomColor = colors[Math.floor(Math.random() * colors.length)]
+          await transactionStore.saveCategory({
+            name: finalCategoryId,
+            color: randomColor,
+          } as Category)
+          const newlyCreated = transactionStore.categories.find((c) => c.name === finalCategoryId)
+          if (newlyCreated) finalCategoryId = newlyCreated.id
+        }
       }
+
+      const budgetData = {
+        ...(props.initialData || {}),
+        name: form.name || undefined,
+        limit_value: Number(form.limit_value),
+        category_id: finalCategoryId,
+        period: 'monthly' as const,
+      } as Budget
+
+      await store.saveBudget(budgetData)
+      message.success('Orçamento salvo com sucesso!')
+      emit('saved')
+      emit('close')
+    } catch (error: any) {
+      message.error('Erro ao salvar o orçamento: ' + error.message)
+    } finally {
+      isSubmitting.value = false
     }
-
-    const budgetData = {
-      ...(props.initialData || {}),
-      name: form.name || undefined,
-      limit_value: Number(form.limit_value),
-      category_id: finalCategoryId,
-      period: 'monthly' as const,
-    } as Budget
-
-    await store.saveBudget(budgetData)
-    message.success('Orçamento salvo com sucesso!')
-    emit('saved')
-    emit('close')
-  } catch (error: any) {
-    message.error('Erro ao salvar o orçamento: ' + error.message)
-  } finally {
-    isSubmitting.value = false
-  }
+  })
 }
 </script>
+
+<style scoped>
+:deep(.n-input),
+:deep(.n-input-number),
+:deep(.n-date-picker),
+:deep(.n-select .n-base-selection) {
+  --n-border-radius: 12px !important;
+  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
+  border: 1px solid transparent !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:deep(.n-input:hover),
+:deep(.n-select .n-base-selection:hover) {
+  border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+:deep(.n-input.n-input--focus),
+:deep(.n-select.n-select--active .n-base-selection) {
+  background-color: transparent !important;
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1) !important;
+}
+
+:is(.dark) :deep(.n-input),
+:is(.dark) :deep(.n-input-number),
+:is(.dark) :deep(.n-date-picker),
+:is(.dark) :deep(.n-select .n-base-selection) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+:deep(.n-form-item .n-form-item-label) {
+  padding-bottom: 4px;
+}
+</style>

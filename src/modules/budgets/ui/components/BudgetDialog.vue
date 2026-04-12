@@ -1,26 +1,23 @@
 <template>
+  <!-- Mobile Drawer -->
   <template v-if="isMobile">
     <NDrawer
       :show="show"
       @update:show="handleClose"
       placement="bottom"
-      :height="'auto'"
-      class="!rounded-t-[2.5rem] !bg-zinc-50 dark:!bg-zinc-950 overflow-hidden"
+      resizable
+      :default-height="600"
+      class="!rounded-t-[2.5rem] !bg-zinc-50 dark:!bg-zinc-950"
     >
       <div class="flex flex-col h-full">
-        <!-- Drawer Header -->
-        <div class="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
-          <div class="w-10 h-1 bg-zinc-300 dark:bg-zinc-700 rounded-full mx-auto mb-4 opacity-50"></div>
-          <div class="flex items-center justify-between">
-            <div class="flex flex-col">
-              <span class="text-xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight leading-none mb-1">
-                {{ budget ? 'Editar Orçamento' : 'Novo Orçamento' }}
-              </span>
-              <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Planejamento Financeiro</span>
-            </div>
-            <NButton quaternary circle @click="$emit('close')">
-              <template #icon><i class="i-lucide-x text-xl"></i></template>
-            </NButton>
+        <!-- Drawer Handle & Header -->
+        <div class="pt-3 pb-6 px-6 border-b border-zinc-200/50 dark:border-zinc-800/50">
+          <div class="w-12 h-1.5 bg-zinc-300 dark:bg-zinc-700 rounded-full mx-auto mb-6 opacity-40"></div>
+          <div class="flex flex-col">
+            <h2 class="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none mb-1">
+              {{ budget ? 'Editar Orçamento' : 'Novo Orçamento' }}
+            </h2>
+            <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Planejamento Financeiro</p>
           </div>
         </div>
 
@@ -31,38 +28,59 @@
     </NDrawer>
   </template>
 
+  <!-- Desktop Modal -->
   <template v-else>
     <NModal
       :show="show"
       @update:show="handleClose"
       preset="card"
-      class="!max-w-xl !rounded-[2rem] !bg-zinc-50 dark:!bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-2xl"
-      :segmented="{ content: 'soft', footer: 'soft' }"
+      :closable="false"
+      class="!max-w-xl !rounded-[2rem] !bg-zinc-50 dark:!bg-zinc-950 !border-none shadow-2xl"
       :header-style="{ padding: '0' }"
       :content-style="{ padding: '0' }"
     >
       <template #header>
-        <div class="p-8 border-b border-zinc-200 dark:border-zinc-800 bg-violet-500/5 w-full">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-2xl bg-violet-500 flex items-center justify-center text-white shadow-lg shadow-violet-500/20">
-                <i class="i-lucide-line-chart text-2xl"></i>
-              </div>
-              <div class="flex flex-col">
-                <span class="text-2xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight leading-none">
-                  {{ budget ? 'Editar Orçamento' : 'Novo Orçamento' }}
-                </span>
-                <span class="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400 mt-1">Metas de Gastos</span>
-              </div>
+        <div class="relative w-full">
+          <!-- Subtle Background Accent -->
+          <div class="absolute -top-20 -left-20 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="p-8 pb-5 flex items-center justify-between relative z-10">
+            <!-- Header Labels (Luxury Display Style with CTA) -->
+            <div class="flex flex-col gap-1.5">
+              <NText 
+                class="text-3xl md:text-4xl font-[900] tracking-tighter text-zinc-950 dark:text-zinc-50 !leading-[1.1]"
+              >
+                {{ budget ? 'Editar Orçamento' : 'Novo Orçamento' }}
+              </NText>
+              
+              <NText 
+                depth="3" 
+                class="text-[11px] font-bold uppercase tracking-[0.1em] opacity-80 pl-0.5"
+              >
+                {{ budget ? 'Ajuste sua meta de gastos mensal' : 'Defina um limite de gastos para este mês' }}
+              </NText>
             </div>
-            <NButton quaternary circle size="large" @click="$emit('close')">
-              <template #icon><i class="i-lucide-x text-xl"></i></template>
+
+            <!-- Custom Close Button -->
+            <NButton 
+              quaternary 
+              circle 
+              size="large"
+              class="!text-zinc-400 hover:!text-zinc-900 dark:hover:!text-zinc-50 hover:!bg-zinc-200/50 dark:hover:!bg-zinc-800/50 transition-all"
+              @click="$emit('close')"
+            >
+              <template #icon>
+                <i class="i-lucide-x text-2xl"></i>
+              </template>
             </NButton>
           </div>
+
+          <!-- Razor-thin Separator -->
+          <div class="mx-8 h-[1px] bg-zinc-200/60 dark:bg-zinc-800/60"></div>
         </div>
       </template>
 
-      <div class="p-2">
+      <div class="px-2 pb-2">
         <BudgetFormContent :initial-data="budget" @close="$emit('close')" @saved="handleSaved" />
       </div>
     </NModal>
@@ -70,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { NModal, NDrawer, NButton } from 'naive-ui'
+import { NModal, NDrawer, NButton, NText } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BudgetFormContent from './BudgetFormContent.vue'
 import type { Budget } from '@/shared/domain/entities/Budget'

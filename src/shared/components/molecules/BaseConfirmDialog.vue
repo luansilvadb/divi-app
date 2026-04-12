@@ -22,20 +22,20 @@
         </p>
 
         <div class="w-full space-y-3 pb-safe">
-          <BaseButton
-            variant="danger"
-            class="w-full !h-14 !rounded-2xl"
+          <NButton
+            type="error"
+            class="w-full !h-14 !rounded-2xl font-black uppercase text-xs tracking-widest !bg-red-500 !text-white shadow-xl shadow-red-500/30"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}
-          </BaseButton>
-          <BaseButton
-            variant="ghost"
-            class="w-full !h-12 !rounded-2xl opacity-50"
+          </NButton>
+          <NButton
+            quaternary
+            class="w-full !h-12 !rounded-2xl font-bold uppercase text-[10px] tracking-widest text-zinc-400"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
-          </BaseButton>
+          </NButton>
         </div>
       </div>
     </NDrawer>
@@ -51,8 +51,9 @@
       :content-style="{ padding: '0' }"
     >
       <div class="p-10 text-center flex flex-col items-center">
-        <div class="w-20 h-20 rounded-[2rem] bg-red-500/10 flex items-center justify-center text-red-500 mb-8 border border-red-500/20 shadow-inner">
-          <i class="i-lucide-trash-2 text-4xl"></i>
+        <div class="w-20 h-20 rounded-[2rem] bg-red-500/10 flex items-center justify-center text-red-500 mb-8 border border-red-500/20 shadow-inner relative">
+          <div class="absolute inset-0 bg-red-500 blur-2xl opacity-10 animate-pulse"></div>
+          <i class="i-lucide-trash-2 text-4xl relative z-10"></i>
         </div>
 
         <h3 class="text-2xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight mb-3">
@@ -63,20 +64,20 @@
         </p>
 
         <div class="grid grid-cols-2 gap-4 w-full">
-          <BaseButton
-            variant="ghost"
-            class="!h-12 !rounded-xl text-zinc-400"
+          <NButton
+            quaternary
+            class="!h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all duration-300"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
-          </BaseButton>
-          <BaseButton
-            variant="danger"
-            class="!h-12 !rounded-xl shadow-lg shadow-red-500/20"
+          </NButton>
+          <NButton
+            type="error"
+            class="!h-12 !rounded-xl font-black uppercase text-xs tracking-widest !bg-red-500 hover:!bg-red-600 !text-white shadow-lg shadow-red-500/20 transition-all duration-300"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}
-          </BaseButton>
+          </NButton>
         </div>
       </div>
     </NModal>
@@ -84,9 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import { NModal, NDrawer } from 'naive-ui'
+import { NModal, NDrawer, NButton } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
-import BaseButton from '../atoms/BaseButton.vue'
 
 defineProps<{
   show: boolean

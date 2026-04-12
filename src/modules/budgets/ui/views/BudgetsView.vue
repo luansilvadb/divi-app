@@ -5,145 +5,119 @@
     subtitle="Defina metas e controle seus gastos mensais."
     :loading="store.isLoading"
   >
-    <template #action>
-      <div class="flex items-center justify-start md:justify-end gap-3 w-full">
-        <BaseButton
-          v-if="!isMobile"
-          variant="primary"
-          class="!rounded-xl px-6 h-10 w-full md:w-auto shadow-lg shadow-violet-500/20"
-          @click="showAddBudgetModal = true"
-        >
-          <template #icon><i class="i-lucide-plus text-lg"></i></template>
-          Novo Orçamento
-        </BaseButton>
-      </div>
-    </template>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-32 md:pb-0">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-32 md:pb-0">
       <!-- MAIN COLUMN -->
-      <main class="lg:col-span-2 space-y-8 order-2 lg:order-1">
-        <BaseSearchInput
-          v-model="store.searchQuery"
-          placeholder="Buscar por nome do orçamento..."
-        />
-
-        <!-- Empty State -->
-        <div
-          v-if="store.budgets.length === 0 && !store.isLoading && !store.searchQuery"
-          class="flex flex-col items-center justify-center py-24 text-center opacity-40 animate-fade-in"
-        >
-          <div class="w-24 h-24 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-8 text-violet-500">
-            <i class="i-lucide-wallet text-5xl"></i>
-          </div>
-          <h3 class="text-xl font-black uppercase tracking-widest mb-4 text-zinc-800 dark:text-zinc-50">
-            Nenhum orçamento
-          </h3>
-          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400 leading-relaxed max-w-xs mb-8">
-            Você ainda não criou planejamentos de gastos ou metas de economia.
-          </p>
-          <BaseButton
-            variant="primary"
-            class="!rounded-xl px-8 h-10"
-            @click="showAddBudgetModal = true"
-          >
-            Criar Orçamento
-          </BaseButton>
-        </div>
-
-        <!-- Search Empty State -->
-        <div
-          v-else-if="filteredBudgets.length === 0 && !store.isLoading && store.searchQuery"
-          class="flex flex-col items-center justify-center py-20 text-center opacity-40"
-        >
-          <div class="w-20 h-20 bg-zinc-100 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mb-6">
-            <i class="i-lucide-search-x text-4xl text-zinc-400"></i>
-          </div>
-          <h3 class="text-lg font-black uppercase tracking-widest mb-2 text-zinc-800 dark:text-zinc-50">Nenhum resultado</h3>
-          <p class="text-xs font-bold uppercase tracking-widest text-zinc-400">{{ searchEmptySubtitle }}</p>
-          <NButton quaternary circle class="mt-8 text-violet-500 font-bold" @click="store.searchQuery = ''">
-            Limpar Busca
-          </NButton>
-        </div>
-
-        <!-- Loading State -->
-        <div v-else-if="store.isLoading" class="flex justify-center py-20">
-          <i class="i-lucide-loader-2 animate-spin text-4xl text-violet-500"></i>
-        </div>
-
-        <!-- Budget List Grid -->
-        <div
-          v-else-if="filteredBudgets.length > 0"
-          class="budgets-list grid grid-cols-1 xl:grid-cols-2 gap-8"
-        >
-          <BudgetCard
-            v-for="budget in filteredBudgets"
-            :key="budget.id"
-            :budget="budget"
-            :consumed="store.getConsumed(budget)"
-            @click="handleEditBudget(budget)"
+      <main class="lg:col-span-2 order-2 lg:order-1">
+        <NSpace vertical :size="24">
+          <BaseSearchInput
+            v-model="store.searchQuery"
+            placeholder="Buscar por nome do orçamento..."
           />
-        </div>
+
+          <!-- Empty State (Cleaned) -->
+          <NEmpty
+            v-if="store.budgets.length === 0 && !store.isLoading && !store.searchQuery"
+            description="Você ainda não criou planejamentos de gastos ou metas de economia."
+            class="py-24"
+          >
+            <template #icon>
+              <i class="i-lucide-wallet text-5xl text-violet-500/40"></i>
+            </template>
+          </NEmpty>
+
+          <!-- Search Empty State -->
+          <NEmpty
+            v-else-if="filteredBudgets.length === 0 && !store.isLoading && store.searchQuery"
+            :description="searchEmptySubtitle"
+            class="py-20"
+          >
+            <template #icon>
+              <i class="i-lucide-search-x text-5xl"></i>
+            </template>
+            <template #extra>
+              <NButton quaternary type="primary" size="small" @click="store.searchQuery = ''">
+                Limpar Busca
+              </NButton>
+            </template>
+          </NEmpty>
+
+          <!-- Loading State -->
+          <div v-else-if="store.isLoading" class="flex justify-center py-20">
+            <NSpin size="large" />
+          </div>
+
+          <!-- Budget List Grid (Max 2 Columns) -->
+          <NGrid
+            v-else-if="filteredBudgets.length > 0"
+            :cols="isMobile ? 1 : 2"
+            :x-gap="20"
+            :y-gap="20"
+          >
+            <NGridItem v-for="budget in filteredBudgets" :key="budget.id">
+              <BudgetCard
+                :budget="budget"
+                :consumed="store.getConsumed(budget)"
+                @click="handleEditBudget(budget)"
+              />
+            </NGridItem>
+          </NGrid>
+        </NSpace>
       </main>
 
       <!-- SIDEBAR COLUMN -->
-      <aside class="side-column space-y-8 order-1 lg:order-2">
-        <BaseCard class="hover-glow">
-          <template #header>Visão Geral</template>
-          <div class="flex flex-col gap-6 pt-2">
-            <BaseSummaryItem
-              label="Total Orçado"
-              :value="formatCurrency(store.totalBudgeted)"
-              color="#8b5cf6"
-              status="info"
-            />
+      <aside class="side-column order-1 lg:order-2">
+        <NSpace vertical :size="16">
+          <NCard>
+            <template #header><NText strong>Visão Geral</NText></template>
+            <NSpace vertical :size="16">
+              <NStatistic label="Total Orçado">
+                <NText type="primary" strong>{{ formatCurrency(store.totalBudgeted) }}</NText>
+              </NStatistic>
 
-            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
+              <NDivider class="!my-0" />
 
-            <BaseSummaryItem
-              label="Total Consumido"
-              :value="formatCurrency(store.totalConsumed)"
-              :color="store.totalConsumed > store.totalBudgeted ? '#ef4444' : '#10b981'"
-              :status="store.totalConsumed > store.totalBudgeted ? 'error' : 'success'"
-            />
+              <NStatistic label="Total Consumido">
+                <NText
+                  :type="store.totalConsumed > store.totalBudgeted ? 'error' : 'success'"
+                  strong
+                >
+                  {{ formatCurrency(store.totalConsumed) }}
+                </NText>
+              </NStatistic>
 
-            <div class="h-px bg-zinc-100 dark:bg-zinc-800/50"></div>
+              <NDivider class="!my-0" />
 
-            <div class="w-full p-6 rounded-3xl bg-zinc-100 dark:bg-zinc-950 flex flex-col items-center text-center shadow-inner border border-zinc-200 dark:border-zinc-800">
-              <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-3">Status de Saúde</span>
-              <div
-                v-if="store.totalConsumed > store.totalBudgeted"
-                class="text-red-500 font-black flex items-center gap-2 uppercase text-xs tracking-widest"
-              >
-                <i class="i-lucide-alert-triangle text-lg"></i>
-                Limite Excedido
-              </div>
-              <div
-                v-else
-                class="text-emerald-500 font-black flex items-center gap-2 uppercase text-xs tracking-widest"
-              >
-                <i class="i-lucide-check-circle text-lg"></i>
-                Dentro do Planejado
-              </div>
-            </div>
-          </div>
-        </BaseCard>
+              <NCard embedded size="small" class="text-center">
+                <NText depth="3" class="text-xs uppercase tracking-widest block mb-2">Status de Saúde</NText>
+                <NTag
+                  v-if="store.totalConsumed > store.totalBudgeted"
+                  type="error"
+                  size="medium"
+                  round
+                >
+                  <template #icon><i class="i-lucide-alert-triangle"></i></template>
+                  Limite Excedido
+                </NTag>
+                <NTag v-else type="success" size="medium" round>
+                  <template #icon><i class="i-lucide-check-circle"></i></template>
+                  Dentro do Planejado
+                </NTag>
+              </NCard>
+            </NSpace>
+          </NCard>
 
-        <!-- Insights -->
-        <BaseCard class="hover-glow">
-          <template #header>Insights de IA</template>
-          <div class="flex flex-col gap-4 pt-2">
-            <div class="flex gap-4 p-5 rounded-3xl bg-violet-500/5 border border-violet-500/10 relative overflow-hidden group">
-              <div class="absolute -right-4 -top-4 w-12 h-12 bg-violet-500/10 blur-2xl rounded-full transition-all group-hover:scale-150"></div>
-              <div class="flex flex-col gap-1 relative z-10">
-                <p class="text-sm font-bold text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                  Você economizou <span class="text-violet-500 font-black">R$ 340,00</span> em
-                  <span class="text-zinc-800 dark:text-zinc-50 font-black">Lazer</span>
-                  comparado ao mês passado.
-                </p>
-              </div>
-            </div>
-          </div>
-        </BaseCard>
+          <!-- Insights -->
+          <NCard>
+            <template #header><NText strong>Insights de IA</NText></template>
+            <NCard embedded size="small" class="!border-violet-500/10 !bg-violet-500/5">
+              <NText class="text-sm leading-relaxed">
+                Você economizou <NText type="primary" strong>R$ 340,00</NText> em
+                <NText strong>Lazer</NText>
+                comparado ao mês passado.
+              </NText>
+            </NCard>
+          </NCard>
+        </NSpace>
       </aside>
     </div>
 
@@ -153,15 +127,24 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { NButton } from 'naive-ui'
+import {
+  NButton,
+  NCard,
+  NStatistic,
+  NSpace,
+  NText,
+  NTag,
+  NEmpty,
+  NDivider,
+  NSpin,
+  NGrid,
+  NGridItem,
+} from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
-import BaseSummaryItem from '@/shared/components/molecules/BaseSummaryItem.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import BudgetCard from '@/shared/components/molecules/BudgetCard.vue'
 import BudgetDialog from '../components/BudgetDialog.vue'
@@ -180,7 +163,10 @@ const handleEditBudget = (budget: Budget) => {
 
 const handleCloseModal = () => {
   showAddBudgetModal.value = false
-  selectedBudget.value = null
+  // Delay clearing the data so the buttons don't disappear during the close animation
+  setTimeout(() => {
+    selectedBudget.value = null
+  }, 300)
 }
 
 const filteredBudgets = computed(() => {

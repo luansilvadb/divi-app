@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
-import { db } from './core/db'
 
 declare let self: ServiceWorkerGlobalScope
 
@@ -56,79 +55,11 @@ registerRoute(
   }),
 )
 
-// Logic for generating transactions from subscriptions
-async function processSubscriptions() {
-  console.log('[SW] Checking for due subscriptions...')
-  try {
-    const subscriptions = await db.table('subscriptions').toArray()
-    const today = new Date()
-    const currentDay = today.getDate()
-
-    for (const sub of subscriptions) {
-      if (sub.billing_day <= currentDay) {
-        // Check if already billed this month
-        const lastBilled = sub.last_billed_at ? new Date(sub.last_billed_at) : null
-        const alreadyBilled =
-          lastBilled &&
-          lastBilled.getMonth() === today.getMonth() &&
-          lastBilled.getFullYear() === today.getFullYear()
-
-        if (!alreadyBilled) {
-          console.log(`[SW] Billing subscription: ${sub.name}`)
-
-          // Create transaction
-          await db.table('transactions').add({
-            id: crypto.randomUUID(),
-            title: `Assinatura: ${sub.name}`,
-            amount: Math.abs(sub.amount),
-            type: 'expense',
-            category_id: sub.category_id,
-            wallet_id: sub.wallet_id,
-            date: today.toISOString(),
-            sync_status: 'pending',
-            deleted: false,
-            client_updated_at: today.toISOString(),
-            created_at: today.toISOString(),
-            version: 1,
-          })
-
-          // Update subscription last billed date
-          await db.table('subscriptions').update(sub.id, {
-            last_billed_at: today.toISOString(),
-            sync_status: 'pending',
-            client_updated_at: today.toISOString(),
-          })
-        }
-      }
-    }
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      (error.name === 'InvalidStateError' || error.message?.includes('closing'))
-    ) {
-      console.warn(
-        '[SW] Database connection is closing or closed during subscription processing. Scaling back.',
-      )
-    } else {
-      console.error('[SW] Error processing subscriptions:', error)
-    }
-  }
-}
-
 // Custom logic for offline sync and background updates
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
-
-  if (event.data && event.data.type === 'CHECK_SUBSCRIPTIONS') {
-    event.waitUntil(processSubscriptions())
-  }
-})
-
-// Trigger check on install/activate or periodically if supported
-self.addEventListener('activate', (event) => {
-  event.waitUntil(processSubscriptions())
 })
 
 console.log('Divi Service Worker Initialized.')

@@ -6,6 +6,7 @@ import { db, type LocalTransaction } from '@/core/db'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
+
 export class DexieTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<Transaction[]> {
     try {
@@ -44,13 +45,18 @@ export class DexieTransactionRepository implements ITransactionRepository {
       // GARANTE IDENTIDADE: Toda transação nasce com UUID no cliente
       const id = transaction.id || uuidv7()
 
+      // STRIP PROXIES: Dexie/IndexedDB (structured clone) does not support Vue 3 Proxy objects.
+      // We deep clone to ensure we are saving a plain JS object.
+      const cleanData = JSON.parse(JSON.stringify(transaction))
+
       const localData: LocalTransaction = {
-        ...transaction,
+        ...cleanData,
         id, // UUID Estável
-        sync_status: transaction.sync_status || 'pending',
-        client_updated_at: transaction.client_updated_at || new Date().toISOString(),
-        deleted: !!transaction.deleted,
-        version: transaction.version || 1,
+        sync_status: cleanData.sync_status || 'pending',
+        client_updated_at: cleanData.client_updated_at || new Date().toISOString(),
+        created_at: cleanData.created_at || new Date().toISOString(),
+        deleted: !!cleanData.deleted,
+        version: cleanData.version || 1,
       }
 
       await db.transactions.put(localData)
@@ -67,6 +73,8 @@ export class DexieTransactionRepository implements ITransactionRepository {
       // Soft delete locally with State-Based flags
       await db.transactions.update(id, {
         deleted: true,
+        sync_status: 'pending',
+        client_updated_at: new Date().toISOString(),
       })
 
       SyncEngine.getInstance().enqueueSync()
@@ -83,6 +91,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
       ...(item as unknown as Transaction),
       sync_status: item.sync_status,
       client_updated_at: item.client_updated_at,
+      created_at: item.created_at,
       deleted: !!item.deleted,
       version: item.version || 1,
     }

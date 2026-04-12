@@ -190,6 +190,32 @@ export const useTransactionStore = defineStore('transactions', () => {
     }
   }
 
+  async function saveWallet(wallet: Partial<Wallet>) {
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const enriched: Wallet = {
+      ...wallet,
+      id: wallet.id || uuidv7(),
+      user_id: wallet.user_id || activeUserId,
+      name: wallet.name || 'Nova Conta',
+      balance: wallet.balance ?? 0,
+      currency: wallet.currency || 'BRL',
+      sync_status: 'pending',
+      deleted: false,
+      client_updated_at: new Date().toISOString(),
+      version: wallet.version || 1,
+    } as Wallet
+
+    try {
+      await walletRepo.save(enriched)
+      await fetchWallets()
+    } catch (err) {
+      console.error('Erro ao salvar conta:', err)
+      throw err
+    }
+  }
+
   async function saveTransaction(transaction: Transaction) {
     // 1. Validação de Domínio (Previne "gohorse")
     if (transaction.amount < 0) {
@@ -322,11 +348,13 @@ export const useTransactionStore = defineStore('transactions', () => {
     totalIncome,
     totalExpense,
     monthlyBalance,
+    activeTransactions,
     topCategories,
     groupedTransactions,
     fetchWallets,
     fetchCategories,
     saveCategory,
+    saveWallet,
     fetchTransactionsByMonth,
     saveTransaction,
     deleteTransaction,

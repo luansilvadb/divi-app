@@ -2,230 +2,196 @@
   <StandardPageLayout
     title="Dashboard"
     highlight="Financeiro"
-    subtitle="Bem-vindo de volta! Aqui está um resumo da sua saúde financeira."
+    subtitle="Aqui está o panorama da sua prosperidade hoje."
   >
-    <template #action>
-      <BaseButton
-        variant="primary"
-        class="!hidden md:!flex !rounded-2xl !px-6 !py-3 shadow-xl shadow-violet-500/20 hover:scale-105 transition-all duration-500 group/quick"
-        @click="showQuickEntry = true"
-      >
-        <template #icon>
-          <i class="i-lucide-plus text-lg transition-transform duration-500 group-hover/quick:rotate-90"></i>
-        </template>
-        <span class="text-[10px] font-bold uppercase tracking-widest ml-2">Entrada Rápida</span>
-      </BaseButton>
-    </template>
-
-    <!-- Initialization Error Banner -->
-    <div
-      v-if="dashboardStore.initializationError"
-      class="mb-8 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center gap-4 animate-fade-in"
-    >
-      <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500 shrink-0">
-        <i class="i-lucide-alert-circle text-xl"></i>
-      </div>
-      <div class="flex-1">
-        <h4 class="text-[10px] font-bold uppercase tracking-widest text-red-500 mb-1">
-          Limitação de Sistema Detectada
-        </h4>
-        <p class="text-xs font-bold text-zinc-600 dark:text-zinc-400 leading-relaxed">
-          O modo anônimo pode limitar algumas funcionalidades locais. Recomendamos o uso do modo
-          padrão para uma experiência completa.
-        </p>
-      </div>
-      <NButton quaternary circle @click="dashboardStore.initializationError = false">
-        <template #icon><i class="i-lucide-x text-red-500"></i></template>
-      </NButton>
-    </div>
-
-    <!-- Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_400px] gap-8">
-      <!-- MAIN COLUMN -->
-      <main class="flex flex-col gap-8">
-        <!-- Stats Overview -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- INCOME CARD -->
-          <BaseCard padding="none" class="hover-glow">
-            <div class="p-6">
-              <h4 class="text-[10px] font-bold uppercase tracking-widest text-emerald-500 opacity-80 mb-2">Entradas (Mês)</h4>
-              <div class="text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter flex items-baseline gap-1">
-                <span class="text-lg opacity-40 font-bold">R$</span>
-                {{ transactionStore.totalIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
-              </div>
-            </div>
-            <div class="px-6 pb-6 pt-2 flex flex-col gap-4">
-              <NProgress type="line" :percentage="75" :show-indicator="false" color="#10b981" :height="8" class="!rounded-full" />
-              <div class="flex items-center gap-2">
-                <i class="i-lucide-trending-up text-emerald-500 text-sm"></i>
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">
-                  <span class="text-emerald-500">+12%</span> em relação ao mês anterior
-                </p>
-              </div>
-            </div>
-          </BaseCard>
-
-          <!-- EXPENSE CARD -->
-          <BaseCard padding="none" class="hover-glow">
-            <div class="p-6">
-              <h4 class="text-[10px] font-bold uppercase tracking-widest text-red-500 opacity-80 mb-2">Saídas (Mês)</h4>
-              <div class="text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter flex items-baseline gap-1">
-                <span class="text-lg opacity-40 font-bold">R$</span>
-                {{ transactionStore.totalExpense.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
-              </div>
-            </div>
-            <div class="px-6 pb-6 pt-2 flex flex-col gap-4">
-              <NProgress type="line" :percentage="42" :show-indicator="false" color="#ef4444" :height="8" class="!rounded-full" />
-              <div class="flex items-center gap-2">
-                <i class="i-lucide-trending-down text-red-500 text-sm"></i>
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">
-                  Economize <span class="text-red-500">R$ 45,00/dia</span> para a meta
-                </p>
-              </div>
-            </div>
-          </BaseCard>
-
-          <!-- BALANCE CARD -->
-          <BaseCard padding="none" class="hover-glow">
-            <div class="p-6">
-              <h4 class="text-[10px] font-bold uppercase tracking-widest text-violet-500 opacity-80 mb-2">Saldo Geral</h4>
-              <div class="text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter flex items-baseline gap-1">
-                <span class="text-lg opacity-40 font-bold">R$</span>
-                {{ Math.abs(dashboardStore.totalBalance).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
-              </div>
-            </div>
-            <div class="px-6 pb-6 pt-2 flex flex-col gap-4">
-              <NProgress type="line" :percentage="88" :show-indicator="false" color="#8b5cf6" :height="8" class="!rounded-full" />
-              <div class="flex items-center gap-2">
-                <i class="i-lucide-award text-violet-500 text-sm"></i>
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-tight">
-                  <span class="text-violet-500">Parabéns!</span> No caminho certo
-                </p>
-              </div>
-            </div>
-          </BaseCard>
+    <!-- Content Layout -->
+    <div class="flex flex-col gap-8">
+      <!-- Accounts Section -->
+      <section>
+        <div class="flex items-center justify-between mb-6 px-2">
+          <div class="flex flex-col">
+            <h2 class="text-[20px] font-black text-zinc-900 dark:text-zinc-50 tracking-tighter">Minhas Contas</h2>
+            <p class="text-[11px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-widest">Ativos em tempo real</p>
+          </div>
+          <div class="h-[1px] flex-1 bg-zinc-100 dark:bg-zinc-800/50 mx-6 opacity-30"></div>
         </div>
 
-        <!-- Accounts -->
-        <section class="flex flex-col gap-6">
-          <div class="flex items-center justify-between px-2">
-            <h2 class="text-xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight flex items-center gap-3">
-              <span class="w-1.5 h-6 bg-violet-500 rounded-full"></span>
-              Minhas Contas
-            </h2>
-            <NButton quaternary size="small" @click="$router.push('/wallets')" class="!text-[10px] font-black uppercase tracking-widest text-violet-500">
-              Ver Todas <i class="i-lucide-chevron-right ml-1"></i>
-            </NButton>
-          </div>
-          <AccountCarousel :wallets="dashboardStore.wallets" />
-        </section>
+        <AccountGrid
+          :wallets="dashboardStore.wallets"
+          :stats-map="walletStatsMap"
+          @saved="dashboardStore.fetchDashboardData()"
+        />
+      </section>
 
-        <!-- Chart Section -->
-        <BaseCard class="flex-1 !p-6 hover-glow overflow-hidden relative" h-full>
-          <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-violet-500/5 blur-[100px] pointer-events-none"></div>
-          
-          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mb-8 gap-4 relative z-10">
-            <div class="flex items-center gap-4">
-              <div class="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-500 shadow-inner">
-                <i class="i-lucide-line-chart text-xl"></i>
+      <!-- Main Activity Matrix -->
+      <div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] 2xl:grid-cols-[1fr_400px] gap-8">
+
+        <!-- LEFT: Insights & Charts -->
+        <div class="flex flex-col gap-8 min-w-0">
+          <!-- Key Metrics Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- INCOME -->
+            <div class="bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] rounded-[32px] overflow-hidden flex flex-col h-full shadow-sm shadow-zinc-200/20 dark:shadow-none">
+              <div class="p-4 bg-slate-100/70 dark:bg-white/[0.06] border-b border-zinc-100 dark:border-white/5 flex items-center justify-between">
+                <span class="text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest">Receitas</span>
+                <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
               </div>
-              <div>
-                <h3 class="text-lg font-black text-zinc-800 dark:text-zinc-50 tracking-tight leading-tight">Evolução Patrimonial</h3>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 opacity-60">Projeção de Lançamentos</p>
-              </div>
-            </div>
-            
-            <NRadioGroup v-model:value="chartRange" size="small" class="!bg-zinc-100 dark:!bg-zinc-900 !p-1 !rounded-xl border border-zinc-200 dark:border-zinc-800">
-              <NRadioButton value="6m" class="!rounded-lg !border-none !bg-transparent text-[10px] font-bold uppercase">6 Meses</NRadioButton>
-              <NRadioButton value="1y" class="!rounded-lg !border-none !bg-transparent text-[10px] font-bold uppercase">Anual</NRadioButton>
-            </NRadioGroup>
-          </div>
-
-          <div class="h-[300px] sm:h-[400px] w-full relative z-10">
-            <PatrimonialChart :data="growthData" :labels="growthLabels" />
-          </div>
-        </BaseCard>
-      </main>
-
-      <!-- SIDEBAR COLUMN -->
-      <aside class="flex flex-col gap-6">
-        <BaseCard h-full padding="none" class="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md hover-glow flex flex-col">
-          <div class="p-6 flex-none">
-            <div class="w-full bg-zinc-100 dark:bg-zinc-800/50 p-1 rounded-2xl flex border border-zinc-200 dark:border-zinc-800">
-              <button
-                v-for="opt in transactionFilterOptions"
-                :key="opt.value"
-                class="flex-1 py-2.5 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 border-none"
-                :class="transactionFilter === opt.value ? 'bg-white dark:bg-zinc-700 text-zinc-900 dark:text-zinc-50 shadow-md' : 'text-zinc-400 hover:text-zinc-600'"
-                @click="transactionFilter = opt.value"
-              >
-                {{ opt.label }}
-              </button>
-            </div>
-          </div>
-
-          <div v-if="filteredTransactions.length === 0" class="flex flex-col items-center justify-center flex-1 py-12 px-6 text-center">
-            <div class="text-5xl mb-6 opacity-20">✨</div>
-            <h3 class="text-xs font-black text-zinc-800 dark:text-zinc-50 uppercase tracking-widest mb-2">Sem transações</h3>
-            <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-8 opacity-60">Comece seu controle hoje!</p>
-            <BaseButton variant="primary" class="!rounded-xl !px-8" @click="simulateAddTransaction">Começar</BaseButton>
-          </div>
-
-          <div v-else class="flex flex-col px-4 pb-6 space-y-2 flex-1">
-            <div v-for="t in filteredTransactions" :key="t.id" class="flex items-center p-3 rounded-2xl transition-all duration-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 group border border-transparent hover:border-zinc-200 dark:hover:border-zinc-700">
-              <div class="mr-4 flex-none">
-                <div class="w-11 h-11 rounded-full flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800"
-                     :style="{ borderLeft: `3px solid ${transactionStore.categoryMap[t.category_id]?.color || '#a1a1aa'}` }">
-                  <img v-if="transactionStore.categoryMap[t.category_id]?.icon" :src="getCategoryIcon(t.category_id)" class="w-6 h-6 object-contain" @error="handleImageError" />
-                  <i v-else class="i-lucide-banknote text-lg text-zinc-400"></i>
-                </div>
-              </div>
-
-              <div class="flex-1 min-w-0">
-                <div class="text-sm font-bold text-zinc-800 dark:text-zinc-50 truncate leading-tight mb-1">{{ t.title || 'Sem título' }}</div>
-                <div class="flex items-center gap-2 opacity-60">
-                  <span class="text-[9px] font-bold uppercase tracking-widest">{{ transactionStore.walletMap[t.wallet_id]?.name || 'Conta' }}</span>
-                  <span class="w-1 h-1 rounded-full bg-zinc-400"></span>
-                  <span class="text-[9px] font-bold uppercase tracking-widest" :style="{ color: transactionStore.categoryMap[t.category_id]?.color }">
-                    {{ transactionStore.categoryMap[t.category_id]?.name || 'Geral' }}
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <p class="text-[9px] font-black text-emerald-500 uppercase tracking-tighter mb-1">Receitas</p>
+                  <span class="text-3xl font-bold text-zinc-900 dark:text-white tracking-tighter tabular-nums">
+                    {{ formatCurrency(transactionStore.totalIncome) }}
                   </span>
                 </div>
-              </div>
-
-              <div class="text-right ml-4 flex-none">
-                <div class="text-sm font-black tracking-tighter" :class="t.type === 'expense' ? 'text-red-500' : 'text-emerald-500'">
-                  {{ t.type === 'expense' ? '-' : '+' }} R$ {{ Math.abs(t.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
+                <div class="mt-4 pt-4 border-t border-zinc-100 dark:border-white/5 flex items-center justify-between">
+                  <span class="text-[10px] font-medium text-zinc-400 lowercase">vs. mês passado</span>
+                  <span class="text-[11px] font-bold text-emerald-500">+12%</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-auto pt-8 flex justify-center">
-              <NButton quaternary @click="$router.push('/transactions')" class="!text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-                Ver todo o histórico
-              </NButton>
+            <!-- EXPENSE -->
+            <div class="bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] rounded-[32px] overflow-hidden flex flex-col h-full shadow-sm shadow-zinc-200/20 dark:shadow-none">
+              <div class="p-4 bg-slate-100/70 dark:bg-white/[0.06] border-b border-zinc-100 dark:border-white/5 flex items-center justify-between">
+                <span class="text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest">Despesas</span>
+                <div class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></div>
+              </div>
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <p class="text-[9px] font-black text-red-500 uppercase tracking-tighter mb-1">Saídas</p>
+                  <span class="text-3xl font-bold text-zinc-900 dark:text-white tracking-tighter tabular-nums">
+                    {{ formatCurrency(transactionStore.totalExpense) }}
+                  </span>
+                </div>
+                <div class="mt-4 pt-4 border-t border-zinc-100 dark:border-white/5">
+                   <div class="flex items-center justify-between mb-2">
+                     <span class="text-[10px] font-medium text-zinc-400 lowercase">uso do orçamento</span>
+                     <span class="text-[10px] font-bold text-zinc-900 dark:text-zinc-100">65%</span>
+                   </div>
+                   <div class="h-1 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                     <div class="h-full bg-red-500" style="width: 65%"></div>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NET FLOW / HEALTH -->
+            <div class="bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] rounded-[32px] overflow-hidden flex flex-col h-full shadow-sm shadow-zinc-200/20 dark:shadow-none">
+              <div class="p-4 bg-slate-100/70 dark:bg-white/[0.06] border-b border-zinc-100 dark:border-white/5 flex items-center justify-between">
+                <span class="text-[10px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-widest">Patrimônio Líquido</span>
+                <div class="w-2 h-2 rounded-full bg-[#5F41FB] shadow-[0_0_8px_rgba(95,65,251,0.4)]"></div>
+              </div>
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <p class="text-[9px] font-black text-[#5F41FB] uppercase tracking-tighter mb-1">Total</p>
+                  <span class="text-3xl font-bold text-zinc-900 dark:text-white tracking-tighter tabular-nums">
+                    {{ formatCurrency(dashboardStore.totalBalance) }}
+                  </span>
+                </div>
+                <p class="text-[11px] font-medium text-zinc-400 mt-4 leading-tight">
+                   Consolidação total de todos os ativos sincronizados.
+                </p>
+              </div>
             </div>
           </div>
-        </BaseCard>
-      </aside>
-    </div>
 
-    <QuickEntryModal v-model:visible="showQuickEntry" />
+          <!-- Chart Area -->
+          <div class="bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] rounded-[32px] overflow-hidden">
+            <div class="p-6 border-b border-zinc-100 dark:border-white/5 bg-slate-100/70 dark:bg-white/[0.06] flex items-center justify-between overflow-x-auto gap-4 scrollbar-none">
+              <div class="shrink-0">
+                <h3 class="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 tracking-widest uppercase">Evolução Patrimonial</h3>
+              </div>
+              <div class="flex bg-zinc-100 dark:bg-zinc-800 p-1 rounded-xl shrink-0">
+                <button
+                  v-for="r in ['6m', '1y']"
+                  :key="r"
+                  @click="chartRange = r"
+                  class="px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all"
+                  :class="chartRange === r ? 'bg-white dark:bg-zinc-700 shadow-sm text-zinc-900 dark:text-white' : 'text-zinc-400 hover:text-zinc-600'"
+                >
+                  {{ r === '6m' ? 'Semestral' : 'Anual' }}
+                </button>
+              </div>
+            </div>
+            <div class="p-8">
+              <div class="h-[350px] w-full">
+                <PatrimonialChart :data="growthData" :labels="growthLabels" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Feed (Sticky for better large screen UX) -->
+        <div class="xl:sticky xl:top-8 h-fit">
+          <div class="bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] rounded-[42px] overflow-hidden flex flex-col h-full shadow-sm shadow-zinc-200/20 dark:shadow-none">
+            <div class="p-6 border-b border-zinc-100 dark:border-white/5 bg-slate-100/70 dark:bg-white/[0.06]">
+              <h3 class="text-[11px] font-bold text-zinc-400 dark:text-zinc-500 tracking-widest uppercase mb-4">Atividades Recentes</h3>
+              <div class="flex p-1 bg-zinc-100 dark:bg-zinc-800 rounded-xl">
+                <button
+                  v-for="opt in transactionFilterOptions"
+                  :key="opt.value"
+                  @click="transactionFilter = opt.value"
+                  class="flex-1 py-1.5 rounded-lg text-[9px] font-bold uppercase tracking-tight transition-all"
+                  :class="transactionFilter === opt.value ? 'bg-white dark:bg-zinc-700 shadow-sm text-zinc-950 dark:text-white' : 'text-zinc-400'"
+                >
+                  {{ opt.label }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Feed Content -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-2 max-h-[780px] scrollbar-thin">
+              <div
+                v-for="t in filteredTransactions"
+                :key="t.id"
+                class="group flex items-center gap-3 p-2.5 rounded-2xl hover:bg-zinc-50 dark:hover:bg-white/[0.02] transition-all cursor-pointer"
+              >
+                <div class="w-10 h-10 rounded-2xl bg-zinc-100 dark:bg-zinc-800/50 flex items-center justify-center shrink-0 border border-zinc-200/50 dark:border-white/5 relative">
+                  <div class="absolute left-0 top-2 bottom-2 w-1 rounded-r-full" :style="{ background: transactionStore.categoryMap[t.category_id]?.color }"></div>
+                  <img v-if="transactionStore.categoryMap[t.category_id]?.icon" :src="getCategoryIcon(t.category_id)" class="w-4 h-4 grayscale opacity-40 group-hover:opacity-100 group-hover:grayscale-0 transition-all" />
+                  <i v-else class="i-lucide-activity text-zinc-300"></i>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <p class="text-[12px] font-semibold text-zinc-900 dark:text-zinc-100 truncate tracking-tight">{{ t.title || 'Atividade' }}</p>
+                  <p class="text-[9px] font-bold text-zinc-400 uppercase tracking-tighter mt-0.5 truncate">
+                    {{ transactionStore.walletMap[t.wallet_id]?.name || 'Conta' }}
+                  </p>
+                </div>
+
+                <div class="text-right shrink-0">
+                  <p class="text-[12px] font-bold tabular-nums" :class="t.type === 'expense' ? 'text-red-500' : 'text-emerald-500'">
+                    {{ t.type === 'expense' ? '-' : '+' }} R$ {{ Math.abs(t.amount).toLocaleString('pt-BR', { minimumFractionDigits: 0 }) }}
+                  </p>
+                </div>
+              </div>
+
+              <div v-if="filteredTransactions.length === 0" class="flex flex-col items-center justify-center py-20 opacity-10">
+                <i class="i-lucide-wind text-4xl mb-2"></i>
+                <span class="text-[10px] font-bold uppercase tracking-[0.4em]">Silence</span>
+              </div>
+            </div>
+
+            <div class="p-4 border-t border-zinc-100 dark:border-white/5 bg-zinc-50/50 dark:bg-white/[0.02] text-center">
+              <button @click="$router.push('/transactions')" class="text-[10px] font-bold text-zinc-400 hover:text-primary uppercase tracking-[0.1em] transition-all">
+                Ver Todo Histórico
+              </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { v7 as uuidv7 } from 'uuid'
 import { useObservable } from '@vueuse/rxjs'
-import { NButton, NProgress, NRadioGroup, NRadioButton } from 'naive-ui'
 import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import AccountCarousel from '@/shared/components/organisms/AccountCarousel.vue'
+import AccountGrid from '@/shared/components/organisms/AccountGrid.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
-import BaseButton from '@/shared/components/atoms/BaseButton.vue'
-import QuickEntryModal from '@/modules/transactions/ui/components/QuickEntryModal.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
@@ -237,51 +203,49 @@ const transactionStore = useTransactionStore()
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
 const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
 
-const showQuickEntry = ref(false)
+const premiumCardClasses = "bg-white dark:bg-[#111622] border border-zinc-100 dark:border-white/[0.04] rounded-[42px] p-7 transition-all duration-500 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_30px_70px_rgba(0,0,0,0.3)] hover:-translate-y-0.5"
+
 const chartRange = ref('6m')
 const transactionFilter = ref('all')
-
 const transactionFilterOptions = [
   { label: 'Todos', value: 'all' },
-  { label: 'Saídas', value: 'expense' },
-  { label: 'Entradas', value: 'income' },
+  { label: 'Receitas', value: 'income' },
+  { label: 'Despesas', value: 'expense' },
 ]
 
 const liveTransactions = useObservable(transactionRepo.watchAll()) as { value: Transaction[] | undefined }
 
 const filteredTransactions = computed(() => {
-  const transactions = liveTransactions.value || []
-  if (transactionFilter.value === 'all') return transactions.slice(0, 15)
-  return transactions.filter((t: Transaction) => t.type === transactionFilter.value).slice(0, 15)
+  const t = liveTransactions.value || []
+  if (transactionFilter.value === 'all') return t.slice(0, 15)
+  return t.filter((item) => item.type === transactionFilter.value).slice(0, 15)
 })
 
-async function simulateAddTransaction() {
-  await transactionStore.saveTransaction({
-    id: uuidv7(),
-    user_id: 'default-user',
-    title: 'Lançamento Inicial ✨',
-    amount: 100,
-    type: 'income',
-    category_id: 'default-cat',
-    wallet_id: 'default-wallet',
-    date: new Date().toISOString(),
-    sync_status: 'pending',
-    deleted: false,
-    client_updated_at: new Date().toISOString(),
-    created_at: new Date().toISOString(),
-    version: 1,
+const walletStatsMap = computed(() => {
+  const stats: Record<string, any> = {}
+  const transactions = transactionStore.activeTransactions || []
+  const catMap = transactionStore.categoryMap || {}
+
+  transactions.forEach((t) => {
+    if (!stats[t.wallet_id]) {
+      stats[t.wallet_id] = { income: 0, expense: 0, totalCount: 0, trend: 0 }
+    }
+    const s = stats[t.wallet_id]
+    s.totalCount++
+    if (t.type === 'income') s.income += t.amount
+    else s.expense += t.amount
   })
-}
 
-function getCategoryIcon(categoryId: string) {
-  const cat = transactionStore.categoryMap[categoryId]
-  return assetLoader.sanitize(cat?.icon)
-}
+  for (const id in stats) {
+    const s = stats[id]
+    const vol = s.income + s.expense
+    s.trend = vol > 0 ? ((s.income - s.expense) / vol) * 100 : 0
+  }
+  return stats
+})
 
-function handleImageError(e: Event) {
-  const target = e.target as HTMLImageElement
-  target.src = assetLoader.getFallback('category')
-}
+function getCategoryIcon(id: string) { return assetLoader.sanitize(transactionStore.categoryMap[id]?.icon) }
+function formatCurrency(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v) }
 
 const growthData = [42000, 43500, 41000, 44800, 46200, 48500]
 const growthLabels = ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar']
@@ -293,3 +257,14 @@ onMounted(async () => {
   ])
 })
 </script>
+
+<style scoped>
+.scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(228 228 231); /* zinc-200 */
+  border-radius: 9999px;
+}
+:deep(.dark) .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(39 39 42); /* zinc-800 */
+}
+</style>

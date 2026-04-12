@@ -3,6 +3,7 @@ import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRep
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
 import { db, type LocalWallet, type LocalCategory } from '@/core/db'
+import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../../domain/errors'
 
 export class DexieWalletRepository implements IWalletRepository {
@@ -26,8 +27,12 @@ export class DexieWalletRepository implements IWalletRepository {
         ...wallet,
         sync_status: wallet.sync_status || 'pending',
         client_updated_at: wallet.client_updated_at || new Date().toISOString(),
+        created_at: wallet.created_at || new Date().toISOString(),
         version: wallet.version || 1,
       } as LocalWallet)
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieWalletRepository] Carteira salva localmente. Sync disparado.')
     } catch (err) {
       throw new InfrastructureError('Failed to save wallet to local DB', err)
     }
@@ -64,8 +69,12 @@ export class DexieCategoryRepository implements ICategoryRepository {
         ...category,
         sync_status: category.sync_status || 'pending',
         client_updated_at: category.client_updated_at || new Date().toISOString(),
+        created_at: category.created_at || new Date().toISOString(),
         version: category.version || 1,
       } as LocalCategory)
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieCategoryRepository] Categoria salva localmente. Sync disparado.')
     } catch (err) {
       throw new InfrastructureError('Failed to save category to local DB', err)
     }

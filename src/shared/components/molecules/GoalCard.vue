@@ -1,85 +1,97 @@
 <template>
-  <BaseCard class="goal-card hover-glow" clickable>
-    <template #header>
-      <div class="header-content flex justify-between items-center w-full">
-        <div class="goal-title-area flex items-center gap-4">
-          <BaseIconBox :color="goal.color || '#8b5cf6'">
-            <span class="emoji-icon text-xl leading-none" v-if="goal.icon">{{ goal.icon }}</span>
-            <i v-else class="i-lucide-target text-xl"></i>
-          </BaseIconBox>
-          <span
-            class="goal-name text-lg font-bold text-zinc-800 dark:text-zinc-50 tracking-tight"
-            >{{ goal.name }}</span
+  <NCard hoverable class="cursor-pointer" v-bind="$attrs">
+    <NSpace vertical :size="20">
+      <!-- Header -->
+      <NSpace justify="space-between" align="center" class="w-full">
+        <NSpace align="center" :size="12">
+          <div
+            class="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+            :style="{ backgroundColor: `${goal.color || '#8b5cf6'}1A`, color: goal.color || '#8b5cf6' }"
           >
-          <ItemSyncIndicator :status="goal.sync_status" />
-        </div>
+            <span v-if="goal.icon" class="leading-none">{{ goal.icon }}</span>
+            <i v-else class="i-lucide-target"></i>
+          </div>
+          <NSpace vertical :size="2">
+            <NSpace align="center" :size="6">
+              <NText strong class="text-base">{{ goal.name }}</NText>
+              <ItemSyncIndicator :status="goal.sync_status" />
+            </NSpace>
+            <NTag size="tiny" :color="{ textColor: goal.color || '#8b5cf6', borderColor: 'transparent', color: `${goal.color || '#8b5cf6'}1A` }" round :bordered="false">
+              {{ goal.type === 'saving' ? 'Acumular' : 'Quitação' }}
+            </NTag>
+          </NSpace>
+        </NSpace>
+      </NSpace>
 
-        <BaseBadge :color="goal.color || '#8b5cf6'" variant="subtle">
-          {{ goal.type === 'saving' ? 'Acumular' : 'Quitação' }}
-        </BaseBadge>
+      <!-- Values -->
+      <NSpace vertical :size="8">
+        <NSpace justify="space-between" align="end">
+          <NSpace align="baseline" :size="8">
+            <NText strong class="text-2xl tabular-nums leading-none">
+              {{ formatCurrency(goal.current_value) }}
+            </NText>
+            <NText depth="3" class="text-sm">
+              / {{ formatCurrency(goal.target_value) }}
+            </NText>
+          </NSpace>
+          <NTag
+            size="small"
+            round
+            :bordered="true"
+            :style="{ color: goal.color || '#8b5cf6', borderColor: `${goal.color || '#8b5cf6'}33` }"
+          >
+            {{ Math.round(percentage) }}%
+          </NTag>
+        </NSpace>
+
+        <NProgress
+          type="line"
+          :percentage="Math.min(percentage, 100)"
+          :show-indicator="false"
+          :color="goal.color || '#8b5cf6'"
+          :height="6"
+        />
+      </NSpace>
+
+      <!-- Footer Details -->
+      <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800">
+        <NSpace justify="space-between" align="center">
+          <NSpace vertical :size="0">
+            <NText depth="3" class="text-[9px] font-bold uppercase tracking-widest">
+              {{ percentage < 100 ? 'Faltam' : 'Objetivo' }}
+            </NText>
+            <NText
+              strong
+              class="text-base tabular-nums"
+              :type="percentage >= 100 ? 'success' : 'default'"
+            >
+              {{
+                percentage < 100
+                  ? formatCurrency(goal.target_value - goal.current_value)
+                  : 'Conquistado!'
+              }}
+            </NText>
+          </NSpace>
+
+          <NTag size="small" round :bordered="false">
+            <template #icon><i class="i-lucide-calendar-days text-xs"></i></template>
+            <NText depth="3" class="text-xs">{{ formatDate(goal.created_at) }}</NText>
+          </NTag>
+        </NSpace>
       </div>
-    </template>
-
-    <div class="goal-info flex flex-col gap-5 pt-2">
-      <div class="values-row flex justify-between items-end">
-        <div class="values-main flex items-baseline gap-2">
-          <span
-            class="consumed text-2xl font-black text-zinc-800 dark:text-zinc-50 tracking-tighter"
-            >{{ formatCurrency(goal.current_value) }}</span
-          >
-          <span
-            class="limit text-sm font-semibold text-zinc-400 opacity-70"
-            >/ {{ formatCurrency(goal.target_value) }}</span
-          >
-        </div>
-        <div
-          class="percentage-pill text-[10px] font-black uppercase tracking-widest bg-zinc-100 dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800"
-          :style="{ color: goal.color || '#8b5cf6' }"
-        >
-          {{ Math.round(percentage) }}%
-        </div>
-      </div>
-
-      <BaseProgressBar :percentage="percentage" :color="goal.color" />
-
-      <div
-        class="goal-footer-details flex justify-between items-center pt-4 border-t border-zinc-100 dark:border-zinc-800"
-      >
-        <div class="insight-group flex flex-col gap-0.5">
-          <span
-            class="insight-label text-[9px] font-bold text-zinc-400 uppercase tracking-widest"
-          >
-            {{ percentage < 100 ? 'Faltam' : 'Objetivo' }}
-          </span>
-          <span
-            class="insight-value text-base font-black text-zinc-800 dark:text-zinc-50 tracking-tight"
-            :class="{ '!text-emerald-500': percentage >= 100 }"
-          >
-            {{
-              percentage < 100
-                ? formatCurrency(goal.target_value - goal.current_value)
-                : 'Conquistado!'
-            }}
-          </span>
-        </div>
-
-        <div
-          class="date-badge flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-zinc-400 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-xl"
-        >
-          <i class="i-lucide-calendar-days text-sm"></i>
-          {{ formatDate(goal.created_at) }}
-        </div>
-      </div>
-    </div>
-  </BaseCard>
+    </NSpace>
+  </NCard>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import BaseCard from '@/shared/components/atoms/BaseCard.vue'
-import BaseBadge from '@/shared/components/atoms/BaseBadge.vue'
-import BaseIconBox from '@/shared/components/atoms/BaseIconBox.vue'
-import BaseProgressBar from '@/shared/components/atoms/BaseProgressBar.vue'
+import {
+  NCard,
+  NSpace,
+  NText,
+  NTag,
+  NProgress,
+} from 'naive-ui'
 import type { Goal } from '../../domain/entities/Goal'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 

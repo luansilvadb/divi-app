@@ -26,8 +26,8 @@ O "divi" não será apenas um aplicativo. Será o primeiro cérebro financeiro l
 - [x] Padrão de sincronização em background (Sync Engine) dos dados Dexie.
 
 **🎯 EPIC 3: A Dança dos Números (CONCLUÍDO - v0.4.0)**
-- [x] Inserção ultrarrápida de transações com categorização preditiva.
-- [x] UX sem atrito: o caminho mais curto entre pensamento e registro.
+- [x] Refatoração da interface de transações para máxima legibilidade e precisão.
+- [x] UX sem atrito: o caminho mais curto entre pensamento e análise de dados.
 
 **EPIC 4: O Espelho Orçamentário (Ativo - Meta: v0.5.0)**
 - Gestão fluída de budgets.

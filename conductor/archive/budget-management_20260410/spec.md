@@ -65,7 +65,7 @@ Feature: Gestão de Orçamentos Mensais
 
 ## 6. Critérios de Aceitação (DoD)
 - [ ] CRUD de Orçamentos funcionando offline.
-- [ ] Atualização em tempo real do saldo ao adicionar transações via Quick Entry.
+- [ ] Atualização em tempo real do saldo ao adicionar transações.
 - [ ] Componente visual de barra de progresso com feedback de cores.
 - [ ] Integração com o SyncEngine para persistência no Supabase.
 

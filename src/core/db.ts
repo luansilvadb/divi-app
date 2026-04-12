@@ -1,5 +1,8 @@
 import Dexie, { type Table } from 'dexie'
 import type { SyncMetadata } from '@/shared/domain/entities/SyncMetadata'
+import { MigrationRunner } from './migrations/MigrationRunner'
+// Side-effect import: registers all migrations in MigrationRegistry
+import './migrations/dexie'
 
 export type { SyncMetadata }
 
@@ -12,6 +15,7 @@ export interface LocalTransaction extends SyncMetadata {
   payee_id?: string
   date: string
   notes?: string
+  tags?: string[]
 }
 
 export interface LocalWallet extends SyncMetadata {
@@ -85,20 +89,11 @@ export class DiviDatabase extends Dexie {
   goals!: Table<LocalGoal>
 
   constructor() {
-    // New database name for the fresh sync engine foundation
+    // DB name MUST remain 'DiviDB_v2' to preserve existing data
     super('DiviDB_v2')
 
-    this.version(1).stores({
-      transactions: 'id, user_id, date, sync_status, deleted, payee_id',
-      wallets: 'id, user_id, name, sync_status, deleted',
-      categories: 'id, user_id, name, sync_status, deleted',
-      payees: 'id, user_id, name, sync_status, deleted',
-      loans: 'id, user_id, name, sync_status, deleted',
-      subscriptions: 'id, user_id, name, sync_status, deleted',
-      activities: 'id, user_id, timestamp',
-      budgets: 'id, user_id, name, sync_status, deleted',
-      goals: 'id, user_id, name, sync_status, deleted',
-    })
+    // Apply all registered migrations via the MigrationRunner
+    MigrationRunner.applyAll(this)
 
     this.setupSyncHooks()
   }
@@ -136,6 +131,21 @@ export class DiviDatabase extends Dexie {
         }
       })
     })
+  }
+
+  async clearAllData() {
+    console.warn('[Database] Clearing all local data...')
+    await Promise.all([
+      this.transactions.clear(),
+      this.wallets.clear(),
+      this.categories.clear(),
+      this.payees.clear(),
+      this.loans.clear(),
+      this.subscriptions.clear(),
+      this.activities.clear(),
+      this.budgets.clear(),
+      this.goals.clear(),
+    ])
   }
 }
 

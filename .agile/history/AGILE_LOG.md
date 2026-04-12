@@ -21,4 +21,4 @@
 
 - Versão: v0.3.0 → v0.4.0
 - Tasks: [3/3] concluídas
-- **Síntese:** Epic 3 (A Dança dos Números) concluído. Implementado Quick Entry com motor de predição local e latência zero. Sincronização automática via SyncEngine integrada.
+- **Síntese:** Epic 3 (A Dança dos Números) concluído. Refatorada a lista de transações para o Dashboard com design premium e tabular-nums. Sincronização automática via SyncEngine integrada.

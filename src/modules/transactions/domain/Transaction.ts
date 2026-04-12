@@ -9,6 +9,7 @@ export interface Transaction {
   payee_id?: string
   date: string
   notes?: string
+  tags?: string[]
   deleted: boolean
   created_at: string
   updated_at: string
