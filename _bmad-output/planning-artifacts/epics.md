@@ -1,11 +1,12 @@
 ---
-stepsCompleted: ['step-01-discovery', 'step-02-design-epics', 'step-03-create-stories', 'step-04-final-validation']
-inputDocuments: [
-  '_bmad-output/planning-artifacts/prd.md',
-  '_bmad-output/planning-artifacts/architecture.md',
-  '_bmad-output/planning-artifacts/ux-design-specification.md',
-  '_bmad-output/project-context.md'
-]
+stepsCompleted: ['step-01-discovery', 'step-02-design-epics', 'step-03-create-stories']
+inputDocuments:
+  [
+    '_bmad-output/planning-artifacts/prd.md',
+    '_bmad-output/planning-artifacts/architecture.md',
+    '_bmad-output/planning-artifacts/ux-design-specification.md',
+    '_bmad-output/project-context.md',
+  ]
 ---
 
 # divi-app - Epic Breakdown
@@ -75,22 +76,27 @@ FR9 (Exportação/Checkum/Delete): Epic 1 (Delete) e Epic 5 (Export/Integrity)
 ## Epic List
 
 ### Epic 1: Fundação Soberana e Sincronização Local-First
+
 Estabelecer o "Cofre" local e a infraestrutura de segurança distribuída. O usuário terá controle total sobre seus dados cifrados via E2EE e funcionamento total offline.
 **FRs covered:** FR7, FR8, FR9, NFR2, NFR5.
 
 ### Epic 2: Ledger de Precisão (Gestão de Ativos)
+
 Implementar o motor financeiro central baseado em BigInt. O usuário poderá gerenciar múltiplas carteiras e categorias com integridade absoluta de saldo.
 **FRs covered:** FR1, FR2, FR3.
 
 ### Epic 3: Smart Entry e Experiência de Cockpit
+
 Otimizar a governança diária com o motor NLP (Smart Entry) e UI de alta performance. O usuário poderá registrar dados em segundos com feedback tátil premium.
 **FRs covered:** FR1, FR4, NFR1.
 
 ### Epic 4: Inteligência Preditiva e Forecast Reativo
+
 Visualizar o futuro financeiro através do motor de Forecasting e Orçamentos. O usuário poderá ver sua data de conquista de metas aproximar-se em tempo real.
 **FRs covered:** FR5, FR6, NFR3.
 
 ### Epic 5: Modo de Guerra e Soberania de Dados
+
 Gerenciar crises financeiras (ZBB Radical) e auditoria de integridade. O usuário poderá sobreviver ao inesperado e exportar seu patrimônio com prova matemática.
 **FRs covered:** FR9, NFR4.
 
