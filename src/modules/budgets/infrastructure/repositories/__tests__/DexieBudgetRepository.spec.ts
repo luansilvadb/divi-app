@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { DexieBudgetRepository } from '../DexieBudgetRepository'
-import { db } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
 
 // Mock SyncEngine - must be before other imports that use it
 vi.mock('@/core/sync/SyncEngine', () => {

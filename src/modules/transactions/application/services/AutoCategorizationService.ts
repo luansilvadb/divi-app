@@ -1,30 +1,58 @@
 import type { Category } from '@/shared/domain/entities/Category'
 
 export class AutoCategorizationService {
-  private categoryMap: Record<string, string> = {
-    netflix: 'Entertainment',
-    spotify: 'Entertainment',
-    uber: 'Transportation',
-    ifood: 'Food',
-    supermarket: 'Groceries',
-    gas: 'Transportation',
-    amazon: 'Shopping',
-  }
+  // Map for O(1) category lookup by keyword
+  private categoryMap = new Map<string, string>([
+    ['netflix', 'Entertainment'],
+    ['spotify', 'Entertainment'],
+    ['uber', 'Transportation'],
+    ['ifood', 'Food'],
+    ['supermarket', 'Groceries'],
+    ['gas', 'Transportation'],
+    ['amazon', 'Shopping'],
+  ])
+
+  // Cache for category lookups to avoid repeated find() operations
+  private categoryCache = new Map<string, Category | null>()
 
   /**
    * Suggests a category based on the transaction title
    */
   suggestCategory(title: string, categories: Category[]): Category | null {
     const lowercaseTitle = title.toLowerCase()
-    const foundKeyword = Object.keys(this.categoryMap).find((keyword) =>
-      lowercaseTitle.includes(keyword),
-    )
 
-    if (foundKeyword) {
-      const categoryName = this.categoryMap[foundKeyword]
-      return categories.find((c) => c.name === categoryName) || null
+    // Check cache first
+    const cacheKey = `${lowercaseTitle}|${categories.length}`
+    const cached = this.categoryCache.get(cacheKey)
+    if (cached !== undefined) return cached
+
+    // Find matching keyword using Map (more efficient than Object.keys)
+    let foundCategoryName: string | null = null
+    this.categoryMap.forEach((categoryName, keyword) => {
+      if (!foundCategoryName && lowercaseTitle.includes(keyword)) {
+        foundCategoryName = categoryName
+      }
+    })
+
+    if (!foundCategoryName) {
+      this.categoryCache.set(cacheKey, null)
+      return null
     }
 
-    return null
+    // Build category name Map for O(1) lookup instead of O(n) find
+    const categoryByName = new Map<string, Category>()
+    for (const cat of categories) {
+      categoryByName.set(cat.name.toLowerCase(), cat)
+    }
+
+    const result = categoryByName.get(foundCategoryName.toLowerCase()) || null
+
+    // Cache result (limit cache size to prevent memory growth)
+    if (this.categoryCache.size > 1000) {
+      this.categoryCache.clear()
+    }
+    this.categoryCache.set(cacheKey, result)
+
+    return result
   }
 }

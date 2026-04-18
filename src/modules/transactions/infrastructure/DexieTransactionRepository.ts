@@ -2,7 +2,7 @@ import { v7 as uuidv7 } from 'uuid'
 import type { Observable } from 'rxjs'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
-import { db, type LocalTransaction } from '@/core/db'
+import { db, type LocalTransaction } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
@@ -42,27 +42,61 @@ export class DexieTransactionRepository implements ITransactionRepository {
 
   async save(transaction: Transaction): Promise<void> {
     try {
-      // GARANTE IDENTIDADE: Toda transação nasce com UUID no cliente
-      const id = transaction.id || uuidv7()
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const id = transaction.id || uuidv7()
+        const oldData = await db.transactions.get(id)
+        
+        // Calcular o impacto da transação atual (income soma, expense subtrai)
+        let walletDelta = BigInt(transaction.amount)
+        if (transaction.type === 'expense') walletDelta = -walletDelta
 
-      // STRIP PROXIES: Dexie/IndexedDB (structured clone) does not support Vue 3 Proxy objects.
-      // We deep clone to ensure we are saving a plain JS object.
-      const cleanData = JSON.parse(JSON.stringify(transaction))
+        if (oldData && !oldData.deleted) {
+          // Reverter impacto da transação antiga 
+          let oldWalletDelta = BigInt(oldData.amount)
+          if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
 
-      const localData: LocalTransaction = {
-        ...cleanData,
-        id, // UUID Estável
-        sync_status: cleanData.sync_status || 'pending',
-        client_updated_at: cleanData.client_updated_at || new Date().toISOString(),
-        created_at: cleanData.created_at || new Date().toISOString(),
-        deleted: !!cleanData.deleted,
-        version: cleanData.version || 1,
-      }
+          if (oldData.wallet_id === transaction.wallet_id) {
+             walletDelta = walletDelta - oldWalletDelta
+          } else {
+             // Mudança de carteira: reverter na antiga
+             const oldWallet = await db.wallets.get(oldData.wallet_id)
+             if (oldWallet) {
+               await db.wallets.put({ ...oldWallet, balance: BigInt(oldWallet.balance) - oldWalletDelta })
+             }
+          }
+        }
 
-      await db.transactions.put(localData)
+        if (walletDelta !== 0n) {
+          const wallet = await db.wallets.get(transaction.wallet_id)
+          if (wallet) {
+            await db.wallets.put({ ...wallet, balance: BigInt(wallet.balance) + walletDelta })
+          }
+        }
+
+        const localData: LocalTransaction = {
+          id,
+          title: transaction.title,
+          amount: BigInt(transaction.amount),
+          type: transaction.type,
+          category_id: transaction.category_id,
+          wallet_id: transaction.wallet_id,
+          payee_id: transaction.payee_id,
+          date: transaction.date,
+          notes: transaction.notes,
+          tags: transaction.tags ? [...transaction.tags] : [],
+          user_id: transaction.user_id,
+          sync_status: transaction.sync_status || 'pending',
+          client_updated_at: transaction.client_updated_at || new Date().toISOString(),
+          created_at: transaction.created_at || new Date().toISOString(),
+          deleted: !!transaction.deleted,
+          version: transaction.version || 1,
+        }
+
+        await db.transactions.put(localData)
+      })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieTransactionRepository] Transação salva localmente. Sync disparado.')
+      console.debug('[DexieTransactionRepository] Transação salva localmente de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to save transaction to local DB', err)
     }
@@ -70,15 +104,27 @@ export class DexieTransactionRepository implements ITransactionRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      // Soft delete locally with State-Based flags
-      await db.transactions.update(id, {
-        deleted: true,
-        sync_status: 'pending',
-        client_updated_at: new Date().toISOString(),
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const oldData = await db.transactions.get(id)
+        if (oldData && !oldData.deleted) {
+          let oldWalletDelta = BigInt(oldData.amount)
+          if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
+          
+          const oldWallet = await db.wallets.get(oldData.wallet_id)
+          if (oldWallet) {
+            await db.wallets.put({ ...oldWallet, balance: BigInt(oldWallet.balance) - oldWalletDelta })
+          }
+        }
+
+        await db.transactions.update(id, {
+          deleted: true,
+          sync_status: 'pending',
+          client_updated_at: new Date().toISOString(),
+        })
       })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieTransactionRepository] Transação marcada para deleção. Sync disparado.')
+      console.debug('[DexieTransactionRepository] Transação marcada para deleção de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to delete transaction', err)
     }

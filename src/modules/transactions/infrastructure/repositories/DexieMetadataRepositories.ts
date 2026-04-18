@@ -2,7 +2,7 @@ import type { IWalletRepository } from '@/shared/domain/contracts/IWalletReposit
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
 import type { Wallet } from '@/shared/domain/entities/Wallet'
 import type { Category } from '@/shared/domain/entities/Category'
-import { db, type LocalWallet, type LocalCategory } from '@/core/db'
+import { db, type LocalWallet, type LocalCategory } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../../domain/errors'
 
@@ -23,16 +23,20 @@ export class DexieWalletRepository implements IWalletRepository {
 
   async save(wallet: Wallet): Promise<void> {
     try {
-      await db.wallets.put({
-        ...wallet,
-        sync_status: wallet.sync_status || 'pending',
-        client_updated_at: wallet.client_updated_at || new Date().toISOString(),
-        created_at: wallet.created_at || new Date().toISOString(),
-        version: wallet.version || 1,
-      } as LocalWallet)
+      await db.transaction('rw', db.wallets, async () => {
+        await db.wallets.put({
+          ...wallet,
+          balance: BigInt(wallet.balance),
+          type: wallet.type || 'checking',
+          sync_status: wallet.sync_status || 'pending',
+          client_updated_at: wallet.client_updated_at || new Date().toISOString(),
+          created_at: wallet.created_at || new Date().toISOString(),
+          version: wallet.version || 1,
+        } as LocalWallet)
+      })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieWalletRepository] Carteira salva localmente. Sync disparado.')
+      console.debug('[DexieWalletRepository] Carteira salva localmente de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to save wallet to local DB', err)
     }
@@ -65,18 +69,39 @@ export class DexieCategoryRepository implements ICategoryRepository {
 
   async save(category: Category): Promise<void> {
     try {
-      await db.categories.put({
-        ...category,
-        sync_status: category.sync_status || 'pending',
-        client_updated_at: category.client_updated_at || new Date().toISOString(),
-        created_at: category.created_at || new Date().toISOString(),
-        version: category.version || 1,
-      } as LocalCategory)
+      await db.transaction('rw', db.categories, async () => {
+        await db.categories.put({
+          ...category,
+          sync_status: category.sync_status || 'pending',
+          client_updated_at: category.client_updated_at || new Date().toISOString(),
+          created_at: category.created_at || new Date().toISOString(),
+          version: category.version || 1,
+        } as LocalCategory)
+      })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieCategoryRepository] Categoria salva localmente. Sync disparado.')
+      console.debug('[DexieCategoryRepository] Categoria salva localmente de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to save category to local DB', err)
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await db.transaction('rw', db.categories, async () => {
+        const item = await db.categories.get(id)
+        if (item) {
+          await db.categories.update(id, {
+            deleted: true,
+            sync_status: 'pending',
+            client_updated_at: new Date().toISOString()
+          })
+        }
+      })
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieCategoryRepository] Categoria deletada atômicamente (soft-delete).')
+    } catch (err) {
+      throw new InfrastructureError('Failed to delete category in local DB', err)
     }
   }
 }

@@ -1,8 +1,8 @@
-import type { DiviDatabase, LocalTransaction } from '@/core/db'
+import type { VaultDatabase, LocalTransaction } from '@/infrastructure/storage/VaultDatabase'
 import type { IPredictionService, PredictionResult } from '../domain/prediction'
 
 export class PredictionService implements IPredictionService {
-  constructor(private db: DiviDatabase) {}
+  constructor(private db: VaultDatabase) {}
 
   async predict(payeeId: string, _amount: number): Promise<PredictionResult> {
     const thirtyDaysAgoDate = new Date()
@@ -13,7 +13,7 @@ export class PredictionService implements IPredictionService {
     const recentTransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter((t) => t.date >= thirtyDaysAgo && !t.deleted)
+      .filter((t: LocalTransaction) => t.date >= thirtyDaysAgo && !t.deleted)
       .toArray()
 
     if (recentTransactions.length > 0) {
@@ -51,18 +51,33 @@ export class PredictionService implements IPredictionService {
   }
 
   private calculateBestMatch(transactions: LocalTransaction[]): PredictionResult {
-    const categoryCounts: Record<string, number> = {}
-    const walletCounts: Record<string, number> = {}
+    const categoryCounts = new Map<string, number>()
+    const walletCounts = new Map<string, number>()
 
-    transactions.forEach((t) => {
-      categoryCounts[t.category_id] = (categoryCounts[t.category_id] || 0) + 1
-      walletCounts[t.wallet_id] = (walletCounts[t.wallet_id] || 0) + 1
-    })
+    let bestCategoryId: string | null = null
+    let bestCategoryCount = 0
+    let bestWalletId: string | null = null
+    let bestWalletCount = 0
 
-    const bestCategory = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0]
-    const bestWallet = Object.entries(walletCounts).sort((a, b) => b[1] - a[1])[0]
+    for (const t of transactions) {
+      // Category tracking with single-pass max detection
+      const catCount = (categoryCounts.get(t.category_id) || 0) + 1
+      categoryCounts.set(t.category_id, catCount)
+      if (catCount > bestCategoryCount) {
+        bestCategoryCount = catCount
+        bestCategoryId = t.category_id
+      }
 
-    if (!bestCategory || !bestWallet) {
+      // Wallet tracking with single-pass max detection
+      const walletCount = (walletCounts.get(t.wallet_id) || 0) + 1
+      walletCounts.set(t.wallet_id, walletCount)
+      if (walletCount > bestWalletCount) {
+        bestWalletCount = walletCount
+        bestWalletId = t.wallet_id
+      }
+    }
+
+    if (!bestCategoryId || !bestWalletId) {
       return {
         categoryId: 'geral',
         walletId: 'default',
@@ -71,9 +86,9 @@ export class PredictionService implements IPredictionService {
     }
 
     return {
-      categoryId: bestCategory[0],
-      walletId: bestWallet[0],
-      confidence: bestCategory[1] / transactions.length,
+      categoryId: bestCategoryId,
+      walletId: bestWalletId,
+      confidence: bestCategoryCount / transactions.length,
     }
   }
 }

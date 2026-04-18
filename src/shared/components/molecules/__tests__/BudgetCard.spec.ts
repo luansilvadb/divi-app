@@ -40,8 +40,9 @@ describe('BudgetCard.vue', () => {
     })
 
     expect(wrapper.text()).toContain('Test Budget')
-    expect(wrapper.text()).toContain('400')
-    expect(wrapper.text()).toContain('1.000')
+    // Intl.NumberFormat uses non-breaking space (U+00A0) in pt-BR locale
+    expect(wrapper.text()).toContain('R$\xa04,00')
+    expect(wrapper.text()).toContain('R$\xa010,00')
     expect(wrapper.text()).toContain('40%')
   })
 

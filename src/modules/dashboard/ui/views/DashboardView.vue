@@ -161,7 +161,7 @@
 
                 <div class="text-right shrink-0">
                   <p class="text-[12px] font-bold tabular-nums" :class="t.type === 'expense' ? 'text-red-500' : 'text-emerald-500'">
-                    {{ t.type === 'expense' ? '-' : '+' }} R$ {{ Math.abs(t.amount).toLocaleString('pt-BR', { minimumFractionDigits: 0 }) }}
+                    {{ t.type === 'expense' ? '-' : '+' }} R$ {{ (Math.abs(Number(t.amount)) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) }}
                   </p>
                 </div>
               </div>
@@ -195,13 +195,13 @@ import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
-import type { TransactionRepositoryPort } from '@/modules/transactions/application/TransactionRepositoryPort'
+import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 const dashboardStore = useDashboardStore()
 const transactionStore = useTransactionStore()
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
-const transactionRepo = container.resolve<TransactionRepositoryPort>(DI_TOKENS.TransactionRepository)
+const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
 
 const premiumCardClasses = "bg-white dark:bg-[#111622] border border-zinc-100 dark:border-white/[0.04] rounded-[42px] p-7 transition-all duration-500 shadow-[0_10px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:hover:shadow-[0_30px_70px_rgba(0,0,0,0.3)] hover:-translate-y-0.5"
 
@@ -224,22 +224,26 @@ const filteredTransactions = computed(() => {
 const walletStatsMap = computed(() => {
   const stats: Record<string, any> = {}
   const transactions = transactionStore.activeTransactions || []
-  const catMap = transactionStore.categoryMap || {}
 
   transactions.forEach((t) => {
     if (!stats[t.wallet_id]) {
-      stats[t.wallet_id] = { income: 0, expense: 0, totalCount: 0, trend: 0 }
+      stats[t.wallet_id] = { income: 0n, expense: 0n, totalCount: 0, trend: 0 }
     }
     const s = stats[t.wallet_id]
     s.totalCount++
-    if (t.type === 'income') s.income += t.amount
-    else s.expense += t.amount
+    if (t.type === 'income') s.income += BigInt(t.amount)
+    else s.expense += BigInt(t.amount)
   })
 
+  // Convert stats to Numbers for UI after aggregation
   for (const id in stats) {
     const s = stats[id]
-    const vol = s.income + s.expense
-    s.trend = vol > 0 ? ((s.income - s.expense) / vol) * 100 : 0
+    const inc = Number(s.income) / 100
+    const exp = Number(s.expense) / 100
+    const vol = inc + exp
+    s.income = inc
+    s.expense = exp
+    s.trend = vol > 0 ? ((inc - exp) / vol) * 100 : 0
   }
   return stats
 })

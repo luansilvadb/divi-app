@@ -14,7 +14,7 @@ export interface IAssetLoader {
   isValidSize(dataUri: string): boolean
 
   /**
-   * Obtém um fallback padrão baseado no tipo de recurso.
+   * Obtém um fallback padrão.
    */
-  getFallback(type?: 'category' | 'wallet' | 'generic'): string
+  getFallback(): string
 }

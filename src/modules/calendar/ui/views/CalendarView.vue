@@ -247,14 +247,14 @@ const selectedDateTransactions = computed(() => getTransactionsForDate(selectedD
 const selectedDateIncome = computed(() =>
   selectedDateTransactions.value
     .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0),
+    .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )
 const selectedDateExpense = computed(() =>
   selectedDateTransactions.value
     .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0),
+    .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )
-const selectedDateBalance = computed(() => selectedDateIncome.value - selectedDateExpense.value)
+const selectedDateBalance = computed(() => Number(selectedDateIncome.value - selectedDateExpense.value) / 100)
 
 const isToday = (date: Date) => {
   const today = new Date()

@@ -120,7 +120,10 @@ function getHealthLabel(walletId: string) {
 function handleNewAccount() { selectedWallet.value = null; showModal.value = true }
 function handleEditWallet(w: Wallet) { selectedWallet.value = w; showModal.value = true }
 function closeModal() { showModal.value = false; setTimeout(() => { selectedWallet.value = null }, 300) }
-function formatCurrency(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v) }
+function formatCurrency(v: number | bigint) {
+  const num = typeof v === 'bigint' ? Number(v) / 100 : v
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(num)
+}
 function getWalletIcon(w: Wallet) { return assetLoader.sanitize(w.icon) }
 function getWalletColor(w: Wallet) {
   const c: Record<string, string> = { 'Nubank': '#8a05be', 'Inter': '#ff7a00', 'BB': '#fbdf07', 'Mercado Pago': '#00b1ea', 'Itaú': '#ec7000', 'Santander': '#ec0000', 'Bradesco': '#cc092f', 'Bari': '#00d9c0' }

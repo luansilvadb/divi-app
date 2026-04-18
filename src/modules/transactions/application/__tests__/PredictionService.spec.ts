@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { DiviDatabase } from '@/core/db'
+import { VaultDatabase } from '@/infrastructure/storage/VaultDatabase'
 import { PredictionService } from '../PredictionService'
 
 function subDays(date: Date, days: number): Date {
@@ -9,12 +9,12 @@ function subDays(date: Date, days: number): Date {
 }
 
 describe('PredictionService', () => {
-  let db: DiviDatabase
+  let db: VaultDatabase
   let service: PredictionService
 
   beforeEach(async () => {
     // Usar uma nova instância do banco para cada teste
-    db = new DiviDatabase()
+    db = new VaultDatabase()
     await db.transactions.clear()
     await db.categories.clear()
     await db.wallets.clear()
@@ -34,7 +34,7 @@ describe('PredictionService', () => {
       await db.transactions.add({
         id: `t${i}`,
         title: 'Starbucks',
-        amount: 10,
+        amount: 10n,
         type: 'expense',
         category_id: catAlimentacao,
         wallet_id: walletMain,
@@ -53,7 +53,7 @@ describe('PredictionService', () => {
     await db.transactions.add({
       id: 't-lazer',
       title: 'Starbucks',
-      amount: 15,
+      amount: 15n,
       type: 'expense',
       category_id: catLazer,
       wallet_id: walletMain,
@@ -68,7 +68,7 @@ describe('PredictionService', () => {
     })
 
     // When
-    const result = await service.predict(payeeId, 10)
+    const result = await service.predict(payeeId, 10n)
 
     // Then
     expect(result.categoryId).toBe(catAlimentacao)
@@ -87,7 +87,7 @@ describe('PredictionService', () => {
       await db.transactions.add({
         id: `old-${i}`,
         title: 'Antigo',
-        amount: 10,
+        amount: 10n,
         type: 'expense',
         category_id: catAntiga,
         wallet_id: 'w1',
@@ -107,7 +107,7 @@ describe('PredictionService', () => {
       await db.transactions.add({
         id: `new-${i}`,
         title: 'Recente',
-        amount: 10,
+        amount: 10n,
         type: 'expense',
         category_id: catRecente,
         wallet_id: 'w1',
@@ -123,7 +123,7 @@ describe('PredictionService', () => {
     }
 
     // When
-    const result = await service.predict(payeeId, 10)
+    const result = await service.predict(payeeId, 10n)
 
     // Then
     expect(result.categoryId).toBe(catRecente)
@@ -134,7 +134,7 @@ describe('PredictionService', () => {
     const payeeId = 'new-payee'
 
     // When
-    const result = await service.predict(payeeId, 10)
+    const result = await service.predict(payeeId, 10n)
 
     // Then
     // Como não há nada, deve retornar algo padrão ou vazio (conforme spec: Geral ou última usada)

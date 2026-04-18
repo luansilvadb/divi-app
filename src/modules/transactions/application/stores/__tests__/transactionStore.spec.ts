@@ -44,7 +44,7 @@ describe('TransactionStore CRUD', () => {
   const sampleTx: Transaction = {
     id: 'tx-1',
     title: 'Sample',
-    amount: 10,
+    amount: 1000n,
     type: 'expense',
     date: '2026-04-10T00:00:00Z',
     category_id: 'cat-1',
@@ -137,7 +137,7 @@ describe('TransactionStore CRUD', () => {
 
   describe('Validation and Optimistic Updates', () => {
     it('should validate transaction before saving', async () => {
-      const invalidTx = { ...sampleTx, amount: -10 }
+      const invalidTx = { ...sampleTx, amount: -1000n }
       const store = useTransactionStore()
 
       await expect(store.saveTransaction(invalidTx)).rejects.toThrow('Amount must be positive')

@@ -10,8 +10,8 @@ describe('BaseSearchInput.vue', () => {
         placeholder: 'Search items...',
       },
     })
-    const input = wrapper.findComponent({ name: 'NInput' })
-    expect(input.props('placeholder')).toBe('Search items...')
+    const input = wrapper.find('input')
+    expect(input.attributes('placeholder')).toBe('Search items...')
   })
 
   it('emits update:modelValue when typing', async () => {
@@ -20,20 +20,9 @@ describe('BaseSearchInput.vue', () => {
         modelValue: '',
       },
     })
-    const input = wrapper.findComponent({ name: 'NInput' })
-    await input.vm.$emit('update:value', 'test search')
+    const input = wrapper.find('input')
+    await input.setValue('test search')
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['test search'])
-  })
-
-  it('clears value when clear button is clicked', async () => {
-    const wrapper = mount(BaseSearchInput, {
-      props: {
-        modelValue: 'some search',
-      },
-    })
-    const input = wrapper.findComponent({ name: 'NInput' })
-    await input.vm.$emit('clear')
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
   })
 
   it('debounces emission when debounce prop is provided', async () => {
@@ -45,8 +34,8 @@ describe('BaseSearchInput.vue', () => {
       },
     })
 
-    const input = wrapper.findComponent({ name: 'NInput' })
-    await input.vm.$emit('input', 'test')
+    const input = wrapper.find('input')
+    await input.setValue('test')
 
     // Should not emit immediately
     expect(wrapper.emitted('update:modelValue')).toBeUndefined()

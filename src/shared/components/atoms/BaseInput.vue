@@ -15,7 +15,6 @@
       :placeholder="placeholder"
       :status="error ? 'error' : undefined"
       v-bind="$attrs"
-      class="!rounded-xl"
     >
       <template v-if="icon" #prefix>
         <i :class="icon" class="text-zinc-400"></i>
@@ -31,7 +30,6 @@
       :placeholder="placeholder"
       :status="error ? 'error' : undefined"
       v-bind="$attrs"
-      class="!rounded-xl"
       show-password-on="mousedown"
     >
       <template v-if="icon" #prefix>
@@ -83,8 +81,8 @@ function handleUpdateText(val: string) {
 
 <style scoped>
 :deep(.n-input) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05);
+  --n-border-radius: 2px !important;
+  background-color: rgba(var(--color-obsidian-rgb), 0.5);
 }
 
 :is(.dark) :deep(.n-input) {

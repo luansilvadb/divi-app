@@ -1,8 +1,0 @@
-{
-  "id": "search-system-harmonization",
-  "name": "Search System Harmonization",
-  "description": "Refine and standardize search bar components across modules to ensure consistency in look, feel, and functionality.",
-  "status": "archived",
-  "priority": "medium",
-  "tags": ["ui", "search", "design-system", "vue-3", "tailwind"]
-}

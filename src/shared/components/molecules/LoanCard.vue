@@ -103,16 +103,17 @@ defineEmits<{
 }>()
 
 const getProgress = (loan: Loan) => {
-  if (loan.total_value === 0) return 0
-  const paid = loan.total_value - loan.remaining_value
-  return (paid / loan.total_value) * 100
+  if (BigInt(loan.total_value) === 0n) return 0
+  const paid = Number(BigInt(loan.total_value) - BigInt(loan.remaining_value))
+  return (paid / Number(loan.total_value)) * 100
 }
 
-const formatCurrency = (value: number) => {
+const formatCurrency = (value: number | bigint) => {
+  const num = typeof value === 'bigint' ? Number(value) / 100 : value
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(num)
 }
 
 const formatDate = (dateString: string) => {

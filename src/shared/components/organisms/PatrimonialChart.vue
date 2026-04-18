@@ -81,7 +81,7 @@ function initChart() {
             },
             title: (tooltipItems) => {
               // Mudei para retornar o mes limpo se necessário
-              return tooltipItems[0].label;
+              return tooltipItems[0]?.label || '';
             }
           },
         },

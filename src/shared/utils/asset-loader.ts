@@ -39,15 +39,8 @@ export class AssetLoader implements IAssetLoader {
     return dataUri.length <= ASSET_LIMITS.MAX_DATA_URI_SIZE
   }
 
-  getFallback(type: 'category' | 'wallet' | 'generic' = 'generic'): string {
-    switch (type) {
-      case 'category':
-        return '/assets/placeholder.svg'
-      case 'wallet':
-        return '/assets/placeholder.svg'
-      default:
-        return '/assets/placeholder.svg'
-    }
+  getFallback(): string {
+    return '/assets/placeholder.svg'
   }
 
   private async logWarning(action: string, description: string) {

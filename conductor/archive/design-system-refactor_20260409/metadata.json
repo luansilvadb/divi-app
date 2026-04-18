@@ -1,8 +1,0 @@
-{
-  "track_id": "design-system-refactor_20260409",
-  "type": "refactor",
-  "status": "new",
-  "created_at": "2026-04-09T14:30:00Z",
-  "updated_at": "2026-04-09T14:30:00Z",
-  "description": "Migrar o sistema de design para uma Fonte Única de Verdade (SSoT) usando diviPreset.ts + tailwindcss-primeui, eliminando tokens duplicados e cores hardcoded."
-}

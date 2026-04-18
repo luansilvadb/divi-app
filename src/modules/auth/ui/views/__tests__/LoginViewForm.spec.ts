@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import LoginView from '../LoginView.vue'
@@ -29,6 +30,7 @@ vi.mock('naive-ui', async () => {
 
 describe('LoginView.vue - Email/Password Form', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
     container.register(DI_TOKENS.AuthService, mockAuthService)
   })

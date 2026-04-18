@@ -2,6 +2,7 @@ import { supabase } from '@/core/supabase'
 import type { IAuthService } from '../domain/contracts/IAuthService'
 import type { User } from '../domain/entities/User'
 import type { Credentials } from '../domain/contracts/Credentials'
+import { SYNCABLE_TABLES } from '@/core/sync/syncConfig'
 
 export class SupabaseAuth implements IAuthService {
   async signInWithGoogle(): Promise<void> {
@@ -63,5 +64,29 @@ export class SupabaseAuth implements IAuthService {
         callback(null)
       }
     })
+  }
+
+  /**
+   * Deletes all data belonging to the current user from all syncable Supabase tables.
+   * Relies on RLS policies to scope the delete to the authenticated user.
+   * Note: The auth account itself remains — this purges data only.
+   * For full account deletion, a Supabase Edge Function with admin rights would be required.
+   */
+  async deleteAccountData(): Promise<void> {
+    const errors: string[] = []
+
+    for (const table of SYNCABLE_TABLES) {
+      // RLS ensures only the user's own rows are deleted (no explicit user_id filter needed)
+      const { error } = await supabase.from(table).delete().neq('id', '00000000-0000-0000-0000-000000000000')
+
+      if (error) {
+        console.error(`[AccountPurge] Failed to delete from ${table}:`, error.message)
+        errors.push(`${table}: ${error.message}`)
+      }
+    }
+
+    if (errors.length > 0) {
+      throw new Error(`Purge parcialmente falhou em: ${errors.join(', ')}`)
+    }
   }
 }

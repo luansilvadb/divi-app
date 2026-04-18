@@ -56,6 +56,34 @@
               </NButton>
             </NSpace>
           </NCard>
+
+          <!-- ZONA DE PERIGO -->
+          <NCard size="small" class="!border-red-500/30">
+            <template #header>
+              <NSpace align="center" :size="8">
+                <i class="i-lucide-triangle-alert text-lg text-red-500"></i>
+                <NText strong class="text-red-500 text-sm uppercase tracking-widest">Zona de Perigo</NText>
+              </NSpace>
+            </template>
+            <NSpace vertical :size="8">
+              <NText depth="3" class="text-xs leading-relaxed">
+                Esta ação é <strong class="text-red-400">irreversível</strong>. Todos os seus dados locais e remotos serão permanentemente excluídos.
+              </NText>
+              <NButton
+                id="btn-delete-account"
+                type="error"
+                ghost
+                block
+                :loading="isPurging"
+                @click="showPurgeModal = true"
+              >
+                <template #icon>
+                  <i class="i-lucide-skull text-lg"></i>
+                </template>
+                EXCLUIR CONTA E DADOS
+              </NButton>
+            </NSpace>
+          </NCard>
         </NSpace>
       </NGridItem>
 
@@ -75,10 +103,59 @@
         </NCard>
       </NGridItem>
     </NGrid>
+
+    <!-- MODAL DE CONFIRMAÇÃO DESTRUTIVA -->
+    <NModal
+      v-model:show="showPurgeModal"
+      preset="dialog"
+      type="error"
+      title="⚠️ OPERAÇÃO DESTRUTIVA IRREVERSÍVEL"
+      :mask-closable="false"
+    >
+      <template #default>
+        <NSpace vertical :size="16">
+          <NText>
+            Você está prestes a <strong>destruir permanentemente</strong> toda a sua conta Divi:
+          </NText>
+          <ul class="text-sm text-zinc-400 space-y-1 list-none pl-0">
+            <li>🗄️ Todos os dados locais (IndexedDB) serão apagados</li>
+            <li>☁️ Todos os registros remotos no servidor serão deletados</li>
+            <li>🔐 As chaves de criptografia serão destruídas</li>
+            <li>🚪 Você será desconectado permanentemente</li>
+          </ul>
+          <NAlert type="error" :show-icon="true">
+            Esta ação <strong>NÃO pode ser desfeita</strong>. Não há backup. Não há recuperação.
+          </NAlert>
+        </NSpace>
+      </template>
+      <template #action>
+        <NSpace :size="8" justify="end">
+          <NButton
+            id="btn-cancel-purge"
+            :disabled="isPurging"
+            @click="showPurgeModal = false"
+          >
+            Cancelar — Manterei minha conta
+          </NButton>
+          <NButton
+            id="btn-confirm-purge"
+            type="error"
+            :loading="isPurging"
+            @click="handlePurgeAccount"
+          >
+            <template #icon>
+              <i class="i-lucide-skull"></i>
+            </template>
+            CONFIRMAR: DESTRUIR TUDO
+          </NButton>
+        </NSpace>
+      </template>
+    </NModal>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import {
   NCard,
   NGrid,
@@ -88,6 +165,9 @@ import {
   NTag,
   NEmpty,
   NButton,
+  NModal,
+  NAlert,
+  useMessage,
 } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../../application/authStore'
@@ -96,14 +176,35 @@ import { useTheme } from '@/core/theme'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
+import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { isDark, toggle: toggleTheme } = useTheme()
 const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
+const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.VaultCryptoManager)
+const message = useMessage()
+
+const showPurgeModal = ref(false)
+const isPurging = ref(false)
 
 async function handleLogout() {
   await authService.signOut()
   router.push({ name: 'login' })
+}
+
+async function handlePurgeAccount() {
+  isPurging.value = true
+  showPurgeModal.value = false
+
+  try {
+    await authStore.purgeAccount(authService, vaultCryptoManager)
+    message.success('Conta e dados excluídos com sucesso. Até mais.', { duration: 3000 })
+    router.push({ name: 'login' })
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Erro ao excluir a conta.'
+    message.error(`Falha no purge: ${msg}`)
+    isPurging.value = false
+  }
 }
 </script>

@@ -184,7 +184,7 @@ const collapsedButtonStyle = computed(() => {
   return {
     opacity,
     transform: `scale(${scale})`,
-    pointerEvents: opacity > 0 ? 'auto' : 'none'
+    pointerEvents: (opacity > 0 ? 'auto' : 'none') as any
   }
 })
 
@@ -196,7 +196,7 @@ const expandedButtonStyle = computed(() => {
   return {
     opacity,
     transform: `scale(${scale})`,
-    pointerEvents: opacity > 0 ? 'auto' : 'none'
+    pointerEvents: (opacity > 0 ? 'auto' : 'none') as any
   }
 })
 

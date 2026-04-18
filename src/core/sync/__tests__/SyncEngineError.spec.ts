@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { SyncEngine } from '../SyncEngine'
-import { db } from '../../db'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import { supabase } from '../../supabase'
 import { setActivePinia, createPinia } from 'pinia'
 import 'fake-indexeddb/auto'
@@ -27,6 +27,16 @@ vi.mock('../../supabase', () => ({
       return mock
     }),
   },
+}))
+
+vi.mock('@/infrastructure/crypto/VaultCryptoManager', () => ({
+  VaultCryptoManager: {
+    getInstance: vi.fn().mockReturnValue({
+      hasKey: vi.fn().mockReturnValue(true),
+      encrypt: vi.fn().mockImplementation((val) => Promise.resolve({ data: val, iv: 'mock-iv' })),
+      decrypt: vi.fn().mockImplementation((payload) => Promise.resolve(payload.data)),
+    })
+  }
 }))
 
 describe('SyncEngine Error Handling', () => {

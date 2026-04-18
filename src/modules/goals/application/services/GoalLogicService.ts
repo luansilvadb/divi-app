@@ -6,8 +6,8 @@ export class GoalLogicService implements IGoalLogicService {
    * Calculates the percentage progress towards a goal.
    */
   calculateProgressPercentage(goal: Goal): number {
-    if (goal.target_value <= 0) return 0
-    const progress = (goal.current_value / goal.target_value) * 100
+    if (goal.target_value <= 0n) return 0
+    const progress = (Number(goal.current_value) / Number(goal.target_value)) * 100
     return Math.min(progress, 100)
   }
 
@@ -16,7 +16,7 @@ export class GoalLogicService implements IGoalLogicService {
    */
   estimateCompletionDate(goal: Goal, averageMonthlySaving: number): Date | null {
     if (averageMonthlySaving <= 0) return null
-    const remainingValue = goal.target_value - goal.current_value
+    const remainingValue = Number(BigInt(goal.target_value) - BigInt(goal.current_value))
     if (remainingValue <= 0) return new Date()
 
     const monthsRemaining = remainingValue / averageMonthlySaving

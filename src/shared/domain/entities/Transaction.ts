@@ -1,14 +1,14 @@
 import type { SyncMetadata } from './SyncMetadata'
 
 export interface Transaction extends SyncMetadata {
-  localId?: string // for Dexie
   title: string
-  amount: number
-  type: 'income' | 'expense'
-  date: string
+  amount: bigint
+  type: 'income' | 'expense' | 'transfer'
   category_id: string
   wallet_id: string
   payee_id?: string
+  date: string
   notes?: string
   tags?: string[]
+  transfer_id?: string
 }

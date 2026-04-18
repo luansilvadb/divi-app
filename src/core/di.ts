@@ -9,6 +9,9 @@ import {
   DexieWalletRepository,
   DexieCategoryRepository,
 } from '../modules/transactions/infrastructure/repositories/DexieMetadataRepositories'
+import { TransactionService } from '../modules/transactions/application/services/TransactionService'
+import { WalletService } from '../modules/wallets/application/services/WalletService'
+import { CategoryService } from '../modules/categories/application/services/CategoryService'
 import { DexiePayeeRepository } from '../modules/transactions/infrastructure/repositories/PayeeRepository'
 import { DexieLoanRepository } from '../modules/loans/infrastructure/repositories/DexieLoanRepository'
 import { DexieBudgetRepository } from '../modules/budgets/infrastructure/repositories/DexieBudgetRepository'
@@ -20,7 +23,11 @@ import { AssetLoader } from '../shared/utils/asset-loader'
 import { GoalLogicService } from '../modules/goals/application/services/GoalLogicService'
 import { SyncEngine } from './sync/SyncEngine'
 import { PredictionService } from '../modules/transactions/application/PredictionService'
-import { db } from './db'
+import { vaultDb } from '../infrastructure/storage/VaultDatabase'
+import { VaultTransactionRepository } from '../modules/ledger/infrastructure/repositories/VaultTransactionRepository'
+import { TransactionService as LedgerTransactionService } from '../modules/ledger/application/services/TransactionService'
+import { VaultCryptoManager } from '../infrastructure/crypto/VaultCryptoManager'
+import { AutoCreateService } from '../modules/transactions/application/services/AutoCreateService'
 
 import { DI_TOKENS } from './di-tokens'
 
@@ -35,7 +42,6 @@ class Container {
   register<T>(token: Token<T>, instance: T): void {
     const key = typeof token === 'string' ? token : token.name
     this.services.set(key, instance)
-    console.debug(`[DI] Registered: ${key}`)
   }
 
   /**
@@ -56,9 +62,21 @@ export const container = new Container()
 // To maintain compatibility with existing code during migration,
 // we register both with the string from DI_TOKENS and the explicit string.
 container.register(DI_TOKENS.AuthService, new SupabaseAuthService())
-container.register(DI_TOKENS.TransactionRepository, new DexieTransactionRepository())
-container.register(DI_TOKENS.WalletRepository, new DexieWalletRepository())
-container.register(DI_TOKENS.CategoryRepository, new DexieCategoryRepository())
+const transactionRepo = new DexieTransactionRepository()
+container.register(DI_TOKENS.TransactionRepository, transactionRepo)
+container.register(DI_TOKENS.TransactionService, new TransactionService(transactionRepo))
+
+const vaultTransactionRepo = new VaultTransactionRepository()
+container.register(DI_TOKENS.VaultTransactionRepository, vaultTransactionRepo)
+container.register(DI_TOKENS.LedgerTransactionService, new LedgerTransactionService(vaultTransactionRepo))
+
+const walletRepo = new DexieWalletRepository()
+container.register(DI_TOKENS.WalletRepository, walletRepo)
+container.register(DI_TOKENS.WalletService, new WalletService(walletRepo))
+
+const categoryRepo = new DexieCategoryRepository()
+container.register(DI_TOKENS.CategoryRepository, categoryRepo)
+container.register(DI_TOKENS.CategoryService, new CategoryService(categoryRepo))
 container.register(DI_TOKENS.PayeeRepository, new DexiePayeeRepository())
 container.register(DI_TOKENS.LoanRepository, new DexieLoanRepository())
 container.register(DI_TOKENS.BudgetRepository, new DexieBudgetRepository())
@@ -70,7 +88,13 @@ container.register(DI_TOKENS.ActivityLogService, activityLogService)
 container.register(DI_TOKENS.AssetLoader, new AssetLoader(activityLogService))
 container.register(DI_TOKENS.ExportService, new ExportService())
 container.register(DI_TOKENS.SyncEngine, new SyncEngine())
-container.register(DI_TOKENS.PredictionService, new PredictionService(db))
+container.register(DI_TOKENS.Database, vaultDb)
+container.register(DI_TOKENS.PredictionService, new PredictionService(vaultDb))
+container.register(DI_TOKENS.VaultCryptoManager, new VaultCryptoManager())
+container.register(DI_TOKENS.AutoCreateService, new AutoCreateService(
+  container.resolve<CategoryService>(DI_TOKENS.CategoryService),
+  container.resolve<WalletService>(DI_TOKENS.WalletService),
+))
 
 // Helper to provide/inject services in Vue components if needed
 export const useService = <T>(token: Token<T>): T => container.resolve(token)

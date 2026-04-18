@@ -17,7 +17,7 @@ export class SupabaseAuthService implements IAuthService {
   }
 
   async getCurrentUser(): Promise<User | null> {
-    // 1. Obter a sessão local (rápido e funciona offline)
+    // 1. Get local session (fast, works offline)
     const {
       data: { session },
       error: sessionError,
@@ -25,13 +25,13 @@ export class SupabaseAuthService implements IAuthService {
 
     if (sessionError || !session) return null
 
-    // 2. Limpar o hash da URL (proteção contra token leak)
+    // 2. Clear URL hash (token leak protection)
     if (typeof window !== 'undefined' && window.location.hash.includes('access_token')) {
       window.history.replaceState(null, '', window.location.pathname + window.location.search)
     }
 
-    // 3. Se estivermos online, podemos validar o usuário no servidor para maior segurança
-    // Se estivermos offline, confiamos na sessão local para não travar o app
+    // 3. If online, validate user with server for better security
+    // If offline, trust local session to prevent app from freezing
     let user = session.user
 
     if (typeof navigator !== 'undefined' && navigator.onLine) {
@@ -45,7 +45,7 @@ export class SupabaseAuthService implements IAuthService {
         }
       } catch {
         console.warn(
-          '[AuthService] Falha ao verificar usuário no servidor (offline?), usando sessão local.',
+          '[AuthService] Failed to verify user on server (offline?), using local session.',
         )
       }
     }
@@ -96,5 +96,19 @@ export class SupabaseAuthService implements IAuthService {
   async signOut(): Promise<void> {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
+  }
+
+  async deleteAccountData(): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const USER_DATA_TABLES = [
+      'transactions', 'wallets', 'categories', 'budgets', 'goals', 'subscriptions', 'loans'
+    ] as const
+
+    for (const table of USER_DATA_TABLES) {
+      const { error } = await supabase.from(table).delete().eq('user_id', user.id)
+      if (error) console.error(`[AuthService] Failed to delete data from ${table}:`, error)
+    }
   }
 }

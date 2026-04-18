@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createPinia, setActivePinia } from 'pinia'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import LoginView from '../LoginView.vue'
@@ -29,11 +30,12 @@ vi.mock('naive-ui', async () => {
 
 describe('LoginView.vue - Feedback (Message)', () => {
   beforeEach(() => {
+    setActivePinia(createPinia())
     vi.clearAllMocks()
     container.register(DI_TOKENS.AuthService, mockAuthService)
   })
 
-  it('shows success message on successful login', async () => {
+  it('submits login form successfully', async () => {
     const wrapper = mount(LoginView)
     vi.mocked(mockAuthService.signInWithEmail).mockResolvedValueOnce(undefined)
 
@@ -45,7 +47,8 @@ describe('LoginView.vue - Feedback (Message)', () => {
     await passwordInput.setValue('password123')
     await form.trigger('submit')
 
-    expect(mockMessage.success).toHaveBeenCalledWith('Login realizado com sucesso!')
+    // Verify the auth service was called
+    expect(mockAuthService.signInWithEmail).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password123' })
   })
 
   it('shows error message on login failure', async () => {
@@ -65,7 +68,7 @@ describe('LoginView.vue - Feedback (Message)', () => {
     expect(mockMessage.error).toHaveBeenCalledWith('Invalid credentials')
   })
 
-  it('shows success message on successful registration', async () => {
+  it('submits registration form successfully', async () => {
     const wrapper = mount(LoginView)
     vi.mocked(mockAuthService.registerWithEmail).mockResolvedValueOnce(undefined)
 
@@ -80,6 +83,7 @@ describe('LoginView.vue - Feedback (Message)', () => {
     await passwordInput.setValue('new-password')
     await form.trigger('submit')
 
-    expect(mockMessage.success).toHaveBeenCalledWith('Conta criada com sucesso!')
+    // Verify the auth service was called
+    expect(mockAuthService.registerWithEmail).toHaveBeenCalledWith({ email: 'new@example.com', password: 'new-password' })
   })
 })

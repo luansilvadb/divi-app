@@ -8,6 +8,14 @@
     <template #action>
       <NSpace align="center" :size="12" class="w-full md:w-auto">
         <BaseMonthSwitcher :month="monthLabelOnly" @prev="prevMonth" @next="nextMonth" />
+        <NButton 
+          type="primary" 
+          @click="openNewForm"
+          v-if="!isMobile"
+        >
+          <template #icon><i class="i-lucide-plus" /></template>
+          Adicionar
+        </NButton>
       </NSpace>
     </template>
 

@@ -147,6 +147,7 @@ const menuOptions: MenuOption[] = [
     children: [
       { label: 'Dashboard', key: '/', icon: renderIcon('i-lucide-layout-dashboard') },
       { label: 'Transações', key: '/transactions', icon: renderIcon('i-lucide-arrow-left-right') },
+      { label: 'Categorias', key: '/categories', icon: renderIcon('i-lucide-tag') },
       { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-wallet') },
       { label: 'Metas', key: '/goals', icon: renderIcon('i-lucide-target') },
       { label: 'Empréstimos', key: '/loans', icon: renderIcon('i-lucide-banknote') },

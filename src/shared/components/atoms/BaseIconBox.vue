@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-xl flex items-center justify-center transition-all duration-300"
+    class="rounded-0 flex items-center justify-center transition-all duration-300"
     :class="[sizeClasses[size]]"
     :style="customStyle"
   >
@@ -20,7 +20,7 @@ const props = withDefaults(
   }>(),
   {
     size: 'md',
-    color: '#8b5cf6',
+    color: '#B45309',
   },
 )
 

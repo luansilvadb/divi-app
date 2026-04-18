@@ -67,7 +67,7 @@
             >
               {{
                 percentage < 100
-                  ? formatCurrency(goal.target_value - goal.current_value)
+                  ? formatCurrency(BigInt(goal.target_value) - BigInt(goal.current_value))
                   : 'Conquistado!'
               }}
             </NText>
@@ -100,15 +100,16 @@ const props = defineProps<{
 }>()
 
 const percentage = computed(() => {
-  if (props.goal.target_value <= 0) return 0
-  return (props.goal.current_value / props.goal.target_value) * 100
+  if (props.goal.target_value <= 0n) return 0
+  return (Number(props.goal.current_value) / Number(props.goal.target_value)) * 100
 })
 
-const formatCurrency = (value: number) => {
+const formatCurrency = (value: number | bigint) => {
+  const num = typeof value === 'bigint' ? Number(value) / 100 : value
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(num)
 }
 
 const formatDate = (dateString?: string) => {

@@ -1,9 +1,9 @@
 <template>
   <NCard
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-modern ease-modern"
+    class="cockpit-card overflow-hidden transition-all duration-modern ease-modern"
     :class="{
-      'cursor-pointer hover:scale-[1.01] hover:brightness-[1.02] active:scale-[0.99] hover-glow': clickable,
+      'cursor-pointer hover:brightness-[1.1] active:scale-[0.99]': clickable,
       'border-red-500/50 animate-pulse': error,
       'h-full flex flex-col': hFull,
     }"
@@ -40,7 +40,7 @@
         type="error"
         size="small"
         @click.stop="$emit('retry')"
-        class="mt-2 !rounded-xl font-bold"
+        class="mt-2 font-bold"
       >
         Tentar novamente
       </NButton>

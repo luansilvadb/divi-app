@@ -1,8 +1,0 @@
-{
-  "id": "db-migration-system",
-  "title": "Sistema de Migrations Completo (Dexie + Supabase)",
-  "status": "completed",
-  "createdAt": "2026-04-12T01:14:00Z",
-  "completedAt": "2026-04-12T01:45:00Z",
-  "description": "Implementar sistema de migrations versionado para Dexie (IndexedDB) e Supabase (PostgreSQL) com suporte a rollback, transformação de dados, retrocompatibilidade e melhores práticas de versionamento de schema."
-}

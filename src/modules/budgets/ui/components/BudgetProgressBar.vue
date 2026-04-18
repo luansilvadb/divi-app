@@ -19,7 +19,7 @@ const props = defineProps<{
 }>()
 
 const isOverBudget = computed(() => props.spent > props.limit)
-const percentage = computed(() => (props.spent / props.limit) * 100)
+const percentage = computed(() => Math.round((props.spent / props.limit) * 100))
 const clampedPercentage = computed(() => Math.min(percentage.value, 100))
 
 const status = computed((): UIStatus => {

@@ -184,7 +184,7 @@ watch(
   (newData) => {
     if (newData) {
       form.name = newData.name || ''
-      form.limit_value = newData.limit_value || null
+      form.limit_value = typeof newData.limit_value === 'bigint' ? Number(newData.limit_value) / 100 : (newData.limit_value || null)
       form.category_id = newData.category_id || null
     } else {
       form.name = ''
@@ -247,9 +247,9 @@ const handleSubmit = async () => {
       }
 
       const budgetData = {
-        ...(props.initialData || {}),
+        ...props.initialData,
         name: form.name || undefined,
-        limit_value: Number(form.limit_value),
+        limit_value: BigInt(Math.round((form.limit_value || 0) * 100)),
         category_id: finalCategoryId,
         period: 'monthly' as const,
       } as Budget

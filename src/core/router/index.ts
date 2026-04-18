@@ -18,9 +18,21 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/wallets',
+      name: 'wallets',
+      component: () => import('../../modules/wallets/ui/views/WalletsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/budgets',
       name: 'budgets',
       component: () => import('../../modules/budgets/ui/views/BudgetsView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: () => import('../../modules/categories/ui/views/CategoriesView.vue'),
       meta: { requiresAuth: true },
     },
     {

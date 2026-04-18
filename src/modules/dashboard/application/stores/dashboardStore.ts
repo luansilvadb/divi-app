@@ -16,11 +16,18 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const wallets = ref<Wallet[]>([])
   const loans = ref<Loan[]>([])
   const isLoading = ref(false)
-  const initializationError = ref(false)
+  const hasInitializationError = ref(false)
 
   // Getters
-  const totalBalance = computed(() => wallets.value.reduce((sum, w) => sum + w.balance, 0))
-  const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
+  const totalBalance = computed(() => {
+    const sum = wallets.value.reduce((acc, w) => acc + BigInt(w.balance), 0n)
+    return Number(sum) / 100
+  })
+
+  const totalDebt = computed(() => {
+    const sum = loans.value.reduce((acc, l) => acc + BigInt(l.remaining_value), 0n)
+    return Number(sum) / 100
+  })
 
   // Actions
   async function fetchDashboardData() {
@@ -38,7 +45,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     wallets,
     loans,
     isLoading,
-    initializationError,
+    hasInitializationError,
     totalBalance,
     totalDebt,
     fetchDashboardData,

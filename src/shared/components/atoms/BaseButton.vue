@@ -6,11 +6,10 @@
     :disabled="disabled || loading"
     :loading="loading"
     v-bind="$attrs"
-    class="!font-bold !rounded-xl transition-all duration-modern ease-modern active:scale-95"
+    class="!font-bold transition-all duration-modern ease-modern active:scale-95"
     :class="[
       { '!px-6 !py-2.5': size === 'medium' },
-      { '!px-4 !py-1.5': size === 'small' },
-      { 'glass-button': variant === 'secondary' }
+      { '!px-4 !py-1.5': size === 'small' }
     ]"
   >
     <template v-if="$slots.icon" #icon>

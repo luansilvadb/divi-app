@@ -58,6 +58,6 @@ describe('BudgetsView.vue', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Nenhum orçamento')
+    expect(wrapper.text()).toContain('Você ainda não criou planejamentos')
   })
 })

@@ -104,11 +104,12 @@ const categoryName = computed(() => {
 })
 
 const percentage = computed(() => {
-  if (props.budget.limit_value <= 0) return 0
-  return (props.consumed / props.budget.limit_value) * 100
+  const limitValue = Number(props.budget.limit_value)
+  if (limitValue <= 0) return 0
+  return (props.consumed / limitValue) * 100
 })
 
-const isOverBudget = computed(() => props.consumed > props.budget.limit_value)
+const isOverBudget = computed(() => props.consumed > Number(props.budget.limit_value))
 
 const daysRemaining = computed(() => {
   const now = new Date()
@@ -120,14 +121,16 @@ const daysRemaining = computed(() => {
 
 const dailyCadence = computed(() => {
   if (daysRemaining.value <= 0) return 0
-  const remaining = props.budget.limit_value - props.consumed
+  const limitValue = Number(props.budget.limit_value)
+  const remaining = limitValue - props.consumed
   return Math.max(remaining / daysRemaining.value, 0)
 })
 
-const formatCurrency = (value: number) => {
+const formatCurrency = (value: number | bigint) => {
+  const val = Number(value) / 100
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(val)
 }
 </script>

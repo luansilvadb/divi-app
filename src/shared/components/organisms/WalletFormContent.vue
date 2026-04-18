@@ -51,7 +51,7 @@
               @input="handleInputBalance"
             >
               <template #prefix>
-                <span class="text-xs font-bold opacity-40 mr-1">{{ activeConfig.symbol }}</span>
+                <span class="text-xs font-bold opacity-40 mr-1">{{ activeConfig?.symbol || 'R$' }}</span>
               </template>
             </NInput>
           </NFormItem>
@@ -153,13 +153,13 @@ const currencyConfigs: Record<string, { locale: string; symbol: string }> = {
   EUR: { locale: 'de-DE', symbol: '€' },
 }
 
-const activeConfig = computed(() => currencyConfigs[form.currency] || currencyConfigs.BRL)
+const activeConfig = computed(() => currencyConfigs[form.currency] || currencyConfigs['BRL'])
 
 // --- Live Masking Logic ---
 
 const displayBalance = computed(() => {
   if (form.balance === null) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
+  return new Intl.NumberFormat(activeConfig.value?.locale || 'pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(form.balance)
@@ -176,7 +176,7 @@ function handleInputBalance(val: string) {
 
 const formatCurrency = (value: number | null) => {
   if (value === null || isNaN(value)) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
+  return new Intl.NumberFormat(activeConfig.value?.locale || 'pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value)
@@ -187,7 +187,7 @@ watch(
   (newData) => {
     if (newData) {
       form.name = newData.name
-      form.balance = newData.balance
+      form.balance = typeof newData.balance === 'bigint' ? Number(newData.balance) / 100 : newData.balance
       form.currency = newData.currency
     }
   },
@@ -220,14 +220,14 @@ async function handleSubmit() {
 
     isSubmitting.value = true
     try {
-      const walletData: Partial<Wallet> = {
-        ...(props.initialData || {}),
+      const walletData = {
+        ...props.initialData,
         name: form.name,
-        balance: form.balance || 0,
+        balanceNum: form.balance || 0,
         currency: form.currency,
       }
 
-      await store.saveWallet(walletData)
+      await store.saveWallet(walletData as any)
       emit('saved')
       emit('close')
       message.success('Conta salva com sucesso!')

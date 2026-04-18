@@ -1,6 +1,7 @@
 import { MigrationRegistry } from '../MigrationRegistry'
 import { migration001InitialSchema } from './001_initial_schema'
 import { migration002AddTagsToTransactions } from './002_add_tags_to_transactions'
+import { migration003ConvertToBigInt } from './003_convert_to_bigint'
 
 /**
  * Central index for all Dexie migrations.
@@ -12,7 +13,11 @@ import { migration002AddTagsToTransactions } from './002_add_tags_to_transaction
  * 3. Add it to the `allMigrations` array
  */
 
-const allMigrations = [migration001InitialSchema, migration002AddTagsToTransactions]
+const allMigrations = [
+  migration001InitialSchema,
+  migration002AddTagsToTransactions,
+  migration003ConvertToBigInt,
+]
 
 // Register all migrations on import
 allMigrations.forEach((migration) => MigrationRegistry.register(migration))
