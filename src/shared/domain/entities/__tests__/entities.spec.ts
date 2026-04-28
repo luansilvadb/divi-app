@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 // Import all domain entities to ensure 100% coverage
-import type { User } from '@/modules/auth/domain/entities/User'
+import type { IUser } from '@/modules/auth/core/entities/IUser'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 import type { IGoal } from '@/modules/goals/core/entities/IGoal'
@@ -9,8 +9,8 @@ import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 describe('Domain Entities', () => {
-  it('should have valid User interface', () => {
-    const user: User = {
+  it('should have valid IUser interface', () => {
+    const user: IUser = {
       id: 'u1',
       email: 'test@example.com',
       name: 'Test User',
@@ -22,8 +22,8 @@ describe('Domain Entities', () => {
     expect(user.avatar_url).toBe('https://example.com/avatar.png')
   })
 
-  it('should have valid User interface with minimal fields', () => {
-    const user: User = {
+  it('should have valid IUser interface with minimal fields', () => {
+    const user: IUser = {
       id: 'u2',
       email: 'minimal@example.com',
     }

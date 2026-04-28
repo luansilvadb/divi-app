@@ -118,12 +118,13 @@ import {
 } from 'naive-ui'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IActivityLogService } from '../../domain/contracts/IActivityLogService'
-import type { Activity } from '../../domain/entities/Activity'
+import type { IActivityLogService } from '../../core/ports/IActivityLogService'
+import type { IActivity } from '../../core/entities/IActivity'
+import { messages } from '@/shared/messages/catalog'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
 const activityService = container.resolve<IActivityLogService>(DI_TOKENS.IActivityLogService)
-const activities = ref<Activity[]>([])
+const activities = ref<IActivity[]>([])
 const isLoading = ref(true)
 const isRefreshing = ref(false)
 

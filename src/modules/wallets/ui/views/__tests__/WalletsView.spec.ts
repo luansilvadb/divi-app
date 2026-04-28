@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import walletsView from '../walletsView.vue'
+import WalletsView from '../WalletsView.vue'
+import { messages } from '@/shared/messages/catalog'
 import { defineComponent, h } from 'vue'
 import { BehaviorSubject } from 'rxjs'
 import { container } from '@/core/di'
@@ -14,7 +15,7 @@ vi.mock('naive-ui', async () => {
   }
 })
 
-describe('walletsView', () => {
+describe('WalletsView', () => {
   let mockwalletservice: any
   let walletsSubject: BehaviorSubject<any[]>
 
@@ -40,7 +41,7 @@ describe('walletsView', () => {
       { id: '2', name: 'Investimento', balance: 450000n, type: 'investment' }
     ])
 
-    const wrapper = mount(walletsView)
+    const wrapper = mount(WalletsView)
     await flushPromises()
 
     expect(wrapper.text()).toContain('Corrente')
@@ -54,14 +55,14 @@ describe('walletsView', () => {
   it('deve exibir mensagem de estado vazio inicial', async () => {
     walletsSubject.next([])
 
-    const wrapper = mount(walletsView)
+    const wrapper = mount(WalletsView)
     await flushPromises()
 
-    expect(wrapper.text()).toContain('Nenhuma carteira configurada.')
+    expect(wrapper.text()).toContain(messages.MSG_I_NO_DATA)
   })
 
   it('abre o modal ao clicar em Nova Carteira e salva os dados corretos', async () => {
-    const wrapper = mount(walletsView, {
+    const wrapper = mount(WalletsView, {
       global: {
         stubs: {
           NModal: { template: '<div class="stub-modal"><slot /></div>' },

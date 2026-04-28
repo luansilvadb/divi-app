@@ -2,40 +2,33 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
+import type { IDashboardService } from '@/modules/dashboard/core/ports/IDashboardService'
 import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
 import type { ILoanRepository } from '@/modules/loans/core/ports/ILoanRepository'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 
 export const useDashboardStore = defineStore('dashboard', () => {
-  // Repositories
-  const IWalletRepo = container.resolve<IWalletRepository>(DI_TOKENS.IWalletRepository)
-  const loanRepo = container.resolve<ILoanRepository>(DI_TOKENS.ILoanRepository)
+  // Services
+  const dashboardService = container.resolve<IDashboardService>(DI_TOKENS.IDashboardService)
 
   // State
   const wallets = ref<IWallet[]>([])
   const loans = ref<ILoan[]>([])
+  const totalBalance = ref(0)
+  const totalDebt = ref(0)
   const isLoading = ref(false)
   const hasInitializationError = ref(false)
-
-  // Getters
-  const totalBalance = computed(() => {
-    const sum = wallets.value.reduce((acc, w) => acc + BigInt(w.balance), 0n)
-    return Number(sum) / 100
-  })
-
-  const totalDebt = computed(() => {
-    const sum = loans.value.reduce((acc, l) => acc + BigInt(l.remaining_value), 0n)
-    return Number(sum) / 100
-  })
 
   // Actions
   async function fetchDashboardData() {
     isLoading.value = true
     try {
-      const [walletsData, loansData] = await Promise.all([IWalletRepo.getAll(), loanRepo.getAll()])
-      wallets.value = walletsData
-      loans.value = loansData
+      const data = await dashboardService.getDashboardData()
+      wallets.value = data.wallets
+      loans.value = data.loans
+      totalBalance.value = data.totalBalance
+      totalDebt.value = data.totalDebt
     } finally {
       isLoading.value = false
     }

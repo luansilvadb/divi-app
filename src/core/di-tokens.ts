@@ -23,4 +23,5 @@ export const DI_TOKENS = {
   IVaultCryptoManager: 'IVaultCryptoManager',
   IAutoCreateService: 'IAutoCreateService',
   IAutoCategorizationService: 'IAutoCategorizationService',
+  IDashboardService: 'IDashboardService',
 } as const;

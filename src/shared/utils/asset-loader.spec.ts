@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { AssetLoader } from './asset-loader'
-import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
+import type { IActivityLogService } from '@/modules/activity-log/core/ports/IActivityLogService'
 
 describe('AssetLoader', () => {
   describe('getFallback', () => {

@@ -6,6 +6,7 @@ import type { ITransactionService } from '../../core/ports/ITransactionService'
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import { AuthError } from '@/core/errors'
 import { transactionValidator } from './TransactionValidator'
+import { messages } from '@/shared/messages/catalog'
 
 const REQUIRED_FIELDS = ['title', 'amount', 'type', 'category_id', 'wallet_id', 'date'] as const
 
@@ -45,7 +46,7 @@ export class TransactionService implements ITransactionService {
     // Guard clause: Authentication check
     const user = await this.authService.getCurrentUser()
     const userId = user?.id
-    if (!userId) throw new AuthError('User not authenticated')
+    if (!userId) throw new AuthError(messages.MSG_E_UNAUTHORIZED)
 
     // Extensible validation via transactionValidator (OCP)
     // Required fields validation

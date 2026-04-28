@@ -6,7 +6,7 @@ import { DI_TOKENS } from '@/core/di-tokens'
 import { useSyncStore } from '@/core/sync/syncStore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
-import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
+import type { IActivityLogService } from '@/modules/activity-log/core/ports/IActivityLogService'
 
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
@@ -18,6 +18,7 @@ import { useCategoryStore } from './useCategoryStore'
 import { usetransactionstats } from './usetransactionstats'
 import { usetransactionsearch } from './usetransactionsearch'
 import { useITransactionGrouping } from './useITransactionGrouping'
+import { messages, formatMessage } from '@/shared/messages/catalog'
 
 type UITransaction = any
 
@@ -113,8 +114,8 @@ export const usetransactionstore = defineStore('transactions', () => {
   async function logITransactionActivity(enriched: ITransaction, activeUserId: string, isNew: boolean) {
     const displayAmt = BigIntAdapter.fromMinorUnits(enriched.amount)
     await activityLogService.logActivity({
-      action: isNew ? 'Nova Transação' : 'Transação Atualizada',
-      description: `R$ ${displayAmt} : ${enriched.title}`,
+      action: isNew ? messages.MSG_ACT_TX_CREATED : messages.MSG_ACT_TX_UPDATED,
+      description: formatMessage('MSG_ACT_TX_DESC', { amount: String(displayAmt), title: enriched.title }),
       type: 'success',
       user_id: activeUserId,
     })
@@ -179,8 +180,8 @@ export const usetransactionstore = defineStore('transactions', () => {
 
       if (authStore.user?.id) {
         await activityLogService.logActivity({
-          action: 'Transação Removida',
-          description: `Remoção da transação: ${deletedTitle}`,
+          action: messages.MSG_ACT_TX_DELETED,
+          description: formatMessage('MSG_ACT_TX_DEL_DESC', { title: deletedTitle }),
           type: 'warning',
           user_id: authStore.user.id,
         })

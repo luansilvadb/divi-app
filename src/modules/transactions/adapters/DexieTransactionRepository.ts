@@ -7,7 +7,7 @@ import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
 
-export class DexieITransactionRepository implements ITransactionRepository {
+export class DexieTransactionRepository implements ITransactionRepository {
   async getAll(): Promise<ITransaction[]> {
     try {
       const list = await db.transactions.filter((t) => !t.deleted).toArray()

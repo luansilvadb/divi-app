@@ -3,7 +3,7 @@ import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { db, type LocalIWallet } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
-export class DexieIWalletRepository implements IWalletRepository {
+export class DexieWalletRepository implements IWalletRepository {
   async getAll(): Promise<IWallet[]> {
     const list = await db.wallets.toArray()
     return list.map((item) => ({

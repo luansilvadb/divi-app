@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import transactionsView from '../transactionsView.vue'
+import TransactionsView from '../TransactionsView.vue'
+import { messages } from '@/shared/messages/catalog'
 import { ref, nextTick } from 'vue'
 
 // Mock shared components
@@ -81,7 +82,7 @@ vi.mock('../../application/stores/transactionstore', () => ({
   }),
 }))
 
-describe('transactionsView', () => {
+describe('TransactionsView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     isMobileMock.value = false
@@ -90,7 +91,7 @@ describe('transactionsView', () => {
   it('renders correctly on desktop', () => {
     isMobileMock.value = false
 
-    const wrapper = mount(transactionsView, {
+    const wrapper = mount(TransactionsView, {
       global: {
         stubs: {
           BaseButton: {
@@ -112,13 +113,13 @@ describe('transactionsView', () => {
 
     expect(wrapper.exists()).toBe(true)
     // Desktop: Should have 'Adicionar' button
-    expect(wrapper.text()).toContain('Adicionar')
+    expect(wrapper.text()).toContain(messages.MSG_I_ADD)
   })
 
   it('renders correctly on mobile', async () => {
     isMobileMock.value = true
 
-    const wrapper = mount(transactionsView, {
+    const wrapper = mount(TransactionsView, {
       global: {
         stubs: {
           BaseButton: true,
@@ -140,6 +141,6 @@ describe('transactionsView', () => {
 
     expect(wrapper.exists()).toBe(true)
     // Mobile: Should have NO 'Adicionar' button in action slot (it's hidden in template)
-    expect(wrapper.html()).not.toContain('Adicionar')
+    expect(wrapper.html()).not.toContain(messages.MSG_I_ADD)
   })
 })

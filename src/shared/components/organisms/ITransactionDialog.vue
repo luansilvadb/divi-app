@@ -17,7 +17,7 @@
             <NText
               class="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none mb-1"
             >
-              {{ ITransaction ? 'Editar Transação' : 'Nova Transação' }}
+              {{ ITransaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
             </NText>
             <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Receitas</p>
           </div>
@@ -51,10 +51,10 @@
             <!-- Header Content -->
             <div class="flex flex-col gap-1">
               <h2 class="text-[#1d1d1f] dark:text-white font-sf-display font-semibold text-[24px] leading-[1.3] tracking-[-0.02em]">
-                {{ ITransaction ? 'Editar Transação' : 'Nova Transação' }}
+                {{ ITransaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
               </h2>
               <p class="text-[#6e6e73] dark:text-[#8e8e93] text-[17px] font-sf-text font-normal leading-[1.5]">
-                {{ ITransaction ? 'Ajuste os detalhes deste registro' : 'Cadastre sua nova movimentação' }}
+                {{ ITransaction ? messages.MSG_I_TX_EDIT_DESC : messages.MSG_I_TX_NEW_DESC }}
               </p>
             </div>
 
@@ -83,6 +83,7 @@
 <script setup lang="ts">
 import { NModal, NDrawer } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
+import { messages } from '@/shared/messages/catalog'
 import ITransactionFormContent from './ITransactionFormContent.vue'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 

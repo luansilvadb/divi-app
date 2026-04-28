@@ -15,7 +15,7 @@
         >
           <div class="flex items-start justify-between">
             <div>
-              <p class="text-[11px] font-semibold uppercase tracking-widest text-white/60">Patrimônio Total</p>
+              <p class="text-[11px] font-semibold uppercase tracking-widest text-white/60">{{ messages.MSG_I_NET_WORTH }}</p>
             </div>
             <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white/15">
               <i class="i-lucide-landmark text-sm text-white"></i>
@@ -25,7 +25,7 @@
             <p class="text-3xl font-bold tracking-tight tabular-nums mt-2">
               {{ formatCurrency(dashboardStore.totalBalance) }}
             </p>
-            <p class="text-[11px] mt-1 text-white/50">Consolidado de todas as contas</p>
+            <p class="text-[11px] mt-1 text-white/50">{{ messages.MSG_I_NET_WORTH_DESC }}</p>
           </div>
         </div>
 
@@ -35,7 +35,7 @@
           id="dashboard-income-card"
         >
           <div class="flex items-start justify-between">
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">Receitas</p>
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">{{ messages.MSG_I_INCOME }}</p>
             <div class="w-7 h-7 rounded-full flex items-center justify-center bg-success/10">
               <i class="i-lucide-trending-up text-xs text-success"></i>
             </div>
@@ -46,7 +46,7 @@
             </p>
             <div class="flex items-center gap-1.5 mt-2">
               <span class="text-[11px] font-semibold text-success">+12%</span>
-              <span class="text-[11px] text-tertiary">vs. mês passado</span>
+              <span class="text-[11px] text-tertiary">{{ messages.MSG_I_VS_LAST_MONTH }}</span>
             </div>
           </div>
         </div>
@@ -57,7 +57,7 @@
           id="dashboard-expense-card"
         >
           <div class="flex items-start justify-between">
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">Despesas</p>
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">{{ messages.MSG_I_EXPENSE }}</p>
             <div class="w-7 h-7 rounded-full flex items-center justify-center bg-error/10">
               <i class="i-lucide-trending-down text-xs text-error"></i>
             </div>
@@ -69,7 +69,7 @@
             <!-- IBudget usage bar -->
             <div class="mt-3">
               <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[10px] text-tertiary">Uso do orçamento</span>
+                <span class="text-[10px] text-tertiary">{{ messages.MSG_I_BUDGET_USAGE }}</span>
                 <span class="text-[10px] font-semibold text-secondary">65%</span>
               </div>
               <div class="h-1 rounded-full overflow-hidden bg-surface-secondary">
@@ -84,8 +84,8 @@
       <section id="dashboard-accounts-section">
         <div class="flex items-center justify-between mb-4 px-0.5">
           <div>
-            <h2 class="text-[17px] font-semibold tracking-tight text-label">Minhas Contas</h2>
-            <p class="text-[12px] mt-0.5 text-tertiary">Ativos em tempo real</p>
+            <h2 class="text-[17px] font-semibold tracking-tight text-label">{{ messages.MSG_I_MY_ACCOUNTS }}</h2>
+            <p class="text-[12px] mt-0.5 text-tertiary">{{ messages.MSG_I_REAL_TIME_ASSETS }}</p>
           </div>
         </div>
         <AccountGrid
@@ -110,13 +110,13 @@
               class="px-6 py-4 flex items-center justify-between border-b border-separator bg-surface-secondary"
             >
               <div>
-                <h3 class="text-[13px] font-semibold text-label">Evolução Patrimonial</h3>
-                <p class="text-[11px] mt-0.5 text-tertiary">Histórico de saldo consolidado</p>
+                <h3 class="text-[13px] font-semibold text-label">{{ messages.MSG_I_PATRIMONIAL_EVOLUTION }}</h3>
+                <p class="text-[11px] mt-0.5 text-tertiary">{{ messages.MSG_I_CONSOLIDATED_HISTORY }}</p>
               </div>
               <!-- Range Segmented Control -->
               <div class="flex p-1 rounded-lg bg-surface-secondary border border-separator">
                 <button
-                  v-for="r in [{ key: '6m', label: '6 Meses' }, { key: '1y', label: '1 Ano' }]"
+                  v-for="r in [{ key: '6m', label: messages.MSG_I_MONTHS_6 }, { key: '1y', label: messages.MSG_I_YEAR_1 }]"
                   :key="r.key"
                   @click="chartRange = r.key"
                   class="px-3.5 py-1 rounded-md text-[11px] font-semibold transition-all duration-150 ease-out"
@@ -141,7 +141,7 @@
             <div
               class="px-6 py-4 flex items-center justify-between border-b border-separator bg-surface-secondary"
             >
-              <h3 class="text-[13px] font-semibold text-label">Atividades Recentes</h3>
+              <h3 class="text-[13px] font-semibold text-label">{{ messages.MSG_I_RECENT_ACTIVITIES }}</h3>
 
               <!-- Filter Segmented Control -->
               <div class="flex p-1 rounded-lg bg-surface-secondary border border-separator">
@@ -205,7 +205,7 @@
                 class="flex flex-col items-center justify-center py-16 gap-3 text-tertiary"
               >
                 <i class="i-lucide-list-x text-2xl opacity-40"></i>
-                <p class="text-[12px] font-medium opacity-60">Nenhuma atividade encontrada</p>
+                <p class="text-[12px] font-medium opacity-60">{{ messages.MSG_I_NO_ACTIVITY }}</p>
               </div>
             </div>
 
@@ -215,7 +215,7 @@
                 @click="$router.push('/transactions')"
                 class="text-[12px] font-medium transition-colors duration-200 w-full text-center text-primary"
               >
-                Ver todo o histórico
+                {{ messages.MSG_I_VIEW_ALL_HISTORY }}
               </button>
             </div>
           </div>
@@ -236,6 +236,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useObservable } from '@vueuse/rxjs'
 import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
 import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { messages } from '@/shared/messages/catalog'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountGrid from '@/shared/components/organisms/AccountGrid.vue'
 import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue'
@@ -254,9 +255,9 @@ const ITransactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.ITr
 const chartRange = ref('6m')
 const ITransactionFilter = ref('all')
 const ITransactionFilterOptions = [
-  { label: 'Todos', value: 'all' },
-  { label: 'Receitas', value: 'income' },
-  { label: 'Despesas', value: 'expense' },
+  { label: messages.MSG_I_ALL, value: 'all' },
+  { label: messages.MSG_I_INCOME, value: 'income' },
+  { label: messages.MSG_I_EXPENSE, value: 'expense' },
 ]
 
 const livetransactions = useObservable(ITransactionRepo.watchAll()) as { value: ITransaction[] | undefined }

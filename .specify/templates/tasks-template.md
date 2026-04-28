@@ -62,11 +62,11 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
+- [ ] T004 Setup database schema and migrations framework (per Principle XV)
 - [ ] T005 [P] Implement authentication/authorization framework
 - [ ] T006 [P] Setup API routing and middleware structure
 - [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
+- [ ] T008 Configure error handling and logging infrastructure (per Principles XII, XIII)
 - [ ] T009 Setup environment configuration management
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
@@ -81,7 +81,7 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
-> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+> **NOTE: Write these tests FIRST, ensure they FAIL before implementation (per Principle XI)**
 
 - [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
 - [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
@@ -92,8 +92,8 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
 - [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
 - [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T016 [US1] Add validation and error handling (per Principles XII, XIV)
+- [ ] T017 [US1] Add logging for user story 1 operations (per Principle XIII)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

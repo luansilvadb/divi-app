@@ -15,7 +15,7 @@
           <div class="w-12 h-1.5 bg-zinc-300 dark:bg-zinc-700 rounded-full mx-auto mb-6 opacity-40"></div>
           <div class="flex flex-col">
             <h2 class="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none mb-1">
-              {{ wallet ? 'Editar Conta' : 'Nova Conta' }}
+              {{ wallet ? messages.MSG_I_WALLET_EDIT : messages.MSG_I_WALLET_NEW }}
             </h2>
             <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Gerenciamento de Ativos</p>
           </div>
@@ -45,10 +45,10 @@
             <!-- Header Content -->
             <div class="flex flex-col gap-1">
               <h2 class="text-[#1d1d1f] dark:text-white font-sf-display font-semibold text-[24px] leading-[1.3] tracking-[-0.02em]">
-                {{ wallet ? 'Editar Conta' : 'Nova Conta' }}
+                {{ wallet ? messages.MSG_I_WALLET_EDIT : messages.MSG_I_WALLET_NEW }}
               </h2>
               <p class="text-[#6e6e73] dark:text-[#8e8e93] text-[17px] font-sf-text font-normal leading-[1.5]">
-                {{ wallet ? 'Ajuste os detalhes da sua conta' : 'Adicione uma nova carteira ou conta bancária' }}
+                {{ wallet ? messages.MSG_I_WALLET_EDIT_DESC : messages.MSG_I_WALLET_NEW_DESC }}
               </p>
             </div>
 
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { NModal, NDrawer } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
+import { messages } from '@/shared/messages/catalog'
 import IWalletFormContent from './IWalletFormContent.vue'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 

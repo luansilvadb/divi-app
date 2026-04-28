@@ -28,7 +28,7 @@ export class DexieBudgetRepository implements IBudgetRepository {
       const deleted = false
       const sync_status = 'pending' as const
 
-      await db.ITransaction('rw', db.budgets, async () => {
+      await db.transaction('rw', db.budgets, async () => {
         const data = {
           ...budget,
           id,
@@ -52,7 +52,7 @@ export class DexieBudgetRepository implements IBudgetRepository {
 
   async update(id: string, budget: Partial<IBudget>): Promise<IBudget> {
     try {
-      await db.ITransaction('rw', db.budgets, async () => {
+      await db.transaction('rw', db.budgets, async () => {
         await db.budgets.update(id, {
           ...budget,
           limit_value: budget.limit_value !== undefined ? BigInt(budget.limit_value) : undefined,
@@ -71,7 +71,7 @@ export class DexieBudgetRepository implements IBudgetRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.ITransaction('rw', db.budgets, async () => {
+      await db.transaction('rw', db.budgets, async () => {
         await db.budgets.update(id, {
           deleted: true,
           sync_status: 'pending',

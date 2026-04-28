@@ -26,6 +26,7 @@ describe('DI Tokens', () => {
     expect(DI_TOKENS.ILedgerTransactionService).toBeDefined()
     expect(DI_TOKENS.IVaultCryptoManager).toBeDefined()
     expect(DI_TOKENS.IAutoCreateService).toBeDefined()
+    expect(DI_TOKENS.IDashboardService).toBeDefined()
   })
 
   it('should have consistent token values', () => {
@@ -51,6 +52,7 @@ describe('DI Tokens', () => {
     expect(DI_TOKENS.IExportService).toBe('IExportService')
     expect(DI_TOKENS.IPredictionService).toBe('IPredictionService')
     expect(DI_TOKENS.IAutoCreateService).toBe('IAutoCreateService')
+    expect(DI_TOKENS.IDashboardService).toBe('IDashboardService')
     expect(DI_TOKENS.ILedgerTransactionService).toBe('ILedgerTransactionService')
 
     // Other tokens

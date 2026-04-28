@@ -46,12 +46,12 @@ description: "Task list template for feature implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T005 [P] [US1] Identify existing domain boundaries and create subdirectories under `src/modules/` (e.g., `src/modules/auth`, `src/modules/user`, etc.)
-- [ ] T006 [P] [US1] Extract pure business logic and entities into `src/modules/[module]/core/`
-- [ ] T007 [US1] Define `I`-prefixed interfaces for external dependencies (e.g., repositories, external APIs) in `src/modules/[module]/ports/`
-- [ ] T008 [US1] Move concrete implementations (e.g., Supabase/Dexie interaction) into `src/modules/[module]/adapters/` making sure they implement the respective `I` interface
-- [ ] T009 [US1] Refactor Pinia stores in `src/stores/` to inject adapter implementations via Vue's `inject` or constructor injection, rather than direct instantiation
-- [ ] T010 [US1] Run TypeScript compiler (`npm run type-check`) and fix any import path breaks across the project
+- [X] T005 [P] [US1] Identify existing domain boundaries and create subdirectories under `src/modules/` (e.g., `src/modules/auth`, `src/modules/user`, etc.)
+- [X] T006 [P] [US1] Extract pure business logic and entities into `src/modules/[module]/core/`
+- [X] T007 [US1] Define `I`-prefixed interfaces for external dependencies (e.g., repositories, external APIs) in `src/modules/[module]/ports/`
+- [X] T008 [US1] Move concrete implementations (e.g., Supabase/Dexie interaction) into `src/modules/[module]/adapters/` making sure they implement the respective `I` interface
+- [X] T009 [US1] Refactor Pinia stores in `src/stores/` to inject adapter implementations via Vue's `inject` or constructor injection, rather than direct instantiation
+- [X] T010 [US1] Run TypeScript compiler (`npm run type-check`) and fix any import path breaks across the project
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -67,8 +67,8 @@ description: "Task list template for feature implementation"
 
 - [X] T011 [P] [US2] Create the central message catalog dictionary and types in `src/shared/messages/catalog.ts`
 - [X] T012 [P] [US2] Create utility function `formatMessage(code, params)` in `src/shared/messages/catalog.ts` for parameterized messages
-- [/] T013 [US2] Scan `src/modules/[module]/core/` for hardcoded error/success strings and replace them with `MSG_E_*` and `MSG_S_*` keys imported from the catalog
-- [/] T014 [US2] Scan Vue components in `src/` (and `App.vue`) for hardcoded alerts, information, or feedback strings and replace them with `MSG_A_*` and `MSG_I_*` keys
+- [X] T013 [US2] Scan `src/modules/[module]/core/` for hardcoded error/success strings and replace them with `MSG_E_*` and `MSG_S_*` keys imported from the catalog
+- [X] T014 [US2] Scan Vue components in `src/` (and `App.vue`) for hardcoded alerts, information, or feedback strings and replace them with `MSG_A_*` and `MSG_I_*` keys
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
