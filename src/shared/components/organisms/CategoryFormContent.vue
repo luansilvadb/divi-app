@@ -55,7 +55,7 @@
 import { ref } from 'vue'
 import { NForm, NFormItem, NInput, NSelect, NColorPicker, NButton } from 'naive-ui'
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
-import { messages, formatMessage } from '@/shared/messages/catalog'
+import { formatMessage } from '@/shared/messages/catalog'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 const props = defineProps<{

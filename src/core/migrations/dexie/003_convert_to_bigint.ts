@@ -14,28 +14,28 @@ export const migration003ConvertToBigInt: IDexieMigration = {
   stores: {}, // Mantém os mesmos índices
   upgrade: async (trans) => {
     // 1. transactions: amount
-    await trans.table('transactions').toCollection().modify((item) => {
+    await trans.table('transactions').toCollection().modify((item: any) => {
       if (typeof item.amount === 'number') {
         item.amount = BigInt(Math.round(item.amount))
       }
     })
 
     // 2. wallets: balance
-    await trans.table('wallets').toCollection().modify((item) => {
+    await trans.table('wallets').toCollection().modify((item: any) => {
       if (typeof item.balance === 'number') {
         item.balance = BigInt(Math.round(item.balance))
       }
     })
 
     // 3. Budgets: limit_value
-    await trans.table('budgets').toCollection().modify((item) => {
+    await trans.table('budgets').toCollection().modify((item: any) => {
       if (typeof item.limit_value === 'number') {
         item.limit_value = BigInt(Math.round(item.limit_value))
       }
     })
 
     // 4. Goals: target_value, current_value
-    await trans.table('goals').toCollection().modify((item) => {
+    await trans.table('goals').toCollection().modify((item: any) => {
       if (typeof item.target_value === 'number') {
         item.target_value = BigInt(Math.round(item.target_value))
       }
@@ -45,7 +45,7 @@ export const migration003ConvertToBigInt: IDexieMigration = {
     })
 
     // 5. Loans: total_value, remaining_value
-    await trans.table('loans').toCollection().modify((item) => {
+    await trans.table('loans').toCollection().modify((item: any) => {
       if (typeof item.total_value === 'number') {
         item.total_value = BigInt(Math.round(item.total_value))
       }
@@ -55,7 +55,7 @@ export const migration003ConvertToBigInt: IDexieMigration = {
     })
 
     // 6. Subscriptions: amount
-    await trans.table('subscriptions').toCollection().modify((item) => {
+    await trans.table('subscriptions').toCollection().modify((item: any) => {
       if (typeof item.amount === 'number') {
         item.amount = BigInt(Math.round(item.amount))
       }

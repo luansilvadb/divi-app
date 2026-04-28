@@ -1,6 +1,6 @@
 import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
-import { db, type LocalIWallet } from '@/infrastructure/storage/VaultDatabase'
+import { db, type ILocalIWallet } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieWalletRepository implements IWalletRepository {
@@ -32,7 +32,7 @@ export class DexieWalletRepository implements IWalletRepository {
         created_at,
         version,
         deleted,
-      } as LocalIWallet)
+      } as ILocalIWallet)
     })
 
     SyncEngine.getInstance().enqueueSync()

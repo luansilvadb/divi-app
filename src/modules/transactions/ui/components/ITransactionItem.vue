@@ -84,7 +84,7 @@ import type { ITransaction } from '@/modules/transactions/core/entities/ITransac
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import type { IAssetLoader } from '@/shared/domain/ports/IAssetLoader'
 import { formatCurrency } from '@/shared/utils/formatters'
 
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.IAssetLoader)
@@ -154,3 +154,4 @@ function getSign() {
   return props.ITransaction.type === 'expense' ? '-' : '+'
 }
 </script>
+

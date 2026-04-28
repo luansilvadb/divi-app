@@ -1,10 +1,12 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useAuthStore } from '../authStore'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
-import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
-import type { IUser } from '../../domain/entities/IUser'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
+import type { ISyncEngine } from '@/core/sync/ports/ISyncEngine'
+import type { IUser } from '../../core/entities/IUser'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
 
 // Mocks para dependências externas
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
@@ -74,8 +76,11 @@ describe('Auth Store', () => {
       store.setUser({ id: '1', email: 'test@example.com' })
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(authService.deleteAccountData).toHaveBeenCalledOnce()
     })
@@ -86,8 +91,11 @@ describe('Auth Store', () => {
       store.setUser({ id: '1', email: 'test@example.com' })
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(vaultDb.clearAllData).toHaveBeenCalledOnce()
     })
@@ -97,8 +105,11 @@ describe('Auth Store', () => {
       store.setUser({ id: '1', email: 'test@example.com' })
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(vaultCryptoManager.lock).toHaveBeenCalledOnce()
     })
@@ -108,8 +119,11 @@ describe('Auth Store', () => {
       store.setUser({ id: '1', email: 'test@example.com' })
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(authService.signOut).toHaveBeenCalledOnce()
     })
@@ -119,8 +133,11 @@ describe('Auth Store', () => {
       store.setUser({ id: '1', email: 'test@example.com' })
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(store.user).toBeNull()
       expect(store.isAuthenticated).toBe(false)
@@ -133,8 +150,11 @@ describe('Auth Store', () => {
         deleteAccountData: vi.fn().mockRejectedValue(new Error('Network error')),
       })
       const vaultCryptoManager = createMockVaultCryptoManager()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
 
-      await expect(store.purgeAccount(authService, vaultCryptoManager)).rejects.toThrow('Network error')
+      await expect(store.purgeAccount()).rejects.toThrow('Network error')
     })
   })
 
@@ -146,8 +166,12 @@ describe('Auth Store', () => {
       })
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+      container.register(DI_TOKENS.ISyncEngine, syncEngine)
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       expect(store.user).toEqual({ id: '1', email: 'test@example.com' })
       expect(store.isAuthenticated).toBe(true)
@@ -158,13 +182,17 @@ describe('Auth Store', () => {
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+      container.register(DI_TOKENS.ISyncEngine, syncEngine)
 
       let authStateCallback: ((user: IUser | null) => void) | null = null
       authService.onAuthStateChange = vi.fn((callback: (user: IUser | null) => void) => {
         authStateCallback = callback
       })
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       if (authStateCallback) (authStateCallback as (user: IUser | null) => void)(null)
 
@@ -176,13 +204,17 @@ describe('Auth Store', () => {
       const authService = createMockAuthService()
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
+      
+      container.register(DI_TOKENS.IAuthService, authService)
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+      container.register(DI_TOKENS.ISyncEngine, syncEngine)
 
       let authStateCallback: ((user: IUser | null) => void) | null = null
       authService.onAuthStateChange = vi.fn((callback: (user: IUser | null) => void) => {
         authStateCallback = callback
       })
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       if (authStateCallback) (authStateCallback as (user: IUser | null) => void)({ id: '1', email: 'test@example.com' })
 
@@ -195,8 +227,11 @@ describe('Auth Store', () => {
       const store = useAuthStore()
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
+      
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+      container.register(DI_TOKENS.ISyncEngine, syncEngine)
 
-      await store.initializeVault('password123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('password123')
 
       expect(vaultCryptoManager.initialize).toHaveBeenCalledWith('password123')
     })
@@ -205,10 +240,14 @@ describe('Auth Store', () => {
       const store = useAuthStore()
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
+      
+      container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+      container.register(DI_TOKENS.ISyncEngine, syncEngine)
 
-      await store.initializeVault('password123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('password123')
 
       expect(syncEngine.trigger).toHaveBeenCalledOnce()
     })
   })
 })
+

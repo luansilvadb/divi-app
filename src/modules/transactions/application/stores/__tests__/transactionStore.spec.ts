@@ -4,7 +4,7 @@ import { usetransactionstore } from '../transactionstore'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
-import { messages, formatMessage } from '@/shared/messages/catalog'
+import { formatMessage } from '@/shared/messages/catalog'
 
 // Mocking dependencies
 const mockITransactionRepo = {

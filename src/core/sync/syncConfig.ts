@@ -12,5 +12,3 @@ export const SYNCABLE_TABLES = [
   'budgets',
   'goals',
 ] as const
-
-export type SyncableTable = (typeof SYNCABLE_TABLES)[number]

@@ -16,14 +16,14 @@ describe('DI Container', () => {
       expect(resolved).toBe(mockService)
     })
 
-    it('should register and resolve a service by class reference', () => {
+    it('should register and resolve a service by class reference (via name)', () => {
       class TestClass {
         value = 'test'
       }
       const instance = new TestClass()
-      container.register(TestClass, instance)
+      container.register(TestClass.name, instance)
 
-      const resolved = container.resolve(TestClass)
+      const resolved = container.resolve(TestClass.name)
       expect(resolved).toBe(instance)
     })
 
@@ -60,40 +60,40 @@ describe('DI Container', () => {
     })
 
     it('should work with DI_TOKENS constants', () => {
-      // DI_TOKENS.AuthService is registered in the container initialization
-      const authService = useService(DI_TOKENS.AuthService)
+      // DI_TOKENS.IAuthService is registered in the container initialization
+      const authService = useService(DI_TOKENS.IAuthService)
       expect(authService).toBeDefined()
     })
   })
 
   describe('Real services registration', () => {
     it('should have AuthService registered', () => {
-      const authService = container.resolve(DI_TOKENS.AuthService)
+      const authService = container.resolve(DI_TOKENS.IAuthService)
       expect(authService).toBeDefined()
     })
 
     it('should have transactionservice registered', () => {
-      const transactionservice = container.resolve(DI_TOKENS.transactionservice)
+      const transactionservice = container.resolve(DI_TOKENS.ITransactionService)
       expect(transactionservice).toBeDefined()
     })
 
     it('should have walletservice registered', () => {
-      const walletservice = container.resolve(DI_TOKENS.walletservice)
+      const walletservice = container.resolve(DI_TOKENS.IWalletService)
       expect(walletservice).toBeDefined()
     })
 
     it('should have CategoryService registered', () => {
-      const categoryService = container.resolve(DI_TOKENS.CategoryService)
+      const categoryService = container.resolve(DI_TOKENS.ICategoryService)
       expect(categoryService).toBeDefined()
     })
 
     it('should have ActivityLogService registered', () => {
-      const activityLogService = container.resolve(DI_TOKENS.ActivityLogService)
+      const activityLogService = container.resolve(DI_TOKENS.IActivityLogService)
       expect(activityLogService).toBeDefined()
     })
 
     it('should have Database registered', () => {
-      const database = container.resolve(DI_TOKENS.Database)
+      const database = container.resolve(DI_TOKENS.IDatabase)
       expect(database).toBeDefined()
     })
   })

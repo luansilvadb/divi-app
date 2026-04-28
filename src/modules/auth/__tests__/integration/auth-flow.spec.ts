@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
-import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
-import type { IUser } from '../../domain/entities/IUser'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
+import type { ISyncEngine } from '@/core/sync/ports/ISyncEngine'
+import type { IUser } from '../../core/entities/IUser'
 import { useAuthStore } from '../../application/authStore'
 
 // Mock VaultDatabase
@@ -301,3 +301,4 @@ describe('Auth Flow Integration', () => {
     })
   })
 })
+

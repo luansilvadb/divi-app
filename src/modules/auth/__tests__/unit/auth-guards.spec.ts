@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IUser } from '../../domain/entities/IUser'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IUser } from '../../core/entities/IUser'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 // Helper function to simulate the auth guard logic
@@ -326,3 +326,4 @@ describe('Auth Guards', () => {
     })
   })
 })
+

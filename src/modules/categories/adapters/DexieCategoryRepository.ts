@@ -1,6 +1,6 @@
 import type { ICategoryRepository } from '../core/ports/ICategoryRepository'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
-import { db, type LocalCategory } from '@/infrastructure/storage/VaultDatabase'
+import { db, type ILocalCategory } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieCategoryRepository implements ICategoryRepository {
@@ -30,7 +30,7 @@ export class DexieCategoryRepository implements ICategoryRepository {
         created_at,
         version,
         deleted,
-      } as LocalCategory)
+      } as ILocalCategory)
     })
 
     SyncEngine.getInstance().enqueueSync()

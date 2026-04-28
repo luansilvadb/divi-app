@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IDashboardService } from '@/modules/dashboard/core/ports/IDashboardService'
-import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
-import type { ILoanRepository } from '@/modules/loans/core/ports/ILoanRepository'
+
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 

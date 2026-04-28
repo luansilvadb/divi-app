@@ -1,9 +1,9 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { useAuthStore } from '../../application/authStore'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
-import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
+import type { ISyncEngine } from '@/core/sync/ports/ISyncEngine'
 
 // Mocks para dependências externas
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
@@ -211,3 +211,4 @@ describe('Auth Store', () => {
     })
   })
 })
+

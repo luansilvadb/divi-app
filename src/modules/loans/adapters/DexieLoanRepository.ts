@@ -1,6 +1,6 @@
 import type { ILoanRepository } from '../core/ports/ILoanRepository'
 import type { ILoan } from '@/modules/loans/core/entities/ILoan'
-import { db, type LocalLoan } from '@/infrastructure/storage/VaultDatabase'
+import { db, type ILocalLoan } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '@/core/errors/InfrastructureError'
 
@@ -17,7 +17,7 @@ export class DexieLoanRepository implements ILoanRepository {
   async save(loan: ILoan): Promise<void> {
     try {
       await db.transaction('rw', db.loans, async () => {
-        const data: LocalLoan = {
+        const data: ILocalLoan = {
           ...loan,
           total_value: BigInt(loan.total_value),
           remaining_value: BigInt(loan.remaining_value),
@@ -59,7 +59,7 @@ export class DexieLoanRepository implements ILoanRepository {
     }
   }
 
-  private mapToEntity(item: LocalLoan): ILoan {
+  private mapToEntity(item: ILocalLoan): ILoan {
     return {
       id: item.id,
       user_id: item.user_id,
@@ -73,7 +73,7 @@ export class DexieLoanRepository implements ILoanRepository {
       version: item.version,
       deleted: !!item.deleted,
       created_at: item.created_at || new Date().toISOString(),
-      status: 'active', // Default status if not present in LocalLoan
+      status: 'active', // Default status if not present in ILocalLoan
     }
   }
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { container } from '../../di'
-import type { IAuthService } from '../../../modules/auth/domain/contracts/IAuthService'
-import type { User } from '../../../modules/auth/domain/entities/User'
+import type { IAuthService } from '../../../modules/auth/core/ports/IAuthService'
+import type { IUser } from '@/modules/auth/core/entities/IUser'
 import router from '../index'
 
 // Mock the router's internal components to avoid import errors in tests
@@ -39,9 +39,10 @@ describe('Router Auth Guards', () => {
       id: '1',
       email: 'test@test.com',
       name: 'Test',
-    } as User)
+    } as IUser)
 
     await router.push({ path: '/login', query: { redirect: 'true' } }) // '/login' is guestOnly
     expect(router.currentRoute.value.name).toBe('dashboard')
   })
 })
+

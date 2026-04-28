@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest'
-import { walletservice } from '../walletservice'
+import { WalletService } from '../WalletService'
 import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { useAuthStore } from '@/modules/auth/application/authStore'
@@ -11,10 +11,10 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   useAuthStore: vi.fn(),
 }))
 
-describe('walletservice', () => {
+describe('WalletService', () => {
   let mockRepo: Mocked<IWalletRepository>
   let authStoreMock: any
-  let service: walletservice
+  let service: WalletService
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -31,7 +31,7 @@ describe('walletservice', () => {
       getById: vi.fn().mockResolvedValue(null),
     }
 
-    service = new walletservice(mockRepo)
+    service = new WalletService(mockRepo)
   })
 
   it('deve carregar as carteiras do repositório no BehaviorSubject', async () => {

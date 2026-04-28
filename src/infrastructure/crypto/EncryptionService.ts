@@ -5,7 +5,7 @@ import { AppError } from '@/core/errors'
  * Oferece cifragem e decifragem de dados utilizando AES-GCM 256-bit.
  * Focado na soberania de dados para sincronização remota.
  */
-export interface EncryptedPayload {
+export interface IEncryptedPayload {
   iv: string // Base64
   data: string // Base64 (ciphertext + tag)
 }
@@ -17,7 +17,7 @@ export class EncryptionService {
   /**
    * Cifra um texto puro em um payload opaco.
    */
-  public static async encrypt(plainText: string, key: CryptoKey): Promise<EncryptedPayload> {
+  public static async encrypt(plainText: string, key: CryptoKey): Promise<IEncryptedPayload> {
     const encoder = new TextEncoder()
     const encodedText = encoder.encode(plainText)
     const iv = crypto.getRandomValues(new Uint8Array(this.IV_LENGTH))
@@ -40,7 +40,7 @@ export class EncryptionService {
   /**
    * Decifra um payload opaco em texto puro.
    */
-  public static async decrypt(payload: EncryptedPayload, key: CryptoKey): Promise<string> {
+  public static async decrypt(payload: IEncryptedPayload, key: CryptoKey): Promise<string> {
     const iv = this.base64ToArrayBuffer(payload.iv)
     const encryptedData = this.base64ToArrayBuffer(payload.data)
 

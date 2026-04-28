@@ -114,7 +114,7 @@ import { NGrid, NGridItem } from 'naive-ui'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import type { IAssetLoader } from '@/shared/domain/ports/IAssetLoader'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import IWalletDialog from './IWalletDialog.vue'
 
@@ -179,3 +179,4 @@ function getIWalletColor(w: IWallet) {
 <style scoped>
 .IWallet-card { height: 117px; min-width: 0; }
 </style>
+

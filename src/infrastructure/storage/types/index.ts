@@ -3,12 +3,12 @@
  * @deprecated Use domain entities instead. These are transitional types.
  */
 
-export type { LocalITransaction } from './LocalITransaction'
-export type { LocalIWallet } from './LocalIWallet'
-export type { LocalCategory } from './LocalCategory'
-export type { LocalPayee } from './LocalPayee'
-export type { LocalLoan } from './LocalLoan'
-export type { LocalSubscription } from './LocalSubscription'
-export type { LocalActivity } from './LocalActivity'
-export type { LocalBudget } from './LocalBudget'
-export type { LocalGoal } from './LocalGoal'
+export type { ILocalITransaction } from './ILocalITransaction'
+export type { ILocalIWallet } from './ILocalIWallet'
+export type { ILocalCategory } from './ILocalCategory'
+export type { ILocalPayee } from './ILocalPayee'
+export type { ILocalLoan } from './ILocalLoan'
+export type { ILocalSubscription } from './ILocalSubscription'
+export type { ILocalActivity } from './ILocalActivity'
+export type { ILocalBudget } from './ILocalBudget'
+export type { ILocalGoal } from './ILocalGoal'

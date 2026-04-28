@@ -4,9 +4,11 @@ import type { ISyncMetadata } from '@/shared/domain/ISyncMetadata'
  * @deprecated Use domain entities instead.
  * Transitionally keeping this here until all modules are fully FSD-aligned.
  */
-export interface LocalCategory extends ISyncMetadata {
+export interface ILocalGoal extends ISyncMetadata {
   name: string
-  icon: string
-  color: string
-  parent_id?: string | null
+  target_value: bigint
+  current_value: bigint
+  type: 'saving' | 'debt'
+  color?: string
+  icon?: string
 }

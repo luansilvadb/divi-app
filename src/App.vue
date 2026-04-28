@@ -35,8 +35,6 @@ import { container } from './core/di'
 import { useTheme } from './core/theme'
 import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import type { IAuthService } from './modules/auth/core/ports/IAuthService'
-import type { IVaultCryptoManager } from './modules/auth/core/ports/IVaultCryptoManager'
-import type { ISyncEngine } from './core/sync/contracts/ISyncEngine'
 import { DI_TOKENS } from './core/di-tokens'
 import {
   NConfigProvider,
@@ -66,8 +64,6 @@ const naiveThemeOverrides = computed(() => (isDark.value ? darkThemeOverrides : 
 
 
 const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
-const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
-const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.ISyncEngine)
 const authStore = useAuthStore()
 const { isAuthenticated: isLoggedIn } = storeToRefs(authStore)
 const isLoginRoute = computed(() => route.name === 'login')

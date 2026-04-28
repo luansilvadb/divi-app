@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IUser } from '../../domain/entities/IUser'
-import type { Credentials } from '../../domain/contracts/Credentials'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IUser } from '../../core/entities/IUser'
+import type { ICredentials } from '../../core/ports/ICredentials'
 
 describe('Auth Service', () => {
   let mockAuthService: IAuthService
@@ -20,7 +20,7 @@ describe('Auth Service', () => {
 
   describe('login with email', () => {
     it('should successfully login with valid credentials', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'test@example.com',
         password: 'password123',
       }
@@ -34,7 +34,7 @@ describe('Auth Service', () => {
     })
 
     it('should fail login with invalid credentials', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'test@example.com',
         password: 'wrongpassword',
       }
@@ -46,7 +46,7 @@ describe('Auth Service', () => {
     })
 
     it('should fail login with empty email', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: '',
         password: 'password123',
       }
@@ -58,7 +58,7 @@ describe('Auth Service', () => {
     })
 
     it('should fail login with empty password', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'test@example.com',
         password: '',
       }
@@ -92,7 +92,7 @@ describe('Auth Service', () => {
 
   describe('registration', () => {
     it('should successfully register with valid credentials', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'newuser@example.com',
         password: 'securepassword123',
       }
@@ -106,7 +106,7 @@ describe('Auth Service', () => {
     })
 
     it('should fail registration with duplicate email', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'existing@example.com',
         password: 'password123',
       }
@@ -118,7 +118,7 @@ describe('Auth Service', () => {
     })
 
     it('should fail registration with weak password', async () => {
-      const credentials: Credentials = {
+      const credentials: ICredentials = {
         email: 'test@example.com',
         password: '123',
       }
@@ -228,3 +228,4 @@ describe('Auth Service', () => {
     })
   })
 })
+

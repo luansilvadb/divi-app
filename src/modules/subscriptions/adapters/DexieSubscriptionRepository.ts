@@ -1,6 +1,6 @@
 import type { ISubscriptionRepository } from '../core/ports/ISubscriptionRepository'
 import type { ISubscription } from '@/modules/subscriptions/core/entities/ISubscription'
-import { db, type LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
+import { db, type ILocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '@/core/errors/InfrastructureError'
 
@@ -17,7 +17,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
   async save(subscription: ISubscription): Promise<void> {
     try {
       await db.transaction('rw', db.subscriptions, async () => {
-        const data: LocalSubscription = {
+        const data: ILocalSubscription = {
           ...subscription,
           amount: BigInt(subscription.amount),
           category_id: subscription.category_id || '',
@@ -54,7 +54,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
     }
   }
 
-  private mapToEntity(item: LocalSubscription): ISubscription {
+  private mapToEntity(item: ILocalSubscription): ISubscription {
     return {
       id: item.id,
       user_id: item.user_id,

@@ -107,6 +107,3 @@ export class BigIntAdapter {
   }
 }
 
-// Standalone exports for easier usage
-export const parseDecimalToBigInt = (value: string) => BigIntAdapter.parseDecimalToBigInt(value)
-export const formatBigIntToDecimal = (value: bigint) => BigIntAdapter.fromMinorUnits(value)

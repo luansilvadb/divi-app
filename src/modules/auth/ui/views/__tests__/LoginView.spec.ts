@@ -4,7 +4,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import LoginView from '../LoginView.vue'
-import type { IAuthService } from '../../../domain/contracts/IAuthService'
+import type { IAuthService } from '../../../core/ports/IAuthService'
 
 const mockAuthService: IAuthService = {
   signInWithGoogle: vi.fn(),
@@ -70,3 +70,4 @@ describe('LoginView.vue', () => {
     expect(privacyLink?.text()).toBe('Política de Privacidade')
   })
 })
+

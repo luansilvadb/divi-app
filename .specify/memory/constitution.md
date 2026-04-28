@@ -1,20 +1,16 @@
 <!-- 
 Sync Impact Report:
-- Version change: 1.3.0 -> 1.4.0
+- Version change: 1.5.0 -> 1.6.0
 - Modified principles: 
-  - None
+  - VIII. Architecture (added Base components and inheritance rule)
 - Added sections:
-  - XI. Test-Driven Development
-  - XII. Typed Domain Errors
-  - XIII. Logging & Tracing
-  - XIV. Validation Layer
-  - XV. Migrations
+  - None
 - Removed sections: 
   - None
 - Templates requiring updates (✅ updated / ⚠ pending):
-  - .specify/templates/plan-template.md (✅ updated - no changes required as it references constitution generically)
-  - .specify/templates/spec-template.md (✅ updated - no changes required for new rules)
-  - .specify/templates/tasks-template.md (✅ updated - added references to Principles XI-XV)
+  - .specify/templates/plan-template.md (✅ updated - no changes required)
+  - .specify/templates/spec-template.md (✅ updated - no changes required)
+  - .specify/templates/tasks-template.md (✅ updated - no changes required)
 - Deferred items:
   - None
 -->
@@ -44,6 +40,8 @@ Abstractions and their implementations must be named so the distinction is immed
 
 ### VIII. Architecture
 Independent business modules internally structured as Hexagonal (Ports & Adapters): the **Core** holds pure business logic with no knowledge of infrastructure; **Ports** are interfaces owned by the core defining its contracts; **Adapters** are the concrete implementations injected at the boundary. Adapters know the core — the core never knows the adapters. Modules communicate only through their public interface; internal layers are never imported across module boundaries. Shared primitives live in `shared/` with no business logic. Exceptions require inline justification.
+
+Base components and base adapters define default behavior overridable by specializations — children override only what diverges, inheriting everything else. Base classes are permitted in the UI and adapter layers only. In the Core, shared behavior is expressed through composition and injected interfaces — inheritance is not permitted.
 
 ### IX. No Dead Code
 Every file, function, and variable must have an active reference in the codebase. Any refactoring, complexity reduction, or cleanup task must include deletion of unreferenced code, backup files, and orphaned modules as part of the same commit. Code is not archived — it is removed. Version control is the backup.
@@ -84,8 +82,11 @@ No validation logic lives in shared utilities, base classes, or middleware unles
 ### XV. Migrations
 Database migrations are immutable artifacts. Once a migration has been applied to any environment, it must never be edited, renamed, or deleted — changes to an existing schema are always expressed as a new migration. Every migration must be reversible: a rollback path is mandatory and must be validated before the migration is considered complete. Migrations contain only structural changes (DDL/DML) — no business logic, no data transformations that belong in the domain, and no references to application-layer constructs. The database schema is the source of truth for data structure; the application code adapts to it, not the other way around. Migration files are committed in the same pull request as the application code that depends on them — schema and code changes are never shipped independently.
 
+### XVI. Single Source of Truth
+Any value, rule, or contract that crosses module boundaries must have exactly one owner and one canonical location. Duplication of cross-cutting concerns — whether constants, mappings, contracts, or configuration — is a defect, not a style choice. When something needs to change, there is exactly one place to change it. If that place does not exist yet, it must be created before the value is used anywhere. Principles X, XII, XV, and the shared primitives defined in VIII are all instances of this rule.
+
 ## Governance
 
 Amendments require documentation, approval, and a migration plan. All PRs/reviews must verify compliance. Complexity must be justified.
 
-**Version**: 1.4.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-28
+**Version**: 1.6.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-28

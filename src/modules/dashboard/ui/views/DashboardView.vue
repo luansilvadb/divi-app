@@ -243,7 +243,7 @@ import PatrimonialChart from '@/shared/components/organisms/PatrimonialChart.vue
 import CategoryBars from '../components/CategoryBars.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
+import type { IAssetLoader } from '@/shared/domain/ports/IAssetLoader'
 import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
@@ -315,3 +315,4 @@ onMounted(async () => {
   border-top: 1px solid var(--surface-separator);
 }
 </style>
+

@@ -1,6 +1,6 @@
 import type { IAuthService } from '../../core/ports/IAuthService'
 import type { IUser } from '../../core/entities/IUser'
-import type { Credentials } from '../../core/ports/Credentials'
+import type { ICredentials } from '../../core/ports/ICredentials'
 
 export class AuthService implements IAuthService {
   constructor(private readonly authPort: IAuthService) {}
@@ -9,7 +9,7 @@ export class AuthService implements IAuthService {
     return this.authPort.signInWithGoogle()
   }
 
-  async signInWithEmail(credentials: Credentials): Promise<void> {
+  async signInWithEmail(credentials: ICredentials): Promise<void> {
     // Add application-level validation if needed
     if (!credentials.email || !credentials.password) {
       throw new Error('Email and password are required')
@@ -17,7 +17,7 @@ export class AuthService implements IAuthService {
     return this.authPort.signInWithEmail(credentials)
   }
 
-  async registerWithEmail(credentials: Credentials): Promise<void> {
+  async registerWithEmail(credentials: ICredentials): Promise<void> {
     if (!credentials.email || !credentials.password) {
       throw new Error('Email and password are required')
     }

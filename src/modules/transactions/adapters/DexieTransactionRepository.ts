@@ -2,7 +2,7 @@ import { v7 as uuidv7 } from 'uuid'
 import type { Observable } from 'rxjs'
 import type { ITransactionRepository } from '../core/ports/ITransactionRepository'
 import type { ITransaction } from '../core/entities/ITransaction'
-import { db, type LocalITransaction } from '@/infrastructure/storage/VaultDatabase'
+import { db, type ILocalITransaction } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../domain/errors'
 import { liveQuery } from 'dexie'
@@ -97,7 +97,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
     }
   }
 
-  private async updateIWalletBalances(ITransaction: ITransaction, oldData?: LocalITransaction): Promise<void> {
+  private async updateIWalletBalances(ITransaction: ITransaction, oldData?: ILocalITransaction): Promise<void> {
     // Calcular o impacto da transação atual (income soma, expense subtrai)
     let IWalletDelta = BigInt(ITransaction.amount)
     if (ITransaction.type === 'expense') IWalletDelta = -IWalletDelta
@@ -126,7 +126,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
     }
   }
 
-  private mapToLocalRecord(id: string, ITransaction: ITransaction): LocalITransaction {
+  private mapToLocalRecord(id: string, ITransaction: ITransaction): ILocalITransaction {
     return {
       id,
       title: ITransaction.title,
@@ -192,7 +192,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
         const transferId = uuidv7()
         const timestamp = new Date().toISOString()
 
-        const debit: LocalITransaction = {
+        const debit: ILocalITransaction = {
           id: uuidv7(),
           title: `Transfer to ${toIWallet.name}`,
           amount,
@@ -210,7 +210,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
           transfer_id: transferId,
         }
 
-        const credit: LocalITransaction = {
+        const credit: ILocalITransaction = {
           id: uuidv7(),
           title: `Transfer from ${fromIWallet.name}`,
           amount,
@@ -240,7 +240,7 @@ export class DexieTransactionRepository implements ITransactionRepository {
   }
 
   private mapToEntity(
-    item: LocalITransaction,
+    item: ILocalITransaction,
   ): ITransaction & { _titleLower: string; _timestamp: number; _dateKey: string } {
     const t = {
       ...(item as unknown as ITransaction),

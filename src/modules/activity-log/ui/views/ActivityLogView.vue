@@ -120,7 +120,6 @@ import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IActivityLogService } from '../../core/ports/IActivityLogService'
 import type { IActivity } from '../../core/entities/IActivity'
-import { messages } from '@/shared/messages/catalog'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
 const activityService = container.resolve<IActivityLogService>(DI_TOKENS.IActivityLogService)

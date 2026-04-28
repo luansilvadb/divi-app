@@ -1,8 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { TransactionService } from '../TransactionService'
-import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
-import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { IAuthService } from '@/modules/auth/core/ports/IAuthService'
 
 describe('TransactionService', () => {
@@ -18,7 +16,7 @@ describe('TransactionService', () => {
       update: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn(),
       watchAll: vi.fn(),
-      getById: vi.fn(),
+      transferBetweenwallets: vi.fn(),
     }
 
     mockAuthService = {

@@ -1,6 +1,6 @@
 import type { IAuthService } from '../core/ports/IAuthService'
 import type { IUser } from '../core/entities/IUser'
-import type { Credentials } from '../core/ports/Credentials'
+import type { ICredentials } from '../core/ports/ICredentials'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export class SupabaseAuthService implements IAuthService {
@@ -55,7 +55,7 @@ export class SupabaseAuthService implements IAuthService {
     }
   }
 
-  async signInWithEmail(credentials: Credentials): Promise<void> {
+  async signInWithEmail(credentials: ICredentials): Promise<void> {
     const { error } = await this.supabase.auth.signInWithPassword({
       email: credentials.email,
       password: credentials.password,
@@ -64,7 +64,7 @@ export class SupabaseAuthService implements IAuthService {
     if (error) throw error
   }
 
-  async registerWithEmail(credentials: Credentials): Promise<void> {
+  async registerWithEmail(credentials: ICredentials): Promise<void> {
     const { error } = await this.supabase.auth.signUp({
       email: credentials.email,
       password: credentials.password,

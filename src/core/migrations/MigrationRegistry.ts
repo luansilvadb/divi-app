@@ -1,17 +1,17 @@
-import type { IIDexieMigration } from './types'
+import type { IDexieMigration } from './types'
 
 /**
  * Centralized registry that holds all Dexie migrations in order.
  * Ensures sequential versions without gaps or duplicates.
  */
 export class MigrationRegistry {
-  private static migrations: IIDexieMigration[] = []
+  private static migrations: IDexieMigration[] = []
 
   /**
    * Register a migration. Validates for duplicate versions and maintains order.
    * @throws Error if a migration with the same version already exists.
    */
-  static register(migration: IIDexieMigration): void {
+  static register(migration: IDexieMigration): void {
     const existing = this.migrations.find((m) => m.version === migration.version)
     if (existing) {
       throw new Error(
@@ -36,14 +36,14 @@ export class MigrationRegistry {
   /**
    * Returns all registered migrations, sorted by version.
    */
-  static getAll(): ReadonlyArray<IIDexieMigration> {
+  static getAll(): ReadonlyArray<IDexieMigration> {
     return [...this.migrations]
   }
 
   /**
    * Returns migrations within a version range (inclusive).
    */
-  static getRange(fromVersion: number, toVersion: number): ReadonlyArray<IIDexieMigration> {
+  static getRange(fromVersion: number, toVersion: number): ReadonlyArray<IDexieMigration> {
     return this.migrations.filter((m) => m.version >= fromVersion && m.version <= toVersion)
   }
 

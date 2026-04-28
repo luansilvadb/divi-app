@@ -1,7 +1,7 @@
 /**
  * Activity log entry for tracking user actions.
  */
-export interface LocalActivity {
+export interface ILocalActivity {
   id: string
   timestamp: string
   action: string
