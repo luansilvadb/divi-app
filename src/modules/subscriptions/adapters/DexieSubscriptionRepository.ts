@@ -16,7 +16,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async save(subscription: ISubscription): Promise<void> {
     try {
-      await db.ITransaction('rw', db.subscriptions, async () => {
+      await db.transaction('rw', db.subscriptions, async () => {
         const data: LocalSubscription = {
           ...subscription,
           amount: BigInt(subscription.amount),
@@ -39,7 +39,7 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.ITransaction('rw', db.subscriptions, async () => {
+      await db.transaction('rw', db.subscriptions, async () => {
         // Soft delete for sync engine
         await db.subscriptions.update(id, {
           deleted: true,

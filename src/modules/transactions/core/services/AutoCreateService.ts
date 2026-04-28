@@ -1,16 +1,17 @@
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { CategoryService } from '@/modules/categories/application/services/CategoryService'
-import { walletservice } from '@/modules/wallets/application/services/walletservice'
+import { WalletService } from '@/modules/wallets/application/services/WalletService'
+import type { IAutoCreateService } from '../ports/IAutoCreateService'
 
 const DEFAULT_COLORS = [
   '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'
 ]
 
-export class AutoCreateService {
+export class AutoCreateService implements IAutoCreateService {
   constructor(
     private categoryService: CategoryService,
-    private walletservice: walletservice,
+    private walletservice: WalletService,
   ) {}
 
   async resolveCategory(

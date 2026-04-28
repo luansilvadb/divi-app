@@ -1,19 +1,20 @@
-import type { IActivityLogService } from '../../domain/contracts/IActivityLogService'
-import type { Activity } from '../../domain/entities/Activity'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import type { IActivityLogService } from '../core/ports/IActivityLogService'
+import type { IActivityRepository } from '../core/ports/IActivityRepository'
+import type { IActivity } from '../core/entities/IActivity'
 
 export class ActivityLogService implements IActivityLogService {
-  async getRecentActivities(): Promise<Activity[]> {
-    const list = await db.activities.orderBy('timestamp').reverse().limit(50).toArray()
-    return list as Activity[]
+  constructor(private activityRepo: IActivityRepository) {}
+
+  async getRecentActivities(): Promise<IActivity[]> {
+    return this.activityRepo.getAll()
   }
 
-  async logActivity(activity: Omit<Activity, 'id' | 'timestamp'>): Promise<void> {
-    const newActivity: Activity = {
+  async logActivity(activity: Omit<IActivity, 'id' | 'timestamp'>): Promise<void> {
+    const newActivity: IActivity = {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
       ...activity,
     }
-    await db.activities.add(newActivity)
+    await this.activityRepo.add(newActivity)
   }
 }

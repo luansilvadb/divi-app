@@ -4,7 +4,7 @@
     <BaseConfirmDialog
       :show="showConfirmDelete"
       title="Excluir Conta"
-      message="Tem certeza que deseja excluir esta conta? O saldo e as transações associadas podem ser afetados."
+      :message="messages.MSG_A_DELETE_CONFIRM"
       confirm-text="Excluir"
       cancel-text="Cancelar"
       @confirm="confirmDelete"
@@ -105,6 +105,7 @@ import {
   type FormRules
 } from 'naive-ui'
 import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { messages } from '@/shared/messages/catalog'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 
@@ -209,10 +210,10 @@ async function handleSubmit() {
         currency: form.currency,
       }
 
-      await store.saveWallet(walletData)
+      await store.saveIWallet(walletData)
       emit('saved')
       emit('close')
-      message.success('Conta salva com sucesso!')
+      message.success(props.initialData ? messages.MSG_S_WALLET_UPDATED : messages.MSG_S_WALLET_CREATED)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro ao salvar conta.'
       message.error(errorMessage)

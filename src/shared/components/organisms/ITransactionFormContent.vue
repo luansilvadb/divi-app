@@ -4,7 +4,7 @@
     <BaseConfirmDialog
       :show="showConfirmDelete"
       title="Excluir Transação"
-      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+      :message="messages.MSG_A_DELETE_CONFIRM"
       confirm-text="Excluir"
       cancel-text="Cancelar"
       @confirm="confirmDelete"
@@ -197,7 +197,10 @@ import type { ITransaction } from '@/modules/transactions/core/entities/ITransac
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import { useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
+import { messages, formatMessage } from '@/shared/messages/catalog'
 import { useITransactionValidation } from '@/modules/transactions/application/composables/useITransactionValidation'
+import type { IAutoCategorizationService } from '@/modules/transactions/core/ports/IAutoCategorizationService'
+import type { IAutoCreateService } from '@/modules/transactions/core/ports/IAutoCreateService'
 
 const props = defineProps<{
   initialData?: ITransaction | null
@@ -226,11 +229,11 @@ const confirmDelete = async () => {
   isSubmitting.value = true
   try {
     await store.deleteITransaction(props.initialData.id)
-    message.success('Transação excluída com sucesso.')
+    message.success(messages.MSG_S_TRANSACTION_DELETED)
     emit('saved')
     emit('close')
   } catch {
-    message.error('Erro ao excluir transação.')
+    message.error(messages.MSG_E_GENERIC)
   } finally {
     isSubmitting.value = false
   }
@@ -367,7 +370,7 @@ async function handleSubmit() {
     await store.saveITransaction(ITransactionData)
     emit('saved')
     emit('close')
-    message.success('Transação salva com sucesso!')
+    message.success(props.initialData ? messages.MSG_S_TRANSACTION_UPDATED : messages.MSG_S_TRANSACTION_CREATED)
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Erro ao salvar transação.'
     message.error(msg)

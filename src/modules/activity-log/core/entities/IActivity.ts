@@ -1,4 +1,4 @@
-export interface Activity {
+export interface IActivity {
   id: string
   timestamp: string
   action: string

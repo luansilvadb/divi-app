@@ -11,7 +11,7 @@ export class DexieGoalRepository implements IGoalRepository {
 
   async save(goal: IGoal): Promise<void> {
     try {
-      await db.ITransaction('rw', db.goals, async () => {
+      await db.transaction('rw', db.goals, async () => {
         const data = {
           ...goal,
           target_value: BigInt(goal.target_value),
@@ -34,7 +34,7 @@ export class DexieGoalRepository implements IGoalRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.ITransaction('rw', db.goals, async () => {
+      await db.transaction('rw', db.goals, async () => {
         // Soft delete for sync engine
         await db.goals.update(id, {
           deleted: true,

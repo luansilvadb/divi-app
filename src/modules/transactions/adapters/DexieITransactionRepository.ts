@@ -48,7 +48,7 @@ export class DexieITransactionRepository implements ITransactionRepository {
       const deleted = false
       const sync_status = 'pending'
 
-      await db.ITransaction('rw', db.transactions, db.wallets, async () => {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
         const fullITransaction = { ...ITransaction, id, created_at, version, deleted, sync_status } as ITransaction
         await this.updateIWalletBalances(fullITransaction)
 
@@ -67,7 +67,7 @@ export class DexieITransactionRepository implements ITransactionRepository {
 
   async update(id: string, ITransaction: Partial<ITransaction>): Promise<ITransaction> {
     try {
-      await db.ITransaction('rw', db.transactions, db.wallets, async () => {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
         const oldData = await db.transactions.get(id)
         if (!oldData) throw new Error('ITransaction not found')
 
@@ -149,7 +149,7 @@ export class DexieITransactionRepository implements ITransactionRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.ITransaction('rw', db.transactions, db.wallets, async () => {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
         const oldData = await db.transactions.get(id)
         if (oldData && !oldData.deleted) {
           let oldIWalletDelta = BigInt(oldData.amount)
@@ -183,7 +183,7 @@ export class DexieITransactionRepository implements ITransactionRepository {
     date: Date = new Date(),
   ): Promise<void> {
     try {
-      await db.ITransaction('rw', db.transactions, db.wallets, async () => {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
         const fromIWallet = await db.wallets.get(fromIWalletId)
         const toIWallet = await db.wallets.get(toIWalletId)
 

@@ -21,7 +21,7 @@ export class DexieIWalletRepository implements IWalletRepository {
     const deleted = false
     const sync_status = 'pending'
 
-    await db.ITransaction('rw', db.wallets, async () => {
+    await db.transaction('rw', db.wallets, async () => {
       await db.wallets.put({
         ...IWallet,
         id,
@@ -41,7 +41,7 @@ export class DexieIWalletRepository implements IWalletRepository {
   }
 
   async update(id: string, IWallet: Partial<IWallet>): Promise<IWallet> {
-    await db.ITransaction('rw', db.wallets, async () => {
+    await db.transaction('rw', db.wallets, async () => {
       await db.wallets.update(id, {
         ...IWallet,
         balance: IWallet.balance !== undefined ? BigInt(IWallet.balance) : undefined,
