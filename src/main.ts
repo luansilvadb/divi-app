@@ -17,8 +17,19 @@ persistenceService.ensurePersistence().catch(err => {
   console.error('[Boot] Persistence request failed:', err)
 })
 
+import { DI_TOKENS } from './core/di-tokens'
+
 const app = createApp(App)
 const pinia = createPinia()
+
+// Composition Root: Provide all services to the Vue app
+Object.values(DI_TOKENS).forEach((token) => {
+  try {
+    app.provide(token, container.resolve(token))
+  } catch (e) {
+    console.warn(`[DI] Skip providing ${token}: not registered in container`)
+  }
+})
 
 app.provide('container', container)
 

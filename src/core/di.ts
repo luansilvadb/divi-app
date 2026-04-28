@@ -89,7 +89,10 @@ container.register(DI_TOKENS.IBudgetRepository, new DexieBudgetRepository())
 container.register(DI_TOKENS.IGoalRepository, new DexieGoalRepository())
 container.register(DI_TOKENS.IGoalLogicService, new GoalLogicService())
 container.register(DI_TOKENS.ISubscriptionRepository, new DexieSubscriptionRepository())
-const activityLogService = new ActivityLogService()
+
+import { DexieActivityRepository } from '../modules/activity-log/adapters/DexieActivityRepository'
+const activityRepo = new DexieActivityRepository()
+const activityLogService = new ActivityLogService(activityRepo)
 container.register(DI_TOKENS.IActivityLogService, activityLogService)
 container.register(DI_TOKENS.IAssetLoader, new AssetLoader(activityLogService))
 container.register(DI_TOKENS.IExportService, new ExportService())

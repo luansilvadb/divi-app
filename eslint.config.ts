@@ -49,6 +49,14 @@ export default defineConfigWithVueTs(
           },
         },
       ],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
       'complexity': ['warn', { max: 10 }],
     },
   },

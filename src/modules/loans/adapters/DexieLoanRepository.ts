@@ -16,7 +16,7 @@ export class DexieLoanRepository implements ILoanRepository {
 
   async save(loan: ILoan): Promise<void> {
     try {
-      await db.ITransaction('rw', db.loans, async () => {
+      await db.transaction('rw', db.loans, async () => {
         const data: LocalLoan = {
           ...loan,
           total_value: BigInt(loan.total_value),
@@ -41,7 +41,7 @@ export class DexieLoanRepository implements ILoanRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.ITransaction('rw', db.loans, async () => {
+      await db.transaction('rw', db.loans, async () => {
         // Soft delete for sync engine
         await db.loans.update(id, {
           deleted: true,

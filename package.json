@@ -15,7 +15,8 @@
     "lint:eslint": "eslint . --fix --cache",
     "lint:knip": "knip",
     "lint:all": "run-s lint:oxlint lint:eslint lint:knip",
-    "format": "prettier --write --experimental-cli src/"
+    "format": "prettier --write --experimental-cli src/",
+    "find-dead-code": "ts-prune"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.1",
@@ -54,6 +55,7 @@
     "oxlint": "~1.51.0",
     "postcss": "^8.5.8",
     "prettier": "3.8.1",
+    "ts-prune": "^0.10.3",
     "typescript": "~5.9.3",
     "unocss": "^66.6.8",
     "vite": "^7.3.1",

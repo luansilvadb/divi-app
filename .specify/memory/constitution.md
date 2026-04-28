@@ -16,8 +16,6 @@ Sync Impact Report:
   - None
 -->
 
-# divi Constitution
-
 ## Core Principles
 
 ### I. Clarity

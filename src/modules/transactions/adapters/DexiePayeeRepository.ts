@@ -16,7 +16,7 @@ export class DexiePayeeRepository implements IPayeeRepository {
 
   async save(payee: IPayee): Promise<void> {
     try {
-      await db.ITransaction('rw', db.payees, async () => {
+      await db.transaction('rw', db.payees, async () => {
         const payeeData: IPayee = {
           ...payee,
           sync_status: payee.sync_status || 'pending',

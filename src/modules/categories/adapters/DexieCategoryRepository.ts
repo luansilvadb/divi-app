@@ -21,7 +21,7 @@ export class DexieCategoryRepository implements ICategoryRepository {
     const deleted = false
     const sync_status = 'pending'
 
-    await db.ITransaction('rw', db.categories, async () => {
+    await db.transaction('rw', db.categories, async () => {
       await db.categories.put({
         ...category,
         id,
@@ -39,7 +39,7 @@ export class DexieCategoryRepository implements ICategoryRepository {
   }
 
   async update(id: string, category: Partial<ICategory>): Promise<ICategory> {
-    await db.ITransaction('rw', db.categories, async () => {
+    await db.transaction('rw', db.categories, async () => {
       await db.categories.update(id, {
         ...category,
         sync_status: 'pending',
@@ -53,7 +53,7 @@ export class DexieCategoryRepository implements ICategoryRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await db.ITransaction('rw', db.categories, async () => {
+    await db.transaction('rw', db.categories, async () => {
       const item = await db.categories.get(id)
       if (item) {
         await db.categories.update(id, {

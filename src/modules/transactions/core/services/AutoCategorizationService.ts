@@ -1,6 +1,8 @@
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
-export class AutoCategorizationService {
+import type { IAutoCategorizationService } from '../ports/IAutoCategorizationService'
+
+export class AutoCategorizationService implements IAutoCategorizationService {
   // Map for O(1) category lookup by keyword
   private categoryMap = new Map<string, string>([
     ['netflix', 'Entertainment'],
