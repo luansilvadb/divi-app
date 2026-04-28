@@ -42,56 +42,13 @@ export class DexieTransactionRepository implements ITransactionRepository {
 
   async save(transaction: Transaction): Promise<void> {
     try {
+      const id = transaction.id || uuidv7()
+
       await db.transaction('rw', db.transactions, db.wallets, async () => {
-        const id = transaction.id || uuidv7()
         const oldData = await db.transactions.get(id)
-        
-        // Calcular o impacto da transação atual (income soma, expense subtrai)
-        let walletDelta = BigInt(transaction.amount)
-        if (transaction.type === 'expense') walletDelta = -walletDelta
+        await this.updateWalletBalances(transaction, oldData)
 
-        if (oldData && !oldData.deleted) {
-          // Reverter impacto da transação antiga 
-          let oldWalletDelta = BigInt(oldData.amount)
-          if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
-
-          if (oldData.wallet_id === transaction.wallet_id) {
-             walletDelta = walletDelta - oldWalletDelta
-          } else {
-             // Mudança de carteira: reverter na antiga
-             const oldWallet = await db.wallets.get(oldData.wallet_id)
-             if (oldWallet) {
-               await db.wallets.put({ ...oldWallet, balance: BigInt(oldWallet.balance) - oldWalletDelta })
-             }
-          }
-        }
-
-        if (walletDelta !== 0n) {
-          const wallet = await db.wallets.get(transaction.wallet_id)
-          if (wallet) {
-            await db.wallets.put({ ...wallet, balance: BigInt(wallet.balance) + walletDelta })
-          }
-        }
-
-        const localData: LocalTransaction = {
-          id,
-          title: transaction.title,
-          amount: BigInt(transaction.amount),
-          type: transaction.type,
-          category_id: transaction.category_id,
-          wallet_id: transaction.wallet_id,
-          payee_id: transaction.payee_id,
-          date: transaction.date,
-          notes: transaction.notes,
-          tags: transaction.tags ? [...transaction.tags] : [],
-          user_id: transaction.user_id,
-          sync_status: transaction.sync_status || 'pending',
-          client_updated_at: transaction.client_updated_at || new Date().toISOString(),
-          created_at: transaction.created_at || new Date().toISOString(),
-          deleted: !!transaction.deleted,
-          version: transaction.version || 1,
-        }
-
+        const localData = this.mapToLocalRecord(id, transaction)
         await db.transactions.put(localData)
       })
 
@@ -99,6 +56,56 @@ export class DexieTransactionRepository implements ITransactionRepository {
       console.debug('[DexieTransactionRepository] Transação salva localmente de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to save transaction to local DB', err)
+    }
+  }
+
+  private async updateWalletBalances(transaction: Transaction, oldData?: LocalTransaction): Promise<void> {
+    // Calcular o impacto da transação atual (income soma, expense subtrai)
+    let walletDelta = BigInt(transaction.amount)
+    if (transaction.type === 'expense') walletDelta = -walletDelta
+
+    if (oldData && !oldData.deleted) {
+      // Reverter impacto da transação antiga 
+      let oldWalletDelta = BigInt(oldData.amount)
+      if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
+
+      if (oldData.wallet_id === transaction.wallet_id) {
+        walletDelta = walletDelta - oldWalletDelta
+      } else {
+        // Mudança de carteira: reverter na antiga
+        const oldWallet = await db.wallets.get(oldData.wallet_id)
+        if (oldWallet) {
+          await db.wallets.put({ ...oldWallet, balance: BigInt(oldWallet.balance) - oldWalletDelta })
+        }
+      }
+    }
+
+    if (walletDelta !== 0n) {
+      const wallet = await db.wallets.get(transaction.wallet_id)
+      if (wallet) {
+        await db.wallets.put({ ...wallet, balance: BigInt(wallet.balance) + walletDelta })
+      }
+    }
+  }
+
+  private mapToLocalRecord(id: string, transaction: Transaction): LocalTransaction {
+    return {
+      id,
+      title: transaction.title,
+      amount: BigInt(transaction.amount),
+      type: transaction.type,
+      category_id: transaction.category_id,
+      wallet_id: transaction.wallet_id,
+      payee_id: transaction.payee_id,
+      date: transaction.date,
+      notes: transaction.notes,
+      tags: transaction.tags ? [...transaction.tags] : [],
+      user_id: transaction.user_id,
+      sync_status: transaction.sync_status || 'pending',
+      client_updated_at: transaction.client_updated_at || new Date().toISOString(),
+      created_at: transaction.created_at || new Date().toISOString(),
+      deleted: !!transaction.deleted,
+      version: transaction.version || 1,
     }
   }
 

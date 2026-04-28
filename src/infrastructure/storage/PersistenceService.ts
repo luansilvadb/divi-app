@@ -2,7 +2,7 @@
  * Serviço para gerenciar a persistência do armazenamento no navegador.
  * Solicita ao browser que os dados não sejam excluídos automaticamente em situações de pouco espaço.
  */
-export class PersistenceService {
+class PersistenceService {
   /**
    * Verifica se o armazenamento já é persistente ou solicita permissão para torná-lo.
    * @returns Promise<boolean> True se a persistência estiver garantida.
