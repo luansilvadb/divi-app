@@ -71,11 +71,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 
 const $router = useRouter()
-const transactionstore = usetransactionstore()
+const transactionStore = useTransactionStore()
 
-const topCategories = computed(() => transactionstore.topCategories)
-const totalExpense = computed(() => transactionstore.totalExpense)
+const topCategories = computed(() => transactionStore.topCategories)
+const totalExpense = computed(() => transactionStore.totalExpense)
 </script>

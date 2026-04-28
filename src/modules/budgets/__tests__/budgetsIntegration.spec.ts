@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../application/stores/budgetStore'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
@@ -42,7 +42,7 @@ describe('Budgets Integration', () => {
     await db.categories.add(category)
 
     const budgetStore = useBudgetStore()
-    const transactionstore = usetransactionstore()
+    const transactionStore = useTransactionStore()
 
     // 2. Initialize Store
     budgetStore.initialize()
@@ -62,7 +62,7 @@ describe('Budgets Integration', () => {
     expect(budgetStore.getConsumed(budgetStore.budgets[0]!)).toBe(0)
 
     // 5. Add ITransaction
-    await transactionstore.saveITransaction({
+    await transactionStore.saveITransaction({
       id: 't1',
       title: 'Dinner',
       amount: 150n,
@@ -73,9 +73,9 @@ describe('Budgets Integration', () => {
     } as any)
 
     // 6. Verify Reactive Update
-    // In a real integration, we'd wait for transactionstore to update its internal 'transactions' ref
-    // But transactionstore update logic might be complex.
-    // For this test, let's assume transactionstore.transactions is updated by saveITransaction call.
+    // In a real integration, we'd wait for transactionStore to update its internal 'transactions' ref
+    // But transactionStore update logic might be complex.
+    // For this test, let's assume transactionStore.transactions is updated by saveITransaction call.
 
     // Wait for any async effects
     await new Promise((resolve) => setTimeout(resolve, 100))

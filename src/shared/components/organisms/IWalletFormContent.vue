@@ -104,7 +104,7 @@ import {
   type FormInst,
   type FormRules
 } from 'naive-ui'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { messages } from '@/shared/messages/catalog'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
@@ -114,7 +114,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['close', 'saved'])
-const store = usetransactionstore()
+const store = useTransactionStore()
 const message = useMessage()
 
 const formRef = ref<FormInst | null>(null)

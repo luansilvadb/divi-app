@@ -115,4 +115,4 @@ export class VaultDatabase extends Dexie {
 
 // Named instance for DI
 export const vaultDb = new VaultDatabase()
-export const db = vaultDb
+

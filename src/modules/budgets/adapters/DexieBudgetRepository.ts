@@ -3,7 +3,7 @@ import { from, type Observable } from 'rxjs'
 import { v7 as uuidv7 } from 'uuid'
 import type { IBudgetRepository } from '../core/ports/IBudgetRepository'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieBudgetRepository implements IBudgetRepository {

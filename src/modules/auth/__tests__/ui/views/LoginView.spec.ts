@@ -103,11 +103,11 @@ vi.mock('@/core/di', () => ({
   container: {
     resolve: vi.fn((token: string) => {
       switch (token) {
-        case 'AuthService':
+        case 'IAuthService':
           return mockAuthService
-        case 'VaultCryptoManager':
+        case 'IVaultCryptoManager':
           return mockVaultCryptoManager
-        case 'SyncEngine':
+        case 'ISyncEngine':
           return mockSyncEngine
         default:
           return {}
@@ -118,9 +118,9 @@ vi.mock('@/core/di', () => ({
 
 vi.mock('@/core/di-tokens', () => ({
   DI_TOKENS: {
-    AuthService: 'AuthService',
-    VaultCryptoManager: 'VaultCryptoManager',
-    SyncEngine: 'SyncEngine',
+    IAuthService: 'IAuthService',
+    IVaultCryptoManager: 'IVaultCryptoManager',
+    ISyncEngine: 'ISyncEngine',
   },
 }))
 

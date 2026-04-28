@@ -1,6 +1,6 @@
 import type { ILoanRepository } from '../core/ports/ILoanRepository'
 import type { ILoan } from '@/modules/loans/core/entities/ILoan'
-import { db, type ILocalLoan } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db, type ILocalLoan } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '@/core/errors/InfrastructureError'
 

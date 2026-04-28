@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../budgetStore'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 // Mock SyncEngine - must be before other imports that use it
@@ -18,9 +18,9 @@ vi.mock('@/core/sync/SyncEngine', () => {
   }
 })
 
-// Mock transactionstore
-vi.mock('@/modules/transactions/application/stores/transactionstore', () => ({
-  usetransactionstore: vi.fn(() => ({
+// Mock useTransactionStore
+vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
+  useTransactionStore: vi.fn(() => ({
     transactions: [
       { id: 't1', category_id: 'c1', amount: 100n, deleted: false, type: 'expense' },
       { id: 't2', category_id: 'c1', amount: 200n, deleted: false, type: 'expense' },

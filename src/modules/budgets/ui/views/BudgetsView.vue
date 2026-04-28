@@ -162,7 +162,7 @@ import {
   NGridItem,
 } from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
@@ -173,7 +173,7 @@ import BudgetDialog from '../components/BudgetDialog.vue'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 const store = useBudgetStore()
-const transactionstore = usetransactionstore()
+const transactionStore = useTransactionStore()
 const isMobile = useIsMobile()
 const showAddBudgetModal = ref(false)
 const selectedBudget = ref<IBudget | null>(null)
@@ -195,7 +195,7 @@ const filteredBudgets = computed(() => {
   if (!store.searchQuery) return store.budgets
   const query = store.searchQuery.toLowerCase()
   return store.budgets.filter((b) => {
-    const name = b.name || transactionstore.categoryMap[b.category_id]?.name || ''
+    const name = b.name || transactionStore.categoryMap[b.category_id]?.name || ''
     return name.toLowerCase().includes(query)
   })
 })
@@ -205,12 +205,12 @@ const searchEmptySubtitle = computed(() => {
 })
 
 onMounted(async () => {
-  if (transactionstore.transactions.length === 0) {
+  if (transactionStore.transactions.length === 0) {
     const now = new Date()
-    await transactionstore.fetchtransactionsByMonth(now.getFullYear(), now.getMonth() + 1)
+    await transactionStore.fetchtransactionsByMonth(now.getFullYear(), now.getMonth() + 1)
   }
-  if (Object.keys(transactionstore.categoryMap).length === 0) {
-    await transactionstore.fetchCategories()
+  if (Object.keys(transactionStore.categoryMap).length === 0) {
+    await transactionStore.fetchCategories()
   }
   store.initialize()
 })

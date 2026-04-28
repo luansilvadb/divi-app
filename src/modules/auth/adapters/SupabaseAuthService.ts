@@ -103,9 +103,17 @@ export class SupabaseAuthService implements IAuthService {
       'transactions', 'wallets', 'categories', 'budgets', 'goals', 'subscriptions', 'loans'
     ] as const
 
+    const failedTables: string[] = []
     for (const table of USER_DATA_TABLES) {
       const { error } = await this.supabase.from(table).delete().eq('user_id', user.id)
-      if (error) console.error(`[AuthService] Failed to delete data from ${table}:`, error)
+      if (error) {
+        console.error(`[AuthService] Failed to delete data from ${table}:`, error)
+        failedTables.push(table)
+      }
+    }
+
+    if (failedTables.length > 0) {
+      throw new Error(`Purge parcialmente falhou em: ${failedTables.join(', ')}`)
     }
   }
 }
