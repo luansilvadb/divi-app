@@ -62,23 +62,6 @@ export default defineConfig({
   build: {
     minify: 'esbuild',
     cssCodeSplit: true,
-    target: 'esnext',
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('vue') || id.includes('pinia') || id.includes('vue-router')) {
-              return 'vendor-vue'
-            }
-            if (id.includes('@supabase') || id.includes('dexie')) {
-              return 'vendor-db'
-            }
-            if (id.includes('chart.js') || id.includes('vue-chartjs')) {
-              return 'vendor-charts'
-            }
-          }
-        }
-      }
-    }
+    target: 'esnext'
   }
 })
