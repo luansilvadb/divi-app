@@ -3,7 +3,7 @@
     :type="naiveType"
     :bordered="variant === 'outline'"
     :round="true"
-    class="!font-bold !px-3"
+    class="!font-semibold !px-3 transition-all duration-150 ease-out"
     size="small"
   >
     <slot>{{ label }}</slot>

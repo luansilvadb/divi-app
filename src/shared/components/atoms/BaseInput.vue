@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-sm font-medium mb-1 text-zinc-800 dark:text-zinc-50"
+      class="block text-sm font-medium mb-1 text-label-primary"
       >{{ label }}</label
     >
 
@@ -14,11 +14,11 @@
       @update:value="handleUpdateNumber"
       :placeholder="placeholder"
       :status="error ? 'error' : undefined"
+      class="transition-all duration-150 ease-out"
       v-bind="$attrs"
-      class="!rounded-xl"
     >
       <template v-if="icon" #prefix>
-        <i :class="icon" class="text-zinc-400"></i>
+        <i :class="icon" class="text-label-tertiary"></i>
       </template>
     </NInputNumber>
 
@@ -30,16 +30,16 @@
       @update:value="handleUpdateText"
       :placeholder="placeholder"
       :status="error ? 'error' : undefined"
+      class="transition-all duration-150 ease-out"
       v-bind="$attrs"
-      class="!rounded-xl"
       show-password-on="mousedown"
     >
       <template v-if="icon" #prefix>
-        <i :class="icon" class="text-zinc-400"></i>
+        <i :class="icon" class="text-label-tertiary"></i>
       </template>
     </NInput>
 
-    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-red-500">
+    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-error">
       {{ error }}
     </p>
   </div>
@@ -80,14 +80,3 @@ function handleUpdateText(val: string) {
   emit('update:modelValue', val)
 }
 </script>
-
-<style scoped>
-:deep(.n-input) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05);
-}
-
-:is(.dark) :deep(.n-input) {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-</style>

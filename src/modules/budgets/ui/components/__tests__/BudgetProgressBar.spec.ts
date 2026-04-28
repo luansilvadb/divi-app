@@ -44,7 +44,8 @@ describe('BudgetProgressBar.vue', () => {
       },
     })
 
-    expect(wrapper.vm.percentage).toBe(100)
+    expect(wrapper.vm.clampedPercentage).toBe(100)
+    expect(wrapper.vm.percentage).toBe(110)
     expect(wrapper.vm.isOverBudget).toBe(true)
   })
 })

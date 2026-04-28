@@ -1,6 +1,6 @@
 import type { IActivityLogService } from '../../domain/contracts/IActivityLogService'
 import type { Activity } from '../../domain/entities/Activity'
-import { db } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
 
 export class ActivityLogService implements IActivityLogService {
   async getRecentActivities(): Promise<Activity[]> {

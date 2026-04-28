@@ -4,15 +4,16 @@
     @update:show="$emit('close')"
     :width="280"
     placement="right"
-    class="!bg-zinc-50 dark:!bg-zinc-950"
+    class=""
+    :style="{ '--bg': 'var(--surface-primary)' }"
   >
     <div class="flex flex-col h-full">
       <!-- Luxury Header -->
-      <div class="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
+      <div class="p-6 border-b" :style="{ borderColor: 'var(--surface-separator)', background: 'var(--surface-primary)' }">
         <div class="flex items-center justify-between">
           <div class="flex flex-col">
-            <span class="text-xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight leading-none mb-1">Mais Opções</span>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Explore o Sistema</span>
+            <span class="text-xl font-bold tracking-tight leading-none mb-1" :style="{ color: 'var(--text-label)' }">Mais Opções</span>
+            <span class="text-[11px] font-medium uppercase tracking-wider" :style="{ color: 'var(--text-tertiary)' }">Explore o Sistema</span>
           </div>
           <NButton quaternary circle @click="$emit('close')">
             <template #icon><i class="i-lucide-x text-xl"></i></template>
@@ -30,9 +31,9 @@
       </div>
 
       <!-- Footer -->
-      <div class="p-6 border-t border-zinc-200 dark:border-zinc-800 flex flex-col gap-4 pb-safe">
+      <div class="p-6 flex flex-col gap-4 pb-safe" :style="{ borderTop: '1px solid var(--surface-separator)' }">
         <div class="flex items-center justify-between px-2">
-          <span class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Aparência</span>
+          <span class="text-[11px] font-semibold uppercase tracking-widest" :style="{ color: 'var(--text-tertiary)' }">Aparência</span>
           <ThemeToggle />
         </div>
 
@@ -51,8 +52,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref, watch } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { h, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { NDrawer, NMenu, NButton, type MenuOption } from 'naive-ui'
 import ThemeToggle from '../molecules/ThemeToggle.vue'
 
@@ -124,13 +125,13 @@ function handleMenuClick(key: string) {
   padding-bottom: env(safe-area-inset-bottom, 1.5rem);
 }
 :deep(.n-menu-item-content--selected) {
-  background-color: rgba(139, 92, 246, 0.1) !important;
+  background-color: rgba(0, 122, 255, 0.08) !important;
 }
 :deep(.n-menu-item-content--selected .n-menu-item-content-header) {
-  color: #8b5cf6 !important;
-  font-weight: 700;
+  color: #007AFF !important;
+  font-weight: 600;
 }
 :deep(.n-menu-item-content--selected .n-menu-item-content__icon) {
-  color: #8b5cf6 !important;
+  color: #007AFF !important;
 }
 </style>

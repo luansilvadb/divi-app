@@ -1,9 +1,9 @@
 <template>
   <NCard
     v-bind="$attrs"
-    class="glass-card overflow-hidden transition-all duration-modern ease-modern"
+    class="overflow-hidden"
     :class="{
-      'cursor-pointer hover:scale-[1.01] hover:brightness-[1.02] active:scale-[0.99] hover-glow': clickable,
+      'cursor-pointer': clickable,
       'border-red-500/50 animate-pulse': error,
       'h-full flex flex-col': hFull,
     }"
@@ -26,12 +26,12 @@
       v-if="error"
       class="p-8 flex flex-col items-center justify-center text-center gap-4 animate-fade-in"
     >
-      <div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500">
+      <div class="w-12 h-12 rounded-full bg-[var(--color-error-subtle)] flex items-center justify-center text-[var(--color-error)]">
         <i class="i-lucide-alert-circle text-2xl"></i>
       </div>
       <div class="flex flex-col gap-1">
-        <h3 class="text-red-500 font-bold">Erro ao carregar dados</h3>
-        <p class="text-zinc-600 dark:text-zinc-400 text-sm max-w-[200px]">
+        <h3 class="text-[var(--color-error)] font-bold">Erro ao carregar dados</h3>
+        <p class="text-[var(--text-secondary)] text-sm max-w-[200px]">
           {{ errorMsg || 'Não foi possível carregar as informações agora.' }}
         </p>
       </div>
@@ -40,7 +40,7 @@
         type="error"
         size="small"
         @click.stop="$emit('retry')"
-        class="mt-2 !rounded-xl font-bold"
+        class="mt-2 font-bold"
       >
         Tentar novamente
       </NButton>
@@ -68,10 +68,10 @@
         </slot>
       </div>
       <div class="flex flex-col gap-1">
-        <h3 class="text-zinc-800 dark:text-zinc-50 font-bold text-lg">
+        <h3 class="text-[var(--text-label)] font-bold text-lg">
           {{ emptyTitle || 'Sem dados' }}
         </h3>
-        <p class="text-zinc-600 dark:text-zinc-400 text-sm max-w-[250px] leading-relaxed">
+        <p class="text-[var(--text-secondary)] text-sm max-w-[250px] leading-relaxed">
           {{ emptySubtitle || 'Não há informações disponíveis para exibir neste momento.' }}
         </p>
       </div>
@@ -81,14 +81,14 @@
     <!-- Default content -->
     <div
       v-else
-      class="text-zinc-800 dark:text-zinc-50"
+      class="text-[var(--text-label)]"
       :class="{ 'h-full flex flex-col': hFull, '!p-0': padding === 'none' }"
     >
       <slot />
     </div>
 
     <template v-if="$slots.footer" #footer>
-      <div class="text-zinc-600 dark:text-zinc-400 text-sm font-medium">
+      <div class="text-[var(--text-secondary)] text-sm font-medium">
         <slot name="footer" />
       </div>
     </template>
@@ -114,3 +114,12 @@ defineProps<{
 
 defineEmits(['click', 'retry'])
 </script>
+
+<style scoped>
+/* Smooth transitions for state changes */
+:deep(.n-card) {
+  transition:
+    background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+</style>

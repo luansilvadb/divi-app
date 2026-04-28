@@ -32,7 +32,8 @@
               </svg>
             </div>
             <NText
-              class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent !bg-gradient-to-br from-violet-500 to-indigo-600"
+              class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
+              style="background-image: linear-gradient(to bottom right, var(--color-primary), var(--color-info));"
             >
               Divi
             </NText>
@@ -150,9 +151,9 @@
           <!-- Terms -->
           <NText depth="3" class="text-center text-[10px] leading-relaxed">
             Ao continuar, você concorda com nossos<br />
-            <a href="#" class="underline underline-offset-2 hover:text-violet-500 transition-colors">Termos de Uso</a>
+            <a href="#" class="underline underline-offset-2 hover:text-[#007AFF] transition-colors">Termos de Uso</a>
             e
-            <a href="#" class="underline underline-offset-2 hover:text-violet-500 transition-colors">Política de Privacidade</a>
+            <a href="#" class="underline underline-offset-2 hover:text-[#007AFF] transition-colors">Política de Privacidade</a>
           </NText>
         </NSpace>
       </NCard>
@@ -179,7 +180,11 @@ import {
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
+import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
+import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
+import { useAuthStore } from '../../application/authStore'
 
+const authStore = useAuthStore()
 const isLoading = ref(false)
 const isRegister = ref(false)
 const email = ref('')
@@ -187,6 +192,8 @@ const password = ref('')
 const message = useMessage()
 
 const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
+const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.VaultCryptoManager)
+const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.SyncEngine)
 const currentYear = new Date().getFullYear()
 
 async function handleSubmit() {
@@ -194,9 +201,13 @@ async function handleSubmit() {
   try {
     if (isRegister.value) {
       await authService.registerWithEmail({ email: email.value, password: password.value })
+      // Initialize vault with same password
+      await authStore.initializeVault(password.value, vaultCryptoManager, syncEngine)
       message.success('Conta criada com sucesso!')
     } else {
       await authService.signInWithEmail({ email: email.value, password: password.value })
+      // Initialize vault with same password
+      await authStore.initializeVault(password.value, vaultCryptoManager, syncEngine)
       message.success('Login realizado com sucesso!')
     }
   } catch (error: unknown) {

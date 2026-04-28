@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-transparent h-full">
+  <div class="p-6 bg-white dark:bg-[#1c1c1e] h-full">
     <!-- Confirm Delete Dialog -->
     <BaseConfirmDialog
       :show="showConfirmDelete"
@@ -17,7 +17,7 @@
       :rules="rules"
       size="large"
       label-placement="top"
-      class="space-y-4"
+      class="space-y-5"
     >
       <!-- Luxury Type Switcher (Segmented Control) -->
       <NFormItem :show-label="false" path="type">
@@ -26,24 +26,17 @@
           name="transaction-type"
           class="w-full"
         >
-          <div class="flex p-1.5 bg-zinc-100/80 dark:bg-zinc-900/80 rounded-2xl gap-1.5 border border-zinc-200 dark:border-zinc-800 shadow-inner w-full relative">
-            
+          <div class="flex p-1 bg-[#f5f5f7] dark:bg-[#2c2c2e] rounded-[9px] w-full relative overflow-hidden">
+
             <!-- Expense Tab -->
             <NRadioButton
               value="expense"
-              class="flex-1 !rounded-xl !border-none !bg-transparent text-center transition-all duration-300"
-              :class="{ 
-                '!bg-white dark:!bg-zinc-800 !shadow-[0_4px_12px_rgba(239,68,68,0.15)] ring-1 ring-red-500/20': form.type === 'expense' 
-              }"
+              class="flex-1 !rounded-[7px] !border-none !bg-transparent text-center select-none transition-all duration-150 ease-out relative"
             >
-              <div class="flex items-center justify-center gap-2.5 py-2">
-                <div 
-                  class="w-2 h-2 rounded-full transition-all duration-300"
-                  :class="form.type === 'expense' ? 'bg-red-500 scale-125 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-zinc-300 dark:bg-zinc-600'"
-                ></div>
-                <span 
-                  class="font-black text-[11px] uppercase tracking-[0.2em] transition-colors"
-                  :class="form.type === 'expense' ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-400'"
+              <div class="flex items-center justify-center gap-2 py-2.5">
+                <span
+                  class="font-semibold text-[13px] tracking-tight transition-all duration-150"
+                  :class="form.type === 'expense' ? 'text-[#1d1d1f] dark:text-white' : 'text-[#6e6e73] dark:text-[#8e8e93]'"
                 >
                   Despesa
                 </span>
@@ -53,19 +46,12 @@
             <!-- Income Tab -->
             <NRadioButton
               value="income"
-              class="flex-1 !rounded-xl !border-none !bg-transparent text-center transition-all duration-300"
-              :class="{ 
-                '!bg-white dark:!bg-zinc-800 !shadow-[0_4px_12px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/20': form.type === 'income' 
-              }"
+              class="flex-1 !rounded-[7px] !border-none !bg-transparent text-center select-none transition-all duration-150 ease-out relative"
             >
-              <div class="flex items-center justify-center gap-2.5 py-2">
-                <div 
-                  class="w-2 h-2 rounded-full transition-all duration-300"
-                  :class="form.type === 'income' ? 'bg-emerald-500 scale-125 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-zinc-300 dark:bg-zinc-600'"
-                ></div>
-                <span 
-                  class="font-black text-[11px] uppercase tracking-[0.2em] transition-colors"
-                  :class="form.type === 'income' ? 'text-zinc-900 dark:text-zinc-50' : 'text-zinc-400'"
+              <div class="flex items-center justify-center gap-2 py-2.5">
+                <span
+                  class="font-semibold text-[13px] tracking-tight transition-all duration-150"
+                  :class="form.type === 'income' ? 'text-[#1d1d1f] dark:text-white' : 'text-[#6e6e73] dark:text-[#8e8e93]'"
                 >
                   Receita
                 </span>
@@ -76,30 +62,24 @@
       </NFormItem>
 
       <!-- Title Input -->
-      <NFormItem label="Título da Transação" path="title">
+      <NFormItem label="Título" path="title">
         <template #label>
-          <div class="flex items-center gap-2 opacity-60">
-            <i class="i-lucide-tag text-xs"></i>
-            <span class="text-[10px] uppercase font-bold tracking-widest">Título</span>
-          </div>
+          <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Título</span>
         </template>
         <NInput
           v-model:value="form.title"
           placeholder="Ex: Netflix, Supermercado..."
-          class="!rounded-xl"
           @input="handleTitleInput"
+          class="!rounded-xl"
         />
       </NFormItem>
 
-      <NGrid :x-gap="16" :cols="2">
+      <NGrid :x-gap="20" :cols="2">
         <!-- Amount Input (BRL Formatted) -->
         <NGi>
           <NFormItem label="Valor" path="amount">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-banknote text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Valor</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Valor</span>
             </template>
             <NInput
               :value="displayAmount"
@@ -108,7 +88,7 @@
               @input="handleInputAmount"
             >
               <template #prefix>
-                <span class="text-xs font-bold opacity-40 mr-1">{{ activeConfig.symbol }}</span>
+                <span class="text-[13px] font-semibold text-[#8e8e93] dark:text-[#636366] mr-1">{{ activeConfig?.symbol || 'R$' }}</span>
               </template>
             </NInput>
           </NFormItem>
@@ -118,10 +98,7 @@
         <NGi>
           <NFormItem label="Data" path="date">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-calendar text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Data</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Data</span>
             </template>
             <NDatePicker
               v-model:value="timestampDate"
@@ -134,15 +111,12 @@
         </NGi>
       </NGrid>
 
-      <NGrid :x-gap="16" :cols="2">
+      <NGrid :x-gap="20" :cols="2">
         <!-- Category Selection -->
         <NGi>
           <NFormItem label="Categoria" path="category_id">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-layers text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Categoria</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Categoria</span>
             </template>
             <NSelect
               v-model:value="form.category_id"
@@ -158,12 +132,9 @@
 
         <!-- Wallet Selection -->
         <NGi>
-          <NFormItem label="Carteira" path="wallet_id">
+          <NFormItem label="Conta" path="wallet_id">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-wallet text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Conta</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Conta</span>
             </template>
             <NSelect
               v-model:value="form.wallet_id"
@@ -178,24 +149,24 @@
         </NGi>
       </NGrid>
 
-      <!-- Action Buttons (Clean Layout) -->
-      <div class="flex items-center gap-4 pt-6">
+      <!-- Action Buttons (Apple Style) -->
+      <div class="flex items-center gap-3 pt-8">
         <NButton
           v-if="props.initialData"
           type="error"
           secondary
-          class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest !bg-red-500/10 !text-red-600 hover:!bg-red-600 hover:!text-white transition-all duration-300"
+          class="flex-1 !h-[48px] !rounded-xl font-semibold text-[17px] tracking-tight !bg-[#ff3b30]/10 !text-[#ff3b30] hover:!bg-[#ff3b30] hover:!text-white active:scale-[0.98] select-none transition-all duration-150"
           @click="handleDelete"
         >
-          Excluir Registro
+          Excluir
         </NButton>
         <NButton
           type="primary"
           :loading="isSubmitting"
-          class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
+          class="flex-[2] !h-[48px] !rounded-xl font-semibold text-[17px] tracking-tight !bg-[#0071e3] hover:!bg-[#0066cc] active:scale-[0.98] select-none transition-all duration-150"
           @click="handleSubmit"
         >
-          Salvar Lançamento
+          Salvar
         </NButton>
       </div>
     </NForm>
@@ -205,28 +176,28 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, watch, computed } from 'vue'
 import { v7 as uuidv7 } from 'uuid'
-import { 
-  NDatePicker, 
-  NButton, 
-  NForm, 
-  NFormItem, 
-  NInput, 
-  NInputNumber, 
-  NSelect, 
-  NRadioGroup, 
+import {
+  NDatePicker,
+  NButton,
+  NForm,
+  NFormItem,
+  NInput,
+  NSelect,
+  NRadioGroup,
   NRadioButton,
   NGrid,
   NGi,
   useMessage,
-  type FormInst,
-  type FormRules
+  type FormInst
 } from 'naive-ui'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { AutoCategorizationService } from '@/modules/transactions/application/services/AutoCategorizationService'
+import { AutoCreateService } from '@/modules/transactions/application/services/AutoCreateService'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
-import type { Wallet } from '@/shared/domain/entities/Wallet'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
+import { useTransactionValidation } from '@/modules/transactions/application/composables/useTransactionValidation'
 
 const props = defineProps<{
   initialData?: Transaction | null
@@ -235,6 +206,8 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'saved'])
 const store = useTransactionStore()
 const autoCatService = new AutoCategorizationService()
+const autoCreateService = container.resolve<AutoCreateService>(DI_TOKENS.AutoCreateService)
+const { rules, validateForm } = useTransactionValidation()
 const message = useMessage()
 
 const formRef = ref<FormInst | null>(null)
@@ -256,21 +229,19 @@ const confirmDelete = async () => {
     message.success('Transação excluída com sucesso.')
     emit('saved')
     emit('close')
-  } catch (error: any) {
+  } catch {
     message.error('Erro ao excluir transação.')
   } finally {
     isSubmitting.value = false
   }
 }
 
-const colors = [
-  '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899'
-]
+// Colors moved to AutoCreateService
 
 interface TransactionForm {
   title: string
   amount: number | null
-  type: 'income' | 'expense'
+  type: 'income' | 'expense' | 'transfer'
   category_id: string | null
   wallet_id: string | null
   date: string
@@ -285,18 +256,13 @@ const form = reactive<TransactionForm>({
   date: new Date().toISOString().slice(0, 10),
 })
 
-const rules: FormRules = {
-  title: { required: true, message: 'Título é obrigatório', trigger: 'blur' },
-  amount: { required: true, type: 'number', min: 0.01, message: 'Valor deve ser maior que zero', trigger: 'blur' },
-  category_id: { required: true, message: 'Selecione uma categoria', trigger: 'change' },
-  wallet_id: { required: true, message: 'Selecione uma conta', trigger: 'change' }
-}
+// Rules are now from useTransactionValidation composable
 
-const categoryOptions = computed(() => 
+const categoryOptions = computed(() =>
   store.categories.map(cat => ({ label: cat.name, value: cat.id }))
 )
 
-const walletOptions = computed(() => 
+const walletOptions = computed(() =>
   store.wallets.map(w => ({ label: w.name, value: w.id }))
 )
 
@@ -312,14 +278,14 @@ const activeWallet = computed(() => {
 
 const activeConfig = computed(() => {
   const currency = activeWallet.value?.currency || 'BRL'
-  return currencyConfigs[currency] || currencyConfigs.BRL
+  return currencyConfigs[currency] || currencyConfigs['BRL']
 })
 
 // --- Live Masking Logic ---
 
 const displayAmount = computed(() => {
   if (form.amount === null) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
+  return new Intl.NumberFormat(activeConfig.value?.locale || 'pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(form.amount)
@@ -334,14 +300,6 @@ function handleInputAmount(val: string) {
   form.amount = Number(digits) / 100
 }
 
-const formatCurrency = (value: number | null) => {
-  if (value === null || isNaN(value)) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
 const timestampDate = computed({
   get: () => new Date(form.date + 'T12:00:00').getTime(),
   set: (val: number) => {
@@ -354,7 +312,8 @@ watch(
   (newData) => {
     if (newData) {
       form.title = newData.title
-      form.amount = newData.amount
+      // Convert bigint to number for the UI form
+      form.amount = typeof newData.amount === 'bigint' ? Number(newData.amount) / 100 : newData.amount
       form.type = newData.type
       form.category_id = newData.category_id
       form.wallet_id = newData.wallet_id
@@ -376,134 +335,103 @@ function handleTitleInput() {
   }
 }
 
+async function buildTransactionData(): Promise<Transaction> {
+  const finalCategoryId = await autoCreateService.resolveCategory(form.category_id, store.categories)
+  const finalWalletId = await autoCreateService.resolveWallet(form.wallet_id, store.wallets)
+
+  return {
+    ...props.initialData,
+    ...form,
+    category_id: finalCategoryId,
+    wallet_id: finalWalletId,
+    amount: BigInt(Math.round((form.amount || 0) * 100)),
+    id: props.initialData?.id || uuidv7(),
+    user_id: props.initialData?.user_id || '',
+    sync_status: 'pending' as const,
+    deleted: props.initialData?.deleted || false,
+    client_updated_at: new Date().toISOString(),
+    version: (props.initialData?.version || 0) + 1,
+  } as Transaction
+}
+
 async function handleSubmit() {
-  formRef.value?.validate(async (errors) => {
-    if (errors) return
+  const { valid: isValid } = validateForm(form)
+  if (!isValid) {
+    formRef.value?.validate((errors) => { if (errors) return })
+    return
+  }
 
-    isSubmitting.value = true
-    try {
-      let finalCategoryId = form.category_id
-
-      if (finalCategoryId && !store.categories.some(c => c.id === finalCategoryId)) {
-        const existingByName = store.categories.find(
-          (c) => c.name.toLowerCase() === finalCategoryId?.toLowerCase(),
-        )
-        if (existingByName) {
-          finalCategoryId = existingByName.id
-        } else {
-          const randomColor = colors[Math.floor(Math.random() * colors.length)]
-          await store.saveCategory({
-            name: finalCategoryId,
-            color: randomColor,
-          } as Category)
-          const newlyCreated = store.categories.find((c) => c.name === finalCategoryId)
-          if (newlyCreated) finalCategoryId = newlyCreated.id
-        }
-      }
-
-      let finalWalletId = form.wallet_id
-      if (finalWalletId && !store.wallets.some((w) => w.id === finalWalletId)) {
-        const existingByName = store.wallets.find(
-          (w) => w.name.toLowerCase() === finalWalletId?.toLowerCase(),
-        )
-        if (existingByName) {
-          finalWalletId = existingByName.id
-        } else {
-          await store.saveWallet({
-            name: finalWalletId,
-            balance: 0,
-            currency: 'BRL',
-          } as Wallet)
-          const newlyCreated = store.wallets.find((w) => w.name === finalWalletId)
-          if (newlyCreated) finalWalletId = newlyCreated.id
-        }
-      }
-
-      const transactionData = {
-        ...(props.initialData || {}),
-        ...form,
-        category_id: finalCategoryId,
-        wallet_id: finalWalletId,
-        amount: form.amount || 0,
-        id: props.initialData?.id || uuidv7(),
-        user_id: props.initialData?.user_id || '',
-        sync_status: 'pending' as const,
-        deleted: props.initialData?.deleted || false,
-        client_updated_at: new Date().toISOString(),
-        version: (props.initialData?.version || 0) + 1,
-      }
-
-      await store.saveTransaction(transactionData as Transaction)
-      emit('saved')
-      emit('close')
-      message.success('Transação salva com sucesso!')
-    } catch (error: any) {
-      message.error(error.message || 'Erro ao salvar transação.')
-    } finally {
-      isSubmitting.value = false
-    }
-  })
+  isSubmitting.value = true
+  try {
+    const transactionData = await buildTransactionData()
+    await store.saveTransaction(transactionData)
+    emit('saved')
+    emit('close')
+    message.success('Transação salva com sucesso!')
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Erro ao salvar transação.'
+    message.error(msg)
+  } finally {
+    isSubmitting.value = false
+  }
 }
 </script>
 
 <style scoped>
-:deep(.n-input), 
-:deep(.n-input-number), 
-:deep(.n-date-picker),
-:deep(.n-select .n-base-selection) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
-  border: 1px solid transparent !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* Naive UI theme handles all styling via naiveTheme.ts */
 
-:deep(.n-input:hover),
-:deep(.n-select .n-base-selection:hover) {
-  border-color: rgba(139, 92, 246, 0.3) !important;
-}
-
-:deep(.n-input.n-input--focus),
-:deep(.n-select.n-select--active .n-base-selection) {
-  background-color: transparent !important;
-  border-color: #8b5cf6 !important;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1) !important;
-}
-
-:is(.dark) :deep(.n-input), 
-:is(.dark) :deep(.n-input-number), 
-:is(.dark) :deep(.n-date-picker),
-:is(.dark) :deep(.n-select .n-base-selection) {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-}
-
-:deep(.n-form-item .n-form-item-label) {
-  padding-bottom: 4px;
-}
-
-/* Luxury Radio Button Fixes */
+/* Segmented Control - Apple Style */
 :deep(.n-radio-button) {
-  --n-button-border-radius: 14px !important;
+  --n-button-border-radius: 7px !important;
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+:deep(.n-radio-button:active) {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+/* Selected button - permanent pressed state */
+:deep(.n-radio-button.n-radio-button--checked) {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  transform: scale(1);
+}
+
+:is(.dark) :deep(.n-radio-button.n-radio-button--checked) {
+  background-color: #3a3a3c !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
 :deep(.n-radio-button .n-radio-button__state-border) {
   display: none !important;
 }
 
-:deep(.n-radio-button.n-radio-button--checked) {
-  background-color: transparent !important;
-}
-
-/* Custom focus ring that matches the pill shape */
 :deep(.n-radio-button:focus-within) {
   outline: none !important;
 }
 
 :deep(.n-radio-button:focus-visible) {
-  box-shadow: 0 0 0 2px #8b5cf6 !important;
-  border-radius: 14px !important;
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.4) !important;
+  border-radius: 7px !important;
+}
+
+/* Button interactions */
+:deep(.n-button) {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+:deep(.n-button:active) {
+  transform: scale(0.98);
+}
+
+:deep(.n-button.n-button--loading) {
+  opacity: 0.85 !important;
 }
 </style>
 

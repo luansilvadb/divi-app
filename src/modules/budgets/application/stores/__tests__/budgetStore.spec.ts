@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../budgetStore'
-import { db } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
 import type { Budget } from '@/shared/domain/entities/Budget'
 
 // Mock SyncEngine - must be before other imports that use it
@@ -95,7 +95,7 @@ describe('BudgetStore', () => {
     await store.saveBudget(budget)
     const saved = await db.budgets.get('b-new')
     expect(saved?.user_id).toBe('u1')
-    expect(saved?.limit_value).toBe(123)
+    expect(saved?.limit_value).toBe(123n)
   })
 
   it('should delete a budget', async () => {
@@ -104,5 +104,32 @@ describe('BudgetStore', () => {
     await store.deleteBudget('b-del')
     const deleted = await db.budgets.get('b-del')
     expect(deleted?.deleted).toBe(true)
+  })
+
+  it('should not mutate the original budget object when saving', async () => {
+    const store = useBudgetStore()
+    const originalBudget: Budget = {
+      id: 'b-immutable',
+      user_id: '', // Empty to trigger user_id assignment
+      category_id: 'c1',
+      limit_value: 500n,
+      period: 'monthly',
+      sync_status: 'pending',
+      created_at: new Date().toISOString(),
+      client_updated_at: new Date().toISOString(),
+      version: 1,
+      deleted: false,
+    }
+
+    // Create a frozen copy to ensure immutability
+    const budgetToSave = Object.freeze({ ...originalBudget })
+
+    // Should not throw when saving (would throw if it tried to mutate)
+    await store.saveBudget(budgetToSave)
+
+    // Verify the saved budget has user_id
+    const saved = await db.budgets.get('b-immutable')
+    expect(saved?.user_id).toBe('u1')
+    expect(saved?.limit_value).toBe(500n)
   })
 })

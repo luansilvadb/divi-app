@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { db } from '@/core/db'
-import type { LocalBudget } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
+import type { LocalBudget } from '@/infrastructure/storage/VaultDatabase'
 
 describe('Budget Database (Dexie)', () => {
   beforeEach(async () => {

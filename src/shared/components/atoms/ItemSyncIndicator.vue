@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="status !== 'synced'"
-    class="item-sync-indicator flex items-center justify-center transition-all duration-300 hover:scale-110"
+    class="item-sync-indicator flex items-center justify-center transition-all duration-150 ease-out hover:scale-110"
     :title="tooltipContent"
   >
     <!-- Pending (Pulsing Cloud) -->

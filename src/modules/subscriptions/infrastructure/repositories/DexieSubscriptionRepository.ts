@@ -1,14 +1,14 @@
 import type { ISubscriptionRepository } from '@/shared/domain/contracts/ISubscriptionRepository'
 import type { Subscription } from '@/shared/domain/entities/Subscription'
-import { db, type LocalSubscription } from '@/core/db'
+import { db, type LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '../../domain/errors'
 
 export class DexieSubscriptionRepository implements ISubscriptionRepository {
   async getAll(): Promise<Subscription[]> {
     try {
-      const list = await db.subscriptions.filter((s) => !s.deleted).toArray()
-      return list.map(this.mapToEntity)
+      const subscriptions = await db.subscriptions.filter((s) => !s.deleted).toArray()
+      return subscriptions.map(this.mapToEntity)
     } catch (err) {
       throw new InfrastructureError('Failed to fetch subscriptions from local DB', err)
     }
@@ -16,19 +16,22 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async save(subscription: Subscription): Promise<void> {
     try {
-      const data: LocalSubscription = {
-        ...subscription,
-        category_id: subscription.category_id || '',
-        wallet_id: subscription.wallet_id || '',
-        sync_status: subscription.sync_status || 'pending',
-        deleted: !!subscription.deleted,
-        client_updated_at: subscription.client_updated_at || new Date().toISOString(),
-        created_at: subscription.created_at || new Date().toISOString(),
-        version: subscription.version || 1,
-      }
-      await db.subscriptions.put(data)
+      await db.transaction('rw', db.subscriptions, async () => {
+        const data: LocalSubscription = {
+          ...subscription,
+          amount: BigInt(subscription.amount),
+          category_id: subscription.category_id || '',
+          wallet_id: subscription.wallet_id || '',
+          sync_status: subscription.sync_status || 'pending',
+          deleted: !!subscription.deleted,
+          client_updated_at: subscription.client_updated_at || new Date().toISOString(),
+          created_at: subscription.created_at || new Date().toISOString(),
+          version: subscription.version || 1,
+        }
+        await db.subscriptions.put(data)
+      })
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieSubscriptionRepository] Assinatura salva localmente. Sync disparado.')
+      console.debug('[DexieSubscriptionRepository] Assinatura salva localmente de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to save subscription to local DB', err)
     }
@@ -36,14 +39,16 @@ export class DexieSubscriptionRepository implements ISubscriptionRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      // Soft delete for sync engine
-      await db.subscriptions.update(id, {
-        deleted: true,
-        sync_status: 'pending',
-        client_updated_at: new Date().toISOString(),
+      await db.transaction('rw', db.subscriptions, async () => {
+        // Soft delete for sync engine
+        await db.subscriptions.update(id, {
+          deleted: true,
+          sync_status: 'pending',
+          client_updated_at: new Date().toISOString(),
+        })
       })
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieSubscriptionRepository] Assinatura marcada para deleção. Sync disparado.')
+      console.debug('[DexieSubscriptionRepository] Assinatura marcada para deleção de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to delete subscription', err)
     }

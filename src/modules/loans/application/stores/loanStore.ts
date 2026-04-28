@@ -22,16 +22,37 @@ export const useLoanStore = defineStore('loans', () => {
   }
 
   const saveLoan = async (loan: Loan) => {
-    await loanRepo.save(loan)
-    await fetchLoans()
+    try {
+      await loanRepo.save(loan)
+      await fetchLoans()
+    } catch (err) {
+      const errorContext = {
+        operation: 'saveLoan',
+        loanId: loan.id,
+        loanDescription: loan.description,
+        error: err instanceof Error ? err.message : String(err),
+      }
+      console.error('[LoanStore] Failed to save loan:', errorContext, err)
+      throw err
+    }
   }
 
   const deleteLoan = async (id: string) => {
-    await loanRepo.delete(id)
-    await fetchLoans()
+    try {
+      await loanRepo.delete(id)
+      await fetchLoans()
+    } catch (err) {
+      const errorContext = {
+        operation: 'deleteLoan',
+        loanId: id,
+        error: err instanceof Error ? err.message : String(err),
+      }
+      console.error('[LoanStore] Failed to delete loan:', errorContext, err)
+      throw err
+    }
   }
 
-  const totalDebt = computed(() => loans.value.reduce((sum, l) => sum + l.remaining_value, 0))
+  const totalDebt = computed(() => Number(loans.value.reduce((sum, l) => sum + BigInt(l.remaining_value), 0n)))
 
   return {
     loans,

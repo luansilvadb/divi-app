@@ -28,13 +28,13 @@
             <div
               v-for="day in calendarDays"
               :key="day.date.toISOString()"
-              class="relative aspect-square rounded-xl p-1.5 border border-transparent transition-all duration-200 flex flex-col items-center cursor-pointer"
+              class="relative aspect-square rounded-xl p-1.5 border border-transparent transition-all duration-150 ease-out flex flex-col items-center cursor-pointer"
               :class="[
                 day.isCurrentMonth
                   ? 'hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-200 dark:hover:border-zinc-700'
                   : 'opacity-20 cursor-default',
                 isSelected(day.date)
-                  ? 'ring-2 ring-violet-500/40 border-violet-500/20 bg-violet-500/5'
+                  ? 'ring-2 ring-violet-500/40 border-violet-500/20 bg-[rgba(0,122,255,0.05)]'
                   : '',
               ]"
               @click="day.isCurrentMonth && selectDate(day.date)"
@@ -247,14 +247,14 @@ const selectedDateTransactions = computed(() => getTransactionsForDate(selectedD
 const selectedDateIncome = computed(() =>
   selectedDateTransactions.value
     .filter((t) => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0),
+    .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )
 const selectedDateExpense = computed(() =>
   selectedDateTransactions.value
     .filter((t) => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0),
+    .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )
-const selectedDateBalance = computed(() => selectedDateIncome.value - selectedDateExpense.value)
+const selectedDateBalance = computed(() => Number(selectedDateIncome.value - selectedDateExpense.value) / 100)
 
 const isToday = (date: Date) => {
   const today = new Date()

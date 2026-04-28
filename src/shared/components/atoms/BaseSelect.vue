@@ -16,7 +16,7 @@
       :status="error ? 'error' : undefined"
       :filterable="editable"
       :tag="editable"
-      class="!rounded-xl"
+      class="!rounded-xl transition-all duration-150 ease-out"
       v-bind="$attrs"
     >
       <template #empty>
@@ -26,7 +26,7 @@
       </template>
     </NSelect>
 
-    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-red-500">
+    <p v-if="error" :id="`${id}-error`" aria-live="polite" class="mt-1 text-xs text-error">
       {{ error }}
     </p>
   </div>
@@ -47,14 +47,3 @@ defineProps<{
 
 defineEmits(['update:modelValue'])
 </script>
-
-<style scoped>
-:deep(.n-base-selection) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
-}
-
-:is(.dark) :deep(.n-base-selection) {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-}
-</style>

@@ -41,39 +41,25 @@
     >
       <template #header>
         <div class="relative w-full">
-          <!-- Subtle Background Accent -->
-          <div class="absolute -top-20 -left-20 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-          
-          <div class="p-8 pb-5 flex items-center justify-between relative z-10">
-            <div class="flex flex-col gap-1.5">
-              <NText 
-                class="text-3xl md:text-4xl font-[900] tracking-tighter text-zinc-950 dark:text-zinc-50 !leading-[1.1]"
-              >
+          <div class="px-6 pt-6 pb-6 flex items-start justify-between">
+            <!-- Header Content -->
+            <div class="flex flex-col gap-1">
+              <h2 class="text-[#1d1d1f] dark:text-white font-sf-display font-semibold text-[24px] leading-[1.3] tracking-[-0.02em]">
                 {{ wallet ? 'Editar Conta' : 'Nova Conta' }}
-              </NText>
-              
-              <NText 
-                depth="3" 
-                class="text-[11px] font-bold uppercase tracking-[0.1em] opacity-80 pl-0.5"
-              >
+              </h2>
+              <p class="text-[#6e6e73] dark:text-[#8e8e93] text-[17px] font-sf-text font-normal leading-[1.5]">
                 {{ wallet ? 'Ajuste os detalhes da sua conta' : 'Adicione uma nova carteira ou conta bancária' }}
-              </NText>
+              </p>
             </div>
 
-            <NButton 
-              quaternary 
-              circle 
-              size="large"
-              class="!text-zinc-400 hover:!text-zinc-900 dark:hover:!text-zinc-50 hover:!bg-zinc-200/50 dark:hover:!bg-zinc-800/50 transition-all"
+            <!-- Close Button - Apple Style -->
+            <button
+              class="w-9 h-9 rounded-full flex items-center justify-center text-[#6e6e73] dark:text-[#8e8e93] hover:bg-[#f5f5f7] dark:hover:bg-[#2c2c2e] hover:text-[#1d1d1f] dark:hover:text-white active:scale-95 transition-all duration-150"
               @click="$emit('close')"
             >
-              <template #icon>
-                <i class="i-lucide-x text-2xl"></i>
-              </template>
-            </NButton>
+              <i class="i-lucide-x text-xl"></i>
+            </button>
           </div>
-
-          <div class="mx-8 h-[1px] bg-zinc-200/60 dark:bg-zinc-800/60"></div>
         </div>
       </template>
 
@@ -85,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { NModal, NDrawer, NButton, NText } from 'naive-ui'
+import { NModal, NDrawer } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import WalletFormContent from './WalletFormContent.vue'
 import type { Wallet } from '@/shared/domain/entities/Wallet'

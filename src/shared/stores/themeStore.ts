@@ -4,7 +4,7 @@ import { ref, computed, watch } from 'vue'
 export type Theme = 'light' | 'dark' | 'system'
 
 export const useThemeStore = defineStore('theme', () => {
-  const themeState = ref<Theme>((localStorage.getItem('divi-ui-theme') as Theme) || 'system')
+  const themeState = ref<Theme>((localStorage.getItem('divi-ui-theme') as Theme) || 'light')
 
   const applyTheme = () => {
     const root = document.documentElement

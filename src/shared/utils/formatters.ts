@@ -3,39 +3,36 @@
  * All functions follow Brazilian (pt-BR) standards.
  */
 
-/**
- * Formats a number as BRL currency (R$ 1.000,00)
- */
-export function formatCurrency(value: number): string {
+/** Number of cents per monetary unit (e.g., 100 cents = R$ 1,00) */
+const CENTS_PER_UNIT = 100
+
+function fromCents(value: bigint): number {
+  return Number(value) / CENTS_PER_UNIT
+}
+
+export function formatCurrency(value: number | bigint): string {
+  const num = typeof value === 'bigint' ? fromCents(value) : value
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(num)
 }
 
-/**
- * Formats a number as BRL currency with sign always displayed (+R$ 1,00 or -R$ 1,00)
- */
-export function formatCurrencySign(value: number): string {
+export function formatCurrencySign(value: number | bigint): string {
+  const num = typeof value === 'bigint' ? fromCents(value) : value
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
     signDisplay: 'always',
-  }).format(value)
+  }).format(num)
 }
 
-/**
- * Formats an ISO date string to pt-BR date (DD/MM/YYYY)
- */
 export function formatDate(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr)
   return date.toLocaleDateString('pt-BR')
 }
 
-/**
- * Formats a date string to a short representation (e.g., "12 MAR")
- */
 export function formatDateShort(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr + (dateStr.includes('T') ? '' : 'T12:00:00'))
@@ -44,9 +41,6 @@ export function formatDateShort(dateStr: string): string {
   return `${day} ${month}`
 }
 
-/**
- * Get human-friendly relative date day (Hoje, Ontem, or DD)
- */
 export function getRelativeDayLabel(dateStr: string): string {
   if (!dateStr) return ''
   const date = new Date(dateStr + (dateStr.includes('T') ? '' : 'T12:00:00'))

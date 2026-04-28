@@ -38,24 +38,48 @@ export const useBudgetStore = defineStore('budgets', () => {
 
   const getConsumed = (budget: Budget) => {
     // Current month transactions from transactionStore (which are already filtered/reactive)
-    return transactionStore.transactions
+    const consumed = transactionStore.transactions
       .filter((t) => t.category_id === budget.category_id && !t.deleted && t.type === 'expense')
-      .reduce((acc, t) => acc + t.amount, 0)
+      .reduce((acc, t) => acc + BigInt(t.amount), 0n)
+    return Number(consumed)
   }
 
 
-  const totalBudgeted = computed(() => budgets.value.reduce((sum, b) => sum + b.limit_value, 0))
+  const totalBudgeted = computed(() => Number(budgets.value.reduce((sum, b) => sum + BigInt(b.limit_value), 0n)))
   const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
 
   async function saveBudget(budget: Budget) {
-    if (!budget.user_id && authStore.user?.id) {
-      budget.user_id = authStore.user.id
+    const budgetToSave = !budget.user_id && authStore.user?.id
+      ? { ...budget, user_id: authStore.user.id }
+      : budget
+    try {
+      await budgetRepo.save(budgetToSave)
+    } catch (err) {
+      const errorContext = {
+        operation: 'saveBudget',
+        budgetId: budget.id,
+        categoryId: budget.category_id,
+        userId: authStore.user?.id,
+        error: err instanceof Error ? err.message : String(err),
+      }
+      console.error('[BudgetStore] Failed to save budget:', errorContext, err)
+      throw err
     }
-    await budgetRepo.save(budget)
   }
 
   async function deleteBudget(id: string) {
-    await budgetRepo.delete(id)
+    try {
+      await budgetRepo.delete(id)
+    } catch (err) {
+      const errorContext = {
+        operation: 'deleteBudget',
+        budgetId: id,
+        userId: authStore.user?.id,
+        error: err instanceof Error ? err.message : String(err),
+      }
+      console.error('[BudgetStore] Failed to delete budget:', errorContext, err)
+      throw err
+    }
   }
 
   return {

@@ -49,11 +49,11 @@
               >
                 <div class="w-full flex gap-1 items-end justify-center h-full pb-2">
                   <div
-                    class="w-4 bg-violet-500/20 rounded-t-lg transition-all duration-500 hover:bg-violet-500/40"
+                    class="w-4 bg-[rgba(0,122,255,0.15)] rounded-t-lg transition-all duration-150 ease-out hover:bg-[rgba(0,122,255,0.32)]"
                     :style="{ height: `${item.income}%` }"
                   ></div>
                   <div
-                    class="w-4 bg-red-500/20 rounded-t-lg transition-all duration-500 hover:bg-red-500/40"
+                    class="w-4 bg-red-500/20 rounded-t-lg transition-all duration-150 ease-out hover:bg-red-500/40"
                     :style="{ height: `${item.expense}%` }"
                   ></div>
                 </div>
@@ -63,7 +63,7 @@
             <NDivider />
             <NSpace justify="center" :size="24">
               <NSpace align="center" :size="6">
-                <div class="w-2 h-2 rounded-full bg-violet-500/40"></div>
+                <div class="w-2 h-2 rounded-full bg-[rgba(0,122,255,0.32)]"></div>
                 <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Entradas</NText>
               </NSpace>
               <NSpace align="center" :size="6">
@@ -80,7 +80,7 @@
         <!-- Daily Average -->
         <NCard hoverable>
           <NSpace align="center" :size="12" class="mb-3">
-            <div class="w-9 h-9 rounded-xl bg-violet-500/10 flex items-center justify-center text-violet-500">
+            <div class="w-9 h-9 rounded-xl bg-[rgba(0,122,255,0.08)] flex items-center justify-center text-[#007AFF]">
               <i class="i-lucide-wallet text-lg"></i>
             </div>
             <NText depth="3" class="text-xs uppercase tracking-widest font-bold">Média Diária</NText>

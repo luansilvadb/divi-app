@@ -1,226 +1,143 @@
-@import 'tailwindcss';
+/*
+  Divi App — Core Styles
+  Apple HIG-inspired Design System. Light-first, corporate financial identity.
+  Reference: openspec/changes/apple-design-system-refactor/
+*/
 
-@custom-variant dark (&:is(.dark *));
+/* Design tokens and utilities */
+@import '../../styles/design-tokens.css';
+@import '../../styles/utilities.css';
 
-@theme {
-  /* Core Colors (using Tailwind Zinc for AI-Native feel) */
-  --color-bg-main: var(--color-zinc-50);
-  --color-bg-main-dark: var(--color-zinc-950);
-  --color-text-primary: var(--color-zinc-900);
-  --color-text-primary-dark: var(--color-zinc-50);
-  --color-text-secondary: var(--color-zinc-500);
-  --color-text-secondary-dark: var(--color-zinc-400);
+:root {
+  --spacing-base: 4px;
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  --font-data: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
 
-  /* Glassmorphism Tokens */
-  --color-glass-bg: rgba(255, 255, 255, 0.7);
-  --color-glass-bg-dark: rgba(24, 24, 27, 0.8);
-  --color-glass-border: rgba(228, 228, 231, 0.5);
-  --color-glass-border-dark: rgba(39, 39, 42, 0.5);
-  --color-glass-blur: 16px;
-  
-  --color-hover-border: var(--color-zinc-200);
-  --color-hover-border-dark: var(--color-zinc-700);
-
-  /* Modern Shadows */
-  --shadow-modern-low: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-modern-medium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-modern-high: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-
-  /* Typography */
-  --tracking-tight: -0.025em;
-  --tracking-wide: 0.025em;
-
-  /* Motion */
-  --ease-modern: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-modern: 400ms;
+  /* Theme transition enabled by default */
+  transition: var(--theme-transition);
 }
 
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-zinc-200, currentcolor);
-  }
-
-  :is(.dark) *,
-  :is(.dark) ::after,
-  :is(.dark) ::before,
-  :is(.dark) ::backdrop,
-  :is(.dark) ::file-selector-button {
-    border-color: var(--color-zinc-800, currentcolor);
-  }
+/* Base Reset */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--surface-background);
+  color: var(--text-label);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-@layer base {
-  body,
-  html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', 'SF Pro', system-ui, -apple-system, sans-serif;
-    background-color: var(--color-bg-main);
-    color: var(--color-text-primary);
-    transition-property: color, background-color, border-color;
-    transition-timing-function: var(--ease-modern);
-    transition-duration: var(--duration-modern);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  :is(.dark) body,
-  :is(.dark) html {
-    background-color: var(--color-bg-main-dark);
-    color: var(--color-text-primary-dark);
-  }
-
-  h1, h2, h3, h4 {
-    letter-spacing: var(--tracking-tight);
-    font-weight: 700;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+/* Rigid Grid & Spacing */
+* {
+  box-sizing: border-box;
 }
 
-@layer components {
-  /* Layout Standardization */
-  .view-wrapper {
-    width: 100%;
-    min-height: 100%;
-    padding: 1.5rem;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-    z-index: 10;
-  }
+/* Typography — subtle, editorial */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-label);
+  margin: 0;
+}
 
-  @media (min-width: 768px) {
-    .view-wrapper {
-      padding: 2.5rem;
-    }
-  }
+/* Body text — relaxed weight */
+span, p, label {
+  font-weight: 400;
+}
 
-  .view-header {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2.5rem;
-    gap: 1.5rem;
-  }
+/* Technical Data Styling */
+.font-technical {
+  font-family: var(--font-data) !important;
+  letter-spacing: -0.01em;
+}
 
-  @media (min-width: 768px) {
-    .view-header {
-      flex-direction: row;
-      align-items: flex-end;
-    }
-  }
+/* Scrollbar — minimal Apple-style */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
 
-  .title-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  .page-title {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: var(--tracking-tight);
-    color: var(--color-text-primary);
-    margin: 0;
-    line-height: 1.2;
-  }
+.dark ::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  .page-subtitle {
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    margin: 0;
-  }
+::-webkit-scrollbar-thumb {
+  background: var(--surface-separator);
+  border-radius: var(--radius-full);
+}
 
-  .view-content-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 2rem;
-    width: 100%;
-  }
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-full);
+}
 
-  @media (min-width: 1280px) {
-    .view-content-grid {
-      grid-template-columns: 1fr 380px;
-    }
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(60, 60, 67, 0.25);
+}
 
-  .main-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
-  }
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
 
-  .side-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    min-width: 0;
-  }
+/* Accessibility — Focus states using Apple System Blue */
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: none !important;
+  box-shadow: var(--focus-ring);
+}
 
-  /* Glassmorphism Utilities */
-  .glass-card {
-    background: var(--color-glass-bg);
-    backdrop-filter: blur(var(--color-glass-blur));
-    border: 1px solid var(--color-glass-border);
-    border-radius: 1.25rem;
-    transition: all var(--duration-modern) var(--ease-modern);
-  }
+/* Remove native browser outline from all form elements */
+input,
+textarea,
+select,
+.n-input,
+.n-select,
+.n-date-picker {
+  outline: none !important;
+}
 
-  :is(.dark) .glass-card {
-    background: var(--color-glass-bg-dark);
-    border-color: var(--color-glass-border-dark);
-  }
+/* Remove all internal borders from Naive UI Select to prevent duplication */
+.n-base-selection,
+.n-base-selection-label,
+.n-base-selection-input,
+.n-base-selection__state-border {
+  border: none !important;
+  box-shadow: none !important;
+}
 
-  .hover-glow:hover {
-    border-color: var(--color-hover-border);
-    box-shadow: var(--shadow-modern-high);
-    transform: translateY(-2px);
-  }
+/* Remove internal borders from Naive UI Input */
+.n-input-wrapper,
+.n-input__input-el,
+.n-input__textarea-el {
+  border: none !important;
+  box-shadow: none !important;
+}
 
-  :is(.dark) .hover-glow:hover {
-    border-color: var(--color-hover-border-dark);
-  }
+/* Remove internal borders from Naive UI DatePicker */
+.n-date-panel,
+.n-date-panel__input {
+  border: none !important;
+  box-shadow: none !important;
+}
 
-  /* Animations */
-  .animate-fade-in {
-    animation: fadeIn 0.6s var(--ease-modern) both;
-  }
+/* Standard Animations */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+.animate-fade-in {
+  animation: fade-in-up 0.3s var(--ease-out) both;
+}
 
-  /* Shimmer Effects */
-  .animate-shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite linear;
-  }
-
-  @keyframes shimmer {
-    from { background-position: -200% 0; }
-    to { background-position: 200% 0; }
-  }
+/* Fix for Naive UI Global Styles */
+.n-config-provider {
+  height: 100%;
 }

@@ -2,74 +2,104 @@
   <div class="account-grid">
     <NGrid
       v-if="wallets && wallets.length > 0"
-      :x-gap="14"
-      :y-gap="14"
+      :x-gap="12"
+      :y-gap="12"
       :cols="isMobile ? 1 : 4"
       responsive="screen"
     >
+      <!-- Wallet Cards -->
       <NGridItem v-for="wallet in wallets" :key="wallet.id">
         <div
-          class="wallet-card group relative flex flex-col rounded-[20px] bg-white dark:bg-[#0d1117] border border-zinc-200/50 dark:border-white/[0.04] transition-all duration-300 hover:border-zinc-300 dark:hover:border-white/10 hover:shadow-[0_4px_20px_rgb(0,0,0,0.03)] cursor-pointer overflow-hidden"
+          class="wallet-card group relative flex flex-col rounded-xl overflow-hidden transition-all duration-150 ease-out cursor-pointer bg-surface-primary border border-separator hover:shadow-md"
           @click="handleEditWallet(wallet)"
         >
-          <!-- NEUTRAL BRAND HEADER -->
-          <div class="p-4 bg-slate-100/70 dark:bg-white/[0.06] border-b border-zinc-100 dark:border-white/5 flex flex-col gap-1 min-w-0">
-            <div class="flex justify-between items-center gap-2 h-4 w-full">
+          <!-- Top accent bar (brand color) -->
+          <div
+            class="absolute top-0 left-0 right-0 h-[3px] rounded-t-xl transition-opacity duration-150 ease-out"
+            :style="{ background: getWalletColor(wallet) }"
+          ></div>
+
+          <!-- Header: Name + Balance -->
+          <div class="pt-5 px-4 pb-3">
+            <div class="flex items-start justify-between gap-2 mb-3">
               <div class="flex items-center gap-2 min-w-0">
-                <!-- Brand Dot as an accent -->
-                <div class="w-1.5 h-1.5 rounded-full shrink-0 shadow-[0_0_8px_rgba(0,0,0,0.05)]" :style="{ background: getWalletColor(wallet) }"></div>
-                <span class="text-[10px] sm:text-[11px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest truncate">{{ wallet.name }}</span>
+                <div
+                  class="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                  :style="{ background: getWalletColor(wallet) + '18' }"
+                >
+                  <div
+                    class="w-2 h-2 rounded-full"
+                    :style="{ background: getWalletColor(wallet) }"
+                  ></div>
+                </div>
+                <span
+                  class="text-[11px] font-semibold uppercase tracking-wider truncate text-tertiary"
+                >{{ wallet.name }}</span>
               </div>
-              <img v-if="wallet.icon" :src="getWalletIcon(wallet)" class="w-3.5 h-3.5 grayscale opacity-20 group-hover:opacity-100 group-hover:grayscale-0 transition-all shrink-0 object-contain" />
+              <img
+                v-if="wallet.icon"
+                :src="getWalletIcon(wallet)"
+                class="w-4 h-4 grayscale opacity-20 group-hover:opacity-60 group-hover:grayscale-0 transition-all shrink-0 object-contain mt-0.5"
+              />
             </div>
-            <div class="mt-1 min-w-0">
-              <span class="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white tabular-nums tracking-tighter block truncate">
-                {{ formatCurrency(wallet.balance) }}
-              </span>
-            </div>
+
+            <p
+              class="text-xl font-bold tracking-tight tabular-nums text-label"
+            >
+              {{ formatCurrency(wallet.balance) }}
+            </p>
           </div>
 
-          <!-- ANALYTICS BODY -->
-          <div class="p-4 py-4 flex flex-col gap-4 flex-1 min-w-0">
-            <div class="space-y-2">
-              <div class="relative h-[3px] bg-zinc-100 dark:bg-white/[0.03] rounded-full overflow-hidden">
-                <div
-                  class="h-full transition-all duration-700 rounded-full"
-                  :class="getFinancialUsage(wallet.id) > timeProgress ? 'bg-red-500' : 'bg-emerald-500'"
-                  :style="{ width: `${Math.min(100, getFinancialUsage(wallet.id))}%` }"
-                ></div>
-                <div
-                  class="absolute inset-y-0 w-[1px] bg-zinc-400/30 z-10"
-                  :style="{ left: `${timeProgress}%` }"
-                ></div>
-              </div>
-              <div class="flex justify-between items-center text-[10px] font-medium text-zinc-400 gap-2">
-                <span class="tabular-nums whitespace-nowrap">Uso: {{ getFinancialUsage(wallet.id) }}%</span>
-                <span class="font-bold uppercase tracking-tighter truncate" :class="getFinancialUsage(wallet.id) > timeProgress ? 'text-red-500' : 'text-emerald-500'">
-                   {{ getHealthLabel(wallet.id) }}
-                </span>
-              </div>
+          <!-- Divider -->
+          <div class="h-px bg-separator"></div>
+
+          <!-- Analytics Footer -->
+          <div class="px-4 py-3 flex flex-col gap-2">
+            <!-- Usage Progress -->
+            <div class="relative h-1 rounded-full overflow-hidden bg-surface-secondary">
+              <div
+                class="h-full rounded-full transition-all duration-150 ease-out"
+                :style="{
+                  width: `${Math.min(100, getFinancialUsage(wallet.id))}%`,
+                  background: getFinancialUsage(wallet.id) > timeProgress
+                    ? 'var(--color-error)'
+                    : 'var(--color-success)'
+                }"
+              ></div>
+              <!-- Time marker -->
+              <div
+                class="absolute inset-y-0 w-px z-10"
+                :style="{ left: `${timeProgress}%`, background: 'var(--text-quaternary)' }"
+              ></div>
             </div>
 
-            <!-- Minimal Footer Info -->
-            <div class="mt-auto pt-2 border-t border-zinc-50 dark:border-white/[0.02] text-[10px] text-zinc-300 dark:text-zinc-700 flex justify-between items-center uppercase font-bold tracking-tighter">
-              <span class="truncate pr-2">{{ walletStats(wallet.id)?.totalCount || 0 }} TXs</span>
-              <span class="shrink-0">D+{{ remainingDays }}</span>
+            <div class="flex justify-between items-center">
+              <span class="text-[10px] text-tertiary">
+                {{ walletStats(wallet.id)?.totalCount || 0 }} transações
+              </span>
+              <span
+                class="text-[10px] font-semibold"
+                :style="{ color: getFinancialUsage(wallet.id) > timeProgress ? 'var(--color-error)' : 'var(--color-success)' }"
+              >
+                {{ getHealthLabel(wallet.id) }}
+              </span>
             </div>
           </div>
         </div>
       </NGridItem>
 
-      <!-- Portal of Creation -->
+      <!-- Add New Account -->
       <NGridItem>
         <div
-          class="group flex flex-col h-[154px] rounded-[20px] border border-dashed border-zinc-200 dark:border-zinc-800/60 items-center justify-center gap-2 transition-all duration-300 hover:border-zinc-300 hover:bg-zinc-50/50 dark:hover:bg-white/[0.01] cursor-pointer"
+          class="group flex flex-col rounded-xl items-center justify-center gap-2 transition-all duration-200 cursor-pointer h-[117px] border border-dashed border-separator bg-transparent hover:bg-surface-secondary hover:border-quaternary"
           @click="handleNewAccount"
         >
-          <div class="w-7 h-7 rounded-full bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-300 group-hover:text-zinc-500 transition-all border border-zinc-200/50 dark:border-white/5">
-            <i class="i-lucide-plus text-base"></i>
+          <div
+            class="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 bg-surface-secondary border border-separator"
+          >
+            <i class="i-lucide-plus text-sm text-tertiary"></i>
           </div>
-          <span class="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 tracking-tight">Nova Conta</span>
+          <span class="text-[11px] font-medium text-tertiary">Nova Conta</span>
         </div>
       </NGridItem>
     </NGrid>
@@ -97,12 +127,12 @@ const selectedWallet = ref<Wallet | null>(null)
 const props = defineProps<{ wallets: Wallet[], statsMap?: Record<string, WalletStats> }>()
 const statsMap = computed(() => props.statsMap || {})
 const walletStats = (id: string) => statsMap.value[id]
-const emit = defineEmits(['saved'])
+
+defineEmits(['saved'])
 
 const now = new Date()
 const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
 const currentDay = now.getDate()
-const remainingDays = daysInMonth - currentDay
 const timeProgress = Math.round((currentDay / daysInMonth) * 100)
 
 function getFinancialUsage(walletId: string) {
@@ -113,21 +143,39 @@ function getFinancialUsage(walletId: string) {
 
 function getHealthLabel(walletId: string) {
   const stats = walletStats(walletId)
-  if (!stats || stats.totalCount === 0) return "Ativo"
+  if (!stats || stats.totalCount === 0) return 'Ativo'
   return getFinancialUsage(walletId) > timeProgress ? 'Atenção' : 'Saudável'
 }
 
 function handleNewAccount() { selectedWallet.value = null; showModal.value = true }
 function handleEditWallet(w: Wallet) { selectedWallet.value = w; showModal.value = true }
 function closeModal() { showModal.value = false; setTimeout(() => { selectedWallet.value = null }, 300) }
-function formatCurrency(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v) }
+
+function formatCurrency(v: number | bigint) {
+  const num = typeof v === 'bigint' ? Number(v) / 100 : v
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(num)
+}
+
 function getWalletIcon(w: Wallet) { return assetLoader.sanitize(w.icon) }
+
 function getWalletColor(w: Wallet) {
-  const c: Record<string, string> = { 'Nubank': '#8a05be', 'Inter': '#ff7a00', 'BB': '#fbdf07', 'Mercado Pago': '#00b1ea', 'Itaú': '#ec7000', 'Santander': '#ec0000', 'Bradesco': '#cc092f', 'Bari': '#00d9c0' }
-  return c[w.name] || '#6366f1'
+  const c: Record<string, string> = {
+    'Nubank': '#8205BE',
+    'Inter': '#FF7A00',
+    'BB': '#F5C400',
+    'Mercado Pago': '#00B1EA',
+    'Itaú': '#EC7000',
+    'Santander': '#EC0000',
+    'Bradesco': '#CC092F',
+    'Bari': '#00D9C0',
+    'C6 Bank': '#232323',
+    'XP': '#1A1A2E',
+    'Caixa': '#216FB4',
+  }
+  return c[w.name] || '#007AFF'
 }
 </script>
 
 <style scoped>
-.wallet-card { height: 154px; min-width: 0; }
+.wallet-card { height: 117px; min-width: 0; }
 </style>

@@ -1,0 +1,152 @@
+/**
+ * Apple HIG Interaction States — Global Transitions & Feedback
+ * Implements smooth transitions and subtle visual feedback for all interactive states
+ */
+
+/* ─── Global Transition Standards ────────────────────────────────────────── */
+:root {
+  /* Transition Durations (Apple Standard) */
+  --transition-fast: 150ms;
+  --transition-normal: 150ms;
+  --transition-slow: 200ms;
+
+  /* Easing Functions (Apple-inspired) */
+  --ease-out-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-in-out-smooth: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* More pronounced Apple feel */
+}
+
+/* ─── Button Interactive States — Handled by Naive UI Theme ─────────────── */
+/* All button borders, shadows, and transitions are managed via naiveTheme.ts */
+
+/* ─── Link Interactive States ───────────────────────────────────────────── */
+a,
+.n-text[role="link"] {
+  transition: color var(--transition-fast) var(--ease-out-smooth);
+  cursor: pointer;
+}
+
+a:hover,
+.n-text[role="link"]:hover {
+  text-decoration: underline;
+  color: #0066cc; /* Darker blue on hover */
+}
+
+/* ─── Card/Clickable Element States ─────────────────────────────────────── */
+.n-card,
+.n-list-item {
+  transition:
+    background-color var(--transition-normal) var(--ease-out-smooth),
+    box-shadow var(--transition-normal) var(--ease-out-smooth),
+    transform var(--transition-normal) var(--ease-out-smooth);
+}
+
+/* Hover on clickable cards */
+.n-card:hover,
+.n-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.dark .n-card:hover,
+.dark .n-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Clickable cards get subtle lift on hover */
+.n-card.clickable:hover {
+  transform: translateY(-1px);
+}
+
+/* ─── Input Focus States — Handled by Naive UI Theme ────────────────────── */
+/* All input borders and focus states are managed via naiveTheme.ts */
+/* No custom CSS needed to avoid duplication */
+
+/* ─── Checkbox/Radio Focus States ───────────────────────────────────────── */
+.n-checkbox-box:focus-within,
+.n-radio-dot:focus-within {
+  outline: 3px solid rgba(0, 122, 255, 0.4); /* Apple focus ring */
+  outline-offset: 2px;
+}
+
+/* ─── Switch Focus State ────────────────────────────────────────────────── */
+.n-switch:focus-within {
+  outline: 3px solid rgba(0, 122, 255, 0.4); /* Apple focus ring */
+  outline-offset: 2px;
+}
+
+/* ─── Selection Controls (Checkbox/Radio/Switch) ────────────────────────── */
+.n-checkbox,
+.n-radio,
+.n-switch {
+  transition:
+    opacity var(--transition-fast) var(--ease-out-smooth),
+    transform var(--transition-fast) var(--ease-out-smooth);
+}
+
+.n-checkbox:hover:not(.n-checkbox--disabled),
+.n-radio:hover:not(.n-radio--disabled) {
+  opacity: 0.8;
+}
+
+/* ─── Tab Interactive States ────────────────────────────────────────────── */
+.n-tabs-tab {
+  transition:
+    color var(--transition-fast) var(--ease-out-smooth),
+    background-color var(--transition-fast) var(--ease-out-smooth);
+}
+
+.n-tabs-tab:hover:not(.n-tabs-tab--active) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.dark .n-tabs-tab:hover:not(.n-tabs-tab--active) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ─── Menu Item States ──────────────────────────────────────────────────── */
+.n-menu-item-content {
+  transition:
+    background-color var(--transition-fast) var(--ease-out-smooth),
+    color var(--transition-fast) var(--ease-out-smooth);
+}
+
+/* ─── Dropdown Option States ────────────────────────────────────────────── */
+.n-dropdown-option-body {
+  transition: background-color var(--transition-fast) var(--ease-out-smooth);
+}
+
+/* ─── Pagination Item States ────────────────────────────────────────────── */
+.n-pagination-item {
+  transition:
+    background-color var(--transition-fast) var(--ease-out-smooth),
+    color var(--transition-fast) var(--ease-out-smooth);
+}
+
+/* ─── Tooltip/Popover Transitions ───────────────────────────────────────── */
+.n-tooltip,
+.n-popover {
+  transition: opacity var(--transition-normal) var(--ease-out-smooth);
+}
+
+/* ─── Modal/Dialog Transitions ──────────────────────────────────────────── */
+.n-modal-container {
+  transition: opacity var(--transition-slow) var(--ease-out-smooth);
+}
+
+/* ─── Notification/Message Transitions ──────────────────────────────────── */
+.n-notification-container,
+.n-message-container {
+  transition:
+    opacity var(--transition-normal) var(--ease-out-smooth),
+    transform var(--transition-normal) var(--ease-out-smooth);
+}
+
+/* ─── Progress Bar Transitions ──────────────────────────────────────────── */
+.n-progress-graph-line-fill {
+  transition: width var(--transition-slow) var(--ease-out-smooth);
+}
+
+/* ─── Spinner/Loading Transitions ───────────────────────────────────────── */
+.n-spin {
+  transition: opacity var(--transition-normal) var(--ease-out-smooth);
+}

@@ -88,9 +88,9 @@
               O log de atividades é imutável e serve como registro histórico de todas as operações
               sensíveis realizadas na sua conta.
             </NText>
-            <NCard embedded size="small" class="!border-violet-500/10 !bg-violet-500/5">
+            <NCard embedded size="small" class="!border-[rgba(0,122,255,0.1)] !bg-[rgba(0,122,255,0.05)]">
               <NSpace align="start" :size="12">
-                <i class="i-lucide-shield-check text-violet-500 text-lg shrink-0 mt-0.5"></i>
+                <i class="i-lucide-shield-check text-[#007AFF] text-lg shrink-0 mt-0.5"></i>
                 <NText class="text-xs leading-relaxed">
                   Todas as ações são registradas com
                   <NText strong>timestamp</NText> e
@@ -155,7 +155,7 @@ const statusBg = (type: string) => {
     case 'success': return 'bg-emerald-500'
     case 'error': return 'bg-red-500'
     case 'warning': return 'bg-amber-500'
-    default: return 'bg-violet-500'
+    default: return 'bg-[#007AFF]'
   }
 }
 

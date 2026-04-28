@@ -38,8 +38,8 @@ describe('BaseInput.vue', () => {
       },
     })
 
-    const input = wrapper.findComponent({ name: 'NInput' })
-    await input.vm.$emit('update:value', 'new text')
+    const input = wrapper.find('input')
+    await input.setValue('new text')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['new text'])
@@ -54,10 +54,12 @@ describe('BaseInput.vue', () => {
       },
     })
 
-    const input = wrapper.findComponent({ name: 'NInputNumber' })
-    await input.vm.$emit('update:value', 42)
+    // Number input renders as input element via NInputNumber stub
+    const input = wrapper.find('input')
+    await input.setValue('42')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+    // NInputNumber stub converts to Number
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([42])
   })
 

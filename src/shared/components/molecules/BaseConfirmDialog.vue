@@ -66,14 +66,14 @@
         <div class="grid grid-cols-2 gap-4 w-full">
           <NButton
             quaternary
-            class="!h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all duration-300"
+            class="!h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all duration-150 ease-out"
             @click="$emit('cancel')"
           >
             {{ cancelText || 'Cancelar' }}
           </NButton>
           <NButton
             type="error"
-            class="!h-12 !rounded-xl font-black uppercase text-xs tracking-widest !bg-red-500 hover:!bg-red-600 !text-white shadow-lg shadow-red-500/20 transition-all duration-300"
+            class="!h-12 !rounded-xl font-black uppercase text-xs tracking-widest !bg-red-500 hover:!bg-red-600 !text-white shadow-lg shadow-red-500/20 transition-all duration-150 ease-out"
             @click="$emit('confirm')"
           >
             {{ confirmText || 'Excluir' }}

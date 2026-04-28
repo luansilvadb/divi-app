@@ -17,20 +17,16 @@
       :rules="rules"
       size="large"
       label-placement="top"
-      class="space-y-4"
+      class="space-y-5"
     >
       <!-- Name Input -->
-      <NFormItem label="Nome do Orçamento" path="name">
+      <NFormItem label="Nome" path="name">
         <template #label>
-          <div class="flex items-center gap-2 opacity-60">
-            <i class="i-lucide-type text-xs"></i>
-            <span class="text-[10px] uppercase font-bold tracking-widest">Identificação (Opcional)</span>
-          </div>
+          <span class="text-[13px] font-semibold text-label-2 tracking-tight">Nome</span>
         </template>
         <NInput
           v-model:value="form.name"
           placeholder="Ex: Orçamento Mensal, Viagem..."
-          class="!rounded-xl"
         />
       </NFormItem>
 
@@ -39,19 +35,15 @@
         <NGi>
           <NFormItem label="Valor Limite" path="limit_value">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-banknote text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Meta de Gastos</span>
-              </div>
+              <span class="text-[13px] font-semibold text-label-2 tracking-tight">Valor Limite</span>
             </template>
             <NInput
               :value="displayLimit"
               placeholder="0,00"
-              class="w-full !rounded-xl"
               @input="handleInputLimit"
             >
               <template #prefix>
-                <span class="text-xs font-bold opacity-40 mr-1">R$</span>
+                <span class="text-[13px] font-semibold text-label-3 dark:text-label-3-dark mr-1">R$</span>
               </template>
             </NInput>
           </NFormItem>
@@ -61,10 +53,7 @@
         <NGi>
           <NFormItem label="Categoria" path="category_id">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-layers text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Categoria</span>
-              </div>
+              <span class="text-[13px] font-semibold text-label-2 tracking-tight">Categoria</span>
             </template>
             <NSelect
               v-model:value="form.category_id"
@@ -72,30 +61,29 @@
               filterable
               tag
               placeholder="Selecione ou crie..."
-              class="!rounded-xl"
             />
           </NFormItem>
         </NGi>
       </NGrid>
 
-      <!-- Action Buttons (Clean Layout) -->
-      <div class="flex items-center gap-4 pt-6 mt-4">
+      <!-- Action Buttons (Apple Style) -->
+      <div class="flex items-center gap-4 pt-8">
         <NButton
           v-if="props.initialData"
           type="error"
           secondary
-          class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest !bg-red-500/10 !text-red-600 hover:!bg-red-600 hover:!text-white transition-all duration-300"
+          class="flex-1 !h-[48px] !rounded-[980px] font-semibold text-[17px] tracking-tight !bg-error-subtle dark:!bg-error-subtle-dark !text-error-main dark:!text-error-main-dark hover:!bg-error-main hover:!text-white active:scale-[0.98] transition-all duration-150"
           @click="handleDelete"
         >
-          Excluir Orçamento
+          Excluir
         </NButton>
         <NButton
           type="primary"
           :loading="isSubmitting"
-          class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
+          class="flex-[2] !h-[48px] !rounded-[980px] font-semibold text-[17px] tracking-tight !bg-apple-action hover:!bg-apple-action-hover active:scale-[0.98] transition-all duration-150"
           @click="handleSubmit"
         >
-          Salvar Orçamento
+          Salvar
         </NButton>
       </div>
 
@@ -110,7 +98,6 @@ import {
   NForm,
   NFormItem,
   NInput,
-  NInputNumber,
   NSelect,
   NGrid,
   NGi,
@@ -171,20 +158,12 @@ function handleInputLimit(val: string) {
   form.limit_value = Number(digits) / 100
 }
 
-const formatCurrency = (value: number | null) => {
-  if (value === null || isNaN(value)) return ''
-  return new Intl.NumberFormat('pt-BR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
 watch(
   () => props.initialData,
   (newData) => {
     if (newData) {
       form.name = newData.name || ''
-      form.limit_value = newData.limit_value || null
+      form.limit_value = typeof newData.limit_value === 'bigint' ? Number(newData.limit_value) / 100 : (newData.limit_value || null)
       form.category_id = newData.category_id || null
     } else {
       form.name = ''
@@ -247,9 +226,9 @@ const handleSubmit = async () => {
       }
 
       const budgetData = {
-        ...(props.initialData || {}),
+        ...props.initialData,
         name: form.name || undefined,
-        limit_value: Number(form.limit_value),
+        limit_value: BigInt(Math.round((form.limit_value || 0) * 100)),
         category_id: finalCategoryId,
         period: 'monthly' as const,
       } as Budget
@@ -258,8 +237,9 @@ const handleSubmit = async () => {
       message.success('Orçamento salvo com sucesso!')
       emit('saved')
       emit('close')
-    } catch (error: any) {
-      message.error('Erro ao salvar o orçamento: ' + error.message)
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Erro ao salvar o orçamento'
+      message.error(msg)
     } finally {
       isSubmitting.value = false
     }
@@ -268,34 +248,7 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-:deep(.n-input),
-:deep(.n-input-number),
-:deep(.n-date-picker),
-:deep(.n-select .n-base-selection) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
-  border: 1px solid transparent !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-:deep(.n-input:hover),
-:deep(.n-select .n-base-selection:hover) {
-  border-color: rgba(139, 92, 246, 0.3) !important;
-}
-
-:deep(.n-input.n-input--focus),
-:deep(.n-select.n-select--active .n-base-selection) {
-  background-color: transparent !important;
-  border-color: #8b5cf6 !important;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1) !important;
-}
-
-:is(.dark) :deep(.n-input),
-:is(.dark) :deep(.n-input-number),
-:is(.dark) :deep(.n-date-picker),
-:is(.dark) :deep(.n-select .n-base-selection) {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-}
+/* Naive UI theme handles all styling via naiveTheme.ts */
 
 :deep(.n-form-item .n-form-item-label) {
   padding-bottom: 4px;

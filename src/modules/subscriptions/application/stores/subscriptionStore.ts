@@ -34,9 +34,9 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
   }
 
   const totalMonthlyCost = computed(() =>
-    subscriptions.value
+    Number(subscriptions.value
       .filter((s) => s.frequency === 'monthly')
-      .reduce((sum, s) => sum + s.amount, 0),
+      .reduce((sum, s) => sum + BigInt(s.amount), 0n))
   )
 
   return {

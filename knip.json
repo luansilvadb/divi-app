@@ -1,0 +1,26 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/main.ts",
+    "src/sw.ts"
+  ],
+  "project": [
+    "src/**/*.ts",
+    "src/**/*.vue"
+  ],
+  "ignore": [
+    "src/__tests__/**",
+    "src/**/__tests__/**",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/core/migrations/**"
+  ],
+  "ignoreDependencies": [
+    "@types/node",
+    "@tsconfig/node24",
+    "workbox-core",
+    "workbox-precaching",
+    "workbox-routing",
+    "workbox-window"
+  ]
+}

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../application/stores/budgetStore'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import { db } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
 import type { Budget } from '@/shared/domain/entities/Budget'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Category } from '@/shared/domain/entities/Category'
@@ -69,6 +69,7 @@ describe('Budgets Integration', () => {
       title: 'Dinner',
       amount: 150,
       category_id: 'c1',
+      wallet_id: 'w1',
       date: new Date().toISOString(),
       type: 'expense',
     } as Transaction)

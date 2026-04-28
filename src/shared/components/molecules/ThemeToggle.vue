@@ -1,12 +1,12 @@
 <template>
   <button
     @click="toggleTheme"
-    class="theme-toggle flex items-center justify-center p-2 rounded-xl transition-all duration-300 cursor-pointer text-zinc-500 hover:text-violet-500 bg-zinc-100 dark:bg-zinc-800 border-none"
+    class="flex items-center justify-center p-2 rounded-xl transition-all duration-150 ease-out cursor-pointer border-none" :style="{ color: 'var(--text-secondary)', background: 'var(--surface-secondary)' }"
     :aria-label="isDark ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
   >
     <i
       :class="isDark ? 'i-lucide-sun' : 'i-lucide-moon'"
-      class="text-lg transition-transform duration-300 group-hover:rotate-12"
+      class="text-lg transition-transform duration-150 ease-out group-hover:rotate-12"
     ></i>
   </button>
 </template>

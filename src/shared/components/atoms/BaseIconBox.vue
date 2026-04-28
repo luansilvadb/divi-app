@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-xl flex items-center justify-center transition-all duration-300"
+    class="rounded-0 flex items-center justify-center transition-all duration-150 ease-out"
     :class="[sizeClasses[size]]"
     :style="customStyle"
   >
@@ -20,7 +20,8 @@ const props = withDefaults(
   }>(),
   {
     size: 'md',
-    color: '#8b5cf6',
+    // Apple System Blue as default
+    color: 'var(--color-primary)',
   },
 )
 
@@ -32,9 +33,10 @@ const sizeClasses: Record<BoxSize, string> = {
 
 const customStyle = computed(() => {
   return {
-    backgroundColor: `${props.color}15`,
+    // Using CSS variables for dynamic theming (Light/Dark)
+    backgroundColor: `${props.color}15`, // 15 hex = ~8% opacity
     color: props.color,
-    border: `1px solid ${props.color}25`
+    border: `1px solid ${props.color}25` // 25 hex = ~15% opacity
   }
 })
 </script>

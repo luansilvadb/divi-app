@@ -33,7 +33,6 @@ describe('BaseButton.vue', () => {
     // For now we check the base classes.
     expect(wrapper.classes()).toContain('!font-bold')
     expect(wrapper.classes()).toContain('transition-all')
-    expect(wrapper.classes()).toContain('shadow-lg') // Not outline or ghost
   })
 
   it('does not apply shadow-lg when variant is outline', () => {

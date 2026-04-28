@@ -1,13 +1,13 @@
 <template>
   <div
-    class="summary-item flex items-center gap-5 transition-all duration-300"
+    class="summary-item flex items-center gap-5 transition-all duration-150 ease-out"
     :class="{ 'opacity-50 grayscale cursor-not-allowed': error }"
   >
     <!-- Icon area -->
     <BaseIconBox
       :color="error ? '#ef4444' : color"
       size="md"
-      class="transition-transform duration-300"
+      class="transition-transform duration-150 ease-out"
     >
       <slot name="icon">
         <i v-if="error" class="i-lucide-alert-circle text-xl"></i>
@@ -17,13 +17,13 @@
     <!-- Text area -->
     <div class="summary-text flex flex-col gap-0.5 min-w-0">
       <span
-        class="label text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none truncate"
+        class="label text-[10px] font-semibold uppercase tracking-widest leading-none truncate" :style="{ color: 'var(--text-tertiary)' }"
       >
         {{ error ? 'Erro de carga' : label }}
       </span>
       <strong
         v-if="!error"
-        class="value text-2xl font-black text-zinc-800 dark:text-zinc-50 leading-tight tracking-tighter transition-all duration-300 truncate"
+        class="value text-2xl font-bold tracking-tight leading-tight transition-all duration-150 ease-out truncate" :style="{ color: 'var(--text-label)' }"
         :class="statusClass"
       >
         {{ value }}
@@ -52,20 +52,20 @@ const props = withDefaults(
   }>(),
   {
     status: 'normal',
-    color: '#8b5cf6'
+    color: '#007AFF'
   },
 )
 
 const statusClass = computed(() => {
   switch (props.status) {
     case 'success':
-      return '!text-emerald-500'
+      return '!text-[#34C759]'
     case 'error':
-      return '!text-red-500'
+      return '!text-[#FF3B30]'
     case 'warning':
-      return '!text-amber-500'
+      return '!text-[#FF9500]'
     case 'info':
-      return '!text-violet-500'
+      return '!text-[#007AFF]'
     default:
       return ''
   }

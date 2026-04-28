@@ -1,6 +1,6 @@
-import { db } from '@/core/db'
+import { db } from '@/infrastructure/storage/VaultDatabase'
 import { v7 as uuidv7 } from 'uuid'
-import type { LocalTransaction, LocalSubscription } from '@/core/db'
+import type { LocalTransaction, LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class SubscriptionProcessor {
@@ -43,7 +43,7 @@ export class SubscriptionProcessor {
               id: transactionId,
               user_id: userId,
               title: `Assinatura: ${sub.name}`,
-              amount: Math.abs(sub.amount),
+              amount: BigInt(Math.abs(Number(sub.amount))),
               type: 'expense',
               category_id: sub.category_id,
               wallet_id: sub.wallet_id,

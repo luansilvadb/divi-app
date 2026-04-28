@@ -1,67 +1,65 @@
 <template>
-  <NCard hoverable class="cursor-pointer" v-bind="$attrs">
-    <NSpace vertical :size="20">
-      <!-- Header -->
-      <NSpace justify="space-between" align="start" class="w-full">
-        <NSpace align="center" :size="12">
-          <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-            <i class="i-lucide-briefcase text-lg"></i>
+  <DataCard hoverable clickable v-bind="$attrs">
+    <template #header-left>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-info-subtle dark:bg-info-subtle-dark flex items-center justify-center text-info-main dark:text-info-main-dark">
+          <i class="i-lucide-briefcase text-lg"></i>
+        </div>
+        <div class="flex flex-col gap-0.5">
+          <span class="card-title leading-tight">{{ loan.name }}</span>
+          <div class="flex items-center gap-2">
+            <ItemSyncIndicator :status="loan.sync_status" />
+            <span class="label-micro">
+              Vence: {{ formatDate(loan.due_date) }}
+            </span>
           </div>
-          <NSpace vertical :size="2">
-            <NText strong class="text-base leading-tight">{{ loan.name }}</NText>
-            <NSpace align="center" :size="6">
-              <ItemSyncIndicator :status="loan.sync_status" />
-              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">
-                Vence: {{ formatDate(loan.due_date) }}
-              </NText>
-            </NSpace>
-          </NSpace>
-        </NSpace>
-      </NSpace>
+        </div>
+      </div>
+    </template>
 
-      <!-- Metrics Block -->
-      <NCard embedded size="small" :bordered="false" class="!bg-zinc-100/50 dark:!bg-zinc-800/20">
+    <template #extra-content>
+      <NCard embedded size="small" :bordered="false" class="!bg-surface-200/50 dark:!bg-surface-200-dark/20">
         <NGrid :cols="2" :x-gap="16">
           <NGridItem>
-            <NSpace vertical :size="4">
-              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Saldo Devedor</NText>
-              <NText type="error" strong class="text-lg tabular-nums leading-none">
+            <div class="flex flex-col gap-1">
+              <span class="label-micro">Saldo Devedor</span>
+              <span class="text-lg font-bold tabular-nums leading-none text-error-main dark:text-error-main-dark">
                 {{ formatCurrency(loan.remaining_value) }}
-              </NText>
-            </NSpace>
+              </span>
+            </div>
           </NGridItem>
           <NGridItem>
-            <NSpace vertical :size="4">
-              <NText depth="3" class="text-[9px] uppercase tracking-widest font-bold">Taxa Mensal</NText>
+            <div class="flex flex-col gap-1">
+              <span class="label-micro">Taxa Mensal</span>
               <NTag size="small" type="info" round :bordered="false">
                 {{ loan.interest_rate || '0' }}%
               </NTag>
-            </NSpace>
+            </div>
           </NGridItem>
         </NGrid>
       </NCard>
+    </template>
 
-      <!-- Progress -->
-      <NSpace vertical :size="8">
-        <NSpace justify="space-between" align="center">
-          <NText depth="3" class="text-[10px] uppercase tracking-widest font-bold">
-            {{ getProgress(loan).toFixed(1) }}% pago
-          </NText>
-          <NText depth="3" class="text-[10px] opacity-60 uppercase tracking-widest font-bold">
-            de {{ formatCurrency(loan.total_value) }}
-          </NText>
-        </NSpace>
-        <NProgress
-          type="line"
-          :percentage="Math.min(getProgress(loan), 100)"
-          :show-indicator="false"
-          color="#3b82f6"
-          :height="6"
-        />
-      </NSpace>
+    <template #progress>
+      <div class="flex items-center justify-between">
+        <span class="text-[10px] font-bold uppercase tracking-widest text-label-secondary">
+          {{ getProgress(loan).toFixed(1) }}% pago
+        </span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-label-quaternary">
+          de {{ formatCurrency(loan.total_value) }}
+        </span>
+      </div>
+      <NProgress
+        type="line"
+        :percentage="Math.min(getProgress(loan), 100)"
+        :show-indicator="false"
+        color="#3b82f6"
+        :height="6"
+      />
+    </template>
 
-      <!-- Footer Actions -->
-      <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex justify-end gap-3">
+    <template #footer-right>
+      <div class="flex justify-end gap-3">
         <NButton
           quaternary
           size="small"
@@ -76,23 +74,15 @@
           Registrar Parcela
         </NButton>
       </div>
-    </NSpace>
-  </NCard>
+    </template>
+  </DataCard>
 </template>
 
 <script setup lang="ts">
-import {
-  NCard,
-  NSpace,
-  NText,
-  NTag,
-  NProgress,
-  NGrid,
-  NGridItem,
-  NButton,
-} from 'naive-ui'
-import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
+import { NTag, NProgress, NGrid, NGridItem, NButton, NCard } from 'naive-ui'
 import type { Loan } from '../../domain/entities/Loan'
+import DataCard from './DataCard.vue'
+import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 defineProps<{
   loan: Loan
@@ -103,16 +93,17 @@ defineEmits<{
 }>()
 
 const getProgress = (loan: Loan) => {
-  if (loan.total_value === 0) return 0
-  const paid = loan.total_value - loan.remaining_value
-  return (paid / loan.total_value) * 100
+  if (BigInt(loan.total_value) === 0n) return 0
+  const paid = Number(BigInt(loan.total_value) - BigInt(loan.remaining_value))
+  return (paid / Number(loan.total_value)) * 100
 }
 
-const formatCurrency = (value: number) => {
+const formatCurrency = (value: number | bigint) => {
+  const num = typeof value === 'bigint' ? Number(value) / 100 : value
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value)
+  }).format(num)
 }
 
 const formatDate = (dateString: string) => {

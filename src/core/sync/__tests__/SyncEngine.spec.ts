@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SyncEngine } from '../SyncEngine'
-import { db } from '../../db'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 import { supabase } from '../../supabase'
 import { setActivePinia, createPinia } from 'pinia'
 import 'fake-indexeddb/auto'
@@ -13,6 +13,16 @@ vi.mock('../../supabase', () => ({
     },
     from: vi.fn(),
   },
+}))
+
+vi.mock('@/infrastructure/crypto/VaultCryptoManager', () => ({
+  VaultCryptoManager: {
+    getInstance: vi.fn().mockReturnValue({
+      hasKey: vi.fn().mockReturnValue(true),
+      encrypt: vi.fn().mockImplementation((val) => Promise.resolve({ data: val, iv: 'mock-iv' })),
+      decrypt: vi.fn().mockImplementation((payload) => Promise.resolve(payload.data)),
+    })
+  }
 }))
 
 const createMockTable = () => {
@@ -130,7 +140,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       // Simulate server having a newer version
       const mockTable = createMockTable()
       mockTable.maybeSingle.mockResolvedValue({
-        data: { client_updated_at: serverTime },
+        data: { client_updated_at: serverTime, user_id: 'test-user-id', version: 2 },
         error: null,
       })
       mockTable.single.mockResolvedValue({

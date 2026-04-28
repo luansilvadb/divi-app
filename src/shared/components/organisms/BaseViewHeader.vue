@@ -1,12 +1,12 @@
 <template>
-  <header 
-    ref="headerRef" 
-    class="view-header-wrapper relative flex flex-col md:block h-0"
+  <header
+    ref="headerRef"
+    class="view-header-wrapper relative flex flex-col md:block"
   >
     <!-- Action slot (pinned to top right) -->
     <div
       v-if="$slots.action"
-      class="header-actions flex justify-start md:justify-end transition-transform duration-300 w-full md:w-auto absolute right-0 -top-16 h-auto md:h-10 z-20"
+      class="header-actions flex justify-start md:justify-end transition-transform duration-300 w-full md:w-auto md:absolute md:right-0 md:top-0 z-30"
     >
       <slot name="action" />
     </div>
@@ -28,7 +28,7 @@ const props = defineProps<{
 }>()
 
 const headerRef = ref<HTMLElement | null>(null)
-const { setHeaderState, setInView, EXPANDED_HEIGHT } = useViewHeader()
+const { setHeaderState, setInView } = useViewHeader()
 
 watch(
   () => [props.title, props.highlight],

@@ -17,15 +17,12 @@
       :rules="rules"
       size="large"
       label-placement="top"
-      class="space-y-4"
+      class="space-y-5"
     >
       <!-- Name Input -->
-      <NFormItem label="Nome da Conta" path="name">
+      <NFormItem label="Nome" path="name">
         <template #label>
-          <div class="flex items-center gap-2 opacity-60">
-            <i class="i-lucide-landmark text-xs"></i>
-            <span class="text-[10px] uppercase font-bold tracking-widest">Identificação</span>
-          </div>
+          <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Nome</span>
         </template>
         <NInput
           v-model:value="form.name"
@@ -39,10 +36,7 @@
         <NGi>
           <NFormItem label="Saldo Inicial" path="balance">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-banknote text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Saldo Atual</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Saldo Inicial</span>
             </template>
             <NInput
               :value="displayBalance"
@@ -51,7 +45,7 @@
               @input="handleInputBalance"
             >
               <template #prefix>
-                <span class="text-xs font-bold opacity-40 mr-1">{{ activeConfig.symbol }}</span>
+                <span class="text-[13px] font-semibold text-[#8e8e93] dark:text-[#636366] mr-1">{{ activeConfig?.symbol || 'R$' }}</span>
               </template>
             </NInput>
           </NFormItem>
@@ -61,10 +55,7 @@
         <NGi>
           <NFormItem label="Moeda" path="currency">
             <template #label>
-              <div class="flex items-center gap-2 opacity-60">
-                <i class="i-lucide-globe text-xs"></i>
-                <span class="text-[10px] uppercase font-bold tracking-widest">Moeda</span>
-              </div>
+              <span class="text-[13px] font-semibold text-[#6e6e73] dark:text-[#8e8e93] tracking-[-0.02em]">Moeda</span>
             </template>
             <NSelect
               v-model:value="form.currency"
@@ -75,24 +66,24 @@
         </NGi>
       </NGrid>
 
-      <!-- Action Buttons (Clean Layout) -->
-      <div class="flex items-center gap-4 pt-6">
+      <!-- Action Buttons (Apple Style) -->
+      <div class="flex items-center gap-3 pt-8">
         <NButton
           v-if="props.initialData"
           type="error"
           secondary
-          class="flex-1 !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-widest !bg-red-500/10 !text-red-600 hover:!bg-red-600 hover:!text-white transition-all duration-300"
+          class="flex-1 !h-[48px] !rounded-xl font-semibold text-[17px] tracking-tight !bg-[#ff3b30]/10 !text-[#ff3b30] hover:!bg-[#ff3b30] hover:!text-white active:scale-[0.98] select-none transition-all duration-150"
           @click="handleDelete"
         >
-          Excluir Conta
+          Excluir
         </NButton>
         <NButton
           type="primary"
           :loading="isSubmitting"
-          class="flex-[2] !h-12 !rounded-xl font-bold uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-violet-500/20"
+          class="flex-[2] !h-[48px] !rounded-xl font-semibold text-[17px] tracking-tight !bg-[#0071e3] hover:!bg-[#0066cc] active:scale-[0.98] select-none transition-all duration-150"
           @click="handleSubmit"
         >
-          Salvar Conta
+          Salvar
         </NButton>
       </div>
     </NForm>
@@ -106,7 +97,6 @@ import {
   NForm,
   NFormItem,
   NInput,
-  NInputNumber,
   NSelect,
   NGrid,
   NGi,
@@ -153,13 +143,13 @@ const currencyConfigs: Record<string, { locale: string; symbol: string }> = {
   EUR: { locale: 'de-DE', symbol: '€' },
 }
 
-const activeConfig = computed(() => currencyConfigs[form.currency] || currencyConfigs.BRL)
+const activeConfig = computed(() => currencyConfigs[form.currency] || currencyConfigs['BRL'])
 
 // --- Live Masking Logic ---
 
 const displayBalance = computed(() => {
   if (form.balance === null) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
+  return new Intl.NumberFormat(activeConfig.value?.locale || 'pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(form.balance)
@@ -174,20 +164,12 @@ function handleInputBalance(val: string) {
   form.balance = Number(digits) / 100
 }
 
-const formatCurrency = (value: number | null) => {
-  if (value === null || isNaN(value)) return ''
-  return new Intl.NumberFormat(activeConfig.value.locale, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
 watch(
   () => props.initialData,
   (newData) => {
     if (newData) {
       form.name = newData.name
-      form.balance = newData.balance
+      form.balance = typeof newData.balance === 'bigint' ? Number(newData.balance) / 100 : newData.balance
       form.currency = newData.currency
     }
   },
@@ -207,7 +189,7 @@ const confirmDelete = async () => {
     // For now we'll mock it or use saveWallet with deleted flag if supported
     message.warning('Funcionalidade de exclusão em desenvolvimento.')
     emit('close')
-  } catch (error: any) {
+  } catch {
     message.error('Erro ao excluir conta.')
   } finally {
     isSubmitting.value = false
@@ -220,10 +202,10 @@ async function handleSubmit() {
 
     isSubmitting.value = true
     try {
-      const walletData: Partial<Wallet> = {
-        ...(props.initialData || {}),
+      const walletData = {
+        ...props.initialData,
         name: form.name,
-        balance: form.balance || 0,
+        balanceNum: form.balance || 0,
         currency: form.currency,
       }
 
@@ -231,8 +213,9 @@ async function handleSubmit() {
       emit('saved')
       emit('close')
       message.success('Conta salva com sucesso!')
-    } catch (error: any) {
-      message.error(error.message || 'Erro ao salvar conta.')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Erro ao salvar conta.'
+      message.error(errorMessage)
     } finally {
       isSubmitting.value = false
     }
@@ -241,32 +224,7 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
-:deep(.n-input), 
-:deep(.n-input-number), 
-:deep(.n-select .n-base-selection) {
-  --n-border-radius: 12px !important;
-  background-color: rgba(var(--color-zinc-500-rgb), 0.05) !important;
-  border: 1px solid transparent !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-:deep(.n-input:hover),
-:deep(.n-select .n-base-selection:hover) {
-  border-color: rgba(139, 92, 246, 0.3) !important;
-}
-
-:deep(.n-input.n-input--focus),
-:deep(.n-select.n-select--active .n-base-selection) {
-  background-color: transparent !important;
-  border-color: #8b5cf6 !important;
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1) !important;
-}
-
-:is(.dark) :deep(.n-input), 
-:is(.dark) :deep(.n-input-number), 
-:is(.dark) :deep(.n-select .n-base-selection) {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-}
+/* Naive UI theme handles all styling via naiveTheme.ts */
 
 :deep(.n-form-item .n-form-item-label) {
   padding-bottom: 4px;
