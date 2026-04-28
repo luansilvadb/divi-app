@@ -50,7 +50,7 @@ export class TransactionService {
     return this.transactionRepository.getAll();
   }
 
-  async create(transaction: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>): Promise<Transaction> {
+  async create(transaction: Omit<Transaction, 'id' | 'created_at' | 'client_updated_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Transaction> {
     return this.transactionRepository.create(transaction);
   }
 

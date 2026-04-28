@@ -78,7 +78,9 @@ describe('SyncEngine Lamport Logic', () => {
       date: new Date().toISOString(),
       sync_status: 'pending',
       version: 1,
-      client_updated_at: '2026-01-01T10:00:00Z'
+      client_updated_at: '2026-01-01T10:00:00Z',
+      created_at: '2026-01-01T10:00:00Z',
+      deleted: false,
     })
 
     // Server has newer version (5 > 1) but older timestamp (09:00 < 10:00)
@@ -121,7 +123,9 @@ describe('SyncEngine Lamport Logic', () => {
       date: new Date().toISOString(),
       sync_status: 'pending',
       version: 2,
-      client_updated_at: '2026-01-01T12:00:00Z'
+      client_updated_at: '2026-01-01T12:00:00Z',
+      created_at: '2026-01-01T12:00:00Z',
+      deleted: false,
     })
 
     // Client has newer version (2 > 1) but older timestamp (09:00 < 10:00)
@@ -155,7 +159,9 @@ describe('SyncEngine Lamport Logic', () => {
       date: olderTime,
       sync_status: 'pending',
       version: 3,
-      client_updated_at: olderTime
+      client_updated_at: olderTime,
+      created_at: olderTime,
+      deleted: false,
     })
 
     const mockTable = createMockTable()

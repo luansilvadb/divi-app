@@ -35,7 +35,7 @@ describe('DexieTransactionRepository', () => {
       date: '2026-04-07T10:00:00Z',
     }
 
-    await repository.save(transaction)
+    await repository.create(transaction)
 
     const all = await repository.getAll()
     expect(all).toHaveLength(1)
@@ -173,7 +173,7 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await repository.save(incomeTx)
+    await repository.create(incomeTx)
 
     // Assertion: Wallet balance should be increased
     const updatedWallet = await db.wallets.get('wallet-income-test')
@@ -214,7 +214,7 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await repository.save(expenseTx)
+    await repository.create(expenseTx)
 
     // Assertion: Wallet balance should be decreased
     const updatedWallet = await db.wallets.get('wallet-expense-test')
@@ -267,7 +267,7 @@ describe('DexieTransactionRepository', () => {
       amount: 5000n, // R$ 50,00 (increased from R$ 20,00)
       client_updated_at: new Date().toISOString(),
     }
-    await repository.save(updatedTx)
+    await repository.update(updatedTx.id, updatedTx)
 
     // Assertion: Balance should reflect the delta: 80000 - 5000 + 2000 = 77000n
     const updatedWallet = await db.wallets.get('wallet-update-test')
@@ -330,7 +330,7 @@ describe('DexieTransactionRepository', () => {
       wallet_id: 'wallet-b', // Changed wallet
       client_updated_at: new Date().toISOString(),
     }
-    await repository.save(movedTx)
+    await repository.update(movedTx.id, movedTx)
 
     // Assertion: Wallet A should be credited (reversed), Wallet B should be debited
     const finalWalletA = await db.wallets.get('wallet-a')
@@ -410,7 +410,7 @@ describe('DexieTransactionRepository', () => {
     }
 
     // Should not throw (gracefully handles missing wallet)
-    await expect(repository.save(orphanTx)).resolves.not.toThrow()
+    await expect(repository.create(orphanTx)).resolves.not.toThrow()
 
     // Transaction should be saved
     const saved = await db.transactions.get('tx-orphan')

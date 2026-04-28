@@ -57,7 +57,7 @@ app.use(router)
 vaultDb.open().catch((err) => {
   console.error('[Database] Failed to initialize local-first foundation:', err)
   const dashboardStore = useDashboardStore(pinia)
-  dashboardStore.initializationError = true
+  dashboardStore.hasInitializationError = true
 })
 
 app.mount('#app')

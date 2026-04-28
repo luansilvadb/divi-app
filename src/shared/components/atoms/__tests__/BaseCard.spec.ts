@@ -15,7 +15,7 @@ const NCardStub = {
   `,
   emits: ['click'],
   methods: {
-    handleKeydown(e: KeyboardEvent) {
+    handleKeydown(this: any, e: KeyboardEvent) {
       if (this.$attrs.role === 'button' && (e.key === 'Enter' || e.key === ' ')) {
         this.$emit('click', e)
       }

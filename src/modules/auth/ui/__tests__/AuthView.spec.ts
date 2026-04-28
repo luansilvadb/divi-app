@@ -64,7 +64,7 @@ describe('AuthView.vue', () => {
 
     expect(wrapper.text()).toContain('Não tem conta? Registre-se')
 
-    await wrapper.find('button.text-zinc-500').trigger('click')
+    await wrapper.find('button[style]').trigger('click')
 
     expect(wrapper.text()).toContain('Criar Conta')
     expect(wrapper.text()).toContain('Já tem conta? Faça login')
@@ -94,7 +94,7 @@ describe('AuthView.vue', () => {
       },
     })
 
-    await wrapper.find('button.text-zinc-500').trigger('click')
+    await wrapper.find('button[style]').trigger('click')
 
     await wrapper.find('input[type="text"]').setValue('test@example.com')
     await wrapper.find('input[type="password"]').setValue('password123')

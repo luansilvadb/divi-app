@@ -16,7 +16,7 @@ describe('BudgetProgressBar.vue', () => {
     })
 
     // We check for computed percentage
-    expect(wrapper.vm.percentage).toBe(40)
+    expect((wrapper.vm as any).percentage).toBe(40)
   })
 
   it('should be yellow when spent is 60%', () => {
@@ -30,7 +30,7 @@ describe('BudgetProgressBar.vue', () => {
       },
     })
 
-    expect(wrapper.vm.percentage).toBe(60)
+    expect((wrapper.vm as any).percentage).toBe(60)
   })
 
   it('should be red when over budget', () => {
@@ -44,8 +44,8 @@ describe('BudgetProgressBar.vue', () => {
       },
     })
 
-    expect(wrapper.vm.clampedPercentage).toBe(100)
-    expect(wrapper.vm.percentage).toBe(110)
-    expect(wrapper.vm.isOverBudget).toBe(true)
+    expect((wrapper.vm as any).clampedPercentage).toBe(100)
+    expect((wrapper.vm as any).percentage).toBe(110)
+    expect((wrapper.vm as any).isOverBudget).toBe(true)
   })
 })

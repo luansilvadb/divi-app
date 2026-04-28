@@ -20,9 +20,11 @@ describe('TransactionService', () => {
     mockTransactionRepo = {
       getAll: vi.fn(),
       getByMonth: vi.fn(),
-      save: vi.fn(),
+      create: vi.fn().mockResolvedValue(undefined),
+      update: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn(),
-      watchAll: vi.fn()
+      watchAll: vi.fn(),
+      transferBetweenWallets: vi.fn().mockResolvedValue(undefined),
     }
 
     transactionService = new TransactionService(mockTransactionRepo)
@@ -70,7 +72,7 @@ describe('TransactionService', () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      const saveSpy = vi.spyOn(mockTransactionRepo, 'save')
+      const createSpy = vi.spyOn(mockTransactionRepo, 'create')
 
       await transactionService.saveTransaction({
         title: 'Test Transaction',
@@ -82,7 +84,7 @@ describe('TransactionService', () => {
         notes: 'Test notes'
       })
 
-      expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
+      expect(createSpy).toHaveBeenCalledWith(expect.objectContaining({
         amount: 1550n, // Should be converted to BigInt (1550 cents)
         title: 'Test Transaction',
         type: 'income',
@@ -95,7 +97,7 @@ describe('TransactionService', () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      const saveSpy = vi.spyOn(mockTransactionRepo, 'save')
+      const createSpy = vi.spyOn(mockTransactionRepo, 'create')
 
       await transactionService.saveTransaction({
         title: 'Test Transaction',
@@ -106,7 +108,7 @@ describe('TransactionService', () => {
         date: '2026-04-13'
       })
 
-      expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
+      expect(createSpy).toHaveBeenCalledWith(expect.objectContaining({
         amount: 2575n // Should be converted to BigInt (2575 cents)
       }))
     })
@@ -132,7 +134,8 @@ describe('TransactionService', () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      const saveSpy = vi.spyOn(mockTransactionRepo, 'save')
+      // When an id is provided, saveTransaction calls update(), not create()
+      const updateSpy = vi.spyOn(mockTransactionRepo, 'update')
 
       const transactionData = {
         id: 'tx-123',
@@ -149,26 +152,28 @@ describe('TransactionService', () => {
 
       await transactionService.saveTransaction(transactionData)
 
-      expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
-        id: 'tx-123',
-        title: 'Salary Deposit',
-        amount: 300000n, // 3000.00 converted to cents
-        type: 'income',
-        category_id: 'cat-salary',
-        wallet_id: 'wallet-main',
-        notes: 'Monthly salary',
-        tags: ['salary', 'monthly'],
-        payee_id: 'payee-1',
-        user_id: 'user-1',
-        sync_status: 'pending',
-        deleted: false
-      }))
+      expect(updateSpy).toHaveBeenCalledWith(
+        'tx-123',
+        expect.objectContaining({
+          title: 'Salary Deposit',
+          amount: 300000n, // 3000.00 converted to cents
+          type: 'income',
+          category_id: 'cat-salary',
+          wallet_id: 'wallet-main',
+          notes: 'Monthly salary',
+          tags: ['salary', 'monthly'],
+          payee_id: 'payee-1',
+        })
+      )
 
       // Verify that the amount was properly converted to BigInt
-      expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
-        amount: 300000n,
-        type: 'income'
-      }))
+      expect(updateSpy).toHaveBeenCalledWith(
+        'tx-123',
+        expect.objectContaining({
+          amount: 300000n,
+          type: 'income'
+        })
+      )
     })
   })
 

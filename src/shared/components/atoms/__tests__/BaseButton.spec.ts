@@ -28,11 +28,8 @@ describe('BaseButton.vue', () => {
   it('applies the correct primary variant by default', () => {
     const wrapper = mount(BaseButton, { global })
 
-    // In our mock, severity might not pass through easily unless we use the real component.
-    // Let's test the class directly or simply test that it mounts without crashing.
-    // For now we check the base classes.
-    expect(wrapper.classes()).toContain('!font-bold')
-    expect(wrapper.classes()).toContain('transition-all')
+    // BaseButton renders as NButton with the apple-button class
+    expect(wrapper.classes()).toContain('apple-button')
   })
 
   it('does not apply shadow-lg when variant is outline', () => {

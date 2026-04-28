@@ -37,9 +37,18 @@ export class BigIntAdapter {
 
   // Método para converter decimal string para BigInt (em centavos)
   static parseDecimalToBigInt(decimalString: string): bigint | null {
+    if (!decimalString || decimalString.trim() === '') {
+      return null
+    }
+
     const normalized = this.normalizeInput(decimalString)
     if (normalized === null) {
-      if (decimalString && decimalString.trim() !== '') return 0n
+      // normalizeInput returns null for invalid format (e.g., multiple dots)
+      // Only return 0n if the cleaned string was empty (e.g., 'abc' → cleaned to '' → 0n)
+      const cleaned = decimalString.trim().replace(/[^0-9.,]/g, '')
+      if (!cleaned || cleaned === '' || cleaned === '.' || cleaned === ',') {
+        return 0n
+      }
       return null
     }
 
@@ -54,6 +63,10 @@ export class BigIntAdapter {
 
   // Método para serializar BigInt para JSON
   static serializeBigInt(value: bigint): string {
+    return value.toString();
+  }
+
+  static toString(value: bigint): string {
     return value.toString();
   }
 
@@ -93,3 +106,7 @@ export class BigIntAdapter {
     return Number(sum) / CENTS_PER_UNIT
   }
 }
+
+// Standalone exports for easier usage
+export const parseDecimalToBigInt = (value: string) => BigIntAdapter.parseDecimalToBigInt(value)
+export const formatBigIntToDecimal = (value: bigint) => BigIntAdapter.fromMinorUnits(value)

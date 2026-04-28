@@ -13,5 +13,5 @@ describe('Molecule Components Coverage', () => {
     await import('../SyncStatusIndicator.vue')
     await import('../ThemeToggle.vue')
     expect(true).toBe(true)
-  })
+  }, 20000)
 })

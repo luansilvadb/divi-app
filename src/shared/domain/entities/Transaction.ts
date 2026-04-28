@@ -10,5 +10,6 @@ export interface Transaction extends SyncMetadata {
   date: string
   notes?: string
   tags?: string[]
+  localId?: string
   transfer_id?: string
 }

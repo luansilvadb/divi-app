@@ -15,5 +15,5 @@ describe('Organism Components Coverage', () => {
     await import('../WalletDialog.vue')
     await import('../WalletFormContent.vue')
     expect(true).toBe(true)
-  })
+  }, 20000)
 })

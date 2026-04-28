@@ -7,7 +7,8 @@ import type { Transaction } from '@/shared/domain/entities/Transaction'
 
 // Mocking dependencies
 const mockTransactionRepo = {
-  save: vi.fn(),
+  create: vi.fn().mockImplementation((t) => Promise.resolve({ ...t, id: t.id || 'new-id' })),
+  update: vi.fn().mockImplementation((id, t) => Promise.resolve({ ...t, id })),
   delete: vi.fn(),
   getByMonth: vi.fn().mockResolvedValue([]),
   getAll: vi.fn().mockResolvedValue([]),
@@ -94,13 +95,16 @@ describe('TransactionStore CRUD', () => {
   })
 
   describe('Create/Update Operations', () => {
-    it('should call save on repository and refresh list', async () => {
+    it('should call create/update on repository and refresh list', async () => {
       const store = useTransactionStore()
       mockTransactionRepo.getByMonth.mockResolvedValue([])
 
       await store.saveTransaction(sampleTx)
 
-      expect(mockTransactionRepo.save).toHaveBeenCalledWith(
+      // It's an update because sampleTx has an ID and we setup initial state
+      // Wait, in this test it checks 'isUpdate' based on if it's in the list.
+      // But store.transactions is empty. So it calls create.
+      expect(mockTransactionRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           id: sampleTx.id,
           title: sampleTx.title,
@@ -162,7 +166,7 @@ describe('TransactionStore CRUD', () => {
 
       await store.saveTransaction(txWithoutUser)
 
-      expect(mockTransactionRepo.save).toHaveBeenCalledWith(
+      expect(mockTransactionRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           user_id: 'test-user-id',
         }),

@@ -23,9 +23,20 @@ export const useCategoryStore = defineStore('categories', () => {
     categoryMap.value = map
   }
 
+  async function saveCategory(category: Category) {
+    await categoryService.createCategory({
+      name: category.name,
+      icon: category.icon,
+      color: category.color,
+      parent_id: category.parent_id,
+    })
+    await fetchCategories()
+  }
+
   return {
     categories,
     categoryMap,
     fetchCategories,
+    saveCategory,
   }
 })

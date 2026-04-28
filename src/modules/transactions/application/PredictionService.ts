@@ -4,7 +4,7 @@ import type { IPredictionService, PredictionResult } from '../domain/prediction'
 export class PredictionService implements IPredictionService {
   constructor(private db: VaultDatabase) {}
 
-  async predict(payeeId: string, _amount: number): Promise<PredictionResult> {
+  async predict(payeeId: string, _amount: bigint): Promise<PredictionResult> {
     const thirtyDaysAgoDate = new Date()
     thirtyDaysAgoDate.setDate(thirtyDaysAgoDate.getDate() - 30)
     const thirtyDaysAgo = thirtyDaysAgoDate.toISOString()

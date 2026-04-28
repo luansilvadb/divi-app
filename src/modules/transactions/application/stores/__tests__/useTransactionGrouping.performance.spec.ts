@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useTransactionGrouping } from '../useTransactionGrouping'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 /**
  * Performance tests for useTransactionGrouping composable
@@ -109,7 +109,7 @@ describe('useTransactionGrouping Performance', () => {
     })
 
     // Verify linear scaling (10x data should not take 100x time)
-    const ratio10x = results[1].duration / results[0].duration
+    const ratio10x = results[1]!.duration / results[0]!.duration
     expect(ratio10x).toBeLessThan(15) // Should be closer to 10x than 100x
   })
 })

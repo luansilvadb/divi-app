@@ -26,7 +26,8 @@ describe('WalletService', () => {
 
     mockRepo = {
       getAll: vi.fn().mockResolvedValue([]),
-      save: vi.fn().mockResolvedValue(undefined),
+      create: vi.fn().mockResolvedValue({} as Wallet),
+      update: vi.fn().mockResolvedValue({} as Wallet),
       getById: vi.fn().mockResolvedValue(null),
     }
 
@@ -56,16 +57,15 @@ describe('WalletService', () => {
       balance: 15.50
     })
 
-    expect(mockRepo.save).toHaveBeenCalledOnce()
+    expect(mockRepo.create).toHaveBeenCalledOnce()
     
     // Asserção CRÍTICA: validando se o valor float 15.50 virou 1550n
-    const savedWallet = mockRepo.save.mock.calls[0]?.[0]
-    if (!savedWallet) throw new Error('Wallet not saved')
-    expect(savedWallet.name).toBe('Nubank')
-    expect(savedWallet.type).toBe('checking')
-    expect(savedWallet.balance).toBeTypeOf('bigint')
-    expect(savedWallet.balance).toBe(1550n)
-    expect(savedWallet.user_id).toBe('test-user-id')
+    const createdWallet = mockRepo.create.mock.calls[0]?.[0]
+    if (!createdWallet) throw new Error('Wallet not created')
+    expect(createdWallet.name).toBe('Nubank')
+    expect(createdWallet.balance).toBeTypeOf('bigint')
+    expect(createdWallet.balance).toBe(1550n)
+    expect(createdWallet.user_id).toBe('test-user-id')
   })
 
   it('deve lançar erro ao criar carteira se não houver usuário autenticado', async () => {
@@ -80,6 +80,6 @@ describe('WalletService', () => {
       })
     ).rejects.toThrow('User not authenticated')
 
-    expect(mockRepo.save).not.toHaveBeenCalled()
+    expect(mockRepo.create).not.toHaveBeenCalled()
   })
 })

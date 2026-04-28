@@ -7,7 +7,7 @@ import { useSyncStore } from '@/core/sync/syncStore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
-import { TransactionService } from '../services/TransactionService'
+
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Category } from '@/shared/domain/entities/Category'
@@ -19,11 +19,10 @@ import { useTransactionStats } from './useTransactionStats'
 import { useTransactionSearch } from './useTransactionSearch'
 import { useTransactionGrouping } from './useTransactionGrouping'
 
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 export const useTransactionStore = defineStore('transactions', () => {
   // Services
-  const transactionService = container.resolve<TransactionService>(DI_TOKENS.TransactionService)
   const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
   const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.ActivityLogService)
   const syncStore = useSyncStore()
@@ -33,7 +32,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const walletStore = useWalletStore()
   const categoryStore = useCategoryStore()
 
-  const transactions = shallowRef<Transaction[]>([])
+  const transactions = shallowRef<any[]>([])
   const isLoading = ref(false)
 
   const currentYear = ref(new Date().getFullYear())
@@ -94,14 +93,21 @@ export const useTransactionStore = defineStore('transactions', () => {
   }
 
   async function updateLocalState(enriched: Transaction, isNew: boolean) {
-    const index = transactions.value.findIndex((t) => t.id === enriched.id)
-    const newArray = [...transactions.value]
-    if (!isNew) {
-      newArray[index] = enriched
-    } else {
-      newArray.unshift(enriched)
+    const uiTx = {
+      ...(enriched as any),
+      _titleLower: (enriched.title || '').toLowerCase(),
+      _timestamp: new Date(enriched.date).getTime(),
+      _dateKey: (enriched.date || '').substring(0, 10),
     }
-    transactions.value = newArray
+
+    const index = transactions.value.findIndex((t) => t.id === enriched.id)
+    const newArray: any[] = [...transactions.value]
+    if (!isNew && index !== -1) {
+      newArray[index] = uiTx
+    } else {
+      newArray.unshift(uiTx)
+    }
+    transactions.value = newArray as any
   }
 
   async function logTransactionActivity(enriched: Transaction, activeUserId: string, isNew: boolean) {
@@ -123,13 +129,17 @@ export const useTransactionStore = defineStore('transactions', () => {
     if (!activeUserId) throw new Error('User not authenticated')
 
     const enriched = enrichTransaction(transaction, activeUserId)
-    const isNew = !transactions.value.some((t) => t.id === enriched.id)
-
-    await updateLocalState(enriched, isNew)
+    const isUpdate = transactions.value.some((t) => t.id === enriched.id)
 
     try {
-      await transactionRepo.save(enriched)
-      await logTransactionActivity(enriched, activeUserId, isNew)
+      if (isUpdate) {
+        await transactionRepo.update(enriched.id, enriched)
+      } else {
+        await transactionRepo.create(enriched)
+      }
+      
+      await updateLocalState(enriched, !isUpdate)
+      await logTransactionActivity(enriched, activeUserId, !isUpdate)
 
       const date = new Date(enriched.date)
       await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
@@ -139,7 +149,7 @@ export const useTransactionStore = defineStore('transactions', () => {
         transactionId: enriched.id,
         transactionTitle: enriched.title,
         userId: activeUserId,
-        isNew,
+        isNew: !isUpdate,
         error: err instanceof Error ? err.message : String(err),
       }
       console.error('[TransactionStore] Failed to save transaction:', errorContext, err)
@@ -199,17 +209,13 @@ export const useTransactionStore = defineStore('transactions', () => {
       const existing = walletStore.walletMap[walletData.id]
       if (!existing) throw new Error('Wallet not found')
 
-      const updated: Wallet = {
-        ...existing,
+      await walletService.updateWallet(walletData.id, {
         ...walletData,
         balance: walletData.balanceNum !== undefined
           ? BigInt(Math.round(walletData.balanceNum * 100))
           : existing.balance,
         currency: walletData.currency || existing.currency,
-        client_updated_at: new Date().toISOString(),
-        version: (existing.version || 0) + 1,
-      }
-      await walletService['walletRepo'].save(updated)
+      })
       await walletStore.fetchWallets()
     } else {
       // Create new wallet
@@ -247,5 +253,6 @@ export const useTransactionStore = defineStore('transactions', () => {
     saveTransaction,
     deleteTransaction,
     saveWallet,
+    saveCategory: (categoryData: Category) => categoryStore.saveCategory(categoryData),
   }
 })

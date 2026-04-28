@@ -24,7 +24,8 @@ describe('TransactionService - CRUD', () => {
     mockRepo = {
       getAll: vi.fn(),
       getByMonth: vi.fn().mockResolvedValue([]),
-      save: vi.fn().mockResolvedValue(undefined),
+      create: vi.fn().mockResolvedValue({} as any),
+      update: vi.fn().mockResolvedValue({} as any),
       delete: vi.fn().mockResolvedValue(undefined),
       watchAll: vi.fn().mockReturnValue(of([])),
     }
@@ -44,7 +45,7 @@ describe('TransactionService - CRUD', () => {
 
       await service.saveTransaction(data)
 
-      expect(mockRepo.save).toHaveBeenCalledWith(
+      expect(mockRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           title: 'Test Transaction',
           amount: 15075n,
@@ -67,8 +68,9 @@ describe('TransactionService - CRUD', () => {
 
       await service.saveTransaction(data)
 
-      expect(mockRepo.save).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'tx-123' })
+      expect(mockRepo.update).toHaveBeenCalledWith(
+        'tx-123',
+        expect.objectContaining({ title: 'Updated' })
       )
     })
   })

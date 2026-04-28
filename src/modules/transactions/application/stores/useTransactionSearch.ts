@@ -1,8 +1,7 @@
 import { computed, ref, type ComputedRef, type Ref } from 'vue'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Category } from '@/shared/domain/entities/Category'
 
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 /**
  * Composable for transaction search functionality.

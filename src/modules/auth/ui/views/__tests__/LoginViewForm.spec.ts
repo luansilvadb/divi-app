@@ -13,6 +13,7 @@ const mockAuthService: IAuthService = {
   signOut: vi.fn(),
   getCurrentUser: vi.fn(),
   onAuthStateChange: vi.fn(),
+  deleteAccountData: vi.fn(),
 }
 
 const mockMessage = {
