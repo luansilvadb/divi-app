@@ -76,7 +76,6 @@ export default defineConfig({
             if (id.includes('chart.js') || id.includes('vue-chartjs')) {
               return 'vendor-charts'
             }
-            return 'vendor'
           }
         }
       }
