@@ -9,7 +9,7 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Initialize and install dependencies (e.g., `npm install`)
+- [x] T001 Initialize and install dependencies (e.g., `npm install`)
 
 ---
 
@@ -19,9 +19,9 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 Run `npx knip` to identify all unused files, exports, and dependencies across `src/`
-- [ ] T003 Run `npm run lint:eslint` to identify functions exceeding the cyclomatic complexity threshold of 15 across `src/`
-- [ ] T004 Run `npm run test:unit` to ensure the current baseline has 100% passing tests
+- [x] T002 Run `npx knip` to identify all unused files, exports, and dependencies across `src/`
+- [x] T003 Run `npm run lint:eslint` to identify functions exceeding the cyclomatic complexity threshold of 15 across `src/`
+- [x] T004 Run `npm run test:unit` to ensure the current baseline has 100% passing tests
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -35,11 +35,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T005 [P] [US1] Refactor complex functions in `src/core/` to respect max complexity of 15
-- [ ] T006 [P] [US1] Refactor complex functions in `src/modules/` to respect max complexity of 15
-- [ ] T007 [P] [US1] Refactor complex functions in `src/infrastructure/` and `src/stores/` to respect max complexity of 15
-- [ ] T008 [US1] Run `npm run test:unit` to ensure no regressions were introduced by the refactoring
-- [ ] T009 [US1] Run `npm run lint:eslint` to verify all functions are under the complexity threshold
+- [x] T005 [P] [US1] Refactor complex functions in `src/core/` to respect max complexity of 15
+- [x] T006 [P] [US1] Refactor complex functions in `src/modules/` to respect max complexity of 15
+- [x] T007 [P] [US1] Refactor complex functions in `src/infrastructure/` and `src/stores/` to respect max complexity of 15
+- [x] T008 [US1] Run `npm run test:unit` to ensure no regressions were introduced by the refactoring
+- [x] T009 [US1] Run `npm run lint:eslint` to verify all functions are under the complexity threshold
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -53,11 +53,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T010 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/core/` and `src/shared/`
-- [ ] T011 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/modules/` and `src/infrastructure/`
-- [ ] T012 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/stores/`, `src/router/` and `src/styles/`
-- [ ] T013 [US2] Clean up any obsolete comments across all refactored files in `src/`
-- [ ] T014 [US2] Run `npx knip` to verify 0 unused exports, files, or dependencies remain
+- [x] T010 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/core/` and `src/shared/`
+- [x] T011 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/modules/` and `src/infrastructure/`
+- [x] T012 [P] [US2] Remove unused files, exports, and variables identified by Knip in `src/stores/`, `src/router/` and `src/styles/`
+- [x] T013 [US2] Clean up any obsolete comments across all refactored files in `src/`
+- [x] T014 [US2] Run `npx knip` to verify 0 unused exports, files, or dependencies remain
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -71,9 +71,9 @@
 
 ### Implementation for User Story 3
 
-- [ ] T015 [US3] Consolidate fragmented or orphaned code into cohesive modules within `src/modules/`
-- [ ] T016 [US3] Remove any empty directories and structural remnants in `src/`
-- [ ] T017 [US3] Verify Hexagonal Architecture boundaries are respected (e.g., no adapters imported inside `src/core/`)
+- [x] T015 [US3] Consolidate fragmented or orphaned code into cohesive modules within `src/modules/`
+- [x] T016 [US3] Remove any empty directories and structural remnants in `src/`
+- [x] T017 [US3] Verify Hexagonal Architecture boundaries are respected (e.g., no adapters imported inside `src/core/`)
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -83,9 +83,9 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T018 [P] Run `npm run test:unit` to guarantee 100% passing tests after all changes
-- [ ] T019 [P] Run `npm run type-check` and `npm run build-only` to ensure the project builds successfully
-- [ ] T020 Run quickstart.md validation commands to confirm all success criteria are met
+- [x] T018 [P] Run `npm run test:unit` to guarantee 100% passing tests after all changes
+- [x] T019 [P] Run `npm run type-check` and `npm run build-only` to ensure the project builds successfully
+- [x] T020 Run quickstart.md validation commands to confirm all success criteria are met
 
 ---
 

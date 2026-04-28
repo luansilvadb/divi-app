@@ -38,7 +38,10 @@ export class BigIntAdapter {
   // Método para converter decimal string para BigInt (em centavos)
   static parseDecimalToBigInt(decimalString: string): bigint | null {
     const normalized = this.normalizeInput(decimalString)
-    if (!normalized) return null
+    if (normalized === null) {
+      if (decimalString && decimalString.trim() !== '') return 0n
+      return null
+    }
 
     const { integerPart, decimalPart } = this.parseParts(normalized)
 

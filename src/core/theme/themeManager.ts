@@ -1,7 +1,6 @@
 import { useThemeStore } from '../../shared/stores/themeStore'
 import { storeToRefs } from 'pinia'
 
-export type { Theme } from '../../shared/stores/themeStore'
 
 export const useTheme = () => {
   const store = useThemeStore()

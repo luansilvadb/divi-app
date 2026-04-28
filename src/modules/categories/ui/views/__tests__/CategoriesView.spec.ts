@@ -110,48 +110,46 @@ describe('CategoriesView', () => {
 
   it('opens add modal and creates a category', async () => {
     const wrapper = mount(CategoriesView, {
-      global: { stubs: { NEmpty: true, NModal: true, NForm: true, NFormItem: true, NInput: true, NSelect: true, NColorPicker: true, NButton: true, NCard: true, NText: true, NGrid: true, NGridItem: true } }
+      global: { stubs: { StandardPageLayout: true, NEmpty: true, CategoryDialog: true, AppleButton: true } }
     })
 
     const vm = wrapper.vm as any
     vm.openAddModal()
     
     expect(vm.showModal).toBe(true)
-    expect(vm.isSubmittingEdit).toBe(false)
+    expect(vm.editingCategory).toBeNull()
     
-    vm.formModel.name = 'New Custom'
-    vm.formModel.color = '#fff'
-    vm.formModel.icon = 'i-lucide-car'
-
-    await vm.handleSave()
-    expect(mockCategoryService.createCategory).toHaveBeenCalledWith({
+    const newCategoryData = {
       name: 'New Custom',
       color: '#fff',
       icon: 'i-lucide-car',
       parent_id: null
-    })
+    }
+
+    await vm.handleSave(newCategoryData)
+    expect(mockCategoryService.createCategory).toHaveBeenCalledWith(newCategoryData)
     expect(vm.showModal).toBe(false)
   })
 
   it('opens edit modal and updates', async () => {
     const wrapper = mount(CategoriesView, {
-      global: { stubs: { NEmpty: true, NModal: true, NForm: true, NFormItem: true, NInput: true, NSelect: true, NColorPicker: true, NButton: true, NCard: true, NText: true, NGrid: true, NGridItem: true } }
+      global: { stubs: { StandardPageLayout: true, NEmpty: true, CategoryDialog: true, AppleButton: true } }
     })
     const vm = wrapper.vm as any
     
-    vm.openEditModal({ id: 'editing-1', name: 'Old', color: '#123', icon: 'i-lucide-tag' })
+    const existingCategory = { id: 'editing-1', name: 'Old', color: '#123', icon: 'i-lucide-tag', parent_id: null }
+    vm.openEditModal(existingCategory)
     expect(vm.showModal).toBe(true)
-    expect(vm.editingId).toBe('editing-1')
-    expect(vm.isSubmittingEdit).toBe(true)
+    expect(vm.editingCategory.id).toBe('editing-1')
 
-    vm.formModel.name = 'New Name'
-    await vm.handleSave()
-    
-    expect(mockCategoryService.updateCategory).toHaveBeenCalledWith('editing-1', {
+    const updatedData = {
       name: 'New Name',
       color: '#123',
       icon: 'i-lucide-tag',
       parent_id: null
-    })
+    }
+    await vm.handleSave(updatedData)
+    
+    expect(mockCategoryService.updateCategory).toHaveBeenCalledWith('editing-1', updatedData)
   })
 })
