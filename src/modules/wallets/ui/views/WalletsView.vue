@@ -1,13 +1,13 @@
 <template>
   <StandardPageLayout
-    title="Minhas Carteiras"
-    highlight="Carteiras"
-    subtitle="Governança de patrimônio e saldo detalhado."
+    :title="messages.MSG_I_MY_ACCOUNTS"
+    :highlight="messages.MSG_I_MY_ACCOUNTS"
+    :subtitle="messages.MSG_I_REAL_TIME_ASSETS"
   >
     <template #action>
       <div class="flex items-center gap-3">
         <AppleButton variant="primary" size="medium" @click="showAddModal = true" id="btn-create-IWallet">
-          Nova Carteira
+          {{ messages.MSG_I_ADD }}
         </AppleButton>
       </div>
     </template>
@@ -16,7 +16,7 @@
       <main class="lg:col-span-2 space-y-6">
         <NEmpty
           v-if="!wallets || wallets.length === 0"
-          description="Nenhuma carteira configurada."
+          :description="messages.MSG_I_NO_DATA"
           class="py-24"
         >
           <template #icon>
@@ -121,6 +121,7 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
+import { messages } from '@/shared/messages/catalog'
 import type { IWalletService } from '../../core/ports/IWalletService'
 
 const message = useMessage()
@@ -178,12 +179,12 @@ async function handleSaveIWallet() {
       currency: 'BRL',
       balance: formModel.value.balance
     })
-    message.success('Carteira criada com sucesso!')
+    message.success(messages.MSG_S_WALLET_CREATED)
     showAddModal.value = false
     formModel.value = { name: '', type: 'checking', balance: 0 }
   } catch (err) {
     console.error(err)
-    message.error('Erro ao criar carteira.')
+    message.error(messages.MSG_E_GENERIC)
   } finally {
     isSaving.value = false
   }

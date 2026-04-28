@@ -1,5 +1,5 @@
 import type { IGoal } from '@/modules/goals/core/entities/IGoal'
-import type { IGoalLogicService } from '../../domain/contracts/IGoalLogicService'
+import type { IGoalLogicService } from '../../core/ports/IGoalLogicService'
 
 export class GoalLogicService implements IGoalLogicService {
   /**
@@ -26,3 +26,4 @@ export class GoalLogicService implements IGoalLogicService {
     return completionDate
   }
 }
+

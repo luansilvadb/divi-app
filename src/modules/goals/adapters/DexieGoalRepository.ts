@@ -1,17 +1,17 @@
 import type { IGoalRepository } from '../core/ports/IGoalRepository'
 import type { IGoal } from '@/modules/goals/core/entities/IGoal'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieGoalRepository implements IGoalRepository {
   async getAll(): Promise<IGoal[]> {
-    const goals = await db.goals.filter((g) => !g.deleted).toArray()
+    const goals = await vaultDb.goals.filter((g) => !g.deleted).toArray()
     return goals as IGoal[]
   }
 
   async save(goal: IGoal): Promise<void> {
     try {
-      await db.transaction('rw', db.goals, async () => {
+      await vaultDb.transaction('rw', vaultDb.goals, async () => {
         const data = {
           ...goal,
           target_value: BigInt(goal.target_value),
@@ -22,7 +22,7 @@ export class DexieGoalRepository implements IGoalRepository {
           created_at: goal.created_at || new Date().toISOString(),
           version: goal.version || 1,
         }
-        await db.goals.put(data)
+        await vaultDb.goals.put(data)
       })
       SyncEngine.getInstance().enqueueSync()
       console.debug('[DexieGoalRepository] Meta salva localmente de forma atômica.')
@@ -34,9 +34,9 @@ export class DexieGoalRepository implements IGoalRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await db.transaction('rw', db.goals, async () => {
+      await vaultDb.transaction('rw', vaultDb.goals, async () => {
         // Soft delete for sync engine
-        await db.goals.update(id, {
+        await vaultDb.goals.update(id, {
           deleted: true,
           sync_status: 'pending',
           client_updated_at: new Date().toISOString(),

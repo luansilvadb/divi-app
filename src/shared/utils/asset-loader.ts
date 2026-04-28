@@ -1,6 +1,6 @@
-import type { IAssetLoader } from '../domain/contracts/IAssetLoader'
+import type { IAssetLoader } from '../domain/ports/IAssetLoader'
 import { ASSET_LIMITS } from '../domain/entities/Asset'
-import type { IActivityLogService } from '../../modules/activity-log/domain/contracts/IActivityLogService'
+import type { IActivityLogService } from '../../modules/activity-log/core/ports/IActivityLogService'
 
 export class AssetLoader implements IAssetLoader {
   constructor(private activityLogService?: IActivityLogService) {}
@@ -53,3 +53,4 @@ export class AssetLoader implements IAssetLoader {
     }
   }
 }
+

@@ -1,6 +1,6 @@
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
 import { v7 as uuidv7 } from 'uuid'
-import type { LocalITransaction, LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
+import type { ILocalITransaction, ILocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class SubscriptionProcessor {
@@ -13,7 +13,7 @@ export class SubscriptionProcessor {
     
     try {
       // 1. Get all active subscriptions for this user
-      const subscriptions = await db.subscriptions
+      const subscriptions = await vaultDb.subscriptions
         .where('user_id')
         .equals(userId)
         .and(s => !s.deleted)
@@ -23,7 +23,7 @@ export class SubscriptionProcessor {
       const currentDay = today.getDate()
       let hasChanges = false
 
-      for (const sub of subscriptions as LocalSubscription[]) {
+      for (const sub of subscriptions as ILocalSubscription[]) {
         // Simple logic: if today's day is >= billing day
         if (sub.billing_day <= currentDay) {
           
@@ -39,7 +39,7 @@ export class SubscriptionProcessor {
 
             // Create ITransaction
             const ITransactionId = uuidv7()
-            const ITransaction: LocalITransaction = {
+            const ITransaction: ILocalITransaction = {
               id: ITransactionId,
               user_id: userId,
               title: `Assinatura: ${sub.name}`,
@@ -55,10 +55,10 @@ export class SubscriptionProcessor {
               version: 1
             }
 
-            await db.transactions.add(ITransaction)
+            await vaultDb.transactions.add(ITransaction)
 
             // Update ISubscription last billed date
-            await db.subscriptions.update(sub.id, {
+            await vaultDb.subscriptions.update(sub.id, {
               last_billed_at: today.toISOString(),
               sync_status: 'pending',
               client_updated_at: today.toISOString()

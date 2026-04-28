@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DashboardView from '../DashboardView.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { container, useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 
@@ -36,13 +35,13 @@ describe('DashboardView', () => {
     }
 
     vi.mocked(container.resolve).mockImplementation((token: unknown) => {
-      if (token === DI_TOKENS.AssetLoader) return mockAssetLoader
+      if (token === DI_TOKENS.IAssetLoader) return mockAssetLoader
       if (token === DI_TOKENS.ITransactionRepository) return mockRepo
       return {}
     })
 
     vi.mocked(useService).mockImplementation((token: unknown) => {
-      if (token === DI_TOKENS.AssetLoader) return mockAssetLoader
+      if (token === DI_TOKENS.IAssetLoader) return mockAssetLoader
       return {}
     })
   })

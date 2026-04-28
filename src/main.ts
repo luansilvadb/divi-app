@@ -26,7 +26,7 @@ const pinia = createPinia()
 Object.values(DI_TOKENS).forEach((token) => {
   try {
     app.provide(token, container.resolve(token))
-  } catch (e) {
+  } catch {
     console.warn(`[DI] Skip providing ${token}: not registered in container`)
   }
 })

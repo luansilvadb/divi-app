@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { DexieITransactionRepository } from '../DexieITransactionRepository'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { DexieTransactionRepository as DexieITransactionRepository } from '../../adapters/DexieTransactionRepository'
+import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import { vi } from 'vitest'
 import 'fake-indexeddb/auto'
@@ -18,7 +18,7 @@ describe('DexieITransactionRepository', () => {
 
   beforeEach(async () => {
     // Limpa todas as tabelas antes de cada teste
-    await Promise.all(Object.values(db.tables).map((table) => table.clear()))
+    await Promise.all(Object.values(vaultDb.tables).map((table) => table.clear()))
     repository = new DexieITransactionRepository()
   })
 
@@ -41,7 +41,7 @@ describe('DexieITransactionRepository', () => {
     expect(all).toHaveLength(1)
 
     // Verifica se os hooks preencheram os dados de sync
-    const savedLocal = await db.transactions.get('tx-1')
+    const savedLocal = await vaultDb.transactions.get('tx-1')
     expect(savedLocal?.sync_status).toBe('pending')
     expect(savedLocal?.client_updated_at).toBeDefined()
     expect(savedLocal?.deleted).toBe(false)
@@ -73,7 +73,7 @@ describe('DexieITransactionRepository', () => {
       deleted: true,
     }
 
-    await db.transactions.bulkAdd([t1, t2])
+    await vaultDb.transactions.bulkAdd([t1, t2])
 
     // getAll should only return the active one
     const all = await repository.getAll()
@@ -100,11 +100,11 @@ describe('DexieITransactionRepository', () => {
       sync_status: 'synced',
       deleted: false,
     }
-    await db.transactions.add(t1)
+    await vaultDb.transactions.add(t1)
 
     await repository.delete('tx-to-delete')
 
-    const localItem = await db.transactions.get('tx-to-delete')
+    const localItem = await vaultDb.transactions.get('tx-to-delete')
     expect(localItem?.deleted).toBe(true)
     expect(localItem?.sync_status).toBe('pending') // Hook updating should trigger this
   })
@@ -124,12 +124,12 @@ describe('DexieITransactionRepository', () => {
       client_updated_at: '2000-01-01T00:00:00Z',
       deleted: false,
     }
-    await db.transactions.add(t1)
+    await vaultDb.transactions.add(t1)
 
     // Simulando um update via repository
-    await db.transactions.update('tx-update', { title: 'Updated Title' })
+    await vaultDb.transactions.update('tx-update', { title: 'Updated Title' })
 
-    const updated = await db.transactions.get('tx-update')
+    const updated = await vaultDb.transactions.get('tx-update')
     expect(updated?.title).toBe('Updated Title')
     expect(updated?.sync_status).toBe('pending')
     expect(new Date(updated!.client_updated_at).getTime()).toBeGreaterThan(
@@ -155,7 +155,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(IWallet)
+    await vaultDb.wallets.add(IWallet)
 
     // Action: Save an income ITransaction
     const incomeTx: ITransaction = {
@@ -176,7 +176,7 @@ describe('DexieITransactionRepository', () => {
     await repository.create(incomeTx)
 
     // Assertion: IWallet balance should be increased
-    const updatedIWallet = await db.wallets.get('IWallet-income-test')
+    const updatedIWallet = await vaultDb.wallets.get('IWallet-income-test')
     expect(updatedIWallet?.balance).toBe(305000n) // 5000 + 300000 = R$ 3.050,00
   })
 
@@ -196,7 +196,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(IWallet)
+    await vaultDb.wallets.add(IWallet)
 
     // Action: Save an expense ITransaction
     const expenseTx: ITransaction = {
@@ -217,7 +217,7 @@ describe('DexieITransactionRepository', () => {
     await repository.create(expenseTx)
 
     // Assertion: IWallet balance should be decreased
-    const updatedIWallet = await db.wallets.get('IWallet-expense-test')
+    const updatedIWallet = await vaultDb.wallets.get('IWallet-expense-test')
     expect(updatedIWallet?.balance).toBe(95500n) // 100000 - 4500 = R$ 955,00
   })
 
@@ -237,7 +237,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(IWallet)
+    await vaultDb.wallets.add(IWallet)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldTx: any = {
@@ -255,11 +255,11 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.transactions.add(oldTx)
+    await vaultDb.transactions.add(oldTx)
     // IWallet balance should already reflect the old ITransaction: 80000n includes the -2000n
     // Actually, the IWallet was created at 80000n and then the tx was added separately.
     // Let's set the IWallet to reflect the state after the old tx: started at 82000n, after -2000n = 80000n
-    await db.wallets.update('IWallet-update-test', { balance: 80000n })
+    await vaultDb.wallets.update('IWallet-update-test', { balance: 80000n })
 
     // Action: Update the ITransaction to a higher amount
     const updatedTx: ITransaction = {
@@ -270,7 +270,7 @@ describe('DexieITransactionRepository', () => {
     await repository.update(updatedTx.id, updatedTx)
 
     // Assertion: Balance should reflect the delta: 80000 - 5000 + 2000 = 77000n
-    const updatedIWallet = await db.wallets.get('IWallet-update-test')
+    const updatedIWallet = await vaultDb.wallets.get('IWallet-update-test')
     expect(updatedIWallet?.balance).toBe(77000n)
   })
 
@@ -304,7 +304,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.bulkAdd([IWalletA, IWalletB])
+    await vaultDb.wallets.bulkAdd([IWalletA, IWalletB])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldTx: any = {
@@ -322,7 +322,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.transactions.add(oldTx)
+    await vaultDb.transactions.add(oldTx)
 
     // Action: Move ITransaction from IWallet A to IWallet B
     const movedTx: ITransaction = {
@@ -333,8 +333,8 @@ describe('DexieITransactionRepository', () => {
     await repository.update(movedTx.id, movedTx)
 
     // Assertion: IWallet A should be credited (reversed), IWallet B should be debited
-    const finalIWalletA = await db.wallets.get('IWallet-a')
-    const finalIWalletB = await db.wallets.get('IWallet-b')
+    const finalIWalletA = await vaultDb.wallets.get('IWallet-a')
+    const finalIWalletB = await vaultDb.wallets.get('IWallet-b')
     expect(finalIWalletA?.balance).toBe(100000n) // 98000 + 2000 (reversed)
     expect(finalIWalletB?.balance).toBe(48000n)  // 50000 - 2000
   })
@@ -355,7 +355,7 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(IWallet)
+    await vaultDb.wallets.add(IWallet)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tx: any = {
@@ -373,23 +373,23 @@ describe('DexieITransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.transactions.add(tx)
+    await vaultDb.transactions.add(tx)
 
     // Action: Soft delete
     await repository.delete('tx-to-soft-delete')
 
     // Assertion: IWallet balance should be reversed (credited back)
-    const updatedIWallet = await db.wallets.get('IWallet-delete-test')
+    const updatedIWallet = await vaultDb.wallets.get('IWallet-delete-test')
     expect(updatedIWallet?.balance).toBe(100000n) // 95000 + 5000
 
     // ITransaction should be marked as deleted
-    const deletedTx = await db.transactions.get('tx-to-soft-delete')
+    const deletedTx = await vaultDb.transactions.get('tx-to-soft-delete')
     expect(deletedTx?.deleted).toBe(true)
   })
 
   it('should NOT update IWallet balance when IWallet does not exist', async () => {
     // Setup: No IWallet in DB
-    const initialwallets = await db.wallets.toArray()
+    const initialwallets = await vaultDb.wallets.toArray()
     expect(initialwallets).toHaveLength(0)
 
     // Action: Save ITransaction referencing non-existent IWallet
@@ -413,12 +413,12 @@ describe('DexieITransactionRepository', () => {
     await expect(repository.create(orphanTx)).resolves.not.toThrow()
 
     // ITransaction should be saved
-    const saved = await db.transactions.get('tx-orphan')
+    const saved = await vaultDb.transactions.get('tx-orphan')
     expect(saved).toBeDefined()
     expect(saved?.amount).toBe(10000n)
 
     // No wallets should exist (nothing to update)
-    const finalwallets = await db.wallets.toArray()
+    const finalwallets = await vaultDb.wallets.toArray()
     expect(finalwallets).toHaveLength(0)
   })
 })

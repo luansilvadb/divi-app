@@ -5,7 +5,7 @@ import { useSyncStore } from './syncStore'
 import { SYNCABLE_TABLES } from './syncConfig'
 import { v7 as uuidv7 } from 'uuid'
 import { VaultCryptoManager } from '@/infrastructure/crypto/VaultCryptoManager'
-import type { ISyncEngine } from './contracts/ISyncEngine'
+import type { ISyncEngine } from './ports/ISyncEngine'
 
 /**
  * SyncEngine: Responsible for bi-directional synchronization between Dexie.js and Supabase.
@@ -661,5 +661,3 @@ export class SyncEngine implements ISyncEngine {
     return false
   }
 }
-
-export default SyncEngine

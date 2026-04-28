@@ -4,7 +4,7 @@ import type { Dexie } from 'dexie'
  * Interface for individual Dexie migrations.
  * Complies with Principle VIII (Interface Naming).
  */
-export interface IIDexieMigration {
+export interface IDexieMigration {
   version: number
   name: string
   /**
@@ -20,6 +20,10 @@ export interface IIDexieMigration {
    * Human readable description of the changes.
    */
   description?: string
+  /**
+   * ISO date of migration creation.
+   */
+  createdAt?: string
 }
 
 /**

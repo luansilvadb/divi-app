@@ -6,28 +6,28 @@ import '@/core/migrations/dexie'
 
 // Import local storage entity types
 import type {
-  LocalITransaction,
-  LocalIWallet,
-  LocalCategory,
-  LocalPayee,
-  LocalLoan,
-  LocalSubscription,
-  LocalActivity,
-  LocalBudget,
-  LocalGoal,
+  ILocalITransaction,
+  ILocalIWallet,
+  ILocalCategory,
+  ILocalPayee,
+  ILocalLoan,
+  ILocalSubscription,
+  ILocalActivity,
+  ILocalBudget,
+  ILocalGoal,
 } from './types'
 
 // Re-export all local storage types for backward compatibility
 export type {
-  LocalITransaction,
-  LocalIWallet,
-  LocalCategory,
-  LocalPayee,
-  LocalLoan,
-  LocalSubscription,
-  LocalActivity,
-  LocalBudget,
-  LocalGoal,
+  ILocalITransaction,
+  ILocalIWallet,
+  ILocalCategory,
+  ILocalPayee,
+  ILocalLoan,
+  ILocalSubscription,
+  ILocalActivity,
+  ILocalBudget,
+  ILocalGoal,
 } from './types'
 
 export type { ISyncMetadata }
@@ -37,15 +37,15 @@ export type { ISyncMetadata }
  * Baseado no Dexie.js para persistência atômica local.
  */
 export class VaultDatabase extends Dexie {
-  transactions!: Table<LocalITransaction>
-  wallets!: Table<LocalIWallet>
-  categories!: Table<LocalCategory>
-  payees!: Table<LocalPayee>
-  loans!: Table<LocalLoan>
-  subscriptions!: Table<LocalSubscription>
-  activities!: Table<LocalActivity>
-  budgets!: Table<LocalBudget>
-  goals!: Table<LocalGoal>
+  transactions!: Table<ILocalITransaction>
+  wallets!: Table<ILocalIWallet>
+  categories!: Table<ILocalCategory>
+  payees!: Table<ILocalPayee>
+  loans!: Table<ILocalLoan>
+  subscriptions!: Table<ILocalSubscription>
+  activities!: Table<ILocalActivity>
+  budgets!: Table<ILocalBudget>
+  goals!: Table<ILocalGoal>
 
   constructor() {
     // Mantendo o nome físico 'DiviDB_v2' para preservar dados existentes
@@ -115,6 +115,4 @@ export class VaultDatabase extends Dexie {
 
 // Named instance for DI
 export const vaultDb = new VaultDatabase()
-
-/** @deprecated Use vaultDb */
 export const db = vaultDb

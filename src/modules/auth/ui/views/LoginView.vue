@@ -180,8 +180,6 @@ import {
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../core/ports/IAuthService'
-import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
-import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
 import { useAuthStore } from '../../application/authStore'
 
 const authStore = useAuthStore()
@@ -192,8 +190,6 @@ const password = ref('')
 const message = useMessage()
 
 const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
-const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
-const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.ISyncEngine)
 const currentYear = new Date().getFullYear()
 
 async function handleSubmit() {

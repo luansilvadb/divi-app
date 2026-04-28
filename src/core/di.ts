@@ -6,8 +6,8 @@
 import { supabase } from './supabase'
 import { SupabaseAuthService } from '../modules/auth/adapters/SupabaseAuthService'
 import { AuthService } from '../modules/auth/core/services/AuthService'
-import { DexieITransactionRepository } from '../modules/transactions/adapters/DexieITransactionRepository'
-import { DexieIWalletRepository } from '../modules/wallets/adapters/DexieIWalletRepository'
+import { DexieTransactionRepository } from '../modules/transactions/adapters/DexieTransactionRepository'
+import { DexieWalletRepository } from '../modules/wallets/adapters/DexieWalletRepository'
 import { DexieCategoryRepository } from '../modules/categories/adapters/DexieCategoryRepository'
 import { DexiePayeeRepository } from '../modules/transactions/adapters/DexiePayeeRepository'
 import { TransactionService } from '../modules/transactions/core/services/TransactionService'
@@ -67,13 +67,13 @@ const authService = new AuthService(supabaseAuthAdapter)
 container.register(DI_TOKENS.IAuthService, authService)
 
 // transactions
-const transactionRepo = new DexieITransactionRepository()
+const transactionRepo = new DexieTransactionRepository()
 container.register(DI_TOKENS.ITransactionRepository, transactionRepo)
 container.register(DI_TOKENS.ITransactionService, new TransactionService(transactionRepo, authService))
 container.register(DI_TOKENS.IAutoCategorizationService, new AutoCategorizationService())
 
 // wallets
-const walletRepo = new DexieIWalletRepository()
+const walletRepo = new DexieWalletRepository()
 container.register(DI_TOKENS.IWalletRepository, walletRepo)
 container.register(DI_TOKENS.IWalletService, new WalletService(walletRepo))
 
@@ -103,6 +103,12 @@ container.register(DI_TOKENS.IVaultCryptoManager, new VaultCryptoManager())
 container.register(DI_TOKENS.IAutoCreateService, new AutoCreateService(
   container.resolve(DI_TOKENS.ICategoryService),
   container.resolve(DI_TOKENS.IWalletService),
+))
+
+import { DashboardService } from '../modules/dashboard/core/services/DashboardService'
+container.register(DI_TOKENS.IDashboardService, new DashboardService(
+  container.resolve(DI_TOKENS.IWalletRepository),
+  container.resolve(DI_TOKENS.ILoanRepository)
 ))
 
 // Helper to provide/inject services in Vue components

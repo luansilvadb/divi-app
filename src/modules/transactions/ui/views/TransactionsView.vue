@@ -1,8 +1,8 @@
 <template>
   <StandardPageLayout
-    title="Transações"
-    highlight="Histórico"
-    subtitle="Acompanhe e gerencie todas as suas movimentações financeiras em um só lugar."
+    :title="messages.MSG_I_VIEW_TX_TITLE"
+    :highlight="messages.MSG_I_VIEW_TX_HIGHLIGHT"
+    :subtitle="messages.MSG_I_VIEW_TX_SUBTITLE"
     :loading="store.isLoading"
   >
     <template #action>
@@ -13,12 +13,12 @@
       <!-- MAIN LIST COLUMN -->
       <main class="lg:col-span-2 order-2 lg:order-1">
         <NSpace vertical :size="24">
-          <BaseSearchInput v-model="searchQuery" placeholder="Buscar transações..." />
+          <BaseSearchInput v-model="searchQuery" :placeholder="messages.MSG_I_SEARCH_TX" />
 
           <!-- Empty State (Cleaned) -->
           <NEmpty
             v-if="Object.keys(groupedtransactions).length === 0"
-            description="Nenhuma movimentação encontrada para este período ou pesquisa."
+            :description="messages.MSG_I_EMPTY_TX"
             class="py-20"
           >
             <template #icon>
@@ -72,7 +72,7 @@
         <div class="bg-white rounded-[18px] p-5 xl:p-6 shadow-sm">
           <!-- Header with Month Switcher and Action Button -->
           <div class="flex items-center justify-between mb-5 xl:mb-6">
-            <h3 class="text-[#1d1d1f] font-sf-display font-semibold text-base xl:text-lg">Resumo do Mês</h3>
+            <h3 class="text-[#1d1d1f] font-sf-display font-semibold text-base xl:text-lg">{{ messages.MSG_I_MONTH_SUMMARY }}</h3>
             <div class="flex items-center gap-2 xl:gap-3">
               <BaseMonthSwitcher :month="monthLabelOnly" @prev="prevMonth" @next="nextMonth" />
               <AppleButton
@@ -82,7 +82,7 @@
                 @click="openNewForm"
                 class="!px-4 xl:!px-5 !py-2 xl:!py-2.5"
               >
-                Adicionar
+                {{ messages.MSG_I_ADD }}
               </AppleButton>
             </div>
           </div>
@@ -91,7 +91,7 @@
           <div class="space-y-5 xl:space-y-6">
             <!-- Income -->
             <div>
-              <p class="text-[#6e6e73] text-[11px] xl:text-xs font-sf-text font-semibold uppercase tracking-wider mb-1.5 xl:mb-2">Entradas</p>
+              <p class="text-[#6e6e73] text-[11px] xl:text-xs font-sf-text font-semibold uppercase tracking-wider mb-1.5 xl:mb-2">{{ messages.MSG_I_INCOME }}</p>
               <div class="flex items-center gap-2.5 xl:gap-3">
                 <div class="w-7 h-7 xl:w-8 xl:h-8 rounded-full bg-green-500/10 flex items-center justify-center">
                   <i class="i-lucide-arrow-up-circle text-sm xl:text-base text-green-500"></i>
@@ -107,7 +107,7 @@
 
             <!-- Expense -->
             <div>
-              <p class="text-[#6e6e73] text-[11px] xl:text-xs font-sf-text font-semibold uppercase tracking-wider mb-1.5 xl:mb-2">Saídas</p>
+              <p class="text-[#6e6e73] text-[11px] xl:text-xs font-sf-text font-semibold uppercase tracking-wider mb-1.5 xl:mb-2">{{ messages.MSG_I_EXPENSE }}</p>
               <div class="flex items-center gap-2.5 xl:gap-3">
                 <div class="w-7 h-7 xl:w-8 xl:h-8 rounded-full bg-red-500/10 flex items-center justify-center">
                   <i class="i-lucide-arrow-down-circle text-sm xl:text-base text-red-500"></i>
@@ -123,7 +123,7 @@
 
             <!-- Net Balance -->
             <div class="bg-[#f5f5f7] rounded-[12px] p-4 xl:p-5 text-center">
-              <p class="text-[#6e6e73] text-[9px] xl:text-[10px] font-sf-text font-semibold uppercase tracking-widest mb-1.5 xl:mb-2">Resultado Líquido</p>
+              <p class="text-[#6e6e73] text-[9px] xl:text-[10px] font-sf-text font-semibold uppercase tracking-widest mb-1.5 xl:mb-2">{{ messages.MSG_I_NET_BALANCE }}</p>
               <span
                 class="font-sf-display font-semibold text-xl xl:text-2xl tabular-nums"
                 :class="store.monthlyBalance >= 0 ? 'text-green-500' : 'text-red-500'"
@@ -136,11 +136,11 @@
 
         <!-- Top Expenses Panel -->
         <div class="bg-white rounded-[18px] p-5 xl:p-6 shadow-sm mt-4 xl:mt-5">
-          <h3 class="text-[#1d1d1f] font-sf-display font-semibold text-sm xl:text-base mb-4 xl:mb-5">Maiores Gastos</h3>
+          <h3 class="text-[#1d1d1f] font-sf-display font-semibold text-sm xl:text-base mb-4 xl:mb-5">{{ messages.MSG_I_TOP_EXPENSES }}</h3>
 
           <div v-if="store.topCategories.length === 0" class="text-center py-8 xl:py-10">
             <i class="i-lucide-pie-chart text-3xl xl:text-4xl text-[#d2d2d7] mb-2 xl:mb-3"></i>
-            <p class="text-[#6e6e73] text-sm xl:text-base">Sem dados no período</p>
+            <p class="text-[#6e6e73] text-sm xl:text-base">{{ messages.MSG_I_NO_DATA_PERIOD }}</p>
           </div>
 
           <div v-else class="space-y-4 xl:space-y-5">
@@ -161,7 +161,7 @@
             </div>
 
             <button class="w-full flex items-center justify-center gap-2 text-[#0066cc] text-sm xl:text-base font-sf-text font-medium py-2.5 xl:py-3 hover:bg-[#f5f5f7] rounded-[8px] transition-colors mt-2">
-              Relatórios completos
+              {{ messages.MSG_I_FULL_REPORTS }}
               <i class="i-lucide-arrow-right text-xs xl:text-sm"></i>
             </button>
           </div>
@@ -178,8 +178,8 @@
 
     <BaseConfirmDialog
       :show="showConfirmDelete"
-      title="Excluir Transação"
-      message="Tem certeza que deseja excluir esta transação? Esta ação não poderá ser desfeita."
+      :title="messages.MSG_ACT_TX_DELETED"
+      :message="messages.MSG_A_DELETE_CONFIRM"
       confirm-text="Excluir"
       cancel-text="Cancelar"
       @confirm="confirmDelete"
@@ -212,6 +212,7 @@ import {
 } from 'naive-ui'
 import { usetransactionstore } from '../../application/stores/transactionstore'
 import { formatCurrency, getRelativeDayLabel } from '@/shared/utils/formatters'
+import { messages } from '@/shared/messages/catalog'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import ITransactionDialog from '@/shared/components/organisms/ITransactionDialog.vue'

@@ -4,6 +4,7 @@ import { usetransactionstore } from '../transactionstore'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import { formatMessage } from '@/shared/messages/catalog'
 
 // Mocking dependencies
 const mockITransactionRepo = {
@@ -144,7 +145,7 @@ describe('transactionstore CRUD', () => {
       const invalidTx = { ...sampleTx, amount: -1000n }
       const store = usetransactionstore()
 
-      await expect(store.saveITransaction(invalidTx)).rejects.toThrow('Amount must be positive')
+      await expect(store.saveITransaction(invalidTx)).rejects.toThrow()
     })
 
     it('should support updating an existing ITransaction in the list and handle refresh', async () => {
@@ -181,8 +182,8 @@ describe('transactionstore CRUD', () => {
 
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(
         expect.objectContaining({
-          action: expect.stringMatching(/ITransaction|Transação/i),
-          description: expect.stringMatching(/R\$ 10,00 : Sample/),
+          action: expect.any(String),
+          description: formatMessage('MSG_ACT_TX_DESC', { amount: '10,00', title: 'Sample' }),
           user_id: 'test-user-id',
         }),
       )

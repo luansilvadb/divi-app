@@ -6,7 +6,7 @@ import type { IBudgetRepository } from '../../core/ports/IBudgetRepository'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
-import type { ISubscription } from 'rxjs'
+import type { Subscription } from 'rxjs'
 
 export const useBudgetStore = defineStore('budgets', () => {
   const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.IBudgetRepository)
@@ -16,7 +16,7 @@ export const useBudgetStore = defineStore('budgets', () => {
   const budgets = ref<IBudget[]>([])
   const isLoading = ref(false)
   const searchQuery = ref('')
-  let budgetSubscription: ISubscription | null = null
+  let budgetSubscription: Subscription | null = null
 
   function initialize() {
     isLoading.value = true

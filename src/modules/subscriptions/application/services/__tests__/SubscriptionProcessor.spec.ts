@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { SubscriptionProcessor } from '../SubscriptionProcessor'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 // Mock dependencies
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
-  db: {
+  vaultDb: {
     subscriptions: {
       where: vi.fn().mockReturnThis(),
       equals: vi.fn().mockReturnThis(),
@@ -48,21 +48,21 @@ describe('SubscriptionProcessor', () => {
       deleted: false,
     }
 
-    ;(db.subscriptions.where as any).mockReturnThis()
-    ;(db.subscriptions as any).equals.mockReturnThis()
-    ;(db.subscriptions as any).and.mockReturnThis()
-    vi.mocked(db.subscriptions.toArray).mockResolvedValue([mockSubscription])
+    ;(vaultDb.subscriptions.where as any).mockReturnThis()
+    ;(vaultDb.subscriptions as any).equals.mockReturnThis()
+    ;(vaultDb.subscriptions as any).and.mockReturnThis()
+    vi.mocked(vaultDb.subscriptions.toArray).mockResolvedValue([mockSubscription])
 
     await SubscriptionProcessor.processPendingSubscriptions('user-1')
 
-    expect(db.transactions.add).toHaveBeenCalledWith(
+    expect(vaultDb.transactions.add).toHaveBeenCalledWith(
       expect.objectContaining({
         user_id: 'user-1',
         title: 'Assinatura: Netflix',
         type: 'expense',
       }),
     )
-    expect(db.subscriptions.update).toHaveBeenCalledWith('sub-1', expect.any(Object))
+    expect(vaultDb.subscriptions.update).toHaveBeenCalledWith('sub-1', expect.any(Object))
     expect(SyncEngine.getInstance().enqueueSync).toHaveBeenCalled()
 
     vi.useRealTimers()
@@ -84,27 +84,27 @@ describe('SubscriptionProcessor', () => {
       deleted: false,
     }
 
-    vi.mocked(db.subscriptions.toArray).mockResolvedValue([mockSubscription])
+    vi.mocked(vaultDb.subscriptions.toArray).mockResolvedValue([mockSubscription])
 
     await SubscriptionProcessor.processPendingSubscriptions('user-1')
 
-    expect(db.transactions.add).not.toHaveBeenCalled()
+    expect(vaultDb.transactions.add).not.toHaveBeenCalled()
     expect(SyncEngine.getInstance().enqueueSync).not.toHaveBeenCalled()
 
     vi.useRealTimers()
   })
 
   it('should handle empty subscriptions', async () => {
-    vi.mocked(db.subscriptions.toArray).mockResolvedValue([])
+    vi.mocked(vaultDb.subscriptions.toArray).mockResolvedValue([])
 
     await SubscriptionProcessor.processPendingSubscriptions('user-1')
 
-    expect(db.transactions.add).not.toHaveBeenCalled()
+    expect(vaultDb.transactions.add).not.toHaveBeenCalled()
     expect(SyncEngine.getInstance().enqueueSync).not.toHaveBeenCalled()
   })
 
   it('should handle errors gracefully', async () => {
-    vi.mocked(db.subscriptions.where).mockImplementation(() => {
+    vi.mocked(vaultDb.subscriptions.where).mockImplementation(() => {
       throw new Error('Database error')
     })
 

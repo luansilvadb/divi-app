@@ -1,6 +1,6 @@
-import type { IActivityLogService } from '../core/ports/IActivityLogService'
-import type { IActivityRepository } from '../core/ports/IActivityRepository'
-import type { IActivity } from '../core/entities/IActivity'
+import type { IActivityLogService } from '../../core/ports/IActivityLogService'
+import type { IActivityRepository } from '../../core/ports/IActivityRepository'
+import type { IActivity } from '../../core/entities/IActivity'
 
 export class ActivityLogService implements IActivityLogService {
   constructor(private activityRepo: IActivityRepository) {}

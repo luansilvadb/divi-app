@@ -1,10 +1,10 @@
-import type { VaultDatabase, LocalITransaction } from '@/infrastructure/storage/VaultDatabase'
-import type { IPredictionService, PredictionResult } from '../domain/prediction'
+import type { VaultDatabase, ILocalITransaction } from '@/infrastructure/storage/VaultDatabase'
+import type { IPredictionService, IPredictionResult } from '../domain/IPredictionResult'
 
 export class PredictionService implements IPredictionService {
   constructor(private db: VaultDatabase) {}
 
-  async predict(payeeId: string, _amount: bigint): Promise<PredictionResult> {
+  async predict(payeeId: string, _amount: bigint): Promise<IPredictionResult> {
     const thirtyDaysAgoDate = new Date()
     thirtyDaysAgoDate.setDate(thirtyDaysAgoDate.getDate() - 30)
     const thirtyDaysAgo = thirtyDaysAgoDate.toISOString()
@@ -13,7 +13,7 @@ export class PredictionService implements IPredictionService {
     const recenttransactions = await this.db.transactions
       .where('payee_id')
       .equals(payeeId)
-      .filter((t: LocalITransaction) => t.date >= thirtyDaysAgo && !t.deleted)
+      .filter((t: ILocalITransaction) => t.date >= thirtyDaysAgo && !t.deleted)
       .toArray()
 
     if (recenttransactions.length > 0) {
@@ -50,7 +50,7 @@ export class PredictionService implements IPredictionService {
     }
   }
 
-  private calculateBestMatch(transactions: LocalITransaction[]): PredictionResult {
+  private calculateBestMatch(transactions: ILocalITransaction[]): IPredictionResult {
     const categoryCounts = new Map<string, number>()
     const IWalletCounts = new Map<string, number>()
 

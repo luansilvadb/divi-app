@@ -1,5 +1,5 @@
 import { KeyDerivationService } from './KeyDerivationService'
-import { EncryptionService, type EncryptedPayload } from './EncryptionService'
+import { EncryptionService, type IEncryptedPayload } from './EncryptionService'
 import type { IVaultCryptoManager } from '@/modules/auth/core/ports/IVaultCryptoManager'
 
 export class VaultCryptoManager implements IVaultCryptoManager {
@@ -35,14 +35,14 @@ export class VaultCryptoManager implements IVaultCryptoManager {
     return this.currentKey !== null
   }
 
-  public async encrypt(plainText: string): Promise<EncryptedPayload> {
+  public async encrypt(plainText: string): Promise<IEncryptedPayload> {
     if (!this.currentKey) {
       throw new Error('Cofre trancado.')
     }
     return EncryptionService.encrypt(plainText, this.currentKey)
   }
 
-  public async decrypt(payload: EncryptedPayload): Promise<string> {
+  public async decrypt(payload: IEncryptedPayload): Promise<string> {
     if (!this.currentKey) {
       throw new Error('Cofre trancado.')
     }

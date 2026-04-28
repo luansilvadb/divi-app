@@ -5,27 +5,16 @@
     "src/sw.ts"
   ],
   "project": [
-    "src/**/*.ts",
-    "src/**/*.vue"
+    "src/**/*.{ts,vue}"
   ],
   "ignore": [
     "src/__tests__/**",
     "src/**/__tests__/**",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
-    "src/core/migrations/**",
-    "**/*.d.ts"
+    "src/**/*.spec.ts"
   ],
   "ignoreDependencies": [
-    "@types/node",
-    "@tsconfig/node24",
-    "workbox-core",
-    "workbox-precaching",
-    "workbox-routing",
-    "workbox-window",
-    "@tailwindcss/postcss",
-    "postcss",
-    "unocss"
+    "workbox-strategies",
+    "workbox-expiration"
   ],
   "ignoreBinaries": [],
   "paths": {

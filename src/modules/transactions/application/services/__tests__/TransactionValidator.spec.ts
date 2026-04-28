@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { ITransactionValidator, ITransactionValidator, type ValidationRule } from '../ITransactionValidator'
+import { TransactionValidator, type IValidationRule, type IValidationContext } from '../../../core/services/TransactionValidator'
 import { ValidationError } from '@/core/errors'
 
-describe('ITransactionValidator', () => {
-  let validator: ITransactionValidator
+describe('TransactionValidator', () => {
+  let validator: TransactionValidator
 
   beforeEach(() => {
-    validator = new ITransactionValidator()
+    validator = new TransactionValidator()
   })
 
   describe('Default Rules', () => {
@@ -55,9 +55,9 @@ describe('ITransactionValidator', () => {
 
   describe('Custom Rules (OCP)', () => {
     it('should allow registering custom validation rules', () => {
-      const customRule: ValidationRule = {
+      const customRule: IValidationRule = {
         name: 'maxAmount',
-        validate: (context) => {
+        validate: (context: IValidationContext) => {
           const amount = context.value as number
           if (amount > 10000) return 'Amount exceeds maximum'
           return true
@@ -97,8 +97,9 @@ describe('ITransactionValidator', () => {
 
   describe('Global Instance', () => {
     it('should provide a singleton instance', () => {
-      expect(ITransactionValidator).toBeInstanceOf(ITransactionValidator)
-      expect(ITransactionValidator.getRegisteredRules().length).toBeGreaterThan(0)
+      const instance = new TransactionValidator()
+      expect(instance).toBeInstanceOf(TransactionValidator)
+      expect(instance.getRegisteredRules().length).toBeGreaterThan(0)
     })
   })
 })

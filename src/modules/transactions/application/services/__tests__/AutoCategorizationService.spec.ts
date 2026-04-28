@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { AutoCategorizationService } from '../AutoCategorizationService'
+import { AutoCategorizationService } from '../../../core/services/AutoCategorizationService'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 describe('AutoCategorizationService', () => {

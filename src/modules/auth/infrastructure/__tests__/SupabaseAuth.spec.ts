@@ -1,13 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { SupabaseAuth } from '../SupabaseAuth'
+import { SupabaseAuthService as SupabaseAuth } from '../../adapters/SupabaseAuthService'
 import { supabase } from '@/core/supabase'
 import type {
-  AuthResponse,
   UserResponse,
   AuthChangeEvent,
   Session,
-  AuthError,
-  IUser,
+  User,
 } from '@supabase/supabase-js'
 
 // Helper para criar um mock de tabela Supabase com método delete em cadeia
@@ -36,7 +34,7 @@ describe('SupabaseAuth', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    authService = new SupabaseAuth()
+    authService = new SupabaseAuth(supabase)
   })
 
   it('should call signInWithPassword when signInWithEmail is called', async () => {
@@ -101,17 +99,17 @@ describe('SupabaseAuth', () => {
     expect(supabase.auth.signOut).toHaveBeenCalled()
   })
 
-  it('should return mapped IUser when getCurrentUser is called', async () => {
+  it('should return mapped User when getCurrentUser is called', async () => {
     const mockSupabaseUser = {
       id: '123',
       email: 'test@test.com',
       user_metadata: {
-        full_name: 'Test IUser',
+        full_name: 'Test User',
         avatar_url: 'http://test.com/avatar.png',
       },
     }
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
-      data: { user: mockSupabaseUser as unknown as IUser },
+      data: { user: mockSupabaseUser as unknown as User },
       error: null,
     } as UserResponse)
 
@@ -121,7 +119,7 @@ describe('SupabaseAuth', () => {
     expect(user).toEqual({
       id: '123',
       email: 'test@test.com',
-      name: 'Test IUser',
+      name: 'Test User',
       avatar_url: 'http://test.com/avatar.png',
     })
   })
@@ -148,7 +146,7 @@ describe('SupabaseAuth', () => {
             id: '123',
             email: 'test@test.com',
             user_metadata: {
-              full_name: 'Test IUser',
+              full_name: 'Test User',
             },
           },
         } as unknown as Session,
@@ -164,7 +162,7 @@ describe('SupabaseAuth', () => {
     expect(callback).toHaveBeenCalledWith({
       id: '123',
       email: 'test@test.com',
-      name: 'Test IUser',
+      name: 'Test User',
       avatar_url: undefined,
     })
   })

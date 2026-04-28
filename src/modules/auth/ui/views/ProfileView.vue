@@ -176,13 +176,11 @@ import { useTheme } from '@/core/theme'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../core/ports/IAuthService'
-import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { isDark, toggle: toggleTheme } = useTheme()
 const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
-const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
 const message = useMessage()
 
 const showPurgeModal = ref(false)

@@ -35,11 +35,6 @@ describe('Migration 002 - Add Tags to transactions', () => {
     expect(typeof migration002AddTagsTotransactions.upgrade).toBe('function')
   })
 
-  it('should have downgrade function defined', () => {
-    expect(migration002AddTagsTotransactions.downgrade).toBeDefined()
-    expect(typeof migration002AddTagsTotransactions.downgrade).toBe('function')
-  })
-
   it('upgrade should add tags:[] to existing transactions', async () => {
     // Setup DB with v1 schema and seed test data
     MigrationRegistry.register(migration001InitialSchema)

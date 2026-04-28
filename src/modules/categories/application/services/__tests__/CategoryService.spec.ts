@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { CategoryService } from '../CategoryService'
-import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
+import type { ICategoryRepository } from '@/modules/categories/core/ports/ICategoryRepository'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 // Mock de repositório
@@ -193,3 +193,4 @@ describe('CategoryService', () => {
     expect(c?.deleted).toBe(true)
   })
 })
+

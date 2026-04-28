@@ -29,20 +29,13 @@ export const migration002AddTagsTotransactions: IDexieMigration = {
     budgets: 'id, user_id, name, sync_status, deleted',
     goals: 'id, user_id, name, sync_status, deleted',
   },
-  upgrade: async (tx) => {
+  upgrade: async (tx: any) => {
     // Add empty tags array to all existing transactions
     const transactions = tx.table('transactions')
-    await transactions.toCollection().modify((record: Record<string, unknown>) => {
+    await transactions.toCollection().modify((record: any) => {
       if (!record.tags) {
         record.tags = []
       }
-    })
-  },
-  downgrade: async (tx) => {
-    // Remove tags field from all transactions
-    const transactions = tx.table('transactions')
-    await transactions.toCollection().modify((record: Record<string, unknown>) => {
-      delete record.tags
     })
   },
 }

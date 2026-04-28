@@ -1,8 +1,10 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { useAuthStore } from '../authStore'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IUser } from '../../domain/entities/IUser'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IUser } from '../../core/entities/IUser'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
 
 describe('Auth Persistence Integration', () => {
   let authService: {
@@ -38,6 +40,10 @@ describe('Auth Persistence Integration', () => {
     syncEngine = {
       trigger: vi.fn(),
     }
+
+    container.register(DI_TOKENS.IAuthService, authService)
+    container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+    container.register(DI_TOKENS.ISyncEngine, syncEngine)
   })
 
   it('should recover user session from service on initialization', async () => {
@@ -46,7 +52,7 @@ describe('Auth Persistence Integration', () => {
 
     const store = useAuthStore()
 
-    await store.initialize(authService as IAuthService, vaultCryptoManager as any, syncEngine as any)
+    await store.initialize()
 
     expect(store.user).toEqual(mockUser)
     expect(store.isAuthenticated).toBe(true)
@@ -60,7 +66,7 @@ describe('Auth Persistence Integration', () => {
       authCallback = cb
     })
 
-    await store.initialize(authService as IAuthService, vaultCryptoManager as any, syncEngine as any)
+    await store.initialize()
 
     const newUser: IUser = { id: '456', email: 'new@test.com' }
     authCallback(newUser)
@@ -75,3 +81,4 @@ describe('Auth Persistence Integration', () => {
     expect(vaultCryptoManager.lock).toHaveBeenCalled()
   })
 })
+

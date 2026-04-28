@@ -1,5 +1,5 @@
 import type Dexie from 'dexie'
-import type { IIDexieMigration, IMigrationResult } from './types'
+import type { IDexieMigration, IMigrationResult } from './types'
 import { MigrationRegistry } from './MigrationRegistry'
 
 /**
@@ -85,7 +85,7 @@ export class MigrationRunner {
   /**
    * Applies a single migration to the Dexie instance.
    */
-  private static applyMigration(db: Dexie, migration: IIDexieMigration): void {
+  private static applyMigration(db: Dexie, migration: IDexieMigration): void {
     const version = db.version(migration.version).stores(migration.stores)
 
     if (migration.upgrade) {

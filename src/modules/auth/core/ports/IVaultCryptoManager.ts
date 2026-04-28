@@ -1,9 +1,9 @@
-import type { EncryptedPayload } from '@/infrastructure/crypto/EncryptionService'
+import type { IEncryptedPayload } from '@/infrastructure/crypto/EncryptionService'
 
 export interface IVaultCryptoManager {
   initialize(password: string): Promise<void>
   lock(): void
   hasKey(): boolean
-  encrypt(plainText: string): Promise<EncryptedPayload>
-  decrypt(payload: EncryptedPayload): Promise<string>
+  encrypt(plainText: string): Promise<IEncryptedPayload>
+  decrypt(payload: IEncryptedPayload): Promise<string>
 }
