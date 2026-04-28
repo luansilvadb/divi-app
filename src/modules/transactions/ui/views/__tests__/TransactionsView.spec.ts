@@ -62,8 +62,8 @@ vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
 }))
 
 // Mock ITransaction store to avoid IndexedDB calls
-vi.mock('../../application/stores/transactionstore', () => ({
-  usetransactionstore: () => ({
+vi.mock('../../application/stores/transactionStore', () => ({
+  useTransactionStore: () => ({
     transactions: [],
     wallets: [],
     categories: [],

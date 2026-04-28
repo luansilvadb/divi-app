@@ -4,6 +4,8 @@ import { useAuthStore } from '../../application/authStore'
 import type { IAuthService } from '../../core/ports/IAuthService'
 import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/ports/ISyncEngine'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
 
 // Mocks para dependências externas
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
@@ -41,9 +43,21 @@ const createMockSyncEngine = (overrides?: Partial<ISyncEngine>): ISyncEngine => 
 })
 
 describe('Auth Store', () => {
+  let authService: IAuthService
+  let vaultCryptoManager: IVaultCryptoManager
+  let syncEngine: ISyncEngine
+
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+
+    authService = createMockAuthService()
+    vaultCryptoManager = createMockVaultCryptoManager()
+    syncEngine = createMockSyncEngine()
+
+    container.register(DI_TOKENS.IAuthService, authService)
+    container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+    container.register(DI_TOKENS.ISyncEngine, syncEngine)
   })
 
   it('should initialize with no user', () => {
@@ -71,10 +85,8 @@ describe('Auth Store', () => {
     it('should call deleteAccountData on auth service', async () => {
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(authService.deleteAccountData).toHaveBeenCalledOnce()
     })
@@ -83,10 +95,8 @@ describe('Auth Store', () => {
       const { vaultDb } = await import('@/infrastructure/storage/VaultDatabase')
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(vaultDb.clearAllData).toHaveBeenCalledOnce()
     })
@@ -94,10 +104,8 @@ describe('Auth Store', () => {
     it('should lock the crypto vault', async () => {
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(vaultCryptoManager.lock).toHaveBeenCalledOnce()
     })
@@ -105,10 +113,8 @@ describe('Auth Store', () => {
     it('should call signOut on auth service', async () => {
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(authService.signOut).toHaveBeenCalledOnce()
     })
@@ -116,10 +122,8 @@ describe('Auth Store', () => {
     it('should clear user state after purge', async () => {
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
-      await store.purgeAccount(authService, vaultCryptoManager)
+      await store.purgeAccount()
 
       expect(store.user).toBeNull()
       expect(store.isAuthenticated).toBe(false)
@@ -128,25 +132,25 @@ describe('Auth Store', () => {
     it('should propagate error if deleteAccountData fails', async () => {
       const store = useAuthStore()
       store.setUser({ id: '1', email: 'test@example.com' })
-      const authService = createMockAuthService({
+      
+      const failingAuthService = createMockAuthService({
         deleteAccountData: vi.fn().mockRejectedValue(new Error('Network error')),
       })
-      const vaultCryptoManager = createMockVaultCryptoManager()
+      container.register(DI_TOKENS.IAuthService, failingAuthService)
 
-      await expect(store.purgeAccount(authService, vaultCryptoManager)).rejects.toThrow('Network error')
+      await expect(store.purgeAccount()).rejects.toThrow('Network error')
     })
   })
 
   describe('initialize', () => {
     it('should initialize with current user', async () => {
       const store = useAuthStore()
-      const authService = createMockAuthService({
+      const customAuthService = createMockAuthService({
         getCurrentUser: vi.fn().mockResolvedValue({ id: '1', email: 'test@example.com' }),
       })
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
+      container.register(DI_TOKENS.IAuthService, customAuthService)
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       expect(store.user).toEqual({ id: '1', email: 'test@example.com' })
       expect(store.isAuthenticated).toBe(true)
@@ -154,16 +158,13 @@ describe('Auth Store', () => {
 
     it('should lock vault on logout', async () => {
       const store = useAuthStore()
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
 
       let authStateCallback: ((user: null) => void) | null = null
       authService.onAuthStateChange = vi.fn((callback) => {
         authStateCallback = callback
       })
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       authStateCallback?.(null)
 
@@ -172,16 +173,13 @@ describe('Auth Store', () => {
 
     it('should trigger sync on login', async () => {
       const store = useAuthStore()
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
 
       let authStateCallback: ((user: { id: string; email: string }) => void) | null = null
       authService.onAuthStateChange = vi.fn((callback) => {
         authStateCallback = callback
       })
 
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       authStateCallback?.({ id: '1', email: 'test@example.com' })
 
@@ -192,20 +190,16 @@ describe('Auth Store', () => {
   describe('initializeVault', () => {
     it('should initialize vault with password', async () => {
       const store = useAuthStore()
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
 
-      await store.initializeVault('password123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('password123')
 
       expect(vaultCryptoManager.initialize).toHaveBeenCalledWith('password123')
     })
 
     it('should trigger sync after vault initialization', async () => {
       const store = useAuthStore()
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
 
-      await store.initializeVault('password123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('password123')
 
       expect(syncEngine.trigger).toHaveBeenCalledOnce()
     })

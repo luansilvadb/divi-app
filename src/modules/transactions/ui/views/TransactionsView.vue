@@ -210,7 +210,7 @@ import {
   NText,
   NEmpty,
 } from 'naive-ui'
-import { usetransactionstore } from '../../application/stores/transactionstore'
+import { useTransactionStore } from '../../application/stores/transactionStore'
 import { formatCurrency, getRelativeDayLabel } from '@/shared/utils/formatters'
 import { messages } from '@/shared/messages/catalog'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
@@ -223,7 +223,7 @@ import ITransactionItem from '../components/ITransactionItem.vue'
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
-const store = usetransactionstore()
+const store = useTransactionStore()
 const isMobile = useIsMobile()
 const showForm = ref(false)
 const editingITransaction = ref<ITransaction | null>(null)

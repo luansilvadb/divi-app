@@ -4,7 +4,7 @@ import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 type UITransaction = any
 
-export function usetransactionstats(
+export function useTransactionStats(
   transactions: Ref<ITransaction[]>,
   categoryMap: Ref<Record<string, ICategory>> | (() => Ref<Record<string, ICategory>>),
 ) {

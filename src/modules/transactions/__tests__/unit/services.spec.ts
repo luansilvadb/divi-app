@@ -1,11 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { transactionservice } from '../../application/services/transactionservice'
-import { ITransactionValidator } from '../../application/services/ITransactionValidator'
-import { AutoCategorizationService } from '../../application/services/AutoCategorizationService'
+import { TransactionService } from '../../core/services/TransactionService'
+import { TransactionValidator } from '../../core/services/TransactionValidator'
+import { AutoCategorizationService } from '../../core/services/AutoCategorizationService'
 import { ExportService } from '../../application/services/ExportService'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
+import type { IAuthService } from '@/modules/auth/core/ports/IAuthService'
 import { of } from 'rxjs'
 import { ValidationError } from '@/core/errors'
 
@@ -16,11 +17,21 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }),
 }))
 
-describe('transactionservice - CRUD', () => {
-  let service: transactionservice
+describe('TransactionService - CRUD', () => {
+  let service: TransactionService
   let mockRepo: ITransactionRepository
+  let mockAuthService: IAuthService
 
   beforeEach(() => {
+    mockAuthService = {
+      getCurrentUser: vi.fn().mockResolvedValue({ id: 'test-user-123' }),
+      signInWithGoogle: vi.fn(),
+      signInWithEmail: vi.fn(),
+      registerWithEmail: vi.fn(),
+      signOut: vi.fn(),
+      onAuthStateChange: vi.fn(),
+      deleteAccountData: vi.fn(),
+    }
     mockRepo = {
       getAll: vi.fn(),
       getByMonth: vi.fn().mockResolvedValue([]),
@@ -29,7 +40,7 @@ describe('transactionservice - CRUD', () => {
       delete: vi.fn().mockResolvedValue(undefined),
       watchAll: vi.fn().mockReturnValue(of([])),
     }
-    service = new transactionservice(mockRepo)
+    service = new TransactionService(mockRepo, mockAuthService)
   })
 
   describe('Create', () => {
@@ -104,11 +115,11 @@ describe('transactionservice - CRUD', () => {
   })
 })
 
-describe('ITransactionValidator', () => {
-  let validator: ITransactionValidator
+describe('TransactionValidator', () => {
+  let validator: TransactionValidator
 
   beforeEach(() => {
-    validator = new ITransactionValidator()
+    validator = new TransactionValidator()
   })
 
   it('should validate required fields', () => {

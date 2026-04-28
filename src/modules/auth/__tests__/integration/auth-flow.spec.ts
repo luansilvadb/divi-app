@@ -5,6 +5,8 @@ import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/ports/ISyncEngine'
 import type { IUser } from '../../core/entities/IUser'
 import { useAuthStore } from '../../application/authStore'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
 
 // Mock VaultDatabase
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
@@ -42,9 +44,21 @@ const createMockSyncEngine = (overrides?: Partial<ISyncEngine>): ISyncEngine => 
 })
 
 describe('Auth Flow Integration', () => {
+  let authService: IAuthService
+  let vaultCryptoManager: IVaultCryptoManager
+  let syncEngine: ISyncEngine
+
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
+
+    authService = createMockAuthService()
+    vaultCryptoManager = createMockVaultCryptoManager()
+    syncEngine = createMockSyncEngine()
+
+    container.register(DI_TOKENS.IAuthService, authService)
+    container.register(DI_TOKENS.IVaultCryptoManager, vaultCryptoManager)
+    container.register(DI_TOKENS.ISyncEngine, syncEngine)
   })
 
   describe('complete login flow', () => {
@@ -56,13 +70,8 @@ describe('Auth Flow Integration', () => {
         name: 'Test IUser',
       }
 
-      const authService = createMockAuthService({
-        signInWithEmail: vi.fn().mockResolvedValue(undefined),
-        getCurrentUser: vi.fn().mockResolvedValue(mockUser),
-      })
-
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
+      vi.mocked(authService.signInWithEmail).mockResolvedValue(undefined)
+      vi.mocked(authService.getCurrentUser).mockResolvedValue(mockUser)
 
       // Step 1: IUser signs in with email
       await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
@@ -72,7 +81,7 @@ describe('Auth Flow Integration', () => {
       })
 
       // Step 2: Initialize vault with password
-      await store.initializeVault('password123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('password123')
       expect(vaultCryptoManager.initialize).toHaveBeenCalledWith('password123')
 
       // Step 3: Sync should be triggered after vault init
@@ -86,12 +95,7 @@ describe('Auth Flow Integration', () => {
     it('should handle login failure without initializing vault', async () => {
       const store = useAuthStore()
 
-      const authService = createMockAuthService({
-        signInWithEmail: vi.fn().mockRejectedValue(new Error('Invalid credentials')),
-      })
-
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
+      vi.mocked(authService.signInWithEmail).mockRejectedValue(new Error('Invalid credentials'))
 
       // Step 1: Login fails
       await expect(
@@ -106,9 +110,6 @@ describe('Auth Flow Integration', () => {
     it('should handle complete logout flow', async () => {
       const store = useAuthStore()
       store.setUser({ id: 'user-123', email: 'test@example.com' })
-
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
 
       // Verify user is initially authenticated
       expect(store.isAuthenticated).toBe(true)
@@ -128,14 +129,12 @@ describe('Auth Flow Integration', () => {
     })
 
     it('should handle Google OAuth flow', async () => {
-      const authService = createMockAuthService({
-        signInWithGoogle: vi.fn().mockResolvedValue(undefined),
-        getCurrentUser: vi.fn().mockResolvedValue({
-          id: 'google-user-123',
-          email: 'user@gmail.com',
-          name: 'Google IUser',
-          avatar_url: 'https://google.com/avatar.png',
-        }),
+      vi.mocked(authService.signInWithGoogle).mockResolvedValue(undefined)
+      vi.mocked(authService.getCurrentUser).mockResolvedValue({
+        id: 'google-user-123',
+        email: 'user@gmail.com',
+        name: 'Google IUser',
+        avatar_url: 'https://google.com/avatar.png',
       })
 
       // Step 1: Initiate Google sign in
@@ -151,17 +150,12 @@ describe('Auth Flow Integration', () => {
     it('should handle registration and immediate login', async () => {
       const store = useAuthStore()
 
-      const authService = createMockAuthService({
-        registerWithEmail: vi.fn().mockResolvedValue(undefined),
-        signInWithEmail: vi.fn().mockResolvedValue(undefined),
-        getCurrentUser: vi.fn().mockResolvedValue({
-          id: 'new-user-123',
-          email: 'newuser@example.com',
-        }),
+      vi.mocked(authService.registerWithEmail).mockResolvedValue(undefined)
+      vi.mocked(authService.signInWithEmail).mockResolvedValue(undefined)
+      vi.mocked(authService.getCurrentUser).mockResolvedValue({
+        id: 'new-user-123',
+        email: 'newuser@example.com',
       })
-
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
 
       // Step 1: Register new user
       await authService.registerWithEmail({
@@ -171,7 +165,7 @@ describe('Auth Flow Integration', () => {
       expect(authService.registerWithEmail).toHaveBeenCalled()
 
       // Step 2: Initialize vault with same password used for registration
-      await store.initializeVault('securepassword123', vaultCryptoManager, syncEngine)
+      await store.initializeVault('securepassword123')
       expect(vaultCryptoManager.initialize).toHaveBeenCalledWith('securepassword123')
 
       // Step 3: Sync triggered after vault initialization
@@ -188,17 +182,12 @@ describe('Auth Flow Integration', () => {
         name: 'Test IUser',
       }
 
-      const authService = createMockAuthService({
-        onAuthStateChange: vi.fn((callback) => {
-          callbacks.push(callback)
-        }),
+      authService.onAuthStateChange = vi.fn((callback) => {
+        callbacks.push(callback)
       })
 
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
-
       // Initialize store with auth service
-      await store.initialize(authService, vaultCryptoManager, syncEngine)
+      await store.initialize()
 
       expect(authService.onAuthStateChange).toHaveBeenCalled()
 
@@ -227,9 +216,6 @@ describe('Auth Flow Integration', () => {
 
       const { vaultDb } = await import('@/infrastructure/storage/VaultDatabase')
 
-      const authService = createMockAuthService()
-      const vaultCryptoManager = createMockVaultCryptoManager()
-
       // Step 1: Delete account data from remote
       await authService.deleteAccountData()
       expect(authService.deleteAccountData).toHaveBeenCalled()
@@ -254,14 +240,7 @@ describe('Auth Flow Integration', () => {
 
   describe('offline behavior', () => {
     it('should handle login when offline', async () => {
-      const store = useAuthStore()
-
-      const authService = createMockAuthService({
-        signInWithEmail: vi.fn().mockRejectedValue(new Error('Network error')),
-      })
-
-      const vaultCryptoManager = createMockVaultCryptoManager()
-      const syncEngine = createMockSyncEngine()
+      vi.mocked(authService.signInWithEmail).mockRejectedValue(new Error('Network error'))
 
       // Attempt login while offline
       await expect(
@@ -285,9 +264,7 @@ describe('Auth Flow Integration', () => {
       expect(store.user).toEqual(mockUser)
 
       // Simulate network error on getCurrentUser
-      const authService = createMockAuthService({
-        getCurrentUser: vi.fn().mockRejectedValue(new Error('Network error')),
-      })
+      vi.mocked(authService.getCurrentUser).mockRejectedValue(new Error('Network error'))
 
       // Should not throw when checking session
       try {

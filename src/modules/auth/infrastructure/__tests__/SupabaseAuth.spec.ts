@@ -11,7 +11,7 @@ import type {
 // Helper para criar um mock de tabela Supabase com método delete em cadeia
 const createDeleteMock = (error: Error | null = null) => ({
   delete: vi.fn().mockReturnValue({
-    neq: vi.fn().mockResolvedValue({ error }),
+    eq: vi.fn().mockResolvedValue({ error }),
   }),
 })
 
@@ -23,6 +23,7 @@ vi.mock('@/core/supabase', () => ({
       signUp: vi.fn(),
       signOut: vi.fn(),
       getUser: vi.fn(),
+      getSession: vi.fn(),
       onAuthStateChange: vi.fn(),
     },
     from: vi.fn(),
@@ -85,6 +86,10 @@ describe('SupabaseAuth', () => {
   })
 
   it('should call signInWithOAuth when signInWithGoogle is called', async () => {
+    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce({
+      data: { provider: 'google', url: 'http://redirect.com' },
+      error: null,
+    } as any)
     await authService.signInWithGoogle()
     expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith({
       provider: 'google',
@@ -95,6 +100,7 @@ describe('SupabaseAuth', () => {
   })
 
   it('should call signOut on supabase auth', async () => {
+    vi.mocked(supabase.auth.signOut).mockResolvedValueOnce({ error: null } as any)
     await authService.signOut()
     expect(supabase.auth.signOut).toHaveBeenCalled()
   })
@@ -108,6 +114,10 @@ describe('SupabaseAuth', () => {
         avatar_url: 'http://test.com/avatar.png',
       },
     }
+    vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
+      data: { session: { user: mockSupabaseUser } as any },
+      error: null,
+    } as any)
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
       data: { user: mockSupabaseUser as unknown as User },
       error: null,
@@ -115,7 +125,7 @@ describe('SupabaseAuth', () => {
 
     const user = await authService.getCurrentUser()
 
-    expect(supabase.auth.getUser).toHaveBeenCalled()
+    expect(supabase.auth.getSession).toHaveBeenCalled()
     expect(user).toEqual({
       id: '123',
       email: 'test@test.com',
@@ -125,10 +135,10 @@ describe('SupabaseAuth', () => {
   })
 
   it('should return null when getCurrentUser has no user', async () => {
-    vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
-      data: { user: null },
+    vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
+      data: { session: null },
       error: null,
-    } as unknown as UserResponse)
+    } as any)
 
     const user = await authService.getCurrentUser()
     expect(user).toBeNull()
@@ -185,34 +195,40 @@ describe('SupabaseAuth', () => {
   })
 
   describe('deleteAccountData', () => {
+    beforeEach(() => {
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({
+        data: { user: { id: '123' } as any },
+        error: null,
+      } as any)
+    })
+
     it('should delete records from all syncable tables successfully', async () => {
       const mockDeleteTable = createDeleteMock(null)
       vi.mocked(supabase.from).mockReturnValue(mockDeleteTable as any)
 
       await authService.deleteAccountData()
 
-      // SYNCABLE_TABLES has 8 tables
-      expect(supabase.from).toHaveBeenCalledTimes(8)
+      // USER_DATA_TABLES has 7 tables
+      expect(supabase.from).toHaveBeenCalledTimes(7)
       expect(supabase.from).toHaveBeenCalledWith('transactions')
       expect(supabase.from).toHaveBeenCalledWith('wallets')
       expect(supabase.from).toHaveBeenCalledWith('categories')
-      expect(supabase.from).toHaveBeenCalledWith('payees')
       expect(supabase.from).toHaveBeenCalledWith('loans')
       expect(supabase.from).toHaveBeenCalledWith('subscriptions')
       expect(supabase.from).toHaveBeenCalledWith('budgets')
       expect(supabase.from).toHaveBeenCalledWith('goals')
     })
 
-    it('should call .delete().neq() on each table', async () => {
+    it('should call .delete().eq() on each table', async () => {
       const mockDeleteTable = createDeleteMock(null)
       vi.mocked(supabase.from).mockReturnValue(mockDeleteTable as any)
 
       await authService.deleteAccountData()
 
-      expect(mockDeleteTable.delete).toHaveBeenCalledTimes(8)
-      expect(mockDeleteTable.delete().neq).toHaveBeenCalledWith(
-        'id',
-        '00000000-0000-0000-0000-000000000000',
+      expect(mockDeleteTable.delete).toHaveBeenCalledTimes(7)
+      expect(mockDeleteTable.delete().eq).toHaveBeenCalledWith(
+        'user_id',
+        '123',
       )
     })
 
@@ -240,8 +256,8 @@ describe('SupabaseAuth', () => {
 
       await expect(authService.deleteAccountData()).rejects.toThrow()
 
-      // Should have tried all 8 tables despite failure
-      expect(supabase.from).toHaveBeenCalledTimes(8)
+      // Should have tried all 7 tables despite failure
+      expect(supabase.from).toHaveBeenCalledTimes(7)
     })
   })
 })

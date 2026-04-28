@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { ref, computed } from 'vue'
-import { usetransactionsearch } from '../usetransactionsearch'
+import { useTransactionSearch } from '../useTransactionSearch'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
@@ -46,7 +46,7 @@ describe('usetransactionsearch Performance', () => {
   it('should search 10,000 transactions in less than 50ms', () => {
     const activetransactions = computed(() => mocktransactions)
     const categoryMap = computed(() => mockCategoryMap)
-    const { setSearchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+    const { setSearchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
 
     // Warm up
     setSearchQuery('grocery')
@@ -71,7 +71,7 @@ describe('usetransactionsearch Performance', () => {
   it('should search by category name in less than 50ms', () => {
     const activetransactions = computed(() => mocktransactions)
     const categoryMap = computed(() => mockCategoryMap)
-    const { setSearchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+    const { setSearchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
 
     // Warm up
     setSearchQuery('ICategory 5')
@@ -94,7 +94,7 @@ describe('usetransactionsearch Performance', () => {
   it('should handle empty search efficiently', () => {
     const activetransactions = computed(() => mocktransactions)
     const categoryMap = computed(() => mockCategoryMap)
-    const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+    const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
 
     const start = performance.now()
     // Empty search should return all transactions without filtering

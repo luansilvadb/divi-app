@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { ref } from 'vue'
-import { usetransactionstats } from '../../application/stores/usetransactionstats'
+import { useTransactionStats } from '../../application/stores/useTransactionStats'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
@@ -83,7 +83,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome } = usetransactionstats(transactionsRef, () => ref(categoryMap))
+      const { totalIncome } = useTransactionStats(transactionsRef, () => ref(categoryMap))
 
       expect(totalIncome.value).toBe(5000) // 500000n / 100 = 5000
     })
@@ -92,7 +92,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalExpense } = usetransactionstats(transactionsRef, () => ref(categoryMap))
+      const { totalExpense } = useTransactionStats(transactionsRef, () => ref(categoryMap))
 
       // 15000n + 4500n = 19500n / 100 = 195
       expect(totalExpense.value).toBe(195)
@@ -102,7 +102,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { monthlyBalance, totalIncome, totalExpense } = usetransactionstats(
+      const { monthlyBalance, totalIncome, totalExpense } = useTransactionStats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -135,7 +135,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref([...mocktransactions, deletedITransaction] as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalExpense, monthlyBalance } = usetransactionstats(transactionsRef, () => ref(categoryMap))
+      const { totalExpense, monthlyBalance } = useTransactionStats(transactionsRef, () => ref(categoryMap))
 
       // Should not include the deleted 100000n expense
       expect(totalExpense.value).toBe(195)
@@ -146,7 +146,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { topCategories } = usetransactionstats(transactionsRef, () => ref(categoryMap))
+      const { topCategories } = useTransactionStats(transactionsRef, () => ref(categoryMap))
 
       // Should have categories (expense categories sorted by total)
       expect(topCategories.value.length).toBeGreaterThan(0)
@@ -167,7 +167,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { topCategories } = usetransactionstats(transactionsRef, () => ref(categoryMap))
+      const { topCategories } = useTransactionStats(transactionsRef, () => ref(categoryMap))
 
       // Percentages should sum to 100
       const totalPercent = topCategories.value.reduce((sum, cat) => sum + cat.percent, 0)
@@ -181,7 +181,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref([] as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance, topCategories } = usetransactionstats(
+      const { totalIncome, totalExpense, monthlyBalance, topCategories } = useTransactionStats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -197,7 +197,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(incomeOnly as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance, topCategories } = usetransactionstats(
+      const { totalIncome, totalExpense, monthlyBalance, topCategories } = useTransactionStats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -213,7 +213,7 @@ describe('Balance Calculation', () => {
       const transactionsRef = ref(expenseOnly as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance } = usetransactionstats(
+      const { totalIncome, totalExpense, monthlyBalance } = useTransactionStats(
         transactionsRef,
         () => ref(categoryMap),
       )

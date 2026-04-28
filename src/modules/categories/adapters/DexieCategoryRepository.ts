@@ -1,6 +1,6 @@
 import type { ICategoryRepository } from '../core/ports/ICategoryRepository'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
-import { db, type ILocalCategory } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db, type ILocalCategory } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieCategoryRepository implements ICategoryRepository {

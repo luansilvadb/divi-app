@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref, computed } from 'vue'
-import { usetransactionsearch } from '../../application/stores/usetransactionsearch'
+import { useTransactionSearch } from '../../application/stores/useTransactionSearch'
 import { useITransactionGrouping } from '../../application/stores/useITransactionGrouping'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
@@ -84,7 +84,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
 
       expect(filteredtransactions.value).toHaveLength(3)
     })
@@ -93,7 +93,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
       searchQuery.value = 'grocery'
 
       expect(filteredtransactions.value).toHaveLength(1)
@@ -104,7 +104,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
       searchQuery.value = 'entertainment'
 
       expect(filteredtransactions.value).toHaveLength(1)
@@ -115,7 +115,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
       searchQuery.value = 'NETFLIX'
 
       expect(filteredtransactions.value).toHaveLength(1)
@@ -126,7 +126,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
       searchQuery.value = 'nonexistent'
 
       expect(filteredtransactions.value).toHaveLength(0)
@@ -136,7 +136,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = useTransactionSearch(activetransactions, categoryMap)
       searchQuery.value = 'sub'
 
       expect(filteredtransactions.value).toHaveLength(1)
@@ -147,7 +147,7 @@ describe('ITransaction Filtering and Grouping', () => {
       const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredtransactions, clearSearch } = usetransactionsearch(
+      const { searchQuery, filteredtransactions, clearSearch } = useTransactionSearch(
         activetransactions,
         categoryMap,
       )

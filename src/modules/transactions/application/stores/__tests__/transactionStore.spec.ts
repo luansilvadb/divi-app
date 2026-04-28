@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { usetransactionstore } from '../transactionstore'
+import { useTransactionStore } from '../transactionStore'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
@@ -42,7 +42,7 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }),
 }))
 
-describe('transactionstore CRUD', () => {
+describe('transactionStore CRUD', () => {
   const sampleTx: ITransaction = {
     id: 'tx-1',
     title: 'Sample',
@@ -80,7 +80,7 @@ describe('transactionstore CRUD', () => {
       const mockTxs = [sampleTx]
       mockITransactionRepo.getByMonth.mockResolvedValue(mockTxs)
 
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       await store.fetchtransactionsByMonth(2026, 4)
 
       expect(mockITransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
@@ -90,14 +90,14 @@ describe('transactionstore CRUD', () => {
     it('should handle repository errors gracefully during fetch', async () => {
       mockITransactionRepo.getByMonth.mockRejectedValue(new Error('DB Error'))
 
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       await expect(store.fetchtransactionsByMonth(2026, 4)).rejects.toThrow('DB Error')
     })
   })
 
   describe('Create/Update Operations', () => {
     it('should call create/update on repository and refresh list', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       mockITransactionRepo.getByMonth.mockResolvedValue([])
 
       await store.saveITransaction(sampleTx)
@@ -118,7 +118,7 @@ describe('transactionstore CRUD', () => {
 
   describe('Delete Operations', () => {
     it('should perform optimistic delete and then persist', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       store.transactions = [sampleTx]
 
       await store.deleteITransaction(sampleTx.id)
@@ -128,7 +128,7 @@ describe('transactionstore CRUD', () => {
     })
 
     it('should rollback optimistic delete on failure', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       store.transactions = [sampleTx]
 
       mockITransactionRepo.delete.mockRejectedValue(new Error('Delete Failed'))
@@ -143,13 +143,13 @@ describe('transactionstore CRUD', () => {
   describe('Validation and Optimistic Updates', () => {
     it('should validate ITransaction before saving', async () => {
       const invalidTx = { ...sampleTx, amount: -1000n }
-      const store = usetransactionstore()
+      const store = useTransactionStore()
 
       await expect(store.saveITransaction(invalidTx)).rejects.toThrow()
     })
 
     it('should support updating an existing ITransaction in the list and handle refresh', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       store.transactions = [{ ...sampleTx }]
 
       const updatedTx = { ...sampleTx, title: 'New Title' }
@@ -162,7 +162,7 @@ describe('transactionstore CRUD', () => {
     })
 
     it('should assign current user_id when saving a new ITransaction', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       const txWithoutUser = { ...sampleTx, user_id: '' }
 
       await store.saveITransaction(txWithoutUser)
@@ -177,7 +177,7 @@ describe('transactionstore CRUD', () => {
 
   describe('Audit Logging', () => {
     it('should create an audit log entry when saving a ITransaction', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       await store.saveITransaction(sampleTx)
 
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(
@@ -190,7 +190,7 @@ describe('transactionstore CRUD', () => {
     })
 
     it('should create an audit log entry when deleting a ITransaction', async () => {
-      const store = usetransactionstore()
+      const store = useTransactionStore()
       store.transactions = [sampleTx]
 
       await store.deleteITransaction(sampleTx.id)

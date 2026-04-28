@@ -78,7 +78,7 @@ import { computed } from 'vue'
 import { NProgress } from 'naive-ui'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 import DataCard from './DataCard.vue'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 
 const props = defineProps<{
   budget: IBudget
@@ -86,20 +86,20 @@ const props = defineProps<{
   noHover?: boolean
 }>()
 
-const transactionstore = usetransactionstore()
+const transactionStore = useTransactionStore()
 
 const categoryName = computed(() => {
-  const cat = transactionstore.categoryMap[props.budget.category_id]
+  const cat = transactionStore.categoryMap[props.budget.category_id]
   return cat?.name || 'Categoria'
 })
 
 const categoryColor = computed(() => {
-  const cat = transactionstore.categoryMap[props.budget.category_id]
+  const cat = transactionStore.categoryMap[props.budget.category_id]
   return cat?.color || '#007AFF'
 })
 
 const categoryIcon = computed(() => {
-  const cat = transactionstore.categoryMap[props.budget.category_id]
+  const cat = transactionStore.categoryMap[props.budget.category_id]
   return cat?.icon || 'i-lucide-tag'
 })
 
