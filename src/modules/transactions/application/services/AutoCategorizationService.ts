@@ -45,7 +45,7 @@ export class AutoCategorizationService {
       categoryByName.set(cat.name.toLowerCase(), cat)
     }
 
-    const result = categoryByName.get(foundCategoryName.toLowerCase()) || null
+    const result = categoryByName.get((foundCategoryName as string).toLowerCase()) || null
 
     // Cache result (limit cache size to prevent memory growth)
     if (this.categoryCache.size > 1000) {

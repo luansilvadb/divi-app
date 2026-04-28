@@ -11,19 +11,37 @@ class MockCategoryRepository implements ICategoryRepository {
     return this.data
   }
 
-  async save(c: Category): Promise<void> {
-    const idx = this.data.findIndex((item) => item.id === c.id)
-    if (idx >= 0) {
-      this.data[idx] = c
-    } else {
-      this.data.push(c)
+  async create(c: any): Promise<Category> {
+    const newCat: Category = {
+      ...c,
+      id: crypto.randomUUID(),
+      sync_status: 'pending',
+      created_at: new Date().toISOString(),
+      client_updated_at: new Date().toISOString(),
+      version: 1,
+      deleted: false,
     }
+    this.data.push(newCat)
+    return newCat
+  }
+
+  async update(id: string, c: any): Promise<Category> {
+    const idx = this.data.findIndex((item) => item.id === id)
+    if (idx >= 0) {
+      this.data[idx] = { 
+        ...this.data[idx]!, 
+        ...c,
+        client_updated_at: new Date().toISOString()
+      } as any
+      return this.data[idx]!
+    }
+    throw new Error('Not found')
   }
 
   async delete(id: string): Promise<void> {
     const idx = this.data.findIndex((item) => item.id === id)
     if (idx >= 0) {
-      this.data[idx] = { ...this.data[idx], deleted: true }
+      this.data[idx] = { ...this.data[idx]!, deleted: true } as any
     }
   }
 }
@@ -107,7 +125,7 @@ describe('CategoryService', () => {
     })
 
     expect(emitted.length).toBe(1)
-    expect(emitted[0].name).toBe('Active Cat')
+    expect(emitted[0]!.name).toBe('Active Cat')
 
     sub.unsubscribe()
   })

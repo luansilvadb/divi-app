@@ -4,8 +4,8 @@ import { commonTheme, darkThemeOverrides } from '../naiveTheme'
 describe('Naive UI Theme Tokens (Apple Design System)', () => {
   it('should have correct Apple dark colors in dark theme', () => {
     const common = darkThemeOverrides.common
-    expect(common?.bodyColor).toBe('#1C1C1E') // Apple Dark Background
-    expect(common?.cardColor).toBe('#2C2C2E') // Apple Grouped Background
+    expect(common?.bodyColor).toBe('#000000') // Apple iOS Dark Grouped Background
+    expect(common?.cardColor).toBe('#1C1C1E') // Apple Dark Surface Primary
   })
 
   it('should have System Blue as the primary color across themes', () => {

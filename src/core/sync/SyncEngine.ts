@@ -342,7 +342,7 @@ export class SyncEngine implements ISyncEngine {
       if (key.startsWith('_')) delete sensitiveData[key]
       if (key.endsWith('_id') && sensitiveData[key] === '') sensitiveData[key] = null
       if (typeof sensitiveData[key] === 'bigint') {
-        sensitiveData[key] = BigIntAdapter.toString(sensitiveData[key])
+        sensitiveData[key] = BigIntAdapter.toString(sensitiveData[key] as bigint)
       }
     })
 
@@ -353,7 +353,7 @@ export class SyncEngine implements ISyncEngine {
     table: any,
     tableName: string,
     recordId: string,
-    finalPayload: Record<string, any>
+    _finalPayload: Record<string, any>
   ): Promise<void> {
     const { error: deleteError } = await supabase
       .from(tableName)

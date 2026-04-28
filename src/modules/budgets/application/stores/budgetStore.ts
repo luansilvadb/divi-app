@@ -49,17 +49,34 @@ export const useBudgetStore = defineStore('budgets', () => {
   const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
 
   async function saveBudget(budget: Budget) {
-    const budgetToSave = !budget.user_id && authStore.user?.id
-      ? { ...budget, user_id: authStore.user.id }
-      : budget
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const isUpdate = !!budget.id
+
     try {
-      await budgetRepo.save(budgetToSave)
+      if (isUpdate) {
+        await budgetRepo.update(budget.id, {
+          name: budget.name,
+          limit_value: budget.limit_value,
+          category_id: budget.category_id,
+          period: budget.period,
+        })
+      } else {
+        await budgetRepo.create({
+          user_id: activeUserId,
+          name: budget.name,
+          limit_value: budget.limit_value,
+          category_id: budget.category_id,
+          period: budget.period,
+        })
+      }
     } catch (err) {
       const errorContext = {
         operation: 'saveBudget',
         budgetId: budget.id,
         categoryId: budget.category_id,
-        userId: authStore.user?.id,
+        userId: activeUserId,
         error: err instanceof Error ? err.message : String(err),
       }
       console.error('[BudgetStore] Failed to save budget:', errorContext, err)

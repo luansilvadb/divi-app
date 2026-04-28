@@ -19,9 +19,11 @@ describe('TransactionService', () => {
     mockRepo = {
       getAll: vi.fn(),
       getByMonth: vi.fn().mockResolvedValue([]),
-      save: vi.fn().mockResolvedValue(undefined),
+      create: vi.fn().mockResolvedValue({} as any),
+      update: vi.fn().mockResolvedValue({} as any),
       delete: vi.fn().mockResolvedValue(undefined),
       watchAll: vi.fn().mockReturnValue(of([])),
+      transferBetweenWallets: vi.fn().mockResolvedValue(undefined),
     }
     service = new TransactionService(mockRepo)
   })
@@ -120,7 +122,7 @@ describe('TransactionService', () => {
 
       await service.saveTransaction(data)
 
-      expect(mockRepo.save).toHaveBeenCalledWith(expect.objectContaining({
+      expect(mockRepo.create).toHaveBeenCalledWith(expect.objectContaining({
         title: 'Lunch',
         amount: 1550n,
         user_id: 'test-user-123',

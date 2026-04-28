@@ -22,11 +22,11 @@ vi.mock('@/core/sync/SyncEngine', () => {
 vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
   useTransactionStore: vi.fn(() => ({
     transactions: [
-      { id: 't1', category_id: 'c1', amount: 100, deleted: false, type: 'expense' },
-      { id: 't2', category_id: 'c1', amount: 200, deleted: false, type: 'expense' },
-      { id: 't3', category_id: 'c2', amount: 50, deleted: false, type: 'expense' },
-      { id: 't4', category_id: 'c1', amount: 300, deleted: true, type: 'expense' }, // Should be ignored
-      { id: 't5', category_id: 'c1', amount: 500, deleted: false, type: 'income' }, // Should be ignored
+      { id: 't1', category_id: 'c1', amount: 100n, deleted: false, type: 'expense' },
+      { id: 't2', category_id: 'c1', amount: 200n, deleted: false, type: 'expense' },
+      { id: 't3', category_id: 'c2', amount: 50n, deleted: false, type: 'expense' },
+      { id: 't4', category_id: 'c1', amount: 300n, deleted: true, type: 'expense' }, // Should be ignored
+      { id: 't5', category_id: 'c1', amount: 500n, deleted: false, type: 'income' }, // Should be ignored
     ],
     categoryMap: {
       c1: { id: 'c1', name: 'Lazer' },
@@ -53,9 +53,9 @@ describe('BudgetStore', () => {
     const budget = {
       id: 'b1',
       category_id: 'c1',
-      limit_value: 1000,
+      limit_value: 1000n,
       period: 'monthly',
-    } as Budget
+    } as any
 
     const consumed = store.getConsumed(budget)
     expect(consumed).toBe(300) // 100 + 200
@@ -69,7 +69,7 @@ describe('BudgetStore', () => {
       id: 'b1',
       user_id: 'u1',
       category_id: 'c1',
-      limit_value: 1000,
+      limit_value: 1000n,
       period: 'monthly',
       sync_status: 'synced',
       created_at: new Date().toISOString(),
@@ -91,16 +91,16 @@ describe('BudgetStore', () => {
 
   it('should save a budget with user_id', async () => {
     const store = useBudgetStore()
-    const budget = { id: 'b-new', limit_value: 123 } as Budget
+    const budget = { category_id: 'c1', limit_value: 123n, period: 'monthly' } as any
     await store.saveBudget(budget)
-    const saved = await db.budgets.get('b-new')
-    expect(saved?.user_id).toBe('u1')
-    expect(saved?.limit_value).toBe(123n)
+    const all = await db.budgets.toArray()
+    expect(all[0]?.user_id).toBe('u1')
+    expect(all[0]?.limit_value).toBe(123n)
   })
 
   it('should delete a budget', async () => {
     const store = useBudgetStore()
-    await db.budgets.add({ id: 'b-del', deleted: false } as Budget)
+    await db.budgets.add({ id: 'b-del', user_id: 'u1', category_id: 'c1', limit_value: 100n, period: 'monthly', deleted: false } as any)
     await store.deleteBudget('b-del')
     const deleted = await db.budgets.get('b-del')
     expect(deleted?.deleted).toBe(true)
@@ -108,9 +108,24 @@ describe('BudgetStore', () => {
 
   it('should not mutate the original budget object when saving', async () => {
     const store = useBudgetStore()
-    const originalBudget: Budget = {
+
+    // Pre-seed the budget in the DB (update path requires existing record)
+    await db.budgets.add({
       id: 'b-immutable',
-      user_id: '', // Empty to trigger user_id assignment
+      user_id: 'u1',
+      category_id: 'c1',
+      limit_value: 200n,
+      period: 'monthly',
+      sync_status: 'synced',
+      created_at: new Date().toISOString(),
+      client_updated_at: new Date().toISOString(),
+      version: 1,
+      deleted: false,
+    })
+
+    const frozenBudget: Budget = Object.freeze({
+      id: 'b-immutable',
+      user_id: 'u1',
       category_id: 'c1',
       limit_value: 500n,
       period: 'monthly',
@@ -119,15 +134,12 @@ describe('BudgetStore', () => {
       client_updated_at: new Date().toISOString(),
       version: 1,
       deleted: false,
-    }
+    })
 
-    // Create a frozen copy to ensure immutability
-    const budgetToSave = Object.freeze({ ...originalBudget })
+    // Should not throw when saving a frozen object (immutability check)
+    await store.saveBudget(frozenBudget)
 
-    // Should not throw when saving (would throw if it tried to mutate)
-    await store.saveBudget(budgetToSave)
-
-    // Verify the saved budget has user_id
+    // Verify the updated budget has the new limit_value
     const saved = await db.budgets.get('b-immutable')
     expect(saved?.user_id).toBe('u1')
     expect(saved?.limit_value).toBe(500n)

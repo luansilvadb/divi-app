@@ -59,7 +59,7 @@ describe('SyncEngine Encryption Integration', () => {
       id: 'tx-1',
       user_id: 'test-user-id',
       title: 'Secret Coffee',
-      amount: 45.5,
+      amount: 45n,
       type: 'expense' as const,
       category_id: 'cat-1',
       wallet_id: 'wal-1',
@@ -88,7 +88,7 @@ describe('SyncEngine Encryption Integration', () => {
     )
 
     // Verify sensitive fields are NOT in the top level
-    const callArgs = mockTable.upsert.mock.calls[0][0]
+    const callArgs = mockTable.upsert.mock.calls[0]![0]
     expect(callArgs.title).toBeUndefined()
     expect(callArgs.amount).toBeUndefined()
   })

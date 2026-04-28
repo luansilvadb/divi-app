@@ -59,3 +59,13 @@ npm run test:unit -- --watch
 ```sh
 npm run lint
 ```
+
+## Development Guidelines
+
+### Monetary Values (BigInt)
+
+All monetary operations and values in this application must use `BigInt` to prevent floating-point precision errors. We use a centralized `bigint-adapter` to parse and format these values. 
+
+- **Always** import and use `parseDecimalToBigInt` when receiving user input (e.g. from UI forms).
+- **Always** import and use `formatBigIntToDecimal` when formatting internal `BigInt` amounts for display.
+- Ensure all repository implementations properly serialize/deserialize `BigInt` values if the underlying storage does not support them natively.

@@ -62,6 +62,6 @@ describe('BudgetCard.vue', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Orçamento estourado')
+    expect(wrapper.text()).toContain('Orçamento excedido')
   })
 })

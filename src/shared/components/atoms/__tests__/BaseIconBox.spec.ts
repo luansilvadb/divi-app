@@ -57,8 +57,8 @@ describe('BaseIconBox.vue', () => {
 
   it('applies default color if none is provided', () => {
     const wrapper = mount(BaseIconBox)
-    // Default color is #B45309 - browser converts to rgb
+    // Default color is var(--color-primary) CSS variable
     expect(wrapper.attributes('style')).toContain('background-color')
-    expect(wrapper.attributes('style')).toContain('color: rgb(180, 83, 9)')
+    expect(wrapper.attributes('style')).toContain('color: var(--color-primary)')
   })
 })

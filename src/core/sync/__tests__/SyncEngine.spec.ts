@@ -62,10 +62,10 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
           user_metadata: {},
           aud: 'authenticated',
           created_at: new Date().toISOString(),
-        } as unknown as Awaited<ReturnType<typeof supabase.auth.getUser>>['data']['user'],
+        }
       },
       error: null,
-    } as unknown as Awaited<ReturnType<typeof supabase.auth.getUser>>)
+    } as any)
 
     vi.mocked(supabase.auth.getSession).mockResolvedValue({
       data: {
@@ -91,7 +91,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         id: 'tx-1',
         user_id: 'test-user-id',
         title: 'New Transaction',
-        amount: 100,
+        amount: 100n,
         type: 'expense',
         category_id: 'cat-1',
         wallet_id: 'wal-1',
@@ -125,7 +125,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         id: 'tx-conflict',
         user_id: 'test-user-id',
         title: 'Client Title',
-        amount: 100,
+        amount: 100n,
         type: 'expense',
         category_id: 'cat-1',
         wallet_id: 'wal-1',
@@ -148,7 +148,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
           id: 'tx-conflict',
           user_id: 'test-user-id',
           title: 'Server Title',
-          amount: 100,
+          amount: 100n,
           type: 'expense',
           category_id: 'cat-1',
           wallet_id: 'wal-1',
@@ -177,7 +177,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         id: 'tx-hook-test',
         user_id: 'test-user-id',
         title: 'Hook Test',
-        amount: 50,
+        amount: 50n,
         type: 'expense',
         category_id: 'c1',
         wallet_id: 'w1',
@@ -198,7 +198,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
         id: 'tx-offline',
         user_id: 'test-user-id',
         title: 'Offline Tx',
-        amount: 10,
+        amount: 10n,
         type: 'expense',
         category_id: 'c1',
         wallet_id: 'w1',

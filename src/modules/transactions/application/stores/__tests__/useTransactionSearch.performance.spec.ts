@@ -4,7 +4,7 @@ import { useTransactionSearch } from '../useTransactionSearch'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Category } from '@/shared/domain/entities/Category'
 
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 /**
  * Performance tests for useTransactionSearch composable

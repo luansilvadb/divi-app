@@ -79,7 +79,7 @@ describe('SyncEngine Error Handling', () => {
       id,
       user_id: 'u1',
       title: 'Error Test',
-      amount: 100,
+      amount: 100n,
       type: 'expense',
       category_id: 'c1',
       wallet_id: 'w1',

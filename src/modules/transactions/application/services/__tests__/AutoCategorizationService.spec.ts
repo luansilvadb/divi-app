@@ -14,6 +14,8 @@ describe('AutoCategorizationService', () => {
       created_at: '',
       version: 1,
       deleted: false,
+      icon: 'category',
+      color: '#000000',
     },
     {
       id: '2',
@@ -24,6 +26,8 @@ describe('AutoCategorizationService', () => {
       created_at: '',
       version: 1,
       deleted: false,
+      icon: 'category',
+      color: '#000000',
     },
     {
       id: '3',
@@ -34,6 +38,8 @@ describe('AutoCategorizationService', () => {
       created_at: '',
       version: 1,
       deleted: false,
+      icon: 'category',
+      color: '#000000',
     },
   ]
 

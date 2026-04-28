@@ -12,6 +12,7 @@ describe('Auth Persistence Integration', () => {
     signInWithGoogle: Mock
     signInWithEmail: Mock
     registerWithEmail: Mock
+    deleteAccountData: Mock
   }
   let vaultCryptoManager: {
     lock: Mock
@@ -29,6 +30,7 @@ describe('Auth Persistence Integration', () => {
       signInWithGoogle: vi.fn(),
       signInWithEmail: vi.fn(),
       registerWithEmail: vi.fn(),
+      deleteAccountData: vi.fn().mockResolvedValue(undefined),
     }
     vaultCryptoManager = {
       lock: vi.fn(),

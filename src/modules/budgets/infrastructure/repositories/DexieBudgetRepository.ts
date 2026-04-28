@@ -20,25 +20,51 @@ export class DexieBudgetRepository implements IBudgetRepository {
     )
   }
 
-  async save(budget: Budget): Promise<void> {
+  async create(budget: Omit<Budget, 'id' | 'created_at' | 'client_updated_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Budget> {
     try {
+      const id = uuidv7()
+      const created_at = new Date().toISOString()
+      const version = 1
+      const deleted = false
+      const sync_status = 'pending' as const
+
       await db.transaction('rw', db.budgets, async () => {
-        const id = budget.id || uuidv7()
         const data = {
           ...budget,
           id,
           limit_value: BigInt(budget.limit_value ?? 0),
-          sync_status: budget.sync_status || 'pending',
-          client_updated_at: budget.client_updated_at || new Date().toISOString(),
-          created_at: budget.created_at || new Date().toISOString(),
-          deleted: !!budget.deleted,
-          version: budget.version || 1,
+          sync_status,
+          client_updated_at: created_at,
+          created_at,
+          deleted,
+          version,
         }
         await db.budgets.put(data)
       })
       SyncEngine.getInstance().enqueueSync()
+      const result = await db.budgets.get(id)
+      return result as Budget
     } catch (err) {
-      console.error('[DexieBudgetRepository] Failed to save budget', err)
+      console.error('[DexieBudgetRepository] Failed to create budget', err)
+      throw err
+    }
+  }
+
+  async update(id: string, budget: Partial<Budget>): Promise<Budget> {
+    try {
+      await db.transaction('rw', db.budgets, async () => {
+        await db.budgets.update(id, {
+          ...budget,
+          limit_value: budget.limit_value !== undefined ? BigInt(budget.limit_value) : undefined,
+          sync_status: 'pending',
+          client_updated_at: new Date().toISOString(),
+        })
+      })
+      SyncEngine.getInstance().enqueueSync()
+      const result = await db.budgets.get(id)
+      return result as Budget
+    } catch (err) {
+      console.error('[DexieBudgetRepository] Failed to update budget', err)
       throw err
     }
   }

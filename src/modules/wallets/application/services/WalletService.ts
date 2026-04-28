@@ -1,13 +1,11 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository';
 import type { Wallet } from '@/shared/domain/entities/Wallet';
-import { v7 as uuidv7 } from 'uuid';
 import { useAuthStore } from '@/modules/auth/application/authStore';
 import { AuthError, ValidationError } from '@/core/errors';
 
 // Constants for currency conversion
 const MINOR_UNIT_MULTIPLIER = 100;
-const INITIAL_VERSION = 1;
 
 export class WalletService {
   private _walletsSubject = new BehaviorSubject<Wallet[]>([]);
@@ -31,19 +29,18 @@ export class WalletService {
     if (!walletData.name?.trim()) throw new ValidationError('Wallet name is required');
     if (!walletData.currency?.trim()) throw new ValidationError('Wallet currency is required');
 
-    const newWallet: Wallet = {
+    const walletToCreate: any = {
       ...walletData,
       balance: BigInt(Math.round(walletData.balance * MINOR_UNIT_MULTIPLIER)),
-      id: uuidv7(),
       user_id: activeUserId,
-      sync_status: 'pending',
-      client_updated_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
-      version: INITIAL_VERSION,
-      deleted: false
     };
 
-    await this.walletRepo.save(newWallet);
+    await this.walletRepo.create(walletToCreate);
+    await this.loadWallets();
+  }
+
+  async updateWallet(id: string, walletData: Partial<Wallet>): Promise<void> {
+    await this.walletRepo.update(id, walletData);
     await this.loadWallets();
   }
 }

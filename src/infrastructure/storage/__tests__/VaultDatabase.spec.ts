@@ -19,7 +19,11 @@ describe('VaultDatabase Hooks', () => {
       type: 'expense' as const,
       category_id: 'cat-1',
       wallet_id: 'wall-1',
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      sync_status: 'pending' as const,
+      client_updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      deleted: false,
     }
 
     // @ts-ignore - version is handled by hooks
@@ -41,7 +45,11 @@ describe('VaultDatabase Hooks', () => {
       category_id: 'cat-1',
       wallet_id: 'wall-1',
       date: new Date().toISOString(),
-      version: 1
+      version: 1,
+      sync_status: 'pending' as const,
+      client_updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      deleted: false,
     }
 
     await db.transactions.add(transaction)
@@ -64,7 +72,11 @@ describe('VaultDatabase Hooks', () => {
       category_id: 'cat-1',
       wallet_id: 'wall-1',
       date: new Date().toISOString(),
-      version: 5
+      version: 5,
+      sync_status: 'pending' as const,
+      client_updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      deleted: false,
     }
 
     await db.transactions.add(transaction)

@@ -40,22 +40,60 @@ export class DexieTransactionRepository implements ITransactionRepository {
     ) as unknown as Observable<Transaction[]>
   }
 
-  async save(transaction: Transaction): Promise<void> {
+  async create(transaction: Omit<Transaction, 'created_at' | 'sync_status' | 'version' | 'deleted'> & { id?: string }): Promise<Transaction> {
     try {
-      const id = transaction.id || uuidv7()
+      const id = (transaction as any).id || uuidv7()
+      const created_at = new Date().toISOString()
+      const version = 1
+      const deleted = false
+      const sync_status = 'pending'
 
       await db.transaction('rw', db.transactions, db.wallets, async () => {
-        const oldData = await db.transactions.get(id)
-        await this.updateWalletBalances(transaction, oldData)
+        const fullTransaction = { ...transaction, id, created_at, version, deleted, sync_status } as Transaction
+        await this.updateWalletBalances(fullTransaction)
 
-        const localData = this.mapToLocalRecord(id, transaction)
+        const localData = this.mapToLocalRecord(id, fullTransaction)
         await db.transactions.put(localData)
       })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieTransactionRepository] Transação salva localmente de forma atômica.')
+      console.debug('[DexieTransactionRepository] Transação criada localmente de forma atômica.')
+      const result = await db.transactions.get(id)
+      return this.mapToEntity(result!) as unknown as Transaction
     } catch (err) {
-      throw new InfrastructureError('Failed to save transaction to local DB', err)
+      throw new InfrastructureError('Failed to create transaction in local DB', err)
+    }
+  }
+
+  async update(id: string, transaction: Partial<Transaction>): Promise<Transaction> {
+    try {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const oldData = await db.transactions.get(id)
+        if (!oldData) throw new Error('Transaction not found')
+
+        const merged: Transaction = {
+          ...this.mapToEntity(oldData),
+          ...transaction,
+        } as Transaction
+
+        await this.updateWalletBalances(merged, oldData)
+
+        const localData = {
+          ...oldData,
+          ...transaction,
+          amount: transaction.amount !== undefined ? BigInt(transaction.amount) : oldData.amount,
+          sync_status: 'pending' as const,
+          client_updated_at: new Date().toISOString(),
+        }
+        await db.transactions.put(localData)
+      })
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieTransactionRepository] Transação atualizada localmente de forma atômica.')
+      const result = await db.transactions.get(id)
+      return this.mapToEntity(result!) as unknown as Transaction
+    } catch (err) {
+      throw new InfrastructureError('Failed to update transaction in local DB', err)
     }
   }
 
@@ -134,6 +172,70 @@ export class DexieTransactionRepository implements ITransactionRepository {
       console.debug('[DexieTransactionRepository] Transação marcada para deleção de forma atômica.')
     } catch (err) {
       throw new InfrastructureError('Failed to delete transaction', err)
+    }
+  }
+
+  async transferBetweenWallets(
+    fromWalletId: string,
+    toWalletId: string,
+    amount: bigint,
+    description: string = '',
+    date: Date = new Date(),
+  ): Promise<void> {
+    try {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const fromWallet = await db.wallets.get(fromWalletId)
+        const toWallet = await db.wallets.get(toWalletId)
+
+        if (!fromWallet || !toWallet) throw new Error('Wallets not found')
+
+        const transferId = uuidv7()
+        const timestamp = new Date().toISOString()
+
+        const debit: LocalTransaction = {
+          id: uuidv7(),
+          title: `Transfer to ${toWallet.name}`,
+          amount,
+          type: 'transfer',
+          category_id: '',
+          wallet_id: fromWalletId,
+          date: date.toISOString(),
+          notes: description,
+          user_id: fromWallet.user_id,
+          sync_status: 'pending',
+          client_updated_at: timestamp,
+          created_at: timestamp,
+          deleted: false,
+          version: 1,
+          transfer_id: transferId,
+        }
+
+        const credit: LocalTransaction = {
+          id: uuidv7(),
+          title: `Transfer from ${fromWallet.name}`,
+          amount,
+          type: 'transfer',
+          category_id: '',
+          wallet_id: toWalletId,
+          date: date.toISOString(),
+          notes: description,
+          user_id: toWallet.user_id,
+          sync_status: 'pending',
+          client_updated_at: timestamp,
+          created_at: timestamp,
+          deleted: false,
+          version: 1,
+          transfer_id: transferId,
+        }
+
+        await db.transactions.bulkPut([debit, credit])
+        await db.wallets.put({ ...fromWallet, balance: BigInt(fromWallet.balance) - amount })
+        await db.wallets.put({ ...toWallet, balance: BigInt(toWallet.balance) + amount })
+      })
+
+      SyncEngine.getInstance().enqueueSync()
+    } catch (err) {
+      throw new InfrastructureError('Failed to execute transfer', err)
     }
   }
 

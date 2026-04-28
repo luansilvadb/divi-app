@@ -2,7 +2,6 @@ import { BehaviorSubject } from 'rxjs'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import { useAuthStore } from '@/modules/auth/application/authStore'
-import { v7 as uuidv7 } from 'uuid'
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import { AuthError } from '@/core/errors'
 import { TransactionValidator, transactionValidator } from './TransactionValidator'
@@ -56,27 +55,35 @@ export class TransactionService {
     this._validator.validate('positiveAmount', { field: 'amount', value: params.amount, params })
 
     const amount = BigIntAdapter.toMinorUnits(params.amount)
+    const isUpdate = !!params.id
 
-    const transaction: Transaction = {
-      id: params.id || uuidv7(),
-      user_id: userId,
-      title: params.title,
-      amount,
-      type: params.type,
-      category_id: params.category_id,
-      wallet_id: params.wallet_id,
-      date: params.date,
-      notes: params.notes,
-      tags: params.tags || [],
-      payee_id: params.payee_id,
-      sync_status: 'pending',
-      created_at: new Date().toISOString(),
-      client_updated_at: new Date().toISOString(),
-      version: 1,
-      deleted: false,
+    if (isUpdate) {
+      await this.transactionRepository.update(params.id!, {
+        title: params.title,
+        amount,
+        type: params.type,
+        category_id: params.category_id,
+        wallet_id: params.wallet_id,
+        date: params.date,
+        notes: params.notes,
+        tags: params.tags,
+        payee_id: params.payee_id,
+      })
+    } else {
+      const transaction: Omit<Transaction, 'id' | 'created_at' | 'client_updated_at' | 'sync_status' | 'version' | 'deleted'> = {
+        user_id: userId,
+        title: params.title,
+        amount,
+        type: params.type,
+        category_id: params.category_id,
+        wallet_id: params.wallet_id,
+        date: params.date,
+        notes: params.notes,
+        tags: params.tags || [],
+        payee_id: params.payee_id,
+      }
+      await this.transactionRepository.create(transaction)
     }
-
-    await this.transactionRepository.save(transaction)
 
     // Recarregar o mês atual da transação para garantir que a UI reflita a mudança
     const date = new Date(params.date)

@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { Wallet } from '@/shared/domain/entities/Wallet';
+import type { Wallet } from '@/shared/domain/entities/Wallet';
 
 export class WalletService {
   private walletsSubject = new BehaviorSubject<Wallet[]>([]);
@@ -19,13 +19,16 @@ export class WalletService {
   }
 
   // Método para adicionar uma nova carteira
-  async add(wallet: Omit<Wallet, 'id' | 'createdAt' | 'updatedAt'>): Promise<Wallet> {
+  async add(wallet: Omit<Wallet, 'id' | 'created_at' | 'client_updated_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Wallet> {
     // Simulação de criação
     const newWallet: Wallet = {
       ...wallet,
       id: `wallet_${Date.now()}`,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      created_at: new Date().toISOString(),
+      client_updated_at: new Date().toISOString(),
+      sync_status: 'synced',
+      version: 1,
+      deleted: false
     };
 
     const currentWallets = this.walletsSubject.value;

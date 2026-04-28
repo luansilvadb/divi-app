@@ -7,7 +7,9 @@ import type { Wallet } from '@/shared/domain/entities/Wallet'
 import { formatCurrency } from '@/shared/utils/formatters'
 import { parseDecimalToBigInt } from '@/shared/utils/bigint-adapter'
 
-const transactionService = useService('LedgerTransactionService')
+import { TransactionService } from '@/modules/ledger/application/services/TransactionService'
+
+const transactionService = useService<TransactionService>('LedgerTransactionService')
 const walletService = useService(WalletService)
 
 // State
@@ -15,17 +17,18 @@ const fromWalletId = ref<string | null>(null)
 const toWalletId = ref<string | null>(null)
 const amount = ref<string>('')
 const description = ref<string>('')
-const date = ref<string>(new Date().toISOString().split('T')[0])
+const date = ref<string>(new Date().toISOString().split('T')[0] || '')
 const dateTimestamp = computed({
-  get: () => new Date(date.value).getTime(),
-  set: (val) => { date.value = new Date(val).toISOString().split('T')[0] }
+  get: () => new Date(date.value || '').getTime(),
+  set: (val) => { date.value = new Date(val).toISOString().split('T')[0] || '' }
 })
 const isLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
 const success = ref<boolean>(false)
 
 // Computed
-const wallets = computed<Wallet[]>(() => walletService.wallets.value || [])
+const wallets = ref<Wallet[]>([])
+walletService.wallets$.subscribe(w => { wallets.value = w })
 const walletOptions = computed(() => 
   wallets.value.map(w => ({ label: `${w.name} (${formatCurrency(w.balance)})`, value: w.id }))
 )
@@ -44,7 +47,7 @@ const isFormValid = computed<boolean>(() => {
   const amountBigInt = parseDecimalToBigInt(amount.value)
   if (!amountBigInt || amountBigInt <= 0n) return false
 
-  return fromWallet.value?.balance >= amountBigInt
+  return (fromWallet.value?.balance ?? 0n) >= amountBigInt
 })
 
 // Methods
@@ -86,8 +89,8 @@ const handleSubmit = async () => {
 onMounted(() => {
   // Initialize with first two wallets if available
   if (wallets.value.length >= 2) {
-    fromWalletId.value = wallets.value[0].id
-    toWalletId.value = wallets.value[1].id
+    fromWalletId.value = wallets.value[0]?.id || null
+    toWalletId.value = wallets.value[1]?.id || null
   }
 })
 </script>

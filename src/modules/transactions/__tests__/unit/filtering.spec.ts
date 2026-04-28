@@ -5,7 +5,7 @@ import { useTransactionGrouping } from '../../application/stores/useTransactionG
 import type { Transaction } from '@/shared/domain/entities/Transaction'
 import type { Category } from '@/shared/domain/entities/Category'
 
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 describe('Transaction Filtering and Grouping', () => {
   describe('useTransactionSearch', () => {

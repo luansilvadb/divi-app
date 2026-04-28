@@ -4,8 +4,6 @@ import type { Category } from '@/shared/domain/entities/Category'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 import { AuthError, ValidationError, NotFoundError } from '@/core/errors'
 
-const INITIAL_VERSION = 1;
-const DEFAULT_CURRENCY = 'BRL';
 
 export class CategoryService {
   private _categoriesSubject = new BehaviorSubject<Category[]>([])
@@ -41,16 +39,13 @@ export class CategoryService {
     ]
 
     for (const def of defaults) {
-      await this.categoryRepository.save({
-        ...def,
+      await this.categoryRepository.create({
+        name: def.name!,
+        icon: def.icon!,
+        color: def.color!,
         user_id: userId,
         parent_id: null,
-        sync_status: 'pending',
-        created_at: new Date().toISOString(),
-        client_updated_at: new Date().toISOString(),
-        version: 1,
-        deleted: false,
-      } as Category)
+      })
     }
 
     // Recarrega após o seed (single-pass filter)
@@ -72,21 +67,13 @@ export class CategoryService {
     if (!params.name?.trim()) throw new ValidationError('Category name is required')
     if (!params.color?.trim()) throw new ValidationError('Category color is required')
 
-    const newCategory: Category = {
-      id: crypto.randomUUID(),
+    await this.categoryRepository.create({
       user_id: userId,
       name: params.name.trim(),
       icon: params.icon || 'i-lucide-tag',
       color: params.color,
       parent_id: params.parent_id || null,
-      sync_status: 'pending',
-      created_at: new Date().toISOString(),
-      client_updated_at: new Date().toISOString(),
-      version: INITIAL_VERSION,
-      deleted: false,
-    }
-
-    await this.categoryRepository.save(newCategory)
+    })
     await this.loadCategories()
   }
 
@@ -108,17 +95,12 @@ export class CategoryService {
     // Guard clause: Required fields on update
     if (!params.name?.trim()) throw new ValidationError('Category name is required')
 
-    const updated: Category = {
-      ...existing,
+    await this.categoryRepository.update(id, {
       name: params.name.trim(),
-      icon: params.icon || existing.icon,
-      color: params.color || existing.color,
-      parent_id: params.parent_id !== undefined ? params.parent_id : existing.parent_id,
-      sync_status: 'pending',
-      client_updated_at: new Date().toISOString(),
-    }
-
-    await this.categoryRepository.save(updated)
+      icon: params.icon,
+      color: params.color,
+      parent_id: params.parent_id,
+    })
     await this.loadCategories()
   }
 

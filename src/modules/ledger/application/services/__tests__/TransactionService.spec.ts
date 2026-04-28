@@ -22,8 +22,8 @@ describe('TransactionService', () => {
   describe('executeTransfer', () => {
     it('should execute transfer between wallets successfully', async () => {
       // Mock repository response
-      mockRepository.transferBetweenWallets.mockResolvedValueOnce(undefined)
-      mockRepository.getAll.mockResolvedValueOnce([])
+      vi.mocked(mockRepository.transferBetweenWallets).mockResolvedValueOnce(undefined)
+      vi.mocked(mockRepository.getAll).mockResolvedValueOnce([])
 
       await service.executeTransfer(
         'wallet1',

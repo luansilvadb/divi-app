@@ -21,24 +21,54 @@ export class DexieWalletRepository implements IWalletRepository {
     }
   }
 
-  async save(wallet: Wallet): Promise<void> {
+  async create(wallet: Omit<Wallet, 'id' | 'created_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Wallet> {
     try {
+      const id = `wallet_${Date.now()}`
+      const created_at = new Date().toISOString()
+      const version = 1
+      const deleted = false
+      const sync_status = 'pending'
+
       await db.transaction('rw', db.wallets, async () => {
         await db.wallets.put({
           ...wallet,
+          id,
           balance: BigInt(wallet.balance),
           type: wallet.type || 'checking',
-          sync_status: wallet.sync_status || 'pending',
-          client_updated_at: wallet.client_updated_at || new Date().toISOString(),
-          created_at: wallet.created_at || new Date().toISOString(),
-          version: wallet.version || 1,
+          sync_status,
+          client_updated_at: created_at,
+          created_at,
+          version,
+          deleted,
         } as LocalWallet)
       })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieWalletRepository] Carteira salva localmente de forma atômica.')
+      console.debug('[DexieWalletRepository] Carteira criada localmente de forma atômica.')
+      const result = await db.wallets.get(id)
+      return result as Wallet
     } catch (err) {
-      throw new InfrastructureError('Failed to save wallet to local DB', err)
+      throw new InfrastructureError('Failed to create wallet in local DB', err)
+    }
+  }
+
+  async update(id: string, wallet: Partial<Wallet>): Promise<Wallet> {
+    try {
+      await db.transaction('rw', db.wallets, async () => {
+        await db.wallets.update(id, {
+          ...wallet,
+          balance: wallet.balance !== undefined ? BigInt(wallet.balance) : undefined,
+          sync_status: 'pending',
+          client_updated_at: new Date().toISOString(),
+        })
+      })
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieWalletRepository] Carteira atualizada localmente de forma atômica.')
+      const result = await db.wallets.get(id)
+      return result as Wallet
+    } catch (err) {
+      throw new InfrastructureError('Failed to update wallet in local DB', err)
     }
   }
 
@@ -67,22 +97,51 @@ export class DexieCategoryRepository implements ICategoryRepository {
     }
   }
 
-  async save(category: Category): Promise<void> {
+  async create(category: Omit<Category, 'id' | 'created_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Category> {
     try {
+      const id = `cat_${Date.now()}`
+      const created_at = new Date().toISOString()
+      const version = 1
+      const deleted = false
+      const sync_status = 'pending'
+
       await db.transaction('rw', db.categories, async () => {
         await db.categories.put({
           ...category,
-          sync_status: category.sync_status || 'pending',
-          client_updated_at: category.client_updated_at || new Date().toISOString(),
-          created_at: category.created_at || new Date().toISOString(),
-          version: category.version || 1,
+          id,
+          sync_status,
+          client_updated_at: created_at,
+          created_at,
+          version,
+          deleted,
         } as LocalCategory)
       })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[DexieCategoryRepository] Categoria salva localmente de forma atômica.')
+      console.debug('[DexieCategoryRepository] Categoria criada localmente de forma atômica.')
+      const result = await db.categories.get(id)
+      return result as Category
     } catch (err) {
-      throw new InfrastructureError('Failed to save category to local DB', err)
+      throw new InfrastructureError('Failed to create category in local DB', err)
+    }
+  }
+
+  async update(id: string, category: Partial<Category>): Promise<Category> {
+    try {
+      await db.transaction('rw', db.categories, async () => {
+        await db.categories.update(id, {
+          ...category,
+          sync_status: 'pending',
+          client_updated_at: new Date().toISOString(),
+        })
+      })
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[DexieCategoryRepository] Categoria atualizada localmente de forma atômica.')
+      const result = await db.categories.get(id)
+      return result as Category
+    } catch (err) {
+      throw new InfrastructureError('Failed to update category in local DB', err)
     }
   }
 

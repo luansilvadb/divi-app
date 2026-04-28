@@ -38,7 +38,7 @@ describe('Budgets Integration', () => {
 
   it('should reactively update budget consumption when transactions change', async () => {
     // 1. Setup Data
-    const category = { id: 'c1', name: 'Food', user_id: 'u1', deleted: false } as Category
+    const category = { id: 'c1', name: 'Food', user_id: 'u1', deleted: false } as any
     await db.categories.add(category)
 
     const budgetStore = useBudgetStore()
@@ -49,12 +49,10 @@ describe('Budgets Integration', () => {
 
     // 3. Create Budget
     await budgetStore.saveBudget({
-      id: 'b1',
       category_id: 'c1',
-      limit_value: 1000,
+      limit_value: 1000n,
       period: 'monthly',
-      user_id: 'u1',
-    } as Budget)
+    } as any)
 
     // Wait for liveQuery
     await new Promise((resolve) => setTimeout(resolve, 100))
@@ -67,12 +65,12 @@ describe('Budgets Integration', () => {
     await transactionStore.saveTransaction({
       id: 't1',
       title: 'Dinner',
-      amount: 150,
+      amount: 150n,
       category_id: 'c1',
       wallet_id: 'w1',
       date: new Date().toISOString(),
       type: 'expense',
-    } as Transaction)
+    } as any)
 
     // 6. Verify Reactive Update
     // In a real integration, we'd wait for transactionStore to update its internal 'transactions' ref

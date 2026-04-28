@@ -5,5 +5,5 @@ export interface PredictionResult {
 }
 
 export interface IPredictionService {
-  predict(payeeId: string, amount: number): Promise<PredictionResult>
+  predict(payeeId: string, amount: bigint): Promise<PredictionResult>
 }

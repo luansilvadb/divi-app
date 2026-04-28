@@ -48,9 +48,9 @@ describe('SubscriptionProcessor', () => {
       deleted: false,
     }
 
-    vi.mocked(db.subscriptions.where).mockReturnThis()
-    vi.mocked(db.subscriptions.equals).mockReturnThis()
-    vi.mocked(db.subscriptions.and).mockReturnThis()
+    ;(db.subscriptions.where as any).mockReturnThis()
+    ;(db.subscriptions as any).equals.mockReturnThis()
+    ;(db.subscriptions as any).and.mockReturnThis()
     vi.mocked(db.subscriptions.toArray).mockResolvedValue([mockSubscription])
 
     await SubscriptionProcessor.processPendingSubscriptions('user-1')

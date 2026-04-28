@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from 'uuid'
 import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
 import type { Transaction } from '@/shared/domain/entities/Transaction'
-import { db, type LocalTransaction, type LocalWallet } from '@/infrastructure/storage/VaultDatabase'
+import { db, type LocalTransaction } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '@/shared/domain/errors/InfrastructureError'
 import { liveQuery } from 'dexie'
@@ -77,42 +77,76 @@ export class VaultTransactionRepository implements ITransactionRepository {
     }
   }
 
-  async save(transaction: Transaction): Promise<void> {
+  async create(transaction: Omit<Transaction, 'id' | 'created_at' | 'sync_status' | 'version' | 'deleted'>): Promise<Transaction> {
     try {
-      await db.transaction('rw', db.transactions, db.wallets, async () => {
-        const id = transaction.id || uuidv7()
-        const oldData = await db.transactions.get(id)
+      const id = uuidv7()
+      const created_at = new Date().toISOString()
+      const version = 1
+      const deleted = false
+      const sync_status = 'pending'
 
-        const walletDelta = this.calculateWalletDelta(transaction, oldData)
-        await this.applyWalletChanges(transaction, oldData, walletDelta)
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const walletDelta = this.calculateWalletDelta({ ...transaction, id, created_at, version, deleted, sync_status } as Transaction, undefined)
+        await this.applyWalletChanges({ ...transaction, id, created_at, version, deleted, sync_status } as Transaction, undefined, walletDelta)
 
         const localData: LocalTransaction = {
+          ...transaction,
           id,
-          title: transaction.title,
+          created_at,
+          version,
+          deleted,
+          sync_status,
+          client_updated_at: created_at,
           amount: BigInt(transaction.amount),
-          type: transaction.type,
           category_id: transaction.category_id || '',
-          wallet_id: transaction.wallet_id,
           payee_id: transaction.payee_id || undefined,
-          date: transaction.date,
           notes: transaction.notes || undefined,
           tags: transaction.tags ? [...transaction.tags] : [],
-          user_id: transaction.user_id || '',
-          sync_status: transaction.sync_status || 'pending',
-          client_updated_at: transaction.client_updated_at || new Date().toISOString(),
-          created_at: transaction.created_at,
-          deleted: !!transaction.deleted,
-          version: transaction.version || 1,
-          transfer_id: transaction.transfer_id,
         }
 
         await db.transactions.put(localData)
       })
 
       SyncEngine.getInstance().enqueueSync()
-      console.debug('[VaultTransactionRepository] Transação salva localmente de forma atômica.')
+      console.debug('[VaultTransactionRepository] Transação criada localmente de forma atômica.')
+      const result = await db.transactions.get(id)
+      return this.mapToEntity(result!) as unknown as Transaction
     } catch (err) {
-      throw new InfrastructureError('Failed to save transaction to local DB', err)
+      throw new InfrastructureError('Failed to create transaction in local DB', err)
+    }
+  }
+
+  async update(id: string, transaction: Partial<Transaction>): Promise<Transaction> {
+    try {
+      await db.transaction('rw', db.transactions, db.wallets, async () => {
+        const oldData = await db.transactions.get(id)
+        if (!oldData) throw new Error('Transaction not found')
+
+        const merged: Transaction = {
+          ...this.mapToEntity(oldData),
+          ...transaction,
+        } as Transaction
+
+        const walletDelta = this.calculateWalletDelta(merged, oldData)
+        await this.applyWalletChanges(merged, oldData, walletDelta)
+
+        const localData: LocalTransaction = {
+          ...oldData,
+          ...transaction,
+          amount: transaction.amount !== undefined ? BigInt(transaction.amount) : oldData.amount,
+          client_updated_at: new Date().toISOString(),
+          sync_status: 'pending',
+        }
+
+        await db.transactions.put(localData)
+      })
+
+      SyncEngine.getInstance().enqueueSync()
+      console.debug('[VaultTransactionRepository] Transação atualizada localmente de forma atômica.')
+      const result = await db.transactions.get(id)
+      return this.mapToEntity(result!) as unknown as Transaction
+    } catch (err) {
+      throw new InfrastructureError('Failed to update transaction in local DB', err)
     }
   }
 

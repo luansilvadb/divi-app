@@ -4,6 +4,7 @@ import { useAuthStore } from '../authStore'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
 import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
+import type { User } from '../../domain/entities/User'
 
 // Mocks para dependências externas
 vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
@@ -158,14 +159,14 @@ describe('Auth Store', () => {
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
 
-      let authStateCallback: ((user: null) => void) | null = null
-      authService.onAuthStateChange = vi.fn((callback) => {
+      let authStateCallback: ((user: User | null) => void) | null = null
+      authService.onAuthStateChange = vi.fn((callback: (user: User | null) => void) => {
         authStateCallback = callback
       })
 
       await store.initialize(authService, vaultCryptoManager, syncEngine)
 
-      authStateCallback?.(null)
+      if (authStateCallback) (authStateCallback as (user: User | null) => void)(null)
 
       expect(vaultCryptoManager.lock).toHaveBeenCalledOnce()
     })
@@ -176,14 +177,14 @@ describe('Auth Store', () => {
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
 
-      let authStateCallback: ((user: { id: string; email: string }) => void) | null = null
-      authService.onAuthStateChange = vi.fn((callback) => {
+      let authStateCallback: ((user: User | null) => void) | null = null
+      authService.onAuthStateChange = vi.fn((callback: (user: User | null) => void) => {
         authStateCallback = callback
       })
 
       await store.initialize(authService, vaultCryptoManager, syncEngine)
 
-      authStateCallback?.({ id: '1', email: 'test@example.com' })
+      if (authStateCallback) (authStateCallback as (user: User | null) => void)({ id: '1', email: 'test@example.com' })
 
       expect(syncEngine.trigger).toHaveBeenCalledOnce()
     })

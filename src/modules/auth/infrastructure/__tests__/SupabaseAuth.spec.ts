@@ -41,10 +41,9 @@ describe('SupabaseAuth', () => {
 
   it('should call signInWithPassword when signInWithEmail is called', async () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: { user: {} as any, session: {} as any },
       error: null,
-    } as unknown as AuthResponse)
+    } as any)
     await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signInWithPassword).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -55,8 +54,8 @@ describe('SupabaseAuth', () => {
   it('should throw error when signInWithEmail fails', async () => {
     vi.mocked(supabase.auth.signInWithPassword).mockResolvedValueOnce({
       data: { user: null, session: null },
-      error: new Error('Invalid credentials') as unknown as AuthError,
-    } as unknown as AuthResponse)
+      error: new Error('Invalid credentials') as any,
+    } as any)
 
     await expect(
       authService.signInWithEmail({ email: 'test@example.com', password: 'password123' }),
@@ -68,7 +67,7 @@ describe('SupabaseAuth', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: { user: {} as any, session: {} as any },
       error: null,
-    } as unknown as AuthResponse)
+    } as any)
     await authService.registerWithEmail({ email: 'test@example.com', password: 'password123' })
     expect(supabase.auth.signUp).toHaveBeenCalledWith({
       email: 'test@example.com',
@@ -79,8 +78,8 @@ describe('SupabaseAuth', () => {
   it('should throw error when registerWithEmail fails', async () => {
     vi.mocked(supabase.auth.signUp).mockResolvedValueOnce({
       data: { user: null, session: null },
-      error: new Error('Email already exists') as unknown as AuthError,
-    } as AuthResponse)
+      error: new Error('Email already exists') as any,
+    } as any)
 
     await expect(
       authService.registerWithEmail({ email: 'test@example.com', password: 'password123' }),

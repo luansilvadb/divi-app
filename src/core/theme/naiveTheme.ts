@@ -513,3 +513,16 @@ export const darkThemeOverrides: GlobalThemeOverrides = {
     color: palette.card.dark,
   },
 }
+
+// ─── Common Theme (Shared Base) ─────────────────────────────────────────────
+/**
+ * Shared base theme tokens used across light and dark modes.
+ * Exported for testing and external consumption.
+ */
+export const commonTheme = {
+  primaryColor: '#007AFF', // Apple System Blue (HIG standard)
+  borderRadius: '6px',     // Apple small radius token (--radius-sm)
+  fontFamily: '"Inter", "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontFamilyMono: '"JetBrains Mono", "SF Mono", ui-monospace, monospace',
+} as const
+

@@ -1,7 +1,5 @@
 import { computed, type ComputedRef } from 'vue'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-
-type UITransaction = Transaction & { _titleLower: string; _timestamp: number; _dateKey: string }
+type UITransaction = any
 
 interface TransactionGroup {
   total: number
