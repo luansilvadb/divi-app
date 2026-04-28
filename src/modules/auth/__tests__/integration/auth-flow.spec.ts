@@ -3,7 +3,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
 import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
-import type { User } from '../../domain/entities/User'
+import type { IUser } from '../../domain/entities/IUser'
 import { useAuthStore } from '../../application/authStore'
 
 // Mock VaultDatabase
@@ -50,10 +50,10 @@ describe('Auth Flow Integration', () => {
   describe('complete login flow', () => {
     it('should authenticate user and initialize vault', async () => {
       const store = useAuthStore()
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
-        name: 'Test User',
+        name: 'Test IUser',
       }
 
       const authService = createMockAuthService({
@@ -64,7 +64,7 @@ describe('Auth Flow Integration', () => {
       const vaultCryptoManager = createMockVaultCryptoManager()
       const syncEngine = createMockSyncEngine()
 
-      // Step 1: User signs in with email
+      // Step 1: IUser signs in with email
       await authService.signInWithEmail({ email: 'test@example.com', password: 'password123' })
       expect(authService.signInWithEmail).toHaveBeenCalledWith({
         email: 'test@example.com',
@@ -133,7 +133,7 @@ describe('Auth Flow Integration', () => {
         getCurrentUser: vi.fn().mockResolvedValue({
           id: 'google-user-123',
           email: 'user@gmail.com',
-          name: 'Google User',
+          name: 'Google IUser',
           avatar_url: 'https://google.com/avatar.png',
         }),
       })
@@ -180,12 +180,12 @@ describe('Auth Flow Integration', () => {
 
     it('should handle auth state change listeners', async () => {
       const store = useAuthStore()
-      const callbacks: Array<(user: User | null) => void> = []
+      const callbacks: Array<(user: IUser | null) => void> = []
 
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
-        name: 'Test User',
+        name: 'Test IUser',
       }
 
       const authService = createMockAuthService({
@@ -274,12 +274,12 @@ describe('Auth Flow Integration', () => {
 
     it('should maintain session state during temporary connectivity loss', async () => {
       const store = useAuthStore()
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
       }
 
-      // User is already authenticated
+      // IUser is already authenticated
       store.setUser(mockUser)
       expect(store.isAuthenticated).toBe(true)
       expect(store.user).toEqual(mockUser)

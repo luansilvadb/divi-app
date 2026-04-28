@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { GoalLogicService } from '../GoalLogicService'
-import type { Goal } from '@/shared/domain/entities/Goal'
+import type { IGoal } from '@/modules/goals/core/entities/IGoal'
 
 describe('GoalLogicService', () => {
   const service = new GoalLogicService()
 
-  const createMockGoal = (current: number, target: number): Goal => ({
+  const createMockGoal = (current: number, target: number): IGoal => ({
     id: 'g1',
     user_id: 'u1',
     name: 'Emergency Fund',

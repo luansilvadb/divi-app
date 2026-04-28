@@ -1,19 +1,19 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ref, computed } from 'vue'
-import { useTransactionSearch } from '../../application/stores/useTransactionSearch'
-import { useTransactionGrouping } from '../../application/stores/useTransactionGrouping'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
+import { usetransactionsearch } from '../../application/stores/usetransactionsearch'
+import { useITransactionGrouping } from '../../application/stores/useITransactionGrouping'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 type UITransaction = any
 
-describe('Transaction Filtering and Grouping', () => {
-  describe('useTransactionSearch', () => {
-    let mockTransactions: UITransaction[]
-    let mockCategoryMap: Record<string, Category>
+describe('ITransaction Filtering and Grouping', () => {
+  describe('usetransactionsearch', () => {
+    let mocktransactions: UITransaction[]
+    let mockCategoryMap: Record<string, ICategory>
 
     beforeEach(() => {
-      mockTransactions = [
+      mocktransactions = [
         {
           id: 'tx-1',
           title: 'Grocery Shopping',
@@ -21,7 +21,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 15000n,
           type: 'expense',
           category_id: 'cat-food',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-15',
           _dateKey: '2026-04-15',
           _timestamp: 1713139200000,
@@ -35,12 +35,12 @@ describe('Transaction Filtering and Grouping', () => {
         },
         {
           id: 'tx-2',
-          title: 'Netflix Subscription',
+          title: 'Netflix ISubscription',
           _titleLower: 'netflix subscription',
           amount: 4500n,
           type: 'expense',
           category_id: 'cat-entertainment',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-14',
           _dateKey: '2026-04-14',
           _timestamp: 1713052800000,
@@ -59,7 +59,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 500000n,
           type: 'income',
           category_id: 'cat-income',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-01',
           _dateKey: '2026-04-01',
           _timestamp: 1711929600000,
@@ -76,93 +76,93 @@ describe('Transaction Filtering and Grouping', () => {
       mockCategoryMap = {
         'cat-food': { id: 'cat-food', name: 'Food & Groceries', color: '#10b981', icon: 'shopping' },
         'cat-entertainment': { id: 'cat-entertainment', name: 'Entertainment', color: '#8b5cf6', icon: 'movie' },
-        'cat-income': { id: 'cat-income', name: 'Income', color: '#3b82f6', icon: 'wallet' },
+        'cat-income': { id: 'cat-income', name: 'Income', color: '#3b82f6', icon: 'IWallet' },
       }
     })
 
     it('should return all transactions when search query is empty', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
 
-      expect(filteredTransactions.value).toHaveLength(3)
+      expect(filteredtransactions.value).toHaveLength(3)
     })
 
     it('should filter transactions by title', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
       searchQuery.value = 'grocery'
 
-      expect(filteredTransactions.value).toHaveLength(1)
-      expect(filteredTransactions.value[0].title).toBe('Grocery Shopping')
+      expect(filteredtransactions.value).toHaveLength(1)
+      expect(filteredtransactions.value[0].title).toBe('Grocery Shopping')
     })
 
     it('should filter transactions by category name', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
       searchQuery.value = 'entertainment'
 
-      expect(filteredTransactions.value).toHaveLength(1)
-      expect(filteredTransactions.value[0].title).toBe('Netflix Subscription')
+      expect(filteredtransactions.value).toHaveLength(1)
+      expect(filteredtransactions.value[0].title).toBe('Netflix ISubscription')
     })
 
     it('should be case insensitive when filtering', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
       searchQuery.value = 'NETFLIX'
 
-      expect(filteredTransactions.value).toHaveLength(1)
-      expect(filteredTransactions.value[0].title).toBe('Netflix Subscription')
+      expect(filteredtransactions.value).toHaveLength(1)
+      expect(filteredtransactions.value[0].title).toBe('Netflix ISubscription')
     })
 
     it('should return empty array when no matches found', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
       searchQuery.value = 'nonexistent'
 
-      expect(filteredTransactions.value).toHaveLength(0)
+      expect(filteredtransactions.value).toHaveLength(0)
     })
 
     it('should handle partial matches', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions } = useTransactionSearch(activeTransactions, categoryMap)
+      const { searchQuery, filteredtransactions } = usetransactionsearch(activetransactions, categoryMap)
       searchQuery.value = 'sub'
 
-      expect(filteredTransactions.value).toHaveLength(1)
-      expect(filteredTransactions.value[0].title).toBe('Netflix Subscription')
+      expect(filteredtransactions.value).toHaveLength(1)
+      expect(filteredtransactions.value[0].title).toBe('Netflix ISubscription')
     })
 
     it('should clear search and return all transactions', () => {
-      const activeTransactions = computed(() => mockTransactions)
+      const activetransactions = computed(() => mocktransactions)
       const categoryMap = ref(mockCategoryMap)
 
-      const { searchQuery, filteredTransactions, clearSearch } = useTransactionSearch(
-        activeTransactions,
+      const { searchQuery, filteredtransactions, clearSearch } = usetransactionsearch(
+        activetransactions,
         categoryMap,
       )
 
       searchQuery.value = 'grocery'
-      expect(filteredTransactions.value).toHaveLength(1)
+      expect(filteredtransactions.value).toHaveLength(1)
 
       clearSearch()
-      expect(filteredTransactions.value).toHaveLength(3)
+      expect(filteredtransactions.value).toHaveLength(3)
     })
   })
 
-  describe('useTransactionGrouping', () => {
+  describe('useITransactionGrouping', () => {
     it('should group transactions by date key', () => {
-      const mockTransactions: UITransaction[] = [
+      const mocktransactions: UITransaction[] = [
         {
           id: 'tx-1',
           title: 'Lunch',
@@ -170,7 +170,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 2500n,
           type: 'expense',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-15',
           _dateKey: '2026-04-15',
           _timestamp: 1713139200000,
@@ -189,7 +189,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 3500n,
           type: 'expense',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-15',
           _dateKey: '2026-04-15',
           _timestamp: 1713139200000,
@@ -208,7 +208,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 500n,
           type: 'expense',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-14',
           _dateKey: '2026-04-14',
           _timestamp: 1713052800000,
@@ -222,10 +222,10 @@ describe('Transaction Filtering and Grouping', () => {
         },
       ]
 
-      const filteredTransactions = computed(() => mockTransactions)
-      const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+      const filteredtransactions = computed(() => mocktransactions)
+      const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
-      const groups = groupedTransactions.value
+      const groups = groupedtransactions.value
 
       expect(Object.keys(groups)).toHaveLength(2)
       expect(groups['2026-04-15'].items).toHaveLength(2)
@@ -233,7 +233,7 @@ describe('Transaction Filtering and Grouping', () => {
     })
 
     it('should calculate group totals correctly', () => {
-      const mockTransactions: UITransaction[] = [
+      const mocktransactions: UITransaction[] = [
         {
           id: 'tx-1',
           title: 'Income',
@@ -241,7 +241,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 500000n,
           type: 'income',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-15',
           _dateKey: '2026-04-15',
           _timestamp: 1713139200000,
@@ -260,7 +260,7 @@ describe('Transaction Filtering and Grouping', () => {
           amount: 15000n,
           type: 'expense',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-15',
           _dateKey: '2026-04-15',
           _timestamp: 1713139200000,
@@ -274,20 +274,20 @@ describe('Transaction Filtering and Grouping', () => {
         },
       ]
 
-      const filteredTransactions = computed(() => mockTransactions)
-      const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+      const filteredtransactions = computed(() => mocktransactions)
+      const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
-      const group = groupedTransactions.value['2026-04-15']
+      const group = groupedtransactions.value['2026-04-15']
 
       expect(group.total).toBe(4850) // 5000 - 150 = 4850
       expect(group.items).toHaveLength(2)
     })
 
-    it('should handle empty transaction list', () => {
-      const filteredTransactions = computed(() => [] as UITransaction[])
-      const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+    it('should handle empty ITransaction list', () => {
+      const filteredtransactions = computed(() => [] as UITransaction[])
+      const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
-      expect(Object.keys(groupedTransactions.value)).toHaveLength(0)
+      expect(Object.keys(groupedtransactions.value)).toHaveLength(0)
     })
   })
 })

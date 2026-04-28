@@ -1,14 +1,17 @@
 <!-- 
 Sync Impact Report:
-- Version change: 1.1.0 -> 1.2.0
+- Version change: 1.2.0 -> 1.3.0
 - Modified principles: 
-  - IX. No Dead Code (Added)
+  - VII. Naming Conventions (Swapped order with Architecture, expanded definition)
+  - VIII. Architecture (Swapped order with Naming Conventions, expanded definition)
+- Added sections:
+  - X. Centralized Message Catalog
 - Removed sections: 
   - None
 - Templates requiring updates (✅ updated / ⚠ pending):
-  - d:\software\divi\divi-app\.specify\templates\plan-template.md (✅ updated - no changes required as it references constitution generically)
-  - d:\software\divi\divi-app\.specify\templates\spec-template.md (✅ updated - no changes required for dead code rule)
-  - d:\software\divi\divi-app\.specify\templates\tasks-template.md (✅ updated - added dead code removal validation to Phase N: Polish)
+  - .specify/templates/plan-template.md (✅ updated - no changes required as it references constitution generically)
+  - .specify/templates/spec-template.md (✅ updated - no changes required for new rules)
+  - .specify/templates/tasks-template.md (✅ updated - added string catalog validation to Phase N: Polish)
 - Deferred items:
   - None
 -->
@@ -35,17 +38,27 @@ Every spec covers only what enables a user to complete the primary flow end-to-e
 ### VI. Interface-First Design
 All dependencies between components must be expressed through abstractions — interfaces, protocols, or contracts — never through concrete implementations. A module must never know the internal details of its collaborators; it must only know their contract. Concrete implementations are injected from outside (dependency injection), never instantiated internally. This applies at every layer: services, repositories, clients, and adapters. Any code that couples directly to a concrete class where an abstraction is viable will be rejected.
 
-### VII. Architecture
-Independent business modules internally structured as Hexagonal (Ports & Adapters): the **Core** holds pure business logic with no knowledge of infrastructure; **Ports** are interfaces owned by the core defining its contracts; **Adapters** are the concrete implementations injected at the boundary. Adapters know the core — the core never knows the adapters. Modules communicate only through their public interface; internal layers are never imported across module boundaries. Shared primitives live in `shared/` with no business logic. Exceptions require inline justification.
+### VII. Naming Conventions
+Abstractions and their implementations must be named so the distinction is immediately legible at the point of use, following the conventions of the project's language and ecosystem. In TypeScript, interfaces are prefixed with `I` (e.g. `IUserRepository`, `IEmailClient`) and their concrete implementations carry a descriptive suffix (e.g. `PostgresUserRepository`, `SendGridEmailClient`). This convention enforces the contract-first intent of principle VI at the naming level.
 
-### VIII. Naming Conventions
-Interfaces must be prefixed with `I` (e.g. `IUserRepository`, `IEmailClient`). This makes the abstraction/implementation distinction immediately visible at the call site and enforces the contract-first intent of principle VI.
+### VIII. Architecture
+Independent business modules internally structured as Hexagonal (Ports & Adapters): the **Core** holds pure business logic with no knowledge of infrastructure; **Ports** are interfaces owned by the core defining its contracts; **Adapters** are the concrete implementations injected at the boundary. Adapters know the core — the core never knows the adapters. Modules communicate only through their public interface; internal layers are never imported across module boundaries. Shared primitives live in `shared/` with no business logic. Exceptions require inline justification.
 
 ### IX. No Dead Code
 Every file, function, and variable must have an active reference in the codebase. Any refactoring, complexity reduction, or cleanup task must include deletion of unreferenced code, backup files, and orphaned modules as part of the same commit. Code is not archived — it is removed. Version control is the backup.
+
+### X. Centralized Message Catalog
+All user-facing strings — validation messages, error feedback, success confirmations, alerts, and notifications — live in a single central resource file. No user-facing string may be hardcoded inside business logic or any application entry point (route handlers, command handlers, event listeners, or UI components). Every message has a semantic code that encodes its category and sequence:
+
+- `MSG_E` — validation and domain errors
+- `MSG_S` — success confirmations
+- `MSG_A` — alerts and warnings
+- `MSG_I` — informational messages
+
+Parameterized messages use named placeholders following the convention of the project's i18n library (e.g. `{field}`, `{min}`, `{max}`) — never string concatenation. The code is the stable contract; the message text may be updated, translated, or adjusted without touching logic. Any string that a user can read must be traceable to this catalog.
 
 ## Governance
 
 Amendments require documentation, approval, and a migration plan. All PRs/reviews must verify compliance. Complexity must be justified.
 
-**Version**: 1.2.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-28
+**Version**: 1.3.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-28

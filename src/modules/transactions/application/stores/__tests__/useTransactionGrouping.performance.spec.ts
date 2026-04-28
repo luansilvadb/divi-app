@@ -1,33 +1,33 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { computed } from 'vue'
-import { useTransactionGrouping } from '../useTransactionGrouping'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import { useITransactionGrouping } from '../useITransactionGrouping'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 type UITransaction = any
 
 /**
- * Performance tests for useTransactionGrouping composable
+ * Performance tests for useITransactionGrouping composable
  * Validates O(n) grouping performance on large datasets
  */
-describe('useTransactionGrouping Performance', () => {
-  let mockTransactions: UITransaction[] = []
+describe('useITransactionGrouping Performance', () => {
+  let mocktransactions: UITransaction[] = []
 
   beforeEach(() => {
     // Generate large dataset for performance testing (5,000 transactions across 30 days)
     const baseDate = new Date(2024, 0, 1)
-    mockTransactions = Array.from({ length: 5000 }, (_, i) => {
+    mocktransactions = Array.from({ length: 5000 }, (_, i) => {
       const date = new Date(baseDate)
       date.setDate(date.getDate() + (i % 30)) // Spread across 30 days
       const dateKey = date.toISOString().split('T')[0]
 
       return {
         id: `tx-${i}`,
-        title: `Transaction ${i}`,
-        _titleLower: `transaction ${i}`,
+        title: `ITransaction ${i}`,
+        _titleLower: `ITransaction ${i}`,
         amount: BigInt(1000 * (i % 100)),
         type: i % 2 === 0 ? ('income' as const) : ('expense' as const),
         category_id: `cat-${i % 10}`,
-        wallet_id: `wallet-${i % 5}`,
+        wallet_id: `IWallet-${i % 5}`,
         date: dateKey,
         _timestamp: date.getTime(),
         _dateKey: dateKey,
@@ -42,12 +42,12 @@ describe('useTransactionGrouping Performance', () => {
   })
 
   it('should group 5,000 transactions in less than 30ms', () => {
-    const filteredTransactions = computed(() => mockTransactions)
-    const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+    const filteredtransactions = computed(() => mocktransactions)
+    const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
     // Measure initial grouping performance
     const start = performance.now()
-    const groups = groupedTransactions.value
+    const groups = groupedtransactions.value
     const end = performance.now()
 
     const duration = end - start
@@ -57,21 +57,21 @@ describe('useTransactionGrouping Performance', () => {
     expect(Object.keys(groups).length).toBe(30) // Should have 30 date groups
 
     // Verify totals are calculated correctly
-    let totalTransactions = 0
+    let totaltransactions = 0
     for (const group of Object.values(groups)) {
-      totalTransactions += group.items.length
+      totaltransactions += group.items.length
     }
-    expect(totalTransactions).toBe(5000)
+    expect(totaltransactions).toBe(5000)
 
     console.log(`[Performance] Group 5,000 transactions: ${duration.toFixed(2)}ms`)
   })
 
   it('should handle empty dataset efficiently', () => {
-    const filteredTransactions = computed(() => [])
-    const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+    const filteredtransactions = computed(() => [])
+    const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
     const start = performance.now()
-    const groups = groupedTransactions.value
+    const groups = groupedtransactions.value
     const end = performance.now()
 
     const duration = end - start
@@ -87,16 +87,16 @@ describe('useTransactionGrouping Performance', () => {
     const results: { size: number; duration: number }[] = []
 
     for (const size of sizes) {
-      const subset = mockTransactions.slice(0, size)
-      const filteredTransactions = computed(() => subset)
-      const { groupedTransactions } = useTransactionGrouping(filteredTransactions)
+      const subset = mocktransactions.slice(0, size)
+      const filteredtransactions = computed(() => subset)
+      const { groupedtransactions } = useITransactionGrouping(filteredtransactions)
 
       // Warm up
-      groupedTransactions.value
+      groupedtransactions.value
 
       // Measure
       const start = performance.now()
-      groupedTransactions.value
+      groupedtransactions.value
       const end = performance.now()
 
       results.push({ size, duration: end - start })

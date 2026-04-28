@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 
 // Import all domain entities to ensure 100% coverage
 import type { User } from '@/modules/auth/domain/entities/User'
-import type { Budget } from '@/shared/domain/entities/Budget'
-import type { Category } from '@/shared/domain/entities/Category'
-import type { Goal } from '@/shared/domain/entities/Goal'
-import type { Loan } from '@/shared/domain/entities/Loan'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
+import type { IGoal } from '@/modules/goals/core/entities/IGoal'
+import type { ILoan } from '@/modules/loans/core/entities/ILoan'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 describe('Domain Entities', () => {
   it('should have valid User interface', () => {
@@ -33,8 +33,8 @@ describe('Domain Entities', () => {
     expect(user.avatar_url).toBeUndefined()
   })
 
-  it('should have valid Budget interface', () => {
-    const budget: Budget = {
+  it('should have valid IBudget interface', () => {
+    const budget: IBudget = {
       id: 'b1',
       user_id: 'u1',
       category_id: 'c1',
@@ -50,8 +50,8 @@ describe('Domain Entities', () => {
     expect(budget.limit_value).toBe(10000n)
   })
 
-  it('should have valid Category interface', () => {
-    const category: Category = {
+  it('should have valid ICategory interface', () => {
+    const category: ICategory = {
       id: 'c1',
       user_id: 'u1',
       name: 'Food',
@@ -67,8 +67,8 @@ describe('Domain Entities', () => {
     expect(category.name).toBe('Food')
   })
 
-  it('should have valid Goal interface', () => {
-    const goal: Goal = {
+  it('should have valid IGoal interface', () => {
+    const goal: IGoal = {
       id: 'g1',
       user_id: 'u1',
       name: 'Emergency Fund',
@@ -87,11 +87,11 @@ describe('Domain Entities', () => {
     expect(goal.target_value).toBe(50000n)
   })
 
-  it('should have valid Loan interface', () => {
-    const loan: Loan = {
+  it('should have valid ILoan interface', () => {
+    const loan: ILoan = {
       id: 'l1',
       user_id: 'u1',
-      name: 'Car Loan',
+      name: 'Car ILoan',
       description: 'Auto financing',
       total_value: 5000000n,
       remaining_value: 3000000n,
@@ -108,8 +108,8 @@ describe('Domain Entities', () => {
     expect(loan.total_value).toBe(5000000n)
   })
 
-  it('should have valid Transaction interface', () => {
-    const transaction: Transaction = {
+  it('should have valid ITransaction interface', () => {
+    const ITransaction: ITransaction = {
       id: 't1',
       user_id: 'u1',
       title: 'Grocery shopping',
@@ -124,7 +124,7 @@ describe('Domain Entities', () => {
       version: 1,
       deleted: false,
     }
-    expect(transaction.id).toBe('t1')
-    expect(transaction.amount).toBe(15000n)
+    expect(ITransaction.id).toBe('t1')
+    expect(ITransaction.amount).toBe(15000n)
   })
 })

@@ -25,8 +25,8 @@ describe('Complete Coverage - Import all source files', () => {
     await import('@/infrastructure/storage/types/LocalLoan')
     await import('@/infrastructure/storage/types/LocalPayee')
     await import('@/infrastructure/storage/types/LocalSubscription')
-    await import('@/infrastructure/storage/types/LocalTransaction')
-    await import('@/infrastructure/storage/types/LocalWallet')
+    await import('@/infrastructure/storage/types/LocalITransaction')
+    await import('@/infrastructure/storage/types/LocalIWallet')
   })
 
   // Activity Log
@@ -38,7 +38,7 @@ describe('Complete Coverage - Import all source files', () => {
   // Auth domain
   it('should cover auth domain', async () => {
     await import('@/modules/auth/domain/contracts/Credentials')
-    await import('@/modules/auth/domain/contracts/IAuthService')
+    await import('@/modules/auth/core/ports/IAuthService')
     await import('@/modules/auth/domain/contracts/IVaultCryptoManager')
     await import('@/modules/auth/domain/entities/User')
   })
@@ -53,7 +53,7 @@ describe('Complete Coverage - Import all source files', () => {
     await import('@/modules/ledger/domain/contracts/ITransactionRepository')
   })
 
-  // Transactions domain
+  // transactions domain
   it('should cover transactions domain', async () => {
     await import('@/modules/transactions/domain/prediction')
   })
@@ -67,21 +67,21 @@ describe('Complete Coverage - Import all source files', () => {
     await import('@/shared/domain/contracts/ILoanRepository')
     await import('@/shared/domain/contracts/IPayeeRepository')
     await import('@/shared/domain/contracts/ISubscriptionRepository')
-    await import('@/shared/domain/contracts/ITransactionRepository')
-    await import('@/shared/domain/contracts/IWalletRepository')
+    await import('@/modules/transactions/core/ports/ITransactionRepository')
+    await import('@/modules/wallets/core/ports/IWalletRepository')
   })
 
   // Shared entities
   it('should cover all shared entities', async () => {
-    await import('@/shared/domain/entities/Budget')
-    await import('@/shared/domain/entities/Category')
-    await import('@/shared/domain/entities/Goal')
-    await import('@/shared/domain/entities/Loan')
-    await import('@/shared/domain/entities/Payee')
-    await import('@/shared/domain/entities/Subscription')
-    await import('@/shared/domain/entities/SyncMetadata')
-    await import('@/shared/domain/entities/Transaction')
-    await import('@/shared/domain/entities/Wallet')
+    await import('@/modules/budgets/core/entities/IBudget')
+    await import('@/modules/categories/core/entities/ICategory')
+    await import('@/modules/goals/core/entities/IGoal')
+    await import('@/modules/loans/core/entities/ILoan')
+    await import('@/modules/transactions/core/entities/IPayee')
+    await import('@/modules/subscriptions/core/entities/ISubscription')
+    await import('@/shared/domain/ISyncMetadata')
+    await import('@/modules/transactions/core/entities/ITransaction')
+    await import('@/modules/wallets/core/entities/IWallet')
   })
 
   // Shared types

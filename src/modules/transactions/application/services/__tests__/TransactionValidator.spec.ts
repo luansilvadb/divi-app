@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { TransactionValidator, transactionValidator, type ValidationRule } from '../TransactionValidator'
+import { ITransactionValidator, ITransactionValidator, type ValidationRule } from '../ITransactionValidator'
 import { ValidationError } from '@/core/errors'
 
-describe('TransactionValidator', () => {
-  let validator: TransactionValidator
+describe('ITransactionValidator', () => {
+  let validator: ITransactionValidator
 
   beforeEach(() => {
-    validator = new TransactionValidator()
+    validator = new ITransactionValidator()
   })
 
   describe('Default Rules', () => {
@@ -24,17 +24,17 @@ describe('TransactionValidator', () => {
       }).toThrow(ValidationError)
     })
 
-    it('should validate transaction types', () => {
+    it('should validate ITransaction types', () => {
       expect(() => {
-        validator.validate('transactionType', { field: 'type', value: 'income', params: {} })
+        validator.validate('ITransactionType', { field: 'type', value: 'income', params: {} })
       }).not.toThrow()
 
       expect(() => {
-        validator.validate('transactionType', { field: 'type', value: 'expense', params: {} })
+        validator.validate('ITransactionType', { field: 'type', value: 'expense', params: {} })
       }).not.toThrow()
 
       expect(() => {
-        validator.validate('transactionType', { field: 'type', value: 'invalid', params: {} })
+        validator.validate('ITransactionType', { field: 'type', value: 'invalid', params: {} })
       }).toThrow(ValidationError)
     })
 
@@ -79,7 +79,7 @@ describe('TransactionValidator', () => {
       const rules = validator.getRegisteredRules()
       
       expect(rules).toContain('required')
-      expect(rules).toContain('transactionType')
+      expect(rules).toContain('ITransactionType')
       expect(rules).toContain('positiveAmount')
     })
 
@@ -97,8 +97,8 @@ describe('TransactionValidator', () => {
 
   describe('Global Instance', () => {
     it('should provide a singleton instance', () => {
-      expect(transactionValidator).toBeInstanceOf(TransactionValidator)
-      expect(transactionValidator.getRegisteredRules().length).toBeGreaterThan(0)
+      expect(ITransactionValidator).toBeInstanceOf(ITransactionValidator)
+      expect(ITransactionValidator.getRegisteredRules().length).toBeGreaterThan(0)
     })
   })
 })

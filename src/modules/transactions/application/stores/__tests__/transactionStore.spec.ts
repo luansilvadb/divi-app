@@ -1,12 +1,12 @@
 import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { useTransactionStore } from '../transactionStore'
+import { usetransactionstore } from '../transactionstore'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 // Mocking dependencies
-const mockTransactionRepo = {
+const mockITransactionRepo = {
   create: vi.fn().mockImplementation((t) => Promise.resolve({ ...t, id: t.id || 'new-id' })),
   update: vi.fn().mockImplementation((id, t) => Promise.resolve({ ...t, id })),
   delete: vi.fn(),
@@ -14,7 +14,7 @@ const mockTransactionRepo = {
   getAll: vi.fn().mockResolvedValue([]),
 }
 
-const mockWalletRepo = {
+const mockIWalletRepo = {
   getAll: vi.fn().mockResolvedValue([]),
 }
 
@@ -41,8 +41,8 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }),
 }))
 
-describe('TransactionStore CRUD', () => {
-  const sampleTx: Transaction = {
+describe('transactionstore CRUD', () => {
+  const sampleTx: ITransaction = {
     id: 'tx-1',
     title: 'Sample',
     amount: 1000n,
@@ -63,110 +63,110 @@ describe('TransactionStore CRUD', () => {
     vi.resetAllMocks()
 
     // Devolvemos o comportamento default após o reset
-    mockTransactionRepo.getByMonth.mockResolvedValue([])
-    mockTransactionRepo.getAll.mockResolvedValue([])
+    mockITransactionRepo.getByMonth.mockResolvedValue([])
+    mockITransactionRepo.getAll.mockResolvedValue([])
     mockActivityLogService.getRecentActivities.mockResolvedValue([])
 
     // Register mocks in the container
-    container.register(DI_TOKENS.TransactionRepository, mockTransactionRepo)
-    container.register(DI_TOKENS.WalletRepository, mockWalletRepo)
-    container.register(DI_TOKENS.CategoryRepository, mockCategoryRepo)
-    container.register(DI_TOKENS.ActivityLogService, mockActivityLogService)
+    container.register(DI_TOKENS.ITransactionRepository, mockITransactionRepo)
+    container.register(DI_TOKENS.IWalletRepository, mockIWalletRepo)
+    container.register(DI_TOKENS.ICategoryRepository, mockCategoryRepo)
+    container.register(DI_TOKENS.IActivityLogService, mockActivityLogService)
   })
 
   describe('Read Operations', () => {
     it('should fetch transactions and update state', async () => {
       const mockTxs = [sampleTx]
-      mockTransactionRepo.getByMonth.mockResolvedValue(mockTxs)
+      mockITransactionRepo.getByMonth.mockResolvedValue(mockTxs)
 
-      const store = useTransactionStore()
-      await store.fetchTransactionsByMonth(2026, 4)
+      const store = usetransactionstore()
+      await store.fetchtransactionsByMonth(2026, 4)
 
-      expect(mockTransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
+      expect(mockITransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
       expect(store.transactions).toEqual(mockTxs)
     })
 
     it('should handle repository errors gracefully during fetch', async () => {
-      mockTransactionRepo.getByMonth.mockRejectedValue(new Error('DB Error'))
+      mockITransactionRepo.getByMonth.mockRejectedValue(new Error('DB Error'))
 
-      const store = useTransactionStore()
-      await expect(store.fetchTransactionsByMonth(2026, 4)).rejects.toThrow('DB Error')
+      const store = usetransactionstore()
+      await expect(store.fetchtransactionsByMonth(2026, 4)).rejects.toThrow('DB Error')
     })
   })
 
   describe('Create/Update Operations', () => {
     it('should call create/update on repository and refresh list', async () => {
-      const store = useTransactionStore()
-      mockTransactionRepo.getByMonth.mockResolvedValue([])
+      const store = usetransactionstore()
+      mockITransactionRepo.getByMonth.mockResolvedValue([])
 
-      await store.saveTransaction(sampleTx)
+      await store.saveITransaction(sampleTx)
 
       // It's an update because sampleTx has an ID and we setup initial state
       // Wait, in this test it checks 'isUpdate' based on if it's in the list.
       // But store.transactions is empty. So it calls create.
-      expect(mockTransactionRepo.create).toHaveBeenCalledWith(
+      expect(mockITransactionRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           id: sampleTx.id,
           title: sampleTx.title,
           sync_status: 'pending',
         }),
       )
-      expect(mockTransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
+      expect(mockITransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
   })
 
   describe('Delete Operations', () => {
     it('should perform optimistic delete and then persist', async () => {
-      const store = useTransactionStore()
+      const store = usetransactionstore()
       store.transactions = [sampleTx]
 
-      await store.deleteTransaction(sampleTx.id)
+      await store.deleteITransaction(sampleTx.id)
 
       expect(store.transactions[0]?.deleted).toBe(true)
-      expect(mockTransactionRepo.delete).toHaveBeenCalledWith(sampleTx.id)
+      expect(mockITransactionRepo.delete).toHaveBeenCalledWith(sampleTx.id)
     })
 
     it('should rollback optimistic delete on failure', async () => {
-      const store = useTransactionStore()
+      const store = usetransactionstore()
       store.transactions = [sampleTx]
 
-      mockTransactionRepo.delete.mockRejectedValue(new Error('Delete Failed'))
-      mockTransactionRepo.getByMonth.mockResolvedValue([sampleTx])
+      mockITransactionRepo.delete.mockRejectedValue(new Error('Delete Failed'))
+      mockITransactionRepo.getByMonth.mockResolvedValue([sampleTx])
 
-      await expect(store.deleteTransaction(sampleTx.id)).rejects.toThrow('Delete Failed')
+      await expect(store.deleteITransaction(sampleTx.id)).rejects.toThrow('Delete Failed')
 
-      expect(mockTransactionRepo.getByMonth).toHaveBeenCalled()
+      expect(mockITransactionRepo.getByMonth).toHaveBeenCalled()
     })
   })
 
   describe('Validation and Optimistic Updates', () => {
-    it('should validate transaction before saving', async () => {
+    it('should validate ITransaction before saving', async () => {
       const invalidTx = { ...sampleTx, amount: -1000n }
-      const store = useTransactionStore()
+      const store = usetransactionstore()
 
-      await expect(store.saveTransaction(invalidTx)).rejects.toThrow('Amount must be positive')
+      await expect(store.saveITransaction(invalidTx)).rejects.toThrow('Amount must be positive')
     })
 
-    it('should support updating an existing transaction in the list and handle refresh', async () => {
-      const store = useTransactionStore()
+    it('should support updating an existing ITransaction in the list and handle refresh', async () => {
+      const store = usetransactionstore()
       store.transactions = [{ ...sampleTx }]
 
       const updatedTx = { ...sampleTx, title: 'New Title' }
-      mockTransactionRepo.getByMonth.mockResolvedValue([updatedTx])
+      mockITransactionRepo.getByMonth.mockResolvedValue([updatedTx])
 
-      await store.saveTransaction(updatedTx)
+      await store.saveITransaction(updatedTx)
 
       const found = store.transactions.find((t) => t.id === sampleTx.id)
       expect(found?.title).toBe('New Title')
     })
 
-    it('should assign current user_id when saving a new transaction', async () => {
-      const store = useTransactionStore()
+    it('should assign current user_id when saving a new ITransaction', async () => {
+      const store = usetransactionstore()
       const txWithoutUser = { ...sampleTx, user_id: '' }
 
-      await store.saveTransaction(txWithoutUser)
+      await store.saveITransaction(txWithoutUser)
 
-      expect(mockTransactionRepo.create).toHaveBeenCalledWith(
+      expect(mockITransactionRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           user_id: 'test-user-id',
         }),
@@ -175,24 +175,24 @@ describe('TransactionStore CRUD', () => {
   })
 
   describe('Audit Logging', () => {
-    it('should create an audit log entry when saving a transaction', async () => {
-      const store = useTransactionStore()
-      await store.saveTransaction(sampleTx)
+    it('should create an audit log entry when saving a ITransaction', async () => {
+      const store = usetransactionstore()
+      await store.saveITransaction(sampleTx)
 
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(
         expect.objectContaining({
-          action: expect.stringMatching(/Transaction|Transação/i),
+          action: expect.stringMatching(/ITransaction|Transação/i),
           description: expect.stringMatching(/R\$ 10,00 : Sample/),
           user_id: 'test-user-id',
         }),
       )
     })
 
-    it('should create an audit log entry when deleting a transaction', async () => {
-      const store = useTransactionStore()
+    it('should create an audit log entry when deleting a ITransaction', async () => {
+      const store = usetransactionstore()
       store.transactions = [sampleTx]
 
-      await store.deleteTransaction(sampleTx.id)
+      await store.deleteITransaction(sampleTx.id)
 
       expect(mockActivityLogService.logActivity).toHaveBeenCalledWith(
         expect.objectContaining({

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { AutoCategorizationService } from '../AutoCategorizationService'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 describe('AutoCategorizationService', () => {
   const service = new AutoCategorizationService()
-  const categories: Category[] = [
+  const categories: ICategory[] = [
     {
       id: '1',
       name: 'Entertainment',
@@ -44,7 +44,7 @@ describe('AutoCategorizationService', () => {
   ]
 
   it('should suggest Entertainment for Netflix', () => {
-    const result = service.suggestCategory('Netflix Subscription', categories)
+    const result = service.suggestCategory('Netflix ISubscription', categories)
     expect(result?.name).toBe('Entertainment')
   })
 

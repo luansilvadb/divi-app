@@ -49,7 +49,7 @@
           </NFormItem>
         </NGi>
 
-        <!-- Category Selection -->
+        <!-- ICategory Selection -->
         <NGi>
           <NFormItem label="Categoria" path="category_id">
             <template #label>
@@ -106,18 +106,18 @@ import {
   type FormRules
 } from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
-import type { Budget } from '@/shared/domain/entities/Budget'
-import type { Category } from '@/shared/domain/entities/Category'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 
 const props = defineProps<{
-  initialData?: Budget | null
+  initialData?: IBudget | null
 }>()
 
 const emit = defineEmits(['close', 'saved'])
 const store = useBudgetStore()
-const transactionStore = useTransactionStore()
+const transactionstore = usetransactionstore()
 const message = useMessage()
 
 const formRef = ref<FormInst | null>(null)
@@ -136,7 +136,7 @@ const rules: FormRules = {
 }
 
 const categoryOptions = computed(() =>
-  transactionStore.categories.map(cat => ({ label: cat.name, value: cat.id }))
+  transactionstore.categories.map(cat => ({ label: cat.name, value: cat.id }))
 )
 
 // --- Live Masking Logic ---
@@ -207,8 +207,8 @@ const handleSubmit = async () => {
     try {
       let finalCategoryId = form.category_id
 
-      if (finalCategoryId && !transactionStore.categories.some(c => c.id === finalCategoryId)) {
-        const existingByName = transactionStore.categories.find(
+      if (finalCategoryId && !transactionstore.categories.some(c => c.id === finalCategoryId)) {
+        const existingByName = transactionstore.categories.find(
           (c) => c.name.toLowerCase() === finalCategoryId?.toLowerCase(),
         )
 
@@ -216,11 +216,11 @@ const handleSubmit = async () => {
           finalCategoryId = existingByName.id
         } else {
           const randomColor = colors[Math.floor(Math.random() * colors.length)]
-          await transactionStore.saveCategory({
+          await transactionstore.saveCategory({
             name: finalCategoryId,
             color: randomColor,
-          } as Category)
-          const newlyCreated = transactionStore.categories.find((c) => c.name === finalCategoryId)
+          } as ICategory)
+          const newlyCreated = transactionstore.categories.find((c) => c.name === finalCategoryId)
           if (newlyCreated) finalCategoryId = newlyCreated.id
         }
       }
@@ -231,7 +231,7 @@ const handleSubmit = async () => {
         limit_value: BigInt(Math.round((form.limit_value || 0) * 100)),
         category_id: finalCategoryId,
         period: 'monthly' as const,
-      } as Budget
+      } as IBudget
 
       await store.saveBudget(budgetData)
       message.success('Orçamento salvo com sucesso!')

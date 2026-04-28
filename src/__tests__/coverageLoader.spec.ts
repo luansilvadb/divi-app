@@ -44,15 +44,15 @@ describe('Coverage Loader - Import all uncovered files', () => {
   it('should load auth contracts', async () => {
     const credentials = await import('@/modules/auth/domain/contracts/Credentials')
     expect(credentials).toBeDefined()
-    const auth = await import('@/modules/auth/domain/contracts/IAuthService')
+    const auth = await import('@/modules/auth/core/ports/IAuthService')
     expect(auth).toBeDefined()
     const crypto = await import('@/modules/auth/domain/contracts/IVaultCryptoManager')
     expect(crypto).toBeDefined()
   })
 
   it('should load ledger services', async () => {
-    const walletService = await import('@/modules/ledger/application/services/WalletService')
-    expect(walletService).toBeDefined()
+    const walletservice = await import('@/modules/ledger/application/services/walletservice')
+    expect(walletservice).toBeDefined()
   })
 
   it('should load ledger contracts', async () => {
@@ -95,10 +95,10 @@ describe('Coverage Loader - Import all uncovered files', () => {
     expect(payeeRepo).toBeDefined()
     const subRepo = await import('@/shared/domain/contracts/ISubscriptionRepository')
     expect(subRepo).toBeDefined()
-    const txRepo = await import('@/shared/domain/contracts/ITransactionRepository')
+    const txRepo = await import('@/modules/transactions/core/ports/ITransactionRepository')
     expect(txRepo).toBeDefined()
-    const walletRepo = await import('@/shared/domain/contracts/IWalletRepository')
-    expect(walletRepo).toBeDefined()
+    const IWalletRepo = await import('@/modules/wallets/core/ports/IWalletRepository')
+    expect(IWalletRepo).toBeDefined()
   })
 
   it('should load router', async () => {

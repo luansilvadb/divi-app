@@ -13,7 +13,8 @@
     "src/**/__tests__/**",
     "src/**/*.spec.ts",
     "src/**/*.test.ts",
-    "src/core/migrations/**"
+    "src/core/migrations/**",
+    "**/*.d.ts"
   ],
   "ignoreDependencies": [
     "@types/node",
@@ -21,6 +22,14 @@
     "workbox-core",
     "workbox-precaching",
     "workbox-routing",
-    "workbox-window"
-  ]
+    "workbox-window",
+    "@tailwindcss/postcss",
+    "postcss",
+    "unocss"
+  ],
+  "ignoreBinaries": [],
+  "paths": {
+    "@/*": ["src/*"]
+  },
+  "ignoreExportsUsedInFile": true
 }

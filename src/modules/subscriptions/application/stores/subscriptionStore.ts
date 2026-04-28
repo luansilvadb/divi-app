@@ -2,15 +2,15 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { ISubscriptionRepository } from '@/shared/domain/contracts/ISubscriptionRepository'
-import type { Subscription } from '@/shared/domain/entities/Subscription'
+import type { ISubscriptionRepository } from '../../core/ports/ISubscriptionRepository'
+import type { ISubscription } from '@/modules/subscriptions/core/entities/ISubscription'
 
 export const useSubscriptionStore = defineStore('subscriptions', () => {
   const subscriptionRepo = container.resolve<ISubscriptionRepository>(
-    DI_TOKENS.SubscriptionRepository,
+    DI_TOKENS.ISubscriptionRepository,
   )
 
-  const subscriptions = ref<Subscription[]>([])
+  const subscriptions = ref<ISubscription[]>([])
   const isLoading = ref(false)
   const searchQuery = ref('')
 
@@ -23,7 +23,7 @@ export const useSubscriptionStore = defineStore('subscriptions', () => {
     }
   }
 
-  const saveSubscription = async (subscription: Subscription) => {
+  const saveSubscription = async (subscription: ISubscription) => {
     await subscriptionRepo.save(subscription)
     await fetchSubscriptions()
   }

@@ -83,12 +83,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NTag, NProgress } from 'naive-ui'
-import type { Goal } from '../../domain/entities/Goal'
+import type { IGoal } from '@/modules/goals/core/entities/IGoal'
 import DataCard from './DataCard.vue'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 const props = defineProps<{
-  goal: Goal
+  goal: IGoal
 }>()
 
 const percentage = computed(() => {

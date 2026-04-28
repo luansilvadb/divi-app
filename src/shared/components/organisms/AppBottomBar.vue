@@ -72,7 +72,7 @@ const emit = defineEmits<{
 const items = computed(() => [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', route: '/' },
   { label: 'Transações', icon: 'i-lucide-arrow-left-right', route: '/transactions' },
-  { label: 'Orçamentos', icon: 'i-lucide-wallet', route: '/budgets' },
+  { label: 'Orçamentos', icon: 'i-lucide-IWallet', route: '/budgets' },
   { label: 'Mais', icon: 'i-lucide-more-horizontal', action: () => emit('open-drawer') },
 ])
 </script>

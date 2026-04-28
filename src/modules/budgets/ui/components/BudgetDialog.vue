@@ -74,11 +74,11 @@
 import { NModal, NDrawer } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import BudgetFormContent from './BudgetFormContent.vue'
-import type { Budget } from '@/shared/domain/entities/Budget'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 defineProps<{
   show: boolean
-  budget?: Budget | null
+  budget?: IBudget | null
 }>()
 
 const emit = defineEmits(['close', 'saved'])

@@ -5,7 +5,7 @@
     subtitle="Gerencie as informações da sua conta."
   >
     <NGrid :cols="'1 768:3'" :x-gap="16" :y-gap="16" responsive="screen" item-responsive>
-      <!-- User Info Card -->
+      <!-- IUser Info Card -->
       <NGridItem>
         <NSpace vertical :size="16">
           <NCard>
@@ -175,14 +175,14 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 import { useTheme } from '@/core/theme'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const { isDark, toggle: toggleTheme } = useTheme()
-const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
-const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.VaultCryptoManager)
+const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
+const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
 const message = useMessage()
 
 const showPurgeModal = ref(false)
@@ -198,7 +198,7 @@ async function handlePurgeAccount() {
   showPurgeModal.value = false
 
   try {
-    await authStore.purgeAccount(authService, vaultCryptoManager)
+    await authStore.purgeAccount()
     message.success('Conta e dados excluídos com sucesso. Até mais.', { duration: 3000 })
     router.push({ name: 'login' })
   } catch (error: unknown) {

@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { CategoryService } from '../CategoryService'
 import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 // Mock de repositório
 class MockCategoryRepository implements ICategoryRepository {
-  public data: Category[] = []
+  public data: ICategory[] = []
 
-  async getAll(): Promise<Category[]> {
+  async getAll(): Promise<ICategory[]> {
     return this.data
   }
 
-  async create(c: any): Promise<Category> {
-    const newCat: Category = {
+  async create(c: any): Promise<ICategory> {
+    const newCat: ICategory = {
       ...c,
       id: crypto.randomUUID(),
       sync_status: 'pending',
@@ -25,7 +25,7 @@ class MockCategoryRepository implements ICategoryRepository {
     return newCat
   }
 
-  async update(id: string, c: any): Promise<Category> {
+  async update(id: string, c: any): Promise<ICategory> {
     const idx = this.data.findIndex((item) => item.id === id)
     if (idx >= 0) {
       this.data[idx] = { 
@@ -119,7 +119,7 @@ describe('CategoryService', () => {
 
     await service.loadCategories()
 
-    let emitted: Category[] = []
+    let emitted: ICategory[] = []
     const sub = service.categories$.subscribe((cats) => {
       emitted = cats
     })

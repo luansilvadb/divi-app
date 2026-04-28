@@ -1,9 +1,9 @@
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Budget } from '@/modules/budgets/domain/entities/Budget'
-import type { Wallet } from '@/modules/wallets/domain/entities/Wallet'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { IBudget } from '@/modules/budgets/domain/entities/IBudget'
+import type { IWallet } from '@/modules/wallets/domain/entities/IWallet'
 import { v4 as uuidv4 } from 'uuid'
 
-export const createTestTransaction = (overrides: Partial<Transaction> = {}): Transaction => ({
+export const createTestITransaction = (overrides: Partial<ITransaction> = {}): ITransaction => ({
   id: uuidv4(),
   user_id: 'test-user',
   sync_status: 'synced',
@@ -11,11 +11,11 @@ export const createTestTransaction = (overrides: Partial<Transaction> = {}): Tra
   created_at: new Date().toISOString(),
   version: 1,
   deleted: false,
-  title: 'Test Transaction',
+  title: 'Test ITransaction',
   amount: 1000n, // 10.00
   type: 'expense',
   category_id: 'cat-1',
-  wallet_id: 'wallet-1',
+  wallet_id: 'IWallet-1',
   date: new Date().toISOString(),
   ...overrides,
 })
@@ -34,7 +34,7 @@ export const createTestBudget = (overrides: Partial<any> = {}): any => ({
   ...overrides,
 })
 
-export const createTestWallet = (overrides: Partial<any> = {}): any => ({
+export const createTestIWallet = (overrides: Partial<any> = {}): any => ({
   id: uuidv4(),
   user_id: 'test-user',
   sync_status: 'synced',
@@ -42,7 +42,7 @@ export const createTestWallet = (overrides: Partial<any> = {}): any => ({
   created_at: new Date().toISOString(),
   version: 1,
   deleted: false,
-  name: 'Test Wallet',
+  name: 'Test IWallet',
   balance: 10000n,
   currency: 'BRL',
   type: 'cash',

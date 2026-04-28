@@ -1,13 +1,13 @@
 import Dexie, { type Table } from 'dexie'
-import type { SyncMetadata } from '@/shared/domain/entities/SyncMetadata'
+import type { ISyncMetadata } from '@/shared/domain/ISyncMetadata'
 import { MigrationRunner } from '@/core/migrations/MigrationRunner'
 // Side-effect import: registers all migrations in MigrationRegistry
 import '@/core/migrations/dexie'
 
 // Import local storage entity types
 import type {
-  LocalTransaction,
-  LocalWallet,
+  LocalITransaction,
+  LocalIWallet,
   LocalCategory,
   LocalPayee,
   LocalLoan,
@@ -19,8 +19,8 @@ import type {
 
 // Re-export all local storage types for backward compatibility
 export type {
-  LocalTransaction,
-  LocalWallet,
+  LocalITransaction,
+  LocalIWallet,
   LocalCategory,
   LocalPayee,
   LocalLoan,
@@ -30,15 +30,15 @@ export type {
   LocalGoal,
 } from './types'
 
-export type { SyncMetadata }
+export type { ISyncMetadata }
 
 /**
  * VaultDatabase (Porteiro da Soberania)
  * Baseado no Dexie.js para persistência atômica local.
  */
 export class VaultDatabase extends Dexie {
-  transactions!: Table<LocalTransaction>
-  wallets!: Table<LocalWallet>
+  transactions!: Table<LocalITransaction>
+  wallets!: Table<LocalIWallet>
   categories!: Table<LocalCategory>
   payees!: Table<LocalPayee>
   loans!: Table<LocalLoan>
@@ -70,7 +70,7 @@ export class VaultDatabase extends Dexie {
     ]
 
     syncableTables.forEach((table) => {
-      table.hook('creating', (_, obj: SyncMetadata) => {
+      table.hook('creating', (_, obj: ISyncMetadata) => {
         if (!obj.sync_status) {
           obj.sync_status = 'pending'
           obj.client_updated_at = new Date().toISOString()
@@ -83,7 +83,7 @@ export class VaultDatabase extends Dexie {
         }
       })
 
-      table.hook('updating', (mods: Partial<SyncMetadata>, _primKey, obj: SyncMetadata) => {
+      table.hook('updating', (mods: Partial<ISyncMetadata>, _primKey, obj: ISyncMetadata) => {
         // Se sync_status não for explicitamente alterado, incrementa a versão
         if (mods.sync_status === undefined) {
           return {

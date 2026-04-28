@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import CategoriesView from '../CategoriesView.vue'
 import { BehaviorSubject } from 'rxjs'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 // Mocks configuration
-const mockCategories = new BehaviorSubject<Category[]>([])
+const mockCategories = new BehaviorSubject<ICategory[]>([])
 
 const mockCategoryService = {
   categories$: mockCategories.asObservable(),
@@ -78,8 +78,8 @@ describe('CategoriesView', () => {
 
   it('lists existing categories', async () => {
     mockCategories.next([
-      { id: '1', name: 'Alimentação', color: '#111', icon: 'i-lucide-tag', parent_id: null } as Category,
-      { id: '2', name: 'Lazer', color: '#222', icon: 'i-lucide-ticket', parent_id: null } as Category,
+      { id: '1', name: 'Alimentação', color: '#111', icon: 'i-lucide-tag', parent_id: null } as ICategory,
+      { id: '2', name: 'Lazer', color: '#222', icon: 'i-lucide-ticket', parent_id: null } as ICategory,
     ])
 
     const wrapper = mount(CategoriesView, {

@@ -1,6 +1,6 @@
 import { MigrationRegistry } from '../MigrationRegistry'
 import { migration001InitialSchema } from './001_initial_schema'
-import { migration002AddTagsToTransactions } from './002_add_tags_to_transactions'
+import { migration002AddTagsTotransactions } from './002_add_tags_to_transactions'
 import { migration003ConvertToBigInt } from './003_convert_to_bigint'
 
 /**
@@ -15,7 +15,7 @@ import { migration003ConvertToBigInt } from './003_convert_to_bigint'
 
 const allMigrations = [
   migration001InitialSchema,
-  migration002AddTagsToTransactions,
+  migration002AddTagsTotransactions,
   migration003ConvertToBigInt,
 ]
 

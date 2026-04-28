@@ -11,7 +11,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
       <!-- MAIN COLUMN: Analytics Charts -->
       <NSpace vertical :size="16">
-        <!-- Distribution by Category -->
+        <!-- Distribution by ICategory -->
         <NCard>
           <template #header><NText strong>Distribuição por Categoria</NText></template>
           <NSpace vertical :size="20" class="pt-2">
@@ -81,7 +81,7 @@
         <NCard hoverable>
           <NSpace align="center" :size="12" class="mb-3">
             <div class="w-9 h-9 rounded-xl bg-[rgba(0,122,255,0.08)] flex items-center justify-center text-[#007AFF]">
-              <i class="i-lucide-wallet text-lg"></i>
+              <i class="i-lucide-IWallet text-lg"></i>
             </div>
             <NText depth="3" class="text-xs uppercase tracking-widest font-bold">Média Diária</NText>
           </NSpace>

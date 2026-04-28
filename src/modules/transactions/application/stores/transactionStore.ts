@@ -5,31 +5,31 @@ import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import { useSyncStore } from '@/core/sync/syncStore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
-import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
+import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
 import type { IActivityLogService } from '@/modules/activity-log/domain/contracts/IActivityLogService'
 
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
-import type { Wallet } from '@/shared/domain/entities/Wallet'
-import { useWalletStore } from './useWalletStore'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
+import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
+import { usewalletstore } from './usewalletstore'
 import { WalletService } from '@/modules/wallets/application/services/WalletService'
 import { useCategoryStore } from './useCategoryStore'
-import { useTransactionStats } from './useTransactionStats'
-import { useTransactionSearch } from './useTransactionSearch'
-import { useTransactionGrouping } from './useTransactionGrouping'
+import { usetransactionstats } from './usetransactionstats'
+import { usetransactionsearch } from './usetransactionsearch'
+import { useITransactionGrouping } from './useITransactionGrouping'
 
 type UITransaction = any
 
-export const useTransactionStore = defineStore('transactions', () => {
+export const usetransactionstore = defineStore('transactions', () => {
   // Services
-  const transactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.TransactionRepository)
-  const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.ActivityLogService)
+  const ITransactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.ITransactionRepository)
+  const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.IActivityLogService)
   const syncStore = useSyncStore()
   const authStore = useAuthStore()
 
   // Composed stores for backward compatibility
-  const walletStore = useWalletStore()
+  const walletstore = usewalletstore()
   const categoryStore = useCategoryStore()
 
   const transactions = shallowRef<any[]>([])
@@ -38,13 +38,13 @@ export const useTransactionStore = defineStore('transactions', () => {
   const currentYear = ref(new Date().getFullYear())
   const currentMonth = ref(new Date().getMonth() + 1)
 
-  async function fetchTransactionsByMonth(year: number, month: number) {
+  async function fetchtransactionsByMonth(year: number, month: number) {
     isLoading.value = true
     currentYear.value = year
     currentMonth.value = month
 
     try {
-      const raw = await transactionRepo.getByMonth(year, month)
+      const raw = await ITransactionRepo.getByMonth(year, month)
       raw.sort((a, b) => {
         const timeA = (a as UITransaction)._timestamp
         const timeB = (b as UITransaction)._timestamp
@@ -60,39 +60,39 @@ export const useTransactionStore = defineStore('transactions', () => {
   watch(
     () => syncStore.updateCounter,
     () => {
-      console.log('[TransactionStore] Re-buscando dados devido a mudança no Sync...')
-      fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+      console.log('[transactionstore] Re-buscando dados devido a mudança no Sync...')
+      fetchtransactionsByMonth(currentYear.value, currentMonth.value)
     },
   )
 
-  // Transaction filtering - delegated to composable for SRP
-  const activeTransactions = computed(() => {
-    return (transactions.value as UITransaction[]).filter((transaction) => !transaction.deleted)
+  // ITransaction filtering - delegated to composable for SRP
+  const activetransactions = computed(() => {
+    return (transactions.value as UITransaction[]).filter((ITransaction) => !ITransaction.deleted)
   })
 
-  // Search functionality - extracted to useTransactionSearch composable (SRP)
-  const { searchQuery, filteredTransactions: filteredTransactionsArray } = useTransactionSearch(
-    activeTransactions,
+  // Search functionality - extracted to usetransactionsearch composable (SRP)
+  const { searchQuery, filteredtransactions: filteredtransactionsArray } = usetransactionsearch(
+    activetransactions,
     computed(() => categoryStore.categoryMap),
   )
 
-  // Grouping functionality - extracted to useTransactionGrouping composable (SRP)
-  const { groupedTransactions } = useTransactionGrouping(filteredTransactionsArray)
+  // Grouping functionality - extracted to useITransactionGrouping composable (SRP)
+  const { groupedtransactions } = useITransactionGrouping(filteredtransactionsArray)
 
-  function enrichTransaction(transaction: Transaction, activeUserId: string): Transaction {
+  function enrichITransaction(ITransaction: ITransaction, activeUserId: string): ITransaction {
     return {
-      ...transaction,
-      id: transaction.id || uuidv7(),
-      user_id: transaction.user_id || activeUserId,
-      date: transaction.date || new Date().toISOString().slice(0, 10),
+      ...ITransaction,
+      id: ITransaction.id || uuidv7(),
+      user_id: ITransaction.user_id || activeUserId,
+      date: ITransaction.date || new Date().toISOString().slice(0, 10),
       sync_status: 'pending',
       deleted: false,
       client_updated_at: new Date().toISOString(),
-      version: transaction.version || 1,
+      version: ITransaction.version || 1,
     }
   }
 
-  async function updateLocalState(enriched: Transaction, isNew: boolean) {
+  async function updateLocalState(enriched: ITransaction, isNew: boolean) {
     const uiTx = {
       ...(enriched as any),
       _titleLower: (enriched.title || '').toLowerCase(),
@@ -110,7 +110,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     transactions.value = newArray as any
   }
 
-  async function logTransactionActivity(enriched: Transaction, activeUserId: string, isNew: boolean) {
+  async function logITransactionActivity(enriched: ITransaction, activeUserId: string, isNew: boolean) {
     const displayAmt = BigIntAdapter.fromMinorUnits(enriched.amount)
     await activityLogService.logActivity({
       action: isNew ? 'Nova Transação' : 'Transação Atualizada',
@@ -120,45 +120,45 @@ export const useTransactionStore = defineStore('transactions', () => {
     })
   }
 
-  async function saveTransaction(transaction: Transaction) {
-    if (transaction.amount < 0n) {
+  async function saveITransaction(ITransaction: ITransaction) {
+    if (ITransaction.amount < 0n) {
       throw new Error('Amount must be positive')
     }
 
     const activeUserId = authStore.user?.id
     if (!activeUserId) throw new Error('User not authenticated')
 
-    const enriched = enrichTransaction(transaction, activeUserId)
+    const enriched = enrichITransaction(ITransaction, activeUserId)
     const isUpdate = transactions.value.some((t) => t.id === enriched.id)
 
     try {
       if (isUpdate) {
-        await transactionRepo.update(enriched.id, enriched)
+        await ITransactionRepo.update(enriched.id, enriched)
       } else {
-        await transactionRepo.create(enriched)
+        await ITransactionRepo.create(enriched)
       }
       
       await updateLocalState(enriched, !isUpdate)
-      await logTransactionActivity(enriched, activeUserId, !isUpdate)
+      await logITransactionActivity(enriched, activeUserId, !isUpdate)
 
       const date = new Date(enriched.date)
-      await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
+      await fetchtransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
     } catch (err) {
       const errorContext = {
-        operation: 'saveTransaction',
-        transactionId: enriched.id,
-        transactionTitle: enriched.title,
+        operation: 'saveITransaction',
+        ITransactionId: enriched.id,
+        ITransactionTitle: enriched.title,
         userId: activeUserId,
         isNew: !isUpdate,
         error: err instanceof Error ? err.message : String(err),
       }
-      console.error('[TransactionStore] Failed to save transaction:', errorContext, err)
-      await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+      console.error('[transactionstore] Failed to save ITransaction:', errorContext, err)
+      await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
   }
 
-  async function deleteTransaction(id: string) {
+  async function deleteITransaction(id: string) {
     const index = transactions.value.findIndex((t) => t.id === id)
     let deletedTitle = 'Desconhecida'
     if (index !== -1) {
@@ -175,7 +175,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     }
 
     try {
-      await transactionRepo.delete(id)
+      await ITransactionRepo.delete(id)
 
       if (authStore.user?.id) {
         await activityLogService.logActivity({
@@ -187,72 +187,72 @@ export const useTransactionStore = defineStore('transactions', () => {
       }
     } catch (err) {
       const errorContext = {
-        operation: 'deleteTransaction',
-        transactionId: id,
-        transactionTitle: deletedTitle,
+        operation: 'deleteITransaction',
+        ITransactionId: id,
+        ITransactionTitle: deletedTitle,
         userId: authStore.user?.id,
         error: err instanceof Error ? err.message : String(err),
       }
-      console.error('[TransactionStore] Failed to delete transaction:', errorContext, err)
-      await fetchTransactionsByMonth(currentYear.value, currentMonth.value)
+      console.error('[transactionstore] Failed to delete ITransaction:', errorContext, err)
+      await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
   }
 
-  // Wallet operations - delegated to walletService for backward compatibility
-  async function saveWallet(walletData: Partial<Wallet> & { name: string; balanceNum?: number; currency?: string }) {
-    const walletService = container.resolve<WalletService>(DI_TOKENS.WalletService)
-    const isUpdate = !!walletData.id
+  // IWallet operations - delegated to walletservice for backward compatibility
+  async function saveIWallet(IWalletData: Partial<IWallet> & { name: string; balanceNum?: number; currency?: string }) {
+    const walletService = container.resolve<WalletService>(DI_TOKENS.IWalletService)
+    const isUpdate = !!IWalletData.id
 
-    if (isUpdate && walletData.id) {
-      // Update existing wallet
-      const existing = walletStore.walletMap[walletData.id]
-      if (!existing) throw new Error('Wallet not found')
+    if (isUpdate && IWalletData.id) {
+      // Update existing IWallet
+      const existing = walletstore.IWalletMap[IWalletData.id]
+      if (!existing) throw new Error('IWallet not found')
 
-      await walletService.updateWallet(walletData.id, {
-        ...walletData,
-        balance: walletData.balanceNum !== undefined
-          ? BigInt(Math.round(walletData.balanceNum * 100))
+      await walletService.updateIWallet(IWalletData.id, {
+        ...IWalletData,
+        balance: IWalletData.balanceNum !== undefined
+          ? BigInt(Math.round(IWalletData.balanceNum * 100))
           : existing.balance,
-        currency: walletData.currency || existing.currency,
+        currency: IWalletData.currency || existing.currency,
       })
-      await walletStore.fetchWallets()
+      await walletstore.fetchwallets()
     } else {
-      // Create new wallet
-      await walletService.createWallet({
-        name: walletData.name,
-        type: walletData.type || 'checking',
-        currency: walletData.currency || 'BRL',
-        icon: walletData.icon || 'wallet',
-        balance: walletData.balanceNum || 0,
+      // Create new IWallet
+      await walletService.createIWallet({
+        name: IWalletData.name,
+        type: IWalletData.type || 'checking',
+        currency: IWalletData.currency || 'BRL',
+        icon: IWalletData.icon || 'IWallet',
+        balance: IWalletData.balanceNum || 0,
       })
     }
   }
 
   // Stats via composition - pass the shallowRefs directly
   const categoryMapRef = computed(() => categoryStore.categoryMap)
-  const stats = useTransactionStats(transactions as unknown as Ref<Transaction[]>, () => categoryMapRef as unknown as Ref<Record<string, Category>>)
+  const stats = usetransactionstats(transactions as unknown as Ref<ITransaction[]>, () => categoryMapRef as unknown as Ref<Record<string, ICategory>>)
 
   return {
     transactions,
-    wallets: computed(() => walletStore.wallets),
+    wallets: computed(() => walletstore.wallets),
     categories: computed(() => categoryStore.categories),
     isLoading,
     searchQuery,
     categoryMap: computed(() => categoryStore.categoryMap),
-    walletMap: computed(() => walletStore.walletMap),
+    IWalletMap: computed(() => walletstore.IWalletMap),
     totalIncome: computed(() => stats.totalIncome.value),
     totalExpense: computed(() => stats.totalExpense.value),
     monthlyBalance: computed(() => stats.monthlyBalance.value),
-    activeTransactions: computed(() => stats.activeTransactions.value),
+    activetransactions: computed(() => stats.activetransactions.value),
     topCategories: computed(() => stats.topCategories.value),
-    groupedTransactions,
-    fetchWallets: () => walletStore.fetchWallets(),
+    groupedtransactions,
+    fetchwallets: () => walletstore.fetchwallets(),
     fetchCategories: () => categoryStore.fetchCategories(),
-    fetchTransactionsByMonth,
-    saveTransaction,
-    deleteTransaction,
-    saveWallet,
-    saveCategory: (categoryData: Category) => categoryStore.saveCategory(categoryData),
+    fetchtransactionsByMonth,
+    saveITransaction,
+    deleteITransaction,
+    saveIWallet,
+    saveCategory: (categoryData: ICategory) => categoryStore.saveCategory(categoryData),
   }
 })

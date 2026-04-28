@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type Dexie from 'dexie'
 import { MigrationRunner } from '../MigrationRunner'
 import { MigrationRegistry } from '../MigrationRegistry'
-import type { DexieMigration } from '../types'
+import type { IDexieMigration } from '../types'
 
 type UpgradeFn = (...args: unknown[]) => unknown
 
@@ -39,7 +39,7 @@ function createMockDexie() {
   return mockDexie
 }
 
-function createMigration(overrides: Partial<DexieMigration> = {}): DexieMigration {
+function createMigration(overrides: Partial<IDexieMigration> = {}): IDexieMigration {
   return {
     version: 1,
     name: 'test_migration',

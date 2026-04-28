@@ -27,7 +27,7 @@ describe('PredictionService', () => {
     const payeeId = 'payee-1'
     const catAlimentacao = 'cat-alimentacao'
     const catLazer = 'cat-lazer'
-    const walletMain = 'wallet-main'
+    const IWalletMain = 'IWallet-main'
 
     // 3 transações com Alimentação
     for (let i = 0; i < 3; i++) {
@@ -37,7 +37,7 @@ describe('PredictionService', () => {
         amount: 10n,
         type: 'expense',
         category_id: catAlimentacao,
-        wallet_id: walletMain,
+        wallet_id: IWalletMain,
         payee_id: payeeId,
         date: new Date().toISOString(),
         sync_status: 'synced',
@@ -56,7 +56,7 @@ describe('PredictionService', () => {
       amount: 15n,
       type: 'expense',
       category_id: catLazer,
-      wallet_id: walletMain,
+      wallet_id: IWalletMain,
       payee_id: payeeId,
       date: new Date().toISOString(),
       sync_status: 'synced',
@@ -72,7 +72,7 @@ describe('PredictionService', () => {
 
     // Then
     expect(result.categoryId).toBe(catAlimentacao)
-    expect(result.walletId).toBe(walletMain)
+    expect(result.IWalletId).toBe(IWalletMain)
     expect(result.confidence).toBeGreaterThan(0.5)
   })
 

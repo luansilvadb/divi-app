@@ -152,6 +152,7 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring (MUST remove dead code per Principle IX)
+- [ ] TXXX Extract any hardcoded user-facing strings to Centralized Message Catalog (per Principle X)
 - [ ] TXXX Performance optimization across all stories
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening

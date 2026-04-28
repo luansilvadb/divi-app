@@ -1,50 +1,44 @@
-import type { Transaction } from 'dexie'
+import type { Dexie } from 'dexie'
 
 /**
- * Defines the contract for a single Dexie schema migration.
- * Each migration is a self-contained, versioned unit of change.
+ * Interface for individual Dexie migrations.
+ * Complies with Principle VIII (Interface Naming).
  */
-export interface DexieMigration {
-  /** Sequential version number (1, 2, 3...). Must be unique and gap-free. */
+export interface IIDexieMigration {
   version: number
-  /** Short, descriptive name (e.g., 'initial_schema') */
   name: string
-  /** Human-readable description of what this migration does */
-  description: string
-  /** ISO 8601 timestamp of when this migration was authored */
-  createdAt: string
   /**
-   * Dexie store definitions.
-   * Keys are table names, values are comma-separated index strings.
-   * A `null` value drops the table.
+   * Tables that will be modified/created.
+   * Key: table name, Value: index string (dexie format).
    */
   stores: Record<string, string | null>
-  /** Optional data transformation applied when upgrading to this version */
-  upgrade?: (tx: Transaction) => Promise<void>
-  /** Optional data transformation applied when rolling back from this version */
-  downgrade?: (tx: Transaction) => Promise<void>
+  /**
+   * Optional data migration logic.
+   */
+  upgrade?: (tx: any) => Promise<void> | void
+  /**
+   * Human readable description of the changes.
+   */
+  description?: string
 }
 
 /**
- * Result of applying a single migration.
+ * Result of a migration operation.
  */
-export interface MigrationResult {
+export interface IMigrationResult {
   version: number
   name: string
-  status: 'applied' | 'skipped' | 'failed'
-  error?: string
-  /** Duration in milliseconds */
+  success: boolean
+  status: 'applied' | 'failed'
   duration: number
+  error?: string
 }
 
 /**
- * Contextual information passed during migration execution.
+ * Context for migration execution.
  */
-export interface MigrationContext {
-  /** Reference to the Dexie database instance */
-  db: unknown
-  /** The version the database was at before this migration */
-  previousVersion: number
-  /** The version this migration targets */
+export interface IMigrationContext {
+  db: Dexie
+  currentVersion: number
   targetVersion: number
 }

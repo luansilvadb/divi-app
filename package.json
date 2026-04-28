@@ -13,6 +13,8 @@
     "lint": "run-s lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
+    "lint:knip": "knip",
+    "lint:all": "run-s lint:oxlint lint:eslint lint:knip",
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {

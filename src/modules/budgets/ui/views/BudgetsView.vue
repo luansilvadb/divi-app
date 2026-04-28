@@ -26,7 +26,7 @@
             style="padding-top: var(--space-12); padding-bottom: var(--space-12);"
           >
             <template #icon>
-              <i class="i-lucide-wallet text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
+              <i class="i-lucide-IWallet text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
             </template>
           </NEmpty>
 
@@ -52,7 +52,7 @@
             <NSpin size="large" />
           </div>
 
-          <!-- Budget List Grid (Max 2 Columns) -->
+          <!-- IBudget List Grid (Max 2 Columns) -->
           <NGrid
             v-else-if="filteredBudgets.length > 0"
             :cols="isMobile ? 1 : 2"
@@ -162,7 +162,7 @@ import {
   NGridItem,
 } from 'naive-ui'
 import { useBudgetStore } from '../../application/stores/budgetStore'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
@@ -170,15 +170,15 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import BudgetCard from '@/shared/components/molecules/BudgetCard.vue'
 import BudgetDialog from '../components/BudgetDialog.vue'
-import type { Budget } from '@/shared/domain/entities/Budget'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 const store = useBudgetStore()
-const transactionStore = useTransactionStore()
+const transactionstore = usetransactionstore()
 const isMobile = useIsMobile()
 const showAddBudgetModal = ref(false)
-const selectedBudget = ref<Budget | null>(null)
+const selectedBudget = ref<IBudget | null>(null)
 
-const handleEditBudget = (budget: Budget) => {
+const handleEditBudget = (budget: IBudget) => {
   selectedBudget.value = budget
   showAddBudgetModal.value = true
 }
@@ -195,7 +195,7 @@ const filteredBudgets = computed(() => {
   if (!store.searchQuery) return store.budgets
   const query = store.searchQuery.toLowerCase()
   return store.budgets.filter((b) => {
-    const name = b.name || transactionStore.categoryMap[b.category_id]?.name || ''
+    const name = b.name || transactionstore.categoryMap[b.category_id]?.name || ''
     return name.toLowerCase().includes(query)
   })
 })
@@ -205,12 +205,12 @@ const searchEmptySubtitle = computed(() => {
 })
 
 onMounted(async () => {
-  if (transactionStore.transactions.length === 0) {
+  if (transactionstore.transactions.length === 0) {
     const now = new Date()
-    await transactionStore.fetchTransactionsByMonth(now.getFullYear(), now.getMonth() + 1)
+    await transactionstore.fetchtransactionsByMonth(now.getFullYear(), now.getMonth() + 1)
   }
-  if (Object.keys(transactionStore.categoryMap).length === 0) {
-    await transactionStore.fetchCategories()
+  if (Object.keys(transactionstore.categoryMap).length === 0) {
+    await transactionstore.fetchCategories()
   }
   store.initialize()
 })

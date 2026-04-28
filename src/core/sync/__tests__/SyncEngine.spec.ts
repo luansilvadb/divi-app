@@ -90,7 +90,7 @@ describe('SyncEngine (Local-First Engine Foundation)', () => {
       await db.transactions.add({
         id: 'tx-1',
         user_id: 'test-user-id',
-        title: 'New Transaction',
+        title: 'New ITransaction',
         amount: 100n,
         type: 'expense',
         category_id: 'cat-1',

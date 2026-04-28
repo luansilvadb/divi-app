@@ -1,7 +1,7 @@
-import type { DexieMigration } from '../types'
+import type { IDexieMigration } from '../types'
 
 /**
- * Migration 002 - Add Tags to Transactions
+ * Migration 002 - Add Tags to transactions
  *
  * EXAMPLE MIGRATION: Demonstrates how to add a new indexed field
  * and transform existing data during the upgrade.
@@ -11,7 +11,7 @@ import type { DexieMigration } from '../types'
  * - Upgrade: initializes `tags: []` on all existing transactions
  * - Downgrade: removes the `tags` field from all records
  */
-export const migration002AddTagsToTransactions: DexieMigration = {
+export const migration002AddTagsTotransactions: IDexieMigration = {
   version: 2,
   name: 'add_tags_to_transactions',
   description: 'Adds a tags multi-entry index to transactions for categorization.',

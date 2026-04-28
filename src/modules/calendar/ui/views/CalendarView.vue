@@ -54,17 +54,17 @@
               <!-- Event Dots -->
               <div class="mt-auto flex gap-0.5 flex-wrap justify-center max-w-full overflow-hidden pb-0.5">
                 <div
-                  v-for="(t, i) in getTransactionsForDate(day.date).slice(0, 3)"
+                  v-for="(t, i) in gettransactionsForDate(day.date).slice(0, 3)"
                   :key="t.id || i"
                   class="w-1.5 h-1.5 rounded-full"
                   :class="t.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'"
                 ></div>
                 <NText
-                  v-if="getTransactionsForDate(day.date).length > 3"
+                  v-if="gettransactionsForDate(day.date).length > 3"
                   depth="3"
                   class="text-[7px]"
                 >
-                  +{{ getTransactionsForDate(day.date).length - 3 }}
+                  +{{ gettransactionsForDate(day.date).length - 3 }}
                 </NText>
               </div>
             </div>
@@ -84,7 +84,7 @@
             </template>
 
             <NEmpty
-              v-if="selectedDateTransactions.length === 0"
+              v-if="selectedDatetransactions.length === 0"
               description="Nenhuma transação"
               class="py-12"
             >
@@ -94,7 +94,7 @@
             </NEmpty>
 
             <NList v-else hoverable :show-divider="false">
-              <NListItem v-for="t in selectedDateTransactions" :key="t.id || t.localId">
+              <NListItem v-for="t in selectedDatetransactions" :key="t.id || t.localId">
                 <template #prefix>
                   <div
                     class="w-8 h-8 rounded-lg flex items-center justify-center"
@@ -123,7 +123,7 @@
           </NCard>
 
           <!-- Day Summary -->
-          <NCard v-if="selectedDateTransactions.length > 0">
+          <NCard v-if="selectedDatetransactions.length > 0">
             <template #header><NText strong>Resumo do Dia</NText></template>
             <NSpace vertical :size="16">
               <NStatistic label="Entradas">
@@ -167,12 +167,12 @@ import {
   NStatistic,
   NDivider,
 } from 'naive-ui'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
-const store = useTransactionStore()
+const store = usetransactionstore()
 
 const currentDate = ref(new Date())
 const selectedDate = ref(new Date())
@@ -190,7 +190,7 @@ onMounted(async () => {
 })
 
 const fetchMonthData = async () => {
-  await store.fetchTransactionsByMonth(currentYear.value, currentMonth.value + 1)
+  await store.fetchtransactionsByMonth(currentYear.value, currentMonth.value + 1)
 }
 
 const prevMonth = async () => {
@@ -232,7 +232,7 @@ const calendarDays = computed(() => {
   return days
 })
 
-const getTransactionsForDate = (date: Date) => {
+const gettransactionsForDate = (date: Date) => {
   return store.transactions.filter((t) => {
     const tDate = new Date(t.date)
     return (
@@ -243,14 +243,14 @@ const getTransactionsForDate = (date: Date) => {
   })
 }
 
-const selectedDateTransactions = computed(() => getTransactionsForDate(selectedDate.value))
+const selectedDatetransactions = computed(() => gettransactionsForDate(selectedDate.value))
 const selectedDateIncome = computed(() =>
-  selectedDateTransactions.value
+  selectedDatetransactions.value
     .filter((t) => t.type === 'income')
     .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )
 const selectedDateExpense = computed(() =>
-  selectedDateTransactions.value
+  selectedDatetransactions.value
     .filter((t) => t.type === 'expense')
     .reduce((sum, t) => sum + BigInt(t.amount), 0n),
 )

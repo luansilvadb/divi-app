@@ -43,7 +43,7 @@ describe('AssetLoader', () => {
 
     it('should return local path for valid root-relative URL', () => {
       const loader = new AssetLoader()
-      expect(loader.sanitize('/assets/images/wallet-icon.svg')).toBe('/assets/images/wallet-icon.svg')
+      expect(loader.sanitize('/assets/images/IWallet-icon.svg')).toBe('/assets/images/IWallet-icon.svg')
     })
 
     it('should trim whitespace from URL', () => {

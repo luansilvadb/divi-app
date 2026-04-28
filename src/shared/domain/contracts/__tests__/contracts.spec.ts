@@ -8,10 +8,10 @@ import '@/shared/domain/contracts/IGoalRepository'
 import '@/shared/domain/contracts/ILoanRepository'
 import '@/shared/domain/contracts/IPayeeRepository'
 import '@/shared/domain/contracts/ISubscriptionRepository'
-import '@/shared/domain/contracts/ITransactionRepository'
-import '@/shared/domain/contracts/IWalletRepository'
+import '@/modules/transactions/core/ports/ITransactionRepository'
+import '@/modules/wallets/core/ports/IWalletRepository'
 import '@/modules/auth/domain/contracts/Credentials'
-import '@/modules/auth/domain/contracts/IAuthService'
+import '@/modules/auth/core/ports/IAuthService'
 import '@/modules/auth/domain/contracts/IVaultCryptoManager'
 
 describe('Domain Contracts Coverage', () => {

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import BudgetCard from '../BudgetCard.vue'
-import type { Budget } from '@/shared/domain/entities/Budget'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 // Mock components
 vi.mock('@/shared/components/atoms/ItemSyncIndicator.vue', () => ({
@@ -15,9 +15,9 @@ describe('BudgetCard.vue', () => {
     category_id: 'c1',
     limit_value: 1000,
     period: 'monthly',
-    name: 'Test Budget',
+    name: 'Test IBudget',
     sync_status: 'synced',
-  } as unknown as Budget
+  } as unknown as IBudget
 
   beforeEach(() => {
     setActivePinia(createPinia())
@@ -39,7 +39,7 @@ describe('BudgetCard.vue', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('Test Budget')
+    expect(wrapper.text()).toContain('Test IBudget')
     // Intl.NumberFormat uses non-breaking space (U+00A0) in pt-BR locale
     expect(wrapper.text()).toContain('R$\xa04,00')
     expect(wrapper.text()).toContain('R$\xa010,00')

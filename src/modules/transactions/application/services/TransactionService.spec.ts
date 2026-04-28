@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { TransactionService } from './TransactionService'
+import { transactionservice } from './transactionservice'
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
-import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 
 // Mock do auth store
@@ -12,22 +12,22 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }))
 }))
 
-describe('TransactionService', () => {
-  let transactionService: TransactionService
-  let mockTransactionRepo: ITransactionRepository
+describe('transactionservice', () => {
+  let transactionservice: transactionservice
+  let mockITransactionRepo: ITransactionRepository
 
   beforeEach(() => {
-    mockTransactionRepo = {
+    mockITransactionRepo = {
       getAll: vi.fn(),
       getByMonth: vi.fn(),
       create: vi.fn().mockResolvedValue(undefined),
       update: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn(),
       watchAll: vi.fn(),
-      transferBetweenWallets: vi.fn().mockResolvedValue(undefined),
+      transferBetweenwallets: vi.fn().mockResolvedValue(undefined),
     }
 
-    transactionService = new TransactionService(mockTransactionRepo)
+    transactionservice = new transactionservice(mockITransactionRepo)
   })
 
   describe('BigInt conversion methods (via BigIntAdapter)', () => {
@@ -67,28 +67,28 @@ describe('TransactionService', () => {
     })
   })
 
-  describe('saveTransaction', () => {
-    it('should save transaction with proper BigInt conversion', async () => {
+  describe('saveITransaction', () => {
+    it('should save ITransaction with proper BigInt conversion', async () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      const createSpy = vi.spyOn(mockTransactionRepo, 'create')
+      const createSpy = vi.spyOn(mockITransactionRepo, 'create')
 
-      await transactionService.saveTransaction({
-        title: 'Test Transaction',
+      await transactionservice.saveITransaction({
+        title: 'Test ITransaction',
         amount: '15.50', // String input
         type: 'income',
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-13',
         notes: 'Test notes'
       })
 
       expect(createSpy).toHaveBeenCalledWith(expect.objectContaining({
         amount: 1550n, // Should be converted to BigInt (1550 cents)
-        title: 'Test Transaction',
+        title: 'Test ITransaction',
         type: 'income',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         user_id: 'user-1'
       }))
     })
@@ -97,14 +97,14 @@ describe('TransactionService', () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      const createSpy = vi.spyOn(mockTransactionRepo, 'create')
+      const createSpy = vi.spyOn(mockITransactionRepo, 'create')
 
-      await transactionService.saveTransaction({
-        title: 'Test Transaction',
+      await transactionservice.saveITransaction({
+        title: 'Test ITransaction',
         amount: 25.75, // Numeric input
         type: 'expense',
         category_id: 'cat-2',
-        wallet_id: 'wallet-2',
+        wallet_id: 'IWallet-2',
         date: '2026-04-13'
       })
 
@@ -120,37 +120,37 @@ describe('TransactionService', () => {
         isAuthenticated: false,
       } as any)
 
-      await expect(transactionService.saveTransaction({
-        title: 'Test Transaction',
+      await expect(transactionservice.saveITransaction({
+        title: 'Test ITransaction',
         amount: '15.50',
         type: 'income',
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-13'
       })).rejects.toThrow('User not authenticated')
     })
 
-    it('should handle transaction with all properties', async () => {
+    it('should handle ITransaction with all properties', async () => {
       const mockAuthStore = useAuthStore() as any
       mockAuthStore.user = { id: 'user-1' }
 
-      // When an id is provided, saveTransaction calls update(), not create()
-      const updateSpy = vi.spyOn(mockTransactionRepo, 'update')
+      // When an id is provided, saveITransaction calls update(), not create()
+      const updateSpy = vi.spyOn(mockITransactionRepo, 'update')
 
-      const transactionData = {
+      const ITransactionData = {
         id: 'tx-123',
         title: 'Salary Deposit',
         amount: '3000.00',
         type: 'income' as const,
         category_id: 'cat-salary',
-        wallet_id: 'wallet-main',
+        wallet_id: 'IWallet-main',
         date: '2026-04-13T10:00:00Z',
         notes: 'Monthly salary',
         tags: ['salary', 'monthly'],
         payee_id: 'payee-1'
       }
 
-      await transactionService.saveTransaction(transactionData)
+      await transactionservice.saveITransaction(ITransactionData)
 
       expect(updateSpy).toHaveBeenCalledWith(
         'tx-123',
@@ -159,7 +159,7 @@ describe('TransactionService', () => {
           amount: 300000n, // 3000.00 converted to cents
           type: 'income',
           category_id: 'cat-salary',
-          wallet_id: 'wallet-main',
+          wallet_id: 'IWallet-main',
           notes: 'Monthly salary',
           tags: ['salary', 'monthly'],
           payee_id: 'payee-1',
@@ -177,9 +177,9 @@ describe('TransactionService', () => {
     })
   })
 
-  describe('loadMonthlyTransactions', () => {
+  describe('loadMonthlytransactions', () => {
     it('should load transactions for specific month and year', async () => {
-      const mockTransactions: Transaction[] = [
+      const mocktransactions: ITransaction[] = [
         {
           id: 'tx-1',
           user_id: 'user-1',
@@ -187,7 +187,7 @@ describe('TransactionService', () => {
           amount: 1000n,
           type: 'income',
           category_id: 'cat-1',
-          wallet_id: 'wallet-1',
+          wallet_id: 'IWallet-1',
           date: '2026-04-01T00:00:00Z',
           sync_status: 'pending',
           created_at: '2026-04-01T00:00:00Z',
@@ -197,11 +197,11 @@ describe('TransactionService', () => {
         }
       ]
 
-      vi.mocked(mockTransactionRepo.getByMonth).mockResolvedValue(mockTransactions)
+      vi.mocked(mockITransactionRepo.getByMonth).mockResolvedValue(mocktransactions)
 
-      await transactionService.loadMonthlyTransactions(2026, 4)
+      await transactionservice.loadMonthlytransactions(2026, 4)
 
-      expect(mockTransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
+      expect(mockITransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
   })
 })

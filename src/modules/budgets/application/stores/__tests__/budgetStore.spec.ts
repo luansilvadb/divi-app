@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../budgetStore'
 import { db } from '@/infrastructure/storage/VaultDatabase'
-import type { Budget } from '@/shared/domain/entities/Budget'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
 
 // Mock SyncEngine - must be before other imports that use it
 vi.mock('@/core/sync/SyncEngine', () => {
@@ -18,9 +18,9 @@ vi.mock('@/core/sync/SyncEngine', () => {
   }
 })
 
-// Mock TransactionStore
-vi.mock('@/modules/transactions/application/stores/transactionStore', () => ({
-  useTransactionStore: vi.fn(() => ({
+// Mock transactionstore
+vi.mock('@/modules/transactions/application/stores/transactionstore', () => ({
+  usetransactionstore: vi.fn(() => ({
     transactions: [
       { id: 't1', category_id: 'c1', amount: 100n, deleted: false, type: 'expense' },
       { id: 't2', category_id: 'c1', amount: 200n, deleted: false, type: 'expense' },
@@ -123,7 +123,7 @@ describe('BudgetStore', () => {
       deleted: false,
     })
 
-    const frozenBudget: Budget = Object.freeze({
+    const frozenBudget: IBudget = Object.freeze({
       id: 'b-immutable',
       user_id: 'u1',
       category_id: 'c1',

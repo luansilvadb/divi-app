@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { User } from '../../domain/entities/User'
+import type { IUser } from '../../domain/entities/IUser'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 // Helper function to simulate the auth guard logic
@@ -42,10 +42,10 @@ describe('Auth Guards', () => {
 
   describe('requiresAuth routes', () => {
     it('should allow access to protected route when user is authenticated', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
-        name: 'Test User',
+        name: 'Test IUser',
       }
       mockAuthService.getCurrentUser = vi.fn().mockResolvedValue(mockUser)
 
@@ -149,7 +149,7 @@ describe('Auth Guards', () => {
     })
 
     it('should redirect to dashboard when authenticated user accesses login page', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
       }
@@ -169,7 +169,7 @@ describe('Auth Guards', () => {
     })
 
     it('should redirect authenticated users away from register page', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
       }
@@ -207,7 +207,7 @@ describe('Auth Guards', () => {
     })
 
     it('should allow access to public routes for both authenticated and unauthenticated users', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
       }
@@ -298,7 +298,7 @@ describe('Auth Guards', () => {
 
   describe('concurrent navigation', () => {
     it('should handle multiple rapid navigation attempts', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: 'user-123',
         email: 'test@example.com',
       }

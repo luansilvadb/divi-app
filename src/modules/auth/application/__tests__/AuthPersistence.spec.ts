@@ -2,7 +2,7 @@ import { setActivePinia, createPinia } from 'pinia'
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest'
 import { useAuthStore } from '../authStore'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { User } from '../../domain/entities/User'
+import type { IUser } from '../../domain/entities/IUser'
 
 describe('Auth Persistence Integration', () => {
   let authService: {
@@ -41,7 +41,7 @@ describe('Auth Persistence Integration', () => {
   })
 
   it('should recover user session from service on initialization', async () => {
-    const mockUser: User = { id: '123', email: 'persisted@test.com' }
+    const mockUser: IUser = { id: '123', email: 'persisted@test.com' }
     authService.getCurrentUser.mockResolvedValueOnce(mockUser)
 
     const store = useAuthStore()
@@ -54,15 +54,15 @@ describe('Auth Persistence Integration', () => {
 
   it('should update store when auth state changes in the service', async () => {
     const store = useAuthStore()
-    let authCallback: (user: User | null) => void = () => {}
+    let authCallback: (user: IUser | null) => void = () => {}
 
-    authService.onAuthStateChange.mockImplementation((cb: (user: User | null) => void) => {
+    authService.onAuthStateChange.mockImplementation((cb: (user: IUser | null) => void) => {
       authCallback = cb
     })
 
     await store.initialize(authService as IAuthService, vaultCryptoManager as any, syncEngine as any)
 
-    const newUser: User = { id: '456', email: 'new@test.com' }
+    const newUser: IUser = { id: '456', email: 'new@test.com' }
     authCallback(newUser)
 
     expect(store.user).toEqual(newUser)

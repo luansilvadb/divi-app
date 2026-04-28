@@ -17,7 +17,7 @@
 
           <!-- Empty State (Cleaned) -->
           <NEmpty
-            v-if="Object.keys(groupedTransactions).length === 0"
+            v-if="Object.keys(groupedtransactions).length === 0"
             description="Nenhuma movimentação encontrada para este período ou pesquisa."
             class="py-20"
           >
@@ -26,9 +26,9 @@
             </template>
           </NEmpty>
 
-          <!-- Transactions List -->
+          <!-- transactions List -->
           <NSpace v-else vertical :size="32">
-            <div v-for="(group, day) in groupedTransactions as any" :key="day">
+            <div v-for="(group, day) in groupedtransactions as any" :key="day">
               <NSpace align="center" :size="12" class="mb-4 px-1">
                 <NText strong class="text-2xl tabular-nums">
                   {{ String(day).split('-')[2] }}
@@ -44,10 +44,10 @@
               </NSpace>
 
               <NSpace vertical :size="8">
-                <TransactionItem
+                <ITransactionItem
                   v-for="t in group.items"
                   :key="t.id"
-                  :transaction="t"
+                  :ITransaction="t"
                   :categoryName="store.categoryMap[t.category_id]?.name || 'Outros'"
                   :categoryColor="
                     t.type === 'expense'
@@ -55,7 +55,7 @@
                       : '#10b981'
                   "
                   :categoryIcon="store.categoryMap[t.category_id]?.icon"
-                  :walletName="store.walletMap[t.wallet_id]?.name || 'Carteira'"
+                  :IWalletName="store.IWalletMap[t.wallet_id]?.name || 'Carteira'"
                   showTime
                   @delete="handleDelete"
                   @click="handleEdit(t)"
@@ -169,11 +169,11 @@
       </aside>
     </div>
 
-    <TransactionDialog
-      :transaction="editingTransaction"
+    <ITransactionDialog
+      :ITransaction="editingITransaction"
       :show="showForm"
       @close="handleCloseForm"
-      @saved="refreshTransactions"
+      @saved="refreshtransactions"
     />
 
     <BaseConfirmDialog
@@ -210,29 +210,29 @@ import {
   NText,
   NEmpty,
 } from 'naive-ui'
-import { useTransactionStore } from '../../application/stores/transactionStore'
+import { usetransactionstore } from '../../application/stores/transactionstore'
 import { formatCurrency, getRelativeDayLabel } from '@/shared/utils/formatters'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
-import TransactionDialog from '@/shared/components/organisms/TransactionDialog.vue'
+import ITransactionDialog from '@/shared/components/organisms/ITransactionDialog.vue'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
-import TransactionItem from '../components/TransactionItem.vue'
+import ITransactionItem from '../components/ITransactionItem.vue'
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
-const store = useTransactionStore()
+const store = usetransactionstore()
 const isMobile = useIsMobile()
 const showForm = ref(false)
-const editingTransaction = ref<Transaction | null>(null)
+const editingITransaction = ref<ITransaction | null>(null)
 const openNewForm = () => {
-  editingTransaction.value = null
+  editingITransaction.value = null
   showForm.value = true
 }
 
 const showConfirmDelete = ref(false)
-const transactionToDelete = ref<string | null>(null)
+const ITransactionToDelete = ref<string | null>(null)
 const currentDate = ref(new Date())
 const searchQuery = computed({
   get: () => store.searchQuery,
@@ -247,16 +247,16 @@ const monthLabelOnly = computed(() => {
     .replace(/^\w/, (c) => c.toUpperCase())
 })
 
-const groupedTransactions = computed(() => store.groupedTransactions)
+const groupedtransactions = computed(() => store.groupedtransactions)
 
 onMounted(async () => {
-  if (store.wallets.length === 0) await store.fetchWallets()
+  if (store.wallets.length === 0) await store.fetchwallets()
   if (store.categories.length === 0) await store.fetchCategories()
-  await refreshTransactions()
+  await refreshtransactions()
 })
 
-async function refreshTransactions() {
-  await store.fetchTransactionsByMonth(
+async function refreshtransactions() {
+  await store.fetchtransactionsByMonth(
     currentDate.value.getFullYear(),
     currentDate.value.getMonth() + 1,
   )
@@ -270,28 +270,28 @@ function nextMonth() {
   currentDate.value = new Date(currentDate.value.getFullYear(), currentDate.value.getMonth() + 1, 1)
 }
 
-watch(currentDate, refreshTransactions)
+watch(currentDate, refreshtransactions)
 
 const handleDelete = (id: string) => {
-  transactionToDelete.value = id
+  ITransactionToDelete.value = id
   showConfirmDelete.value = true
 }
 
 const confirmDelete = async () => {
-  if (transactionToDelete.value) {
-    await store.deleteTransaction(transactionToDelete.value)
+  if (ITransactionToDelete.value) {
+    await store.deleteITransaction(ITransactionToDelete.value)
     showConfirmDelete.value = false
-    transactionToDelete.value = null
+    ITransactionToDelete.value = null
   }
 }
 
 const cancelDelete = () => {
   showConfirmDelete.value = false
-  transactionToDelete.value = null
+  ITransactionToDelete.value = null
 }
 
-const handleEdit = (transaction: Transaction) => {
-  editingTransaction.value = transaction
+const handleEdit = (ITransaction: ITransaction) => {
+  editingITransaction.value = ITransaction
   showForm.value = true
 }
 
@@ -299,7 +299,7 @@ const handleCloseForm = () => {
   showForm.value = false
   // Delay clearing the data so the buttons don't disappear during the close animation
   setTimeout(() => {
-    editingTransaction.value = null
+    editingITransaction.value = null
   }, 300)
 }
 

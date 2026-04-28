@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { TransactionService } from '../../application/services/TransactionService'
-import { TransactionValidator } from '../../application/services/TransactionValidator'
+import { transactionservice } from '../../application/services/transactionservice'
+import { ITransactionValidator } from '../../application/services/ITransactionValidator'
 import { AutoCategorizationService } from '../../application/services/AutoCategorizationService'
 import { ExportService } from '../../application/services/ExportService'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
-import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
+import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
 import { of } from 'rxjs'
 import { ValidationError } from '@/core/errors'
 
@@ -16,8 +16,8 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }),
 }))
 
-describe('TransactionService - CRUD', () => {
-  let service: TransactionService
+describe('transactionservice - CRUD', () => {
+  let service: transactionservice
   let mockRepo: ITransactionRepository
 
   beforeEach(() => {
@@ -29,25 +29,25 @@ describe('TransactionService - CRUD', () => {
       delete: vi.fn().mockResolvedValue(undefined),
       watchAll: vi.fn().mockReturnValue(of([])),
     }
-    service = new TransactionService(mockRepo)
+    service = new transactionservice(mockRepo)
   })
 
   describe('Create', () => {
-    it('should create transaction with correct data', async () => {
+    it('should create ITransaction with correct data', async () => {
       const data = {
-        title: 'Test Transaction',
+        title: 'Test ITransaction',
         amount: 150.75,
         type: 'expense' as const,
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-15',
       }
 
-      await service.saveTransaction(data)
+      await service.saveITransaction(data)
 
       expect(mockRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: 'Test Transaction',
+          title: 'Test ITransaction',
           amount: 15075n,
           type: 'expense',
           user_id: 'test-user-123',
@@ -55,18 +55,18 @@ describe('TransactionService - CRUD', () => {
       )
     })
 
-    it('should update existing transaction when id provided', async () => {
+    it('should update existing ITransaction when id provided', async () => {
       const data = {
         id: 'tx-123',
         title: 'Updated',
         amount: 200,
         type: 'expense' as const,
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-10',
       }
 
-      await service.saveTransaction(data)
+      await service.saveITransaction(data)
 
       expect(mockRepo.update).toHaveBeenCalledWith(
         'tx-123',
@@ -77,26 +77,26 @@ describe('TransactionService - CRUD', () => {
 
   describe('Read', () => {
     it('should load monthly transactions', async () => {
-      await service.loadMonthlyTransactions(2026, 4)
+      await service.loadMonthlytransactions(2026, 4)
       expect(mockRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
 
     it('should emit transactions through observable', async () => {
-      const mockList = [{ id: '1', title: 'T1' }] as Transaction[]
+      const mockList = [{ id: '1', title: 'T1' }] as ITransaction[]
       vi.mocked(mockRepo.getByMonth).mockResolvedValue(mockList)
 
-      let received: Transaction[] = []
-      service.transactions$.subscribe((val: Transaction[]) => (received = val))
+      let received: ITransaction[] = []
+      service.transactions$.subscribe((val: ITransaction[]) => (received = val))
 
-      await service.loadMonthlyTransactions(2026, 4)
+      await service.loadMonthlytransactions(2026, 4)
 
       expect(received).toEqual(mockList)
     })
   })
 
   describe('Delete', () => {
-    it('should delete transaction and reload month', async () => {
-      await service.deleteTransaction('tx-1', 2026, 4)
+    it('should delete ITransaction and reload month', async () => {
+      await service.deleteITransaction('tx-1', 2026, 4)
 
       expect(mockRepo.delete).toHaveBeenCalledWith('tx-1')
       expect(mockRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
@@ -104,11 +104,11 @@ describe('TransactionService - CRUD', () => {
   })
 })
 
-describe('TransactionValidator', () => {
-  let validator: TransactionValidator
+describe('ITransactionValidator', () => {
+  let validator: ITransactionValidator
 
   beforeEach(() => {
-    validator = new TransactionValidator()
+    validator = new ITransactionValidator()
   })
 
   it('should validate required fields', () => {
@@ -129,9 +129,9 @@ describe('TransactionValidator', () => {
     ).toThrow(ValidationError)
   })
 
-  it('should validate transaction type', () => {
+  it('should validate ITransaction type', () => {
     expect(() =>
-      validator.validate('transactionType', {
+      validator.validate('ITransactionType', {
         field: 'type',
         value: 'income',
         params: {},
@@ -139,7 +139,7 @@ describe('TransactionValidator', () => {
     ).not.toThrow()
 
     expect(() =>
-      validator.validate('transactionType', {
+      validator.validate('ITransactionType', {
         field: 'type',
         value: 'invalid',
         params: {},
@@ -174,7 +174,7 @@ describe('AutoCategorizationService', () => {
   })
 
   it('should suggest category by keyword', () => {
-    const categories: Category[] = [
+    const categories: ICategory[] = [
       { id: 'cat-1', name: 'Entertainment', color: '#ff0000', icon: 'movie' },
     ]
 
@@ -184,7 +184,7 @@ describe('AutoCategorizationService', () => {
   })
 
   it('should return null for unknown keywords', () => {
-    const categories: Category[] = [
+    const categories: ICategory[] = [
       { id: 'cat-1', name: 'Entertainment', color: '#ff0000', icon: 'movie' },
     ]
 
@@ -206,15 +206,15 @@ describe('ExportService', () => {
     expect(csv).toContain('Data,Título,Valor,Tipo,Categoria,Carteira,Notas')
   })
 
-  it('should format transaction in CSV', () => {
-    const transactions: Transaction[] = [
+  it('should format ITransaction in CSV', () => {
+    const transactions: ITransaction[] = [
       {
         id: 'tx-1',
         title: 'Test',
         amount: 1000n,
         type: 'expense',
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-15',
         user_id: 'user-1',
         tags: [],

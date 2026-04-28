@@ -3,7 +3,7 @@ import Dexie from 'dexie'
 import { MigrationRegistry } from '../MigrationRegistry'
 import { MigrationRunner } from '../MigrationRunner'
 import { migration001InitialSchema } from '../dexie/001_initial_schema'
-import { migration002AddTagsToTransactions } from '../dexie/002_add_tags_to_transactions'
+import { migration002AddTagsTotransactions } from '../dexie/002_add_tags_to_transactions'
 import { migration003ConvertToBigInt } from '../dexie/003_convert_to_bigint'
 
 describe('Migration 003 - BigInt Conversion', () => {
@@ -17,7 +17,7 @@ describe('Migration 003 - BigInt Conversion', () => {
   it('should convert numeric values to bigint and preserve integrity', async () => {
     // Stage 1: Initialize at version 2 with numeric data
     MigrationRegistry.register(migration001InitialSchema)
-    MigrationRegistry.register(migration002AddTagsToTransactions)
+    MigrationRegistry.register(migration002AddTagsTotransactions)
 
     const db = new Dexie(DB_NAME)
     MigrationRunner.applyAll(db)
@@ -34,7 +34,7 @@ describe('Migration 003 - BigInt Conversion', () => {
 
     await db.table('wallets').add({
       id: 'w1',
-      name: 'Main Wallet',
+      name: 'Main IWallet',
       balance: 500000, // 5000.00
       deleted: false
     })
@@ -44,7 +44,7 @@ describe('Migration 003 - BigInt Conversion', () => {
     // Stage 2: Apply Migration 003
     MigrationRegistry.clear() // Ensure we re-register including 003
     MigrationRegistry.register(migration001InitialSchema)
-    MigrationRegistry.register(migration002AddTagsToTransactions)
+    MigrationRegistry.register(migration002AddTagsTotransactions)
     MigrationRegistry.register(migration003ConvertToBigInt)
 
     const dbV3 = new Dexie(DB_NAME)
@@ -58,16 +58,16 @@ describe('Migration 003 - BigInt Conversion', () => {
     expect(tx.amount).toBe(1550n)
     expect(typeof tx.amount).toBe('bigint')
 
-    const wallet = await dbV3.table('wallets').get('w1')
-    expect(wallet.balance).toBe(500000n)
-    expect(typeof wallet.balance).toBe('bigint')
+    const IWallet = await dbV3.table('wallets').get('w1')
+    expect(IWallet.balance).toBe(500000n)
+    expect(typeof IWallet.balance).toBe('bigint')
 
     dbV3.close()
   })
 
   it('should handle missing or alternative formats gracefully', async () => {
      MigrationRegistry.register(migration001InitialSchema)
-     MigrationRegistry.register(migration002AddTagsToTransactions)
+     MigrationRegistry.register(migration002AddTagsTotransactions)
      MigrationRegistry.register(migration003ConvertToBigInt)
 
      const db = new Dexie(DB_NAME)

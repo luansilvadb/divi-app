@@ -1,36 +1,36 @@
 import { computed, ref, type ComputedRef, type Ref } from 'vue'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 type UITransaction = any
 
 /**
- * Composable for transaction search functionality.
- * Separates search concerns from main transaction store (SRP).
+ * Composable for ITransaction search functionality.
+ * Separates search concerns from main ITransaction store (SRP).
  */
-export function useTransactionSearch(
-  activeTransactions: ComputedRef<UITransaction[]>,
-  categoryMap: Ref<Record<string, Category>> | ComputedRef<Record<string, Category>>,
+export function usetransactionsearch(
+  activetransactions: ComputedRef<UITransaction[]>,
+  categoryMap: Ref<Record<string, ICategory>> | ComputedRef<Record<string, ICategory>>,
 ) {
   const searchQuery = ref('')
 
-  const filteredTransactions = computed(() => {
-    if (!searchQuery.value.trim()) return activeTransactions.value
+  const filteredtransactions = computed(() => {
+    if (!searchQuery.value.trim()) return activetransactions.value
 
     const query = searchQuery.value.toLowerCase().trim()
     const filteredResults: UITransaction[] = []
-    const sourceTransactions = activeTransactions.value
+    const sourcetransactions = activetransactions.value
     const categoryLookup = categoryMap.value
 
-    for (let i = 0, len = sourceTransactions.length; i < len; i++) {
-      const transaction = sourceTransactions[i]!
-      if (transaction._titleLower.includes(query)) {
-        filteredResults.push(transaction)
+    for (let i = 0, len = sourcetransactions.length; i < len; i++) {
+      const ITransaction = sourcetransactions[i]!
+      if (ITransaction._titleLower.includes(query)) {
+        filteredResults.push(ITransaction)
         continue
       }
 
-      const category = categoryLookup[transaction.category_id]
+      const category = categoryLookup[ITransaction.category_id]
       if (category && category.name.toLowerCase().includes(query)) {
-        filteredResults.push(transaction)
+        filteredResults.push(ITransaction)
       }
     }
 
@@ -47,7 +47,7 @@ export function useTransactionSearch(
 
   return {
     searchQuery,
-    filteredTransactions,
+    filteredtransactions,
     setSearchQuery,
     clearSearch,
   }

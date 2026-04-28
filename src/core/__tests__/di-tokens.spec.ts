@@ -3,62 +3,62 @@ import { DI_TOKENS } from '../di-tokens'
 
 describe('DI Tokens', () => {
   it('should export all required tokens', () => {
-    expect(DI_TOKENS.AuthService).toBeDefined()
-    expect(DI_TOKENS.TransactionRepository).toBeDefined()
-    expect(DI_TOKENS.TransactionService).toBeDefined()
-    expect(DI_TOKENS.WalletRepository).toBeDefined()
-    expect(DI_TOKENS.WalletService).toBeDefined()
-    expect(DI_TOKENS.CategoryRepository).toBeDefined()
-    expect(DI_TOKENS.CategoryService).toBeDefined()
-    expect(DI_TOKENS.PayeeRepository).toBeDefined()
-    expect(DI_TOKENS.LoanRepository).toBeDefined()
-    expect(DI_TOKENS.BudgetRepository).toBeDefined()
-    expect(DI_TOKENS.GoalRepository).toBeDefined()
-    expect(DI_TOKENS.GoalLogicService).toBeDefined()
-    expect(DI_TOKENS.SubscriptionRepository).toBeDefined()
-    expect(DI_TOKENS.ActivityLogService).toBeDefined()
-    expect(DI_TOKENS.ExportService).toBeDefined()
-    expect(DI_TOKENS.AssetLoader).toBeDefined()
-    expect(DI_TOKENS.SyncEngine).toBeDefined()
-    expect(DI_TOKENS.PredictionService).toBeDefined()
-    expect(DI_TOKENS.Database).toBeDefined()
-    expect(DI_TOKENS.VaultTransactionRepository).toBeDefined()
-    expect(DI_TOKENS.LedgerTransactionService).toBeDefined()
-    expect(DI_TOKENS.VaultCryptoManager).toBeDefined()
-    expect(DI_TOKENS.AutoCreateService).toBeDefined()
+    expect(DI_TOKENS.IAuthService).toBeDefined()
+    expect(DI_TOKENS.ITransactionRepository).toBeDefined()
+    expect(DI_TOKENS.ITransactionService).toBeDefined()
+    expect(DI_TOKENS.IWalletRepository).toBeDefined()
+    expect(DI_TOKENS.IWalletService).toBeDefined()
+    expect(DI_TOKENS.ICategoryRepository).toBeDefined()
+    expect(DI_TOKENS.ICategoryService).toBeDefined()
+    expect(DI_TOKENS.IPayeeRepository).toBeDefined()
+    expect(DI_TOKENS.ILoanRepository).toBeDefined()
+    expect(DI_TOKENS.IBudgetRepository).toBeDefined()
+    expect(DI_TOKENS.IGoalRepository).toBeDefined()
+    expect(DI_TOKENS.IGoalLogicService).toBeDefined()
+    expect(DI_TOKENS.ISubscriptionRepository).toBeDefined()
+    expect(DI_TOKENS.IActivityLogService).toBeDefined()
+    expect(DI_TOKENS.IExportService).toBeDefined()
+    expect(DI_TOKENS.IAssetLoader).toBeDefined()
+    expect(DI_TOKENS.ISyncEngine).toBeDefined()
+    expect(DI_TOKENS.IPredictionService).toBeDefined()
+    expect(DI_TOKENS.IDatabase).toBeDefined()
+    expect(DI_TOKENS.IVaultTransactionRepository).toBeDefined()
+    expect(DI_TOKENS.ILedgerTransactionService).toBeDefined()
+    expect(DI_TOKENS.IVaultCryptoManager).toBeDefined()
+    expect(DI_TOKENS.IAutoCreateService).toBeDefined()
   })
 
   it('should have consistent token values', () => {
     // Auth tokens
-    expect(DI_TOKENS.AuthService).toBe('IAuthService')
+    expect(DI_TOKENS.IAuthService).toBe('IAuthService')
 
     // Repository tokens should follow I prefix pattern
-    expect(DI_TOKENS.TransactionRepository).toBe('ITransactionRepository')
-    expect(DI_TOKENS.WalletRepository).toBe('IWalletRepository')
-    expect(DI_TOKENS.CategoryRepository).toBe('ICategoryRepository')
-    expect(DI_TOKENS.PayeeRepository).toBe('IPayeeRepository')
-    expect(DI_TOKENS.LoanRepository).toBe('ILoanRepository')
-    expect(DI_TOKENS.BudgetRepository).toBe('IBudgetRepository')
-    expect(DI_TOKENS.GoalRepository).toBe('IGoalRepository')
-    expect(DI_TOKENS.SubscriptionRepository).toBe('ISubscriptionRepository')
+    expect(DI_TOKENS.ITransactionRepository).toBe('ITransactionRepository')
+    expect(DI_TOKENS.IWalletRepository).toBe('IWalletRepository')
+    expect(DI_TOKENS.ICategoryRepository).toBe('ICategoryRepository')
+    expect(DI_TOKENS.IPayeeRepository).toBe('IPayeeRepository')
+    expect(DI_TOKENS.ILoanRepository).toBe('ILoanRepository')
+    expect(DI_TOKENS.IBudgetRepository).toBe('IBudgetRepository')
+    expect(DI_TOKENS.IGoalRepository).toBe('IGoalRepository')
+    expect(DI_TOKENS.ISubscriptionRepository).toBe('ISubscriptionRepository')
 
     // Service tokens
-    expect(DI_TOKENS.WalletService).toBe('WalletService')
-    expect(DI_TOKENS.CategoryService).toBe('CategoryService')
-    expect(DI_TOKENS.TransactionService).toBe('TransactionService')
-    expect(DI_TOKENS.ActivityLogService).toBe('IActivityLogService')
-    expect(DI_TOKENS.GoalLogicService).toBe('IGoalLogicService')
-    expect(DI_TOKENS.ExportService).toBe('ExportService')
-    expect(DI_TOKENS.PredictionService).toBe('IPredictionService')
-    expect(DI_TOKENS.AutoCreateService).toBe('AutoCreateService')
-    expect(DI_TOKENS.LedgerTransactionService).toBe('LedgerTransactionService')
+    expect(DI_TOKENS.IWalletService).toBe('IWalletService')
+    expect(DI_TOKENS.ICategoryService).toBe('ICategoryService')
+    expect(DI_TOKENS.ITransactionService).toBe('ITransactionService')
+    expect(DI_TOKENS.IActivityLogService).toBe('IActivityLogService')
+    expect(DI_TOKENS.IGoalLogicService).toBe('IGoalLogicService')
+    expect(DI_TOKENS.IExportService).toBe('IExportService')
+    expect(DI_TOKENS.IPredictionService).toBe('IPredictionService')
+    expect(DI_TOKENS.IAutoCreateService).toBe('IAutoCreateService')
+    expect(DI_TOKENS.ILedgerTransactionService).toBe('ILedgerTransactionService')
 
     // Other tokens
-    expect(DI_TOKENS.AssetLoader).toBe('IAssetLoader')
-    expect(DI_TOKENS.SyncEngine).toBe('ISyncEngine')
-    expect(DI_TOKENS.Database).toBe('IVaultDatabase')
-    expect(DI_TOKENS.VaultTransactionRepository).toBe('VaultTransactionRepository')
-    expect(DI_TOKENS.VaultCryptoManager).toBe('IVaultCryptoManager')
+    expect(DI_TOKENS.IAssetLoader).toBe('IAssetLoader')
+    expect(DI_TOKENS.ISyncEngine).toBe('ISyncEngine')
+    expect(DI_TOKENS.IDatabase).toBe('IDatabase')
+    expect(DI_TOKENS.IVaultTransactionRepository).toBe('IVaultTransactionRepository')
+    expect(DI_TOKENS.IVaultCryptoManager).toBe('IVaultCryptoManager')
   })
 
   it('should have unique token values', () => {
@@ -71,10 +71,10 @@ describe('DI Tokens', () => {
     // Object.freeze() ensures runtime immutability
     expect(() => {
       // @ts-expect-error - Testing immutability
-      DI_TOKENS.AuthService = 'Modified'
+      DI_TOKENS.IAuthService = 'Modified'
     }).toThrow() // Object.freeze() throws TypeError in strict mode
 
     // Value should remain unchanged
-    expect(DI_TOKENS.AuthService).toBe('IAuthService')
+    expect(DI_TOKENS.IAuthService).toBe('IAuthService')
   })
 })

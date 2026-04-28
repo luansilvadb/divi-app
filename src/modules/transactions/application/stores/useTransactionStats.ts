@@ -1,22 +1,22 @@
 import { computed, type Ref } from 'vue'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 type UITransaction = any
 
-export function useTransactionStats(
-  transactions: Ref<Transaction[]>,
-  categoryMap: Ref<Record<string, Category>> | (() => Ref<Record<string, Category>>),
+export function usetransactionstats(
+  transactions: Ref<ITransaction[]>,
+  categoryMap: Ref<Record<string, ICategory>> | (() => Ref<Record<string, ICategory>>),
 ) {
   const categoryMapRef = computed(() => (typeof categoryMap === 'function' ? categoryMap() : categoryMap))
 
-  const activeTransactions = computed(() => {
+  const activetransactions = computed(() => {
     return (transactions.value as UITransaction[]).filter((t) => !t.deleted)
   })
 
   const totalIncome = computed(() => {
     let inc = 0n
-    const trans = activeTransactions.value
+    const trans = activetransactions.value
     for (let i = 0, len = trans.length; i < len; i++) {
       if (trans[i]?.type === 'income') inc += BigInt(trans[i]!.amount)
     }
@@ -25,7 +25,7 @@ export function useTransactionStats(
 
   const totalExpense = computed(() => {
     let exp = 0n
-    const trans = activeTransactions.value
+    const trans = activetransactions.value
     for (let i = 0, len = trans.length; i < len; i++) {
       if (trans[i]?.type === 'expense') exp += BigInt(trans[i]!.amount)
     }
@@ -36,7 +36,7 @@ export function useTransactionStats(
 
   const topCategories = computed(() => {
     const catMap: Record<string, bigint> = {}
-    const trans = activeTransactions.value
+    const trans = activetransactions.value
 
     for (let i = 0, len = trans.length; i < len; i++) {
       const t = trans[i]!
@@ -48,7 +48,7 @@ export function useTransactionStats(
     const expenseTotalNum = totalExpense.value
     if (expenseTotalNum === 0) return []
 
-    const mapValue = (categoryMapRef as unknown as { value: Record<string, Category> }).value
+    const mapValue = (categoryMapRef as unknown as { value: Record<string, ICategory> }).value
     return Object.entries(catMap)
       .map(([id, totalBig]) => {
         const cat = mapValue[id]
@@ -66,7 +66,7 @@ export function useTransactionStats(
   })
 
   return {
-    activeTransactions,
+    activetransactions,
     totalIncome,
     totalExpense,
     monthlyBalance,

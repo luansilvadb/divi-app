@@ -1,6 +1,6 @@
 import { db } from '@/infrastructure/storage/VaultDatabase'
 import { v7 as uuidv7 } from 'uuid'
-import type { LocalTransaction, LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
+import type { LocalITransaction, LocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class SubscriptionProcessor {
@@ -35,12 +35,12 @@ export class SubscriptionProcessor {
             lastBilled.getFullYear() === today.getFullYear()
 
           if (!alreadyBilled) {
-            console.info(`[SubscriptionProcessor] Generating transaction for: ${sub.name}`)
+            console.info(`[SubscriptionProcessor] Generating ITransaction for: ${sub.name}`)
 
-            // Create Transaction
-            const transactionId = uuidv7()
-            const transaction: LocalTransaction = {
-              id: transactionId,
+            // Create ITransaction
+            const ITransactionId = uuidv7()
+            const ITransaction: LocalITransaction = {
+              id: ITransactionId,
               user_id: userId,
               title: `Assinatura: ${sub.name}`,
               amount: BigInt(Math.abs(Number(sub.amount))),
@@ -55,9 +55,9 @@ export class SubscriptionProcessor {
               version: 1
             }
 
-            await db.transactions.add(transaction)
+            await db.transactions.add(ITransaction)
 
-            // Update Subscription last billed date
+            // Update ISubscription last billed date
             await db.subscriptions.update(sub.id, {
               last_billed_at: today.toISOString(),
               sync_status: 'pending',

@@ -1,6 +1,6 @@
 export interface PredictionResult {
   categoryId: string
-  walletId: string
+  IWalletId: string
   confidence: number // 0 a 1
 }
 

@@ -72,14 +72,14 @@ describe('DI Container', () => {
       expect(authService).toBeDefined()
     })
 
-    it('should have TransactionService registered', () => {
-      const transactionService = container.resolve(DI_TOKENS.TransactionService)
-      expect(transactionService).toBeDefined()
+    it('should have transactionservice registered', () => {
+      const transactionservice = container.resolve(DI_TOKENS.transactionservice)
+      expect(transactionservice).toBeDefined()
     })
 
-    it('should have WalletService registered', () => {
-      const walletService = container.resolve(DI_TOKENS.WalletService)
-      expect(walletService).toBeDefined()
+    it('should have walletservice registered', () => {
+      const walletservice = container.resolve(DI_TOKENS.walletservice)
+      expect(walletservice).toBeDefined()
     })
 
     it('should have CategoryService registered', () => {

@@ -151,7 +151,7 @@ const menuOptions: MenuOption[] = [
       { label: 'Dashboard', key: '/', icon: renderIcon('i-lucide-layout-dashboard') },
       { label: 'Transações', key: '/transactions', icon: renderIcon('i-lucide-arrow-left-right') },
       { label: 'Categorias', key: '/categories', icon: renderIcon('i-lucide-tag') },
-      { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-wallet') },
+      { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-IWallet') },
       { label: 'Metas', key: '/goals', icon: renderIcon('i-lucide-target') },
       { label: 'Empréstimos', key: '/loans', icon: renderIcon('i-lucide-banknote') },
       { label: 'Assinaturas', key: '/subscriptions', icon: renderIcon('i-lucide-refresh-cw') },

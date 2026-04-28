@@ -2,19 +2,19 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository'
-import type { ILoanRepository } from '@/shared/domain/contracts/ILoanRepository'
-import type { Wallet } from '@/shared/domain/entities/Wallet'
-import type { Loan } from '@/shared/domain/entities/Loan'
+import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
+import type { ILoanRepository } from '@/modules/loans/core/ports/ILoanRepository'
+import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
+import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 
 export const useDashboardStore = defineStore('dashboard', () => {
   // Repositories
-  const walletRepo = container.resolve<IWalletRepository>(DI_TOKENS.WalletRepository)
-  const loanRepo = container.resolve<ILoanRepository>(DI_TOKENS.LoanRepository)
+  const IWalletRepo = container.resolve<IWalletRepository>(DI_TOKENS.IWalletRepository)
+  const loanRepo = container.resolve<ILoanRepository>(DI_TOKENS.ILoanRepository)
 
   // State
-  const wallets = ref<Wallet[]>([])
-  const loans = ref<Loan[]>([])
+  const wallets = ref<IWallet[]>([])
+  const loans = ref<ILoan[]>([])
   const isLoading = ref(false)
   const hasInitializationError = ref(false)
 
@@ -33,7 +33,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   async function fetchDashboardData() {
     isLoading.value = true
     try {
-      const [walletsData, loansData] = await Promise.all([walletRepo.getAll(), loanRepo.getAll()])
+      const [walletsData, loansData] = await Promise.all([IWalletRepo.getAll(), loanRepo.getAll()])
       wallets.value = walletsData
       loans.value = loansData
     } finally {

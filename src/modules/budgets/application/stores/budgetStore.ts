@@ -2,21 +2,21 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IBudgetRepository } from '@/shared/domain/contracts/IBudgetRepository'
-import type { Budget } from '@/shared/domain/entities/Budget'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import type { IBudgetRepository } from '../../core/ports/IBudgetRepository'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
-import type { Subscription } from 'rxjs'
+import type { ISubscription } from 'rxjs'
 
 export const useBudgetStore = defineStore('budgets', () => {
-  const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.BudgetRepository)
-  const transactionStore = useTransactionStore()
+  const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.IBudgetRepository)
+  const transactionstore = usetransactionstore()
   const authStore = useAuthStore()
 
-  const budgets = ref<Budget[]>([])
+  const budgets = ref<IBudget[]>([])
   const isLoading = ref(false)
   const searchQuery = ref('')
-  let budgetSubscription: Subscription | null = null
+  let budgetSubscription: ISubscription | null = null
 
   function initialize() {
     isLoading.value = true
@@ -36,9 +36,9 @@ export const useBudgetStore = defineStore('budgets', () => {
     budgetSubscription?.unsubscribe()
   }
 
-  const getConsumed = (budget: Budget) => {
-    // Current month transactions from transactionStore (which are already filtered/reactive)
-    const consumed = transactionStore.transactions
+  const getConsumed = (budget: IBudget) => {
+    // Current month transactions from transactionstore (which are already filtered/reactive)
+    const consumed = transactionstore.transactions
       .filter((t) => t.category_id === budget.category_id && !t.deleted && t.type === 'expense')
       .reduce((acc, t) => acc + BigInt(t.amount), 0n)
     return Number(consumed)
@@ -48,7 +48,7 @@ export const useBudgetStore = defineStore('budgets', () => {
   const totalBudgeted = computed(() => Number(budgets.value.reduce((sum, b) => sum + BigInt(b.limit_value), 0n)))
   const totalConsumed = computed(() => budgets.value.reduce((sum, b) => sum + getConsumed(b), 0))
 
-  async function saveBudget(budget: Budget) {
+  async function saveBudget(budget: IBudget) {
     const activeUserId = authStore.user?.id
     if (!activeUserId) throw new Error('User not authenticated')
 

@@ -1,17 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { User } from '../domain/entities/User'
-import type { IAuthService } from '../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../domain/contracts/IVaultCryptoManager'
+import type { IUser } from '../core/entities/IUser'
+import type { IAuthService } from '../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../core/ports/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
 import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
+import { container } from '@/core/di'
+import { DI_TOKENS } from '@/core/di-tokens'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<User | null>(null)
+  const user = ref<IUser | null>(null)
 
   const isAuthenticated = computed(() => user.value !== null)
 
-  function setUser(newUser: User) {
+  function setUser(newUser: IUser) {
     user.value = newUser
   }
 
@@ -19,11 +21,11 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
   }
 
-  async function initialize(
-    authService: IAuthService,
-    vaultCryptoManager: IVaultCryptoManager,
-    syncEngine: ISyncEngine,
-  ) {
+  async function initialize() {
+    const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
+    const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
+    const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.ISyncEngine)
+
     // Set initial user
     const currentUser = await authService.getCurrentUser()
     if (currentUser) {
@@ -31,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Listen for auth changes
-    authService.onAuthStateChange((newUser: User | null) => {
+    authService.onAuthStateChange((newUser: IUser | null) => {
       user.value = newUser
       if (!newUser) {
         // SECURITY: Clear keys on logout
@@ -46,11 +48,10 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Inicializa o cofre de criptografia soberana.
    */
-  async function initializeVault(
-    password: string,
-    vaultCryptoManager: IVaultCryptoManager,
-    syncEngine: ISyncEngine,
-  ) {
+  async function initializeVault(password: string) {
+    const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
+    const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.ISyncEngine)
+
     await vaultCryptoManager.initialize(password)
     // Sincronizar após liberar o cofre para permitir push/pull de dados criptografados
     syncEngine.trigger()
@@ -61,10 +62,10 @@ export const useAuthStore = defineStore('auth', () => {
    * Sequência: deleteAccountData (remoto) → clearAllData (local) → lock (crypto) → signOut
    * O router push para /login é responsabilidade do chamador (UI).
    */
-  async function purgeAccount(
-    authService: IAuthService,
-    vaultCryptoManager: IVaultCryptoManager,
-  ): Promise<void> {
+  async function purgeAccount(): Promise<void> {
+    const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
+    const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
+
     // 1. Deletar dados remotos via Supabase (RLS garante escopo do usuário)
     await authService.deleteAccountData()
 

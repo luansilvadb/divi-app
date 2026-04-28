@@ -196,7 +196,7 @@ export function createMockDexie( tables: Record<string, unknown[]> = {}) {
       return mockTables[name]
     }),
     tables: vi.fn().mockReturnValue(Object.values(mockTables)),
-    transaction: vi.fn().mockImplementation((mode: string, ...args: unknown[]) => {
+    ITransaction: vi.fn().mockImplementation((mode: string, ...args: unknown[]) => {
       const callback = args[args.length - 1] as Function
       return Promise.resolve(callback())
     }),

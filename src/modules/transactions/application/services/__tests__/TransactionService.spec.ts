@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { TransactionService } from '../TransactionService'
+import { transactionservice } from '../transactionservice'
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
-import type { ITransactionRepository } from '@/shared/domain/contracts/ITransactionRepository'
+import type { ITransactionRepository } from '@/modules/transactions/core/ports/ITransactionRepository'
 import { of } from 'rxjs'
 
 // Mock do authStore
@@ -11,8 +11,8 @@ vi.mock('@/modules/auth/application/authStore', () => ({
   }),
 }))
 
-describe('TransactionService', () => {
-  let service: TransactionService
+describe('transactionservice', () => {
+  let service: transactionservice
   let mockRepo: ITransactionRepository
 
   beforeEach(() => {
@@ -23,9 +23,9 @@ describe('TransactionService', () => {
       update: vi.fn().mockResolvedValue({} as any),
       delete: vi.fn().mockResolvedValue(undefined),
       watchAll: vi.fn().mockReturnValue(of([])),
-      transferBetweenWallets: vi.fn().mockResolvedValue(undefined),
+      transferBetweenwallets: vi.fn().mockResolvedValue(undefined),
     }
-    service = new TransactionService(mockRepo)
+    service = new transactionservice(mockRepo)
   })
 
   describe('BigInt Handling (Minor Units)', () => {
@@ -116,11 +116,11 @@ describe('TransactionService', () => {
         amount: 15.5,
         type: 'expense' as const,
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-07',
       }
 
-      await service.saveTransaction(data)
+      await service.saveITransaction(data)
 
       expect(mockRepo.create).toHaveBeenCalledWith(expect.objectContaining({
         title: 'Lunch',
@@ -135,17 +135,17 @@ describe('TransactionService', () => {
         amount: 10,
         type: 'expense' as const,
         category_id: 'cat-1',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-07',
       }
 
-      await service.saveTransaction(data)
+      await service.saveITransaction(data)
 
       expect(mockRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
     })
 
     it('should reload monthly transactions after delete', async () => {
-      await service.deleteTransaction('tx-1', 2026, 4)
+      await service.deleteITransaction('tx-1', 2026, 4)
 
       expect(mockRepo.delete).toHaveBeenCalledWith('tx-1')
       expect(mockRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
@@ -160,7 +160,7 @@ describe('TransactionService', () => {
       let received: any[] = []
       service.transactions$.subscribe(val => received = val)
 
-      await service.loadMonthlyTransactions(2026, 4)
+      await service.loadMonthlytransactions(2026, 4)
 
       expect(received).toEqual(mockList)
     })

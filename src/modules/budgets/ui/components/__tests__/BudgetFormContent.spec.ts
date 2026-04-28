@@ -16,12 +16,12 @@ describe('BudgetFormContent Component', () => {
   it('should handle budget form data structure', () => {
     // Test the data structure the component expects
     const formData = {
-      name: 'Test Budget',
+      name: 'Test IBudget',
       limit_value: 50000,
       category_id: 'c1',
     }
 
-    expect(formData.name).toBe('Test Budget')
+    expect(formData.name).toBe('Test IBudget')
     expect(formData.limit_value).toBe(50000)
     expect(formData.category_id).toBe('c1')
   })
