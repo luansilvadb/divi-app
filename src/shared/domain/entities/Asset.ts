@@ -1,7 +1,7 @@
 /**
  * Representa um recurso visual dinâmico ou estático utilizado na interface.
  */
-export interface Asset {
+export interface IAsset {
   type: 'data' | 'static' | 'icon'
   value: string
   fallback?: string

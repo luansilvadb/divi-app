@@ -8,8 +8,8 @@ import '@/infrastructure/storage/types/LocalGoal'
 import '@/infrastructure/storage/types/LocalLoan'
 import '@/infrastructure/storage/types/LocalPayee'
 import '@/infrastructure/storage/types/LocalSubscription'
-import '@/infrastructure/storage/types/LocalTransaction'
-import '@/infrastructure/storage/types/LocalWallet'
+import '@/infrastructure/storage/types/LocalITransaction'
+import '@/infrastructure/storage/types/LocalIWallet'
 import '@/infrastructure/storage/types'
 
 describe('Storage Types Coverage', () => {

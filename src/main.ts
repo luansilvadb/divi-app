@@ -7,6 +7,7 @@ import './core/styles/main.css'
 import './core/theme/interactionStates.css' // Apple HIG interaction states
 import App from './App.vue'
 import router from './core/router'
+import { container } from './core/di'
 import { vaultDb } from '@/infrastructure/storage/VaultDatabase'
 import { persistenceService } from '@/infrastructure/storage/PersistenceService'
 import { useDashboardStore } from './modules/dashboard/application/stores/dashboardStore'
@@ -18,6 +19,8 @@ persistenceService.ensurePersistence().catch(err => {
 
 const app = createApp(App)
 const pinia = createPinia()
+
+app.provide('container', container)
 
 // Global error handler
 app.config.errorHandler = (err, vm, info) => {

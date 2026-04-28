@@ -55,10 +55,10 @@
 import { ref } from 'vue'
 import { NForm, NFormItem, NInput, NSelect, NColorPicker, NButton } from 'naive-ui'
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 const props = defineProps<{
-  initialData?: Category | null
+  initialData?: ICategory | null
   parentOptions: Array<{ label: string; value: string }>
   isSubmittingEdit: boolean
 }>()

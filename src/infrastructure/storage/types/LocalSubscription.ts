@@ -1,10 +1,10 @@
-import type { SyncMetadata } from '@/shared/domain/entities/SyncMetadata'
+import type { ISyncMetadata } from '@/shared/domain/ISyncMetadata'
 
 /**
  * @deprecated Use domain entities instead.
  * Transitionally keeping this here until all modules are fully FSD-aligned.
  */
-export interface LocalSubscription extends SyncMetadata {
+export interface LocalSubscription extends ISyncMetadata {
   name: string
   amount: bigint
   category_id: string

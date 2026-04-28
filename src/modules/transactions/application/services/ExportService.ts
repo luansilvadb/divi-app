@@ -1,10 +1,10 @@
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 export class ExportService {
   /**
    * Generates a CSV string from a list of transactions
    */
-  generateCSV(transactions: Transaction[]): string {
+  generateCSV(transactions: ITransaction[]): string {
     const headers = ['Data', 'Título', 'Valor', 'Tipo', 'Categoria', 'Carteira', 'Notas']
     const rows = transactions.map((t) => [
       new Date(t.date).toLocaleDateString('pt-BR'),

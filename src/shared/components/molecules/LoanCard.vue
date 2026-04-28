@@ -80,19 +80,19 @@
 
 <script setup lang="ts">
 import { NTag, NProgress, NGrid, NGridItem, NButton, NCard } from 'naive-ui'
-import type { Loan } from '../../domain/entities/Loan'
+import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 import DataCard from './DataCard.vue'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 defineProps<{
-  loan: Loan
+  loan: ILoan
 }>()
 
 defineEmits<{
   (e: 'delete', id: string): void
 }>()
 
-const getProgress = (loan: Loan) => {
+const getProgress = (loan: ILoan) => {
   if (BigInt(loan.total_value) === 0n) return 0
   const paid = Number(BigInt(loan.total_value) - BigInt(loan.remaining_value))
   return (paid / Number(loan.total_value)) * 100

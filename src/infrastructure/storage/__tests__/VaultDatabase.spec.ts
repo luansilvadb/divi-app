@@ -11,7 +11,7 @@ describe('VaultDatabase Hooks', () => {
   })
 
   it('deve inicializar a versão como 1 ao criar um novo registro', async () => {
-    const transaction = {
+    const ITransaction = {
       id: 'test-1',
       user_id: 'user-1',
       title: 'Teste',
@@ -27,7 +27,7 @@ describe('VaultDatabase Hooks', () => {
     }
 
     // @ts-ignore - version is handled by hooks
-    await db.transactions.add(transaction)
+    await db.transactions.add(ITransaction)
     
     const saved = await db.transactions.get('test-1')
     expect(saved?.version).toBe(1)
@@ -36,7 +36,7 @@ describe('VaultDatabase Hooks', () => {
   })
 
   it('deve incrementar a versão ao atualizar um registro', async () => {
-    const transaction = {
+    const ITransaction = {
       id: 'test-2',
       user_id: 'user-1',
       title: 'Teste Original',
@@ -52,7 +52,7 @@ describe('VaultDatabase Hooks', () => {
       deleted: false,
     }
 
-    await db.transactions.add(transaction)
+    await db.transactions.add(ITransaction)
     
     // Simular atualização de negócio (sem mexer no sync_status)
     await db.transactions.update('test-2', { title: 'Teste Atualizado' })
@@ -63,7 +63,7 @@ describe('VaultDatabase Hooks', () => {
   })
 
   it('NÃO deve incrementar a versão se o sync_status for fornecido pelo SyncEngine', async () => {
-    const transaction = {
+    const ITransaction = {
       id: 'test-3',
       user_id: 'user-1',
       title: 'Teste',
@@ -79,7 +79,7 @@ describe('VaultDatabase Hooks', () => {
       deleted: false,
     }
 
-    await db.transactions.add(transaction)
+    await db.transactions.add(ITransaction)
     
     // Simular o SyncEngine marcando como sincronizado
     await db.transactions.update('test-3', { 

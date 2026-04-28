@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import TransactionItem from '@/modules/transactions/ui/components/TransactionItem.vue'
+import ITransactionItem from '@/modules/transactions/ui/components/ITransactionItem.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 
@@ -51,14 +51,14 @@ vi.mock('@/shared/utils/formatters', () => ({
   }),
 }))
 
-describe('TransactionItem', () => {
-  const mockTransaction = {
+describe('ITransactionItem', () => {
+  const mockITransaction = {
     id: 'tx-1',
     title: 'Grocery Shopping',
     amount: 15075n, // R$ 150,75 in minor units
     type: 'expense',
     category_id: 'cat-1',
-    wallet_id: 'wallet-1',
+    wallet_id: 'IWallet-1',
     date: '2026-04-15T10:30:00Z',
     sync_status: 'synced',
     user_id: 'user-1',
@@ -70,11 +70,11 @@ describe('TransactionItem', () => {
   }
 
   const defaultProps = {
-    transaction: mockTransaction,
+    ITransaction: mockITransaction,
     categoryName: 'Food',
     categoryColor: '#10b981',
     categoryIcon: 'food-icon.png',
-    walletName: 'Main Wallet',
+    IWalletName: 'Main IWallet',
     showTime: true,
   }
 
@@ -82,16 +82,16 @@ describe('TransactionItem', () => {
     setActivePinia(createPinia())
   })
 
-  it('renders transaction title correctly', () => {
-    const wrapper = mount(TransactionItem, {
+  it('renders ITransaction title correctly', () => {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
     expect(wrapper.text()).toContain('Grocery Shopping')
   })
 
-  it('renders expense transaction correctly', () => {
-    const wrapper = mount(TransactionItem, {
+  it('renders expense ITransaction correctly', () => {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
@@ -101,37 +101,37 @@ describe('TransactionItem', () => {
     expect(wrapper.text()).toContain('-')
   })
 
-  it('renders income transaction correctly', () => {
-    const incomeTransaction = {
-      ...mockTransaction,
+  it('renders income ITransaction correctly', () => {
+    const incomeITransaction = {
+      ...mockITransaction,
       type: 'income',
       amount: 500000n,
     }
 
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: {
         ...defaultProps,
-        transaction: incomeTransaction,
+        ITransaction: incomeITransaction,
       },
     })
 
-    // Income should show title (using the mock transaction title)
+    // Income should show title (using the mock ITransaction title)
     expect(wrapper.text()).toContain('Grocery Shopping')
     // Should render successfully
     expect(wrapper.find('.n-card').exists()).toBe(true)
   })
 
-  it('renders transfer transaction correctly', () => {
-    const transferTransaction = {
-      ...mockTransaction,
+  it('renders transfer ITransaction correctly', () => {
+    const transferITransaction = {
+      ...mockITransaction,
       type: 'transfer',
       amount: 100000n,
     }
 
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: {
         ...defaultProps,
-        transaction: transferTransaction,
+        ITransaction: transferITransaction,
       },
     })
 
@@ -142,7 +142,7 @@ describe('TransactionItem', () => {
   })
 
   it('emits click event when clicked', async () => {
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
@@ -152,7 +152,7 @@ describe('TransactionItem', () => {
   })
 
   it('emits delete event when delete button clicked', async () => {
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
@@ -166,27 +166,27 @@ describe('TransactionItem', () => {
   })
 
   it('displays category name correctly', () => {
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
     expect(wrapper.text()).toContain('Food')
   })
 
-  it('displays wallet name correctly', () => {
-    const wrapper = mount(TransactionItem, {
+  it('displays IWallet name correctly', () => {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
-    expect(wrapper.text()).toContain('Main Wallet')
+    expect(wrapper.text()).toContain('Main IWallet')
   })
 
-  it('shows default title when transaction title is empty', () => {
-    const wrapper = mount(TransactionItem, {
+  it('shows default title when ITransaction title is empty', () => {
+    const wrapper = mount(ITransactionItem, {
       props: {
         ...defaultProps,
-        transaction: {
-          ...mockTransaction,
+        ITransaction: {
+          ...mockITransaction,
           title: '',
         },
       },
@@ -196,7 +196,7 @@ describe('TransactionItem', () => {
   })
 
   it('displays time when showTime is true', () => {
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
@@ -205,7 +205,7 @@ describe('TransactionItem', () => {
   })
 
   it('shows correct badge color for expense', () => {
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: defaultProps,
     })
 
@@ -215,15 +215,15 @@ describe('TransactionItem', () => {
   })
 
   it('shows correct badge color for income', () => {
-    const incomeTransaction = {
-      ...mockTransaction,
+    const incomeITransaction = {
+      ...mockITransaction,
       type: 'income',
     }
 
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: {
         ...defaultProps,
-        transaction: incomeTransaction,
+        ITransaction: incomeITransaction,
       },
     })
 
@@ -232,15 +232,15 @@ describe('TransactionItem', () => {
   })
 
   it('shows transfer label for transfer type', () => {
-    const transferTransaction = {
-      ...mockTransaction,
+    const transferITransaction = {
+      ...mockITransaction,
       type: 'transfer',
     }
 
-    const wrapper = mount(TransactionItem, {
+    const wrapper = mount(ITransactionItem, {
       props: {
         ...defaultProps,
-        transaction: transferTransaction,
+        ITransaction: transferITransaction,
       },
     })
 

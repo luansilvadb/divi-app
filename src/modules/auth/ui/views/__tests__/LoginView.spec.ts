@@ -33,7 +33,7 @@ describe('LoginView.vue', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
-    container.register(DI_TOKENS.AuthService, mockAuthService)
+    container.register(DI_TOKENS.IAuthService, mockAuthService)
   })
 
   it('renders login view with proper accessibility attributes', async () => {

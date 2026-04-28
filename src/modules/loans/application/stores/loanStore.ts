@@ -2,13 +2,13 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { ILoanRepository } from '@/shared/domain/contracts/ILoanRepository'
-import type { Loan } from '@/shared/domain/entities/Loan'
+import type { ILoanRepository } from '../../core/ports/ILoanRepository'
+import type { ILoan } from '@/modules/loans/core/entities/ILoan'
 
 export const useLoanStore = defineStore('loans', () => {
-  const loanRepo = container.resolve<ILoanRepository>(DI_TOKENS.LoanRepository)
+  const loanRepo = container.resolve<ILoanRepository>(DI_TOKENS.ILoanRepository)
 
-  const loans = ref<Loan[]>([])
+  const loans = ref<ILoan[]>([])
   const isLoading = ref(false)
   const searchQuery = ref('')
 
@@ -21,7 +21,7 @@ export const useLoanStore = defineStore('loans', () => {
     }
   }
 
-  const saveLoan = async (loan: Loan) => {
+  const saveLoan = async (loan: ILoan) => {
     try {
       await loanRepo.save(loan)
       await fetchLoans()

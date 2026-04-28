@@ -62,6 +62,27 @@ npm run lint
 
 ## Development Guidelines
 
+### Architecture Standards
+
+This project follows strict **Hexagonal Architecture** (Core/Ports/Adapters) and **Interface-First** design principles.
+
+1.  **Module Structure**: Every feature module under `src/modules/` must follow this structure:
+    -   `core/entities/`: Domain entities and interfaces.
+    -   `core/ports/`: Port interfaces (prefixed with `I`) that define what the module needs or provides.
+    -   `application/services/`: Core business logic (Services) that implements or uses ports.
+    -   `application/stores/`: State management (Pinia).
+    -   `adapters/`: Concrete implementations of ports (e.g., Supabase, Dexie).
+    -   `ui/views/` & `ui/components/`: Framework-specific UI code.
+
+2.  **Interface-First Design (Principle VIII)**:
+    -   All cross-boundary dependencies MUST use interfaces.
+    -   Interfaces MUST be prefixed with `I` (e.g., `IAuthService`, `ITransaction`).
+    -   Concrete classes must never be imported directly from other modules.
+
+3.  **Dependency Injection**:
+    -   Use the manual DI container in `src/core/di.ts` to register and resolve services.
+    -   Use `container.resolve(DI_TOKENS.IService)` in classes and the `useService` composable in Vue components.
+
 ### Monetary Values (BigInt)
 
 All monetary operations and values in this application must use `BigInt` to prevent floating-point precision errors. We use a centralized `bigint-adapter` to parse and format these values. 

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import DashboardView from '../DashboardView.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { container, useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 
@@ -28,7 +28,7 @@ describe('DashboardView', () => {
       getFallback: vi.fn(() => 'fallback.png'),
     }
 
-    // Mock TransactionRepository
+    // Mock ITransactionRepository
     const mockRepo = {
       getAll: vi.fn().mockResolvedValue([]),
       getByMonth: vi.fn().mockResolvedValue([]),
@@ -37,7 +37,7 @@ describe('DashboardView', () => {
 
     vi.mocked(container.resolve).mockImplementation((token: unknown) => {
       if (token === DI_TOKENS.AssetLoader) return mockAssetLoader
-      if (token === DI_TOKENS.TransactionRepository) return mockRepo
+      if (token === DI_TOKENS.ITransactionRepository) return mockRepo
       return {}
     })
 
@@ -57,7 +57,7 @@ describe('DashboardView', () => {
               transactions: {
                 transactions: [],
                 categoryMap: {},
-                walletMap: {},
+                IWalletMap: {},
                 totalIncome: 0,
                 totalExpense: 0,
               },
@@ -91,7 +91,7 @@ describe('DashboardView', () => {
           createTestingPinia({
             createSpy: vi.fn,
             initialState: {
-              transactions: { transactions: [], categoryMap: {}, walletMap: {} },
+              transactions: { transactions: [], categoryMap: {}, IWalletMap: {} },
               dashboard: { initializationError: true },
             },
           }),

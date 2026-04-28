@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { User } from '../../domain/entities/User'
+import type { IUser } from '../../domain/entities/IUser'
 import type { Credentials } from '../../domain/contracts/Credentials'
 
 describe('Auth Service', () => {
@@ -110,11 +110,11 @@ describe('Auth Service', () => {
         email: 'existing@example.com',
         password: 'password123',
       }
-      const error = new Error('User already registered')
+      const error = new Error('IUser already registered')
 
       mockAuthService.registerWithEmail = vi.fn().mockRejectedValue(error)
 
-      await expect(mockAuthService.registerWithEmail(credentials)).rejects.toThrow('User already registered')
+      await expect(mockAuthService.registerWithEmail(credentials)).rejects.toThrow('IUser already registered')
     })
 
     it('should fail registration with weak password', async () => {
@@ -149,10 +149,10 @@ describe('Auth Service', () => {
 
   describe('get current user', () => {
     it('should return current user when authenticated', async () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: '123',
         email: 'test@example.com',
-        name: 'Test User',
+        name: 'Test IUser',
         avatar_url: 'https://example.com/avatar.png',
       }
 
@@ -182,10 +182,10 @@ describe('Auth Service', () => {
     })
 
     it('should call callback when user signs in', () => {
-      const mockUser: User = {
+      const mockUser: IUser = {
         id: '123',
         email: 'test@example.com',
-        name: 'Test User',
+        name: 'Test IUser',
       }
       const callback = vi.fn()
 

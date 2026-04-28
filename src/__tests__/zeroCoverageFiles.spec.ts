@@ -48,11 +48,11 @@ describe('Zero Coverage Files - Import for Coverage', () => {
     const localSubscription = await import('@/infrastructure/storage/types/LocalSubscription')
     expect(localSubscription).toBeDefined()
     
-    const localTransaction = await import('@/infrastructure/storage/types/LocalTransaction')
-    expect(localTransaction).toBeDefined()
+    const localITransaction = await import('@/infrastructure/storage/types/LocalITransaction')
+    expect(localITransaction).toBeDefined()
     
-    const localWallet = await import('@/infrastructure/storage/types/LocalWallet')
-    expect(localWallet).toBeDefined()
+    const localIWallet = await import('@/infrastructure/storage/types/LocalIWallet')
+    expect(localIWallet).toBeDefined()
   })
 
   it('covers activity log domain', async () => {
@@ -67,7 +67,7 @@ describe('Zero Coverage Files - Import for Coverage', () => {
     const credentials = await import('@/modules/auth/domain/contracts/Credentials')
     expect(credentials).toBeDefined()
     
-    const authService = await import('@/modules/auth/domain/contracts/IAuthService')
+    const authService = await import('@/modules/auth/core/ports/IAuthService')
     expect(authService).toBeDefined()
     
     const vaultCrypto = await import('@/modules/auth/domain/contracts/IVaultCryptoManager')
@@ -114,40 +114,40 @@ describe('Zero Coverage Files - Import for Coverage', () => {
     const subRepo = await import('@/shared/domain/contracts/ISubscriptionRepository')
     expect(subRepo).toBeDefined()
     
-    const txRepo = await import('@/shared/domain/contracts/ITransactionRepository')
+    const txRepo = await import('@/modules/transactions/core/ports/ITransactionRepository')
     expect(txRepo).toBeDefined()
     
-    const walletRepo = await import('@/shared/domain/contracts/IWalletRepository')
-    expect(walletRepo).toBeDefined()
+    const IWalletRepo = await import('@/modules/wallets/core/ports/IWalletRepository')
+    expect(IWalletRepo).toBeDefined()
   })
 
   it('covers all shared entities', async () => {
-    const budget = await import('@/shared/domain/entities/Budget')
+    const budget = await import('@/modules/budgets/core/entities/IBudget')
     expect(budget).toBeDefined()
     
-    const category = await import('@/shared/domain/entities/Category')
+    const category = await import('@/modules/categories/core/entities/ICategory')
     expect(category).toBeDefined()
     
-    const goal = await import('@/shared/domain/entities/Goal')
+    const goal = await import('@/modules/goals/core/entities/IGoal')
     expect(goal).toBeDefined()
     
-    const loan = await import('@/shared/domain/entities/Loan')
+    const loan = await import('@/modules/loans/core/entities/ILoan')
     expect(loan).toBeDefined()
     
-    const payee = await import('@/shared/domain/entities/Payee')
+    const payee = await import('@/modules/transactions/core/entities/IPayee')
     expect(payee).toBeDefined()
     
-    const subscription = await import('@/shared/domain/entities/Subscription')
+    const subscription = await import('@/modules/subscriptions/core/entities/ISubscription')
     expect(subscription).toBeDefined()
     
-    const syncMetadata = await import('@/shared/domain/entities/SyncMetadata')
-    expect(syncMetadata).toBeDefined()
+    const ISyncMetadata = await import('@/shared/domain/ISyncMetadata')
+    expect(ISyncMetadata).toBeDefined()
     
-    const transaction = await import('@/shared/domain/entities/Transaction')
-    expect(transaction).toBeDefined()
+    const ITransaction = await import('@/modules/transactions/core/entities/ITransaction')
+    expect(ITransaction).toBeDefined()
     
-    const wallet = await import('@/shared/domain/entities/Wallet')
-    expect(wallet).toBeDefined()
+    const IWallet = await import('@/modules/wallets/core/entities/IWallet')
+    expect(IWallet).toBeDefined()
   })
 
   it('covers shared types', async () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
-import WalletsView from '../WalletsView.vue'
+import walletsView from '../walletsView.vue'
 import { defineComponent, h } from 'vue'
 import { BehaviorSubject } from 'rxjs'
 import { container } from '@/core/di'
@@ -14,22 +14,22 @@ vi.mock('naive-ui', async () => {
   }
 })
 
-describe('WalletsView', () => {
-  let mockWalletService: any
+describe('walletsView', () => {
+  let mockwalletservice: any
   let walletsSubject: BehaviorSubject<any[]>
 
   beforeEach(() => {
     vi.clearAllMocks()
     walletsSubject = new BehaviorSubject<any[]>([])
 
-    mockWalletService = {
+    mockwalletservice = {
       wallets$: walletsSubject.asObservable(),
-      loadWallets: vi.fn(),
-      createWallet: vi.fn().mockResolvedValue(undefined)
+      loadwallets: vi.fn(),
+      createIWallet: vi.fn().mockResolvedValue(undefined)
     }
 
     vi.spyOn(container, 'resolve').mockImplementation((token: any) => {
-      if (token === DI_TOKENS.WalletService) return mockWalletService
+      if (token === DI_TOKENS.IWalletService) return mockwalletservice
       return {}
     })
   })
@@ -40,7 +40,7 @@ describe('WalletsView', () => {
       { id: '2', name: 'Investimento', balance: 450000n, type: 'investment' }
     ])
 
-    const wrapper = mount(WalletsView)
+    const wrapper = mount(walletsView)
     await flushPromises()
 
     expect(wrapper.text()).toContain('Corrente')
@@ -54,14 +54,14 @@ describe('WalletsView', () => {
   it('deve exibir mensagem de estado vazio inicial', async () => {
     walletsSubject.next([])
 
-    const wrapper = mount(WalletsView)
+    const wrapper = mount(walletsView)
     await flushPromises()
 
     expect(wrapper.text()).toContain('Nenhuma carteira configurada.')
   })
 
   it('abre o modal ao clicar em Nova Carteira e salva os dados corretos', async () => {
-    const wrapper = mount(WalletsView, {
+    const wrapper = mount(walletsView, {
       global: {
         stubs: {
           NModal: { template: '<div class="stub-modal"><slot /></div>' },
@@ -70,17 +70,17 @@ describe('WalletsView', () => {
     })
     await flushPromises()
 
-    const btnCreate = wrapper.find('#btn-create-wallet')
+    const btnCreate = wrapper.find('#btn-create-IWallet')
     expect(btnCreate.exists()).toBe(true)
     await btnCreate.trigger('click')
     await flushPromises()
 
     // Em vez de interagir com DOM de componentes teleportados, vamos testar o state (VM)
     ;(wrapper.vm as any).formModel.name = 'Nova Conta'
-    await (wrapper.vm as any).handleSaveWallet()
+    await (wrapper.vm as any).handleSaveIWallet()
     await flushPromises()
 
-    expect(mockWalletService.createWallet).toHaveBeenCalledWith({
+    expect(mockwalletservice.createIWallet).toHaveBeenCalledWith({
       name: 'Nova Conta',
       type: 'checking',
       currency: 'BRL',

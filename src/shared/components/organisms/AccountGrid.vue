@@ -7,16 +7,16 @@
       :cols="isMobile ? 1 : 4"
       responsive="screen"
     >
-      <!-- Wallet Cards -->
-      <NGridItem v-for="wallet in wallets" :key="wallet.id">
+      <!-- IWallet Cards -->
+      <NGridItem v-for="IWallet in wallets" :key="IWallet.id">
         <div
-          class="wallet-card group relative flex flex-col rounded-xl overflow-hidden transition-all duration-150 ease-out cursor-pointer bg-surface-primary border border-separator hover:shadow-md"
-          @click="handleEditWallet(wallet)"
+          class="IWallet-card group relative flex flex-col rounded-xl overflow-hidden transition-all duration-150 ease-out cursor-pointer bg-surface-primary border border-separator hover:shadow-md"
+          @click="handleEditIWallet(IWallet)"
         >
           <!-- Top accent bar (brand color) -->
           <div
             class="absolute top-0 left-0 right-0 h-[3px] rounded-t-xl transition-opacity duration-150 ease-out"
-            :style="{ background: getWalletColor(wallet) }"
+            :style="{ background: getIWalletColor(IWallet) }"
           ></div>
 
           <!-- Header: Name + Balance -->
@@ -25,20 +25,20 @@
               <div class="flex items-center gap-2 min-w-0">
                 <div
                   class="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
-                  :style="{ background: getWalletColor(wallet) + '18' }"
+                  :style="{ background: getIWalletColor(IWallet) + '18' }"
                 >
                   <div
                     class="w-2 h-2 rounded-full"
-                    :style="{ background: getWalletColor(wallet) }"
+                    :style="{ background: getIWalletColor(IWallet) }"
                   ></div>
                 </div>
                 <span
                   class="text-[11px] font-semibold uppercase tracking-wider truncate text-tertiary"
-                >{{ wallet.name }}</span>
+                >{{ IWallet.name }}</span>
               </div>
               <img
-                v-if="wallet.icon"
-                :src="getWalletIcon(wallet)"
+                v-if="IWallet.icon"
+                :src="getIWalletIcon(IWallet)"
                 class="w-4 h-4 grayscale opacity-20 group-hover:opacity-60 group-hover:grayscale-0 transition-all shrink-0 object-contain mt-0.5"
               />
             </div>
@@ -46,7 +46,7 @@
             <p
               class="text-xl font-bold tracking-tight tabular-nums text-label"
             >
-              {{ formatCurrency(wallet.balance) }}
+              {{ formatCurrency(IWallet.balance) }}
             </p>
           </div>
 
@@ -60,8 +60,8 @@
               <div
                 class="h-full rounded-full transition-all duration-150 ease-out"
                 :style="{
-                  width: `${Math.min(100, getFinancialUsage(wallet.id))}%`,
-                  background: getFinancialUsage(wallet.id) > timeProgress
+                  width: `${Math.min(100, getFinancialUsage(IWallet.id))}%`,
+                  background: getFinancialUsage(IWallet.id) > timeProgress
                     ? 'var(--color-error)'
                     : 'var(--color-success)'
                 }"
@@ -75,13 +75,13 @@
 
             <div class="flex justify-between items-center">
               <span class="text-[10px] text-tertiary">
-                {{ walletStats(wallet.id)?.totalCount || 0 }} transações
+                {{ walletstats(IWallet.id)?.totalCount || 0 }} transações
               </span>
               <span
                 class="text-[10px] font-semibold"
-                :style="{ color: getFinancialUsage(wallet.id) > timeProgress ? 'var(--color-error)' : 'var(--color-success)' }"
+                :style="{ color: getFinancialUsage(IWallet.id) > timeProgress ? 'var(--color-error)' : 'var(--color-success)' }"
               >
-                {{ getHealthLabel(wallet.id) }}
+                {{ getHealthLabel(IWallet.id) }}
               </span>
             </div>
           </div>
@@ -104,29 +104,29 @@
       </NGridItem>
     </NGrid>
 
-    <WalletDialog :show="showModal" :wallet="selectedWallet" @close="closeModal" @saved="$emit('saved')" />
+    <IWalletDialog :show="showModal" :IWallet="selectedIWallet" @close="closeModal" @saved="$emit('saved')" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { NGrid, NGridItem } from 'naive-ui'
-import type { Wallet } from '../../domain/entities/Wallet'
+import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAssetLoader } from '@/shared/domain/contracts/IAssetLoader'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
-import WalletDialog from './WalletDialog.vue'
+import IWalletDialog from './IWalletDialog.vue'
 
-interface WalletStats { income: number; expense: number; totalCount: number; trend: number }
+interface walletstats { income: number; expense: number; totalCount: number; trend: number }
 
-const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.AssetLoader)
+const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.IAssetLoader)
 const isMobile = useIsMobile()
 const showModal = ref(false)
-const selectedWallet = ref<Wallet | null>(null)
-const props = defineProps<{ wallets: Wallet[], statsMap?: Record<string, WalletStats> }>()
+const selectedIWallet = ref<IWallet | null>(null)
+const props = defineProps<{ wallets: IWallet[], statsMap?: Record<string, walletstats> }>()
 const statsMap = computed(() => props.statsMap || {})
-const walletStats = (id: string) => statsMap.value[id]
+const walletstats = (id: string) => statsMap.value[id]
 
 defineEmits(['saved'])
 
@@ -135,30 +135,30 @@ const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
 const currentDay = now.getDate()
 const timeProgress = Math.round((currentDay / daysInMonth) * 100)
 
-function getFinancialUsage(walletId: string) {
-  const stats = walletStats(walletId)
+function getFinancialUsage(IWalletId: string) {
+  const stats = walletstats(IWalletId)
   if (!stats || stats.income === 0) return 0
   return Math.round((stats.expense / stats.income) * 100)
 }
 
-function getHealthLabel(walletId: string) {
-  const stats = walletStats(walletId)
+function getHealthLabel(IWalletId: string) {
+  const stats = walletstats(IWalletId)
   if (!stats || stats.totalCount === 0) return 'Ativo'
-  return getFinancialUsage(walletId) > timeProgress ? 'Atenção' : 'Saudável'
+  return getFinancialUsage(IWalletId) > timeProgress ? 'Atenção' : 'Saudável'
 }
 
-function handleNewAccount() { selectedWallet.value = null; showModal.value = true }
-function handleEditWallet(w: Wallet) { selectedWallet.value = w; showModal.value = true }
-function closeModal() { showModal.value = false; setTimeout(() => { selectedWallet.value = null }, 300) }
+function handleNewAccount() { selectedIWallet.value = null; showModal.value = true }
+function handleEditIWallet(w: IWallet) { selectedIWallet.value = w; showModal.value = true }
+function closeModal() { showModal.value = false; setTimeout(() => { selectedIWallet.value = null }, 300) }
 
 function formatCurrency(v: number | bigint) {
   const num = typeof v === 'bigint' ? Number(v) / 100 : v
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(num)
 }
 
-function getWalletIcon(w: Wallet) { return assetLoader.sanitize(w.icon) }
+function getIWalletIcon(w: IWallet) { return assetLoader.sanitize(w.icon) }
 
-function getWalletColor(w: Wallet) {
+function getIWalletColor(w: IWallet) {
   const c: Record<string, string> = {
     'Nubank': '#8205BE',
     'Inter': '#FF7A00',
@@ -177,5 +177,5 @@ function getWalletColor(w: Wallet) {
 </script>
 
 <style scoped>
-.wallet-card { height: 117px; min-width: 0; }
+.IWallet-card { height: 117px; min-width: 0; }
 </style>

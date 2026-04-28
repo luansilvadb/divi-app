@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { DexieTransactionRepository } from '../DexieTransactionRepository'
+import { DexieITransactionRepository } from '../DexieITransactionRepository'
 import { db } from '@/infrastructure/storage/VaultDatabase'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import { vi } from 'vitest'
 import 'fake-indexeddb/auto'
 
@@ -13,29 +13,29 @@ vi.mock('@/core/sync/SyncEngine', () => ({
   },
 }))
 
-describe('DexieTransactionRepository', () => {
-  let repository: DexieTransactionRepository
+describe('DexieITransactionRepository', () => {
+  let repository: DexieITransactionRepository
 
   beforeEach(async () => {
     // Limpa todas as tabelas antes de cada teste
     await Promise.all(Object.values(db.tables).map((table) => table.clear()))
-    repository = new DexieTransactionRepository()
+    repository = new DexieITransactionRepository()
   })
 
-  it('should save a transaction and automatically fill sync metadata via hooks', async () => {
+  it('should save a ITransaction and automatically fill sync metadata via hooks', async () => {
     // @ts-expect-error - omitting metadata to test hooks
-    const transaction: Transaction = {
+    const ITransaction: ITransaction = {
       id: 'tx-1',
       user_id: 'user-1',
       title: 'Coffee',
       amount: 450n,
       type: 'expense',
       category_id: 'cat-1',
-      wallet_id: 'wallet-1',
+      wallet_id: 'IWallet-1',
       date: '2026-04-07T10:00:00Z',
     }
 
-    await repository.create(transaction)
+    await repository.create(ITransaction)
 
     const all = await repository.getAll()
     expect(all).toHaveLength(1)
@@ -86,7 +86,7 @@ describe('DexieTransactionRepository', () => {
     expect(observable).toBeDefined()
   })
 
-  it('should mark for sync when a transaction is deleted (soft delete)', async () => {
+  it('should mark for sync when a ITransaction is deleted (soft delete)', async () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t1: any = {
       id: 'tx-to-delete',
@@ -137,15 +137,15 @@ describe('DexieTransactionRepository', () => {
     )
   })
 
-  // ── Wallet Balance Integration Tests (Task 4) ──
+  // ── IWallet Balance Integration Tests (Task 4) ──
 
-  it('should increase wallet balance when saving an income transaction', async () => {
-    // Setup: Create wallet with initial balance
+  it('should increase IWallet balance when saving an income ITransaction', async () => {
+    // Setup: Create IWallet with initial balance
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet: any = {
-      id: 'wallet-income-test',
+    const IWallet: any = {
+      id: 'IWallet-income-test',
       user_id: 'user-1',
-      name: 'Test Wallet',
+      name: 'Test IWallet',
       balance: 5000n, // R$ 50,00
       currency: 'BRL',
       type: 'checking',
@@ -155,17 +155,17 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(wallet)
+    await db.wallets.add(IWallet)
 
-    // Action: Save an income transaction
-    const incomeTx: Transaction = {
+    // Action: Save an income ITransaction
+    const incomeTx: ITransaction = {
       id: 'tx-income',
       user_id: 'user-1',
       title: 'Salary',
       amount: 300000n, // R$ 3.000,00
       type: 'income',
       category_id: 'cat-salary',
-      wallet_id: 'wallet-income-test',
+      wallet_id: 'IWallet-income-test',
       date: '2026-04-10T10:00:00Z',
       sync_status: 'pending',
       created_at: new Date().toISOString(),
@@ -175,18 +175,18 @@ describe('DexieTransactionRepository', () => {
     }
     await repository.create(incomeTx)
 
-    // Assertion: Wallet balance should be increased
-    const updatedWallet = await db.wallets.get('wallet-income-test')
-    expect(updatedWallet?.balance).toBe(305000n) // 5000 + 300000 = R$ 3.050,00
+    // Assertion: IWallet balance should be increased
+    const updatedIWallet = await db.wallets.get('IWallet-income-test')
+    expect(updatedIWallet?.balance).toBe(305000n) // 5000 + 300000 = R$ 3.050,00
   })
 
-  it('should decrease wallet balance when saving an expense transaction', async () => {
+  it('should decrease IWallet balance when saving an expense ITransaction', async () => {
     // Setup
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet: any = {
-      id: 'wallet-expense-test',
+    const IWallet: any = {
+      id: 'IWallet-expense-test',
       user_id: 'user-1',
-      name: 'Expense Wallet',
+      name: 'Expense IWallet',
       balance: 100000n, // R$ 1.000,00
       currency: 'BRL',
       type: 'checking',
@@ -196,17 +196,17 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(wallet)
+    await db.wallets.add(IWallet)
 
-    // Action: Save an expense transaction
-    const expenseTx: Transaction = {
+    // Action: Save an expense ITransaction
+    const expenseTx: ITransaction = {
       id: 'tx-expense',
       user_id: 'user-1',
       title: 'Groceries',
       amount: 4500n, // R$ 45,00
       type: 'expense',
       category_id: 'cat-food',
-      wallet_id: 'wallet-expense-test',
+      wallet_id: 'IWallet-expense-test',
       date: '2026-04-10T12:00:00Z',
       sync_status: 'pending',
       created_at: new Date().toISOString(),
@@ -216,18 +216,18 @@ describe('DexieTransactionRepository', () => {
     }
     await repository.create(expenseTx)
 
-    // Assertion: Wallet balance should be decreased
-    const updatedWallet = await db.wallets.get('wallet-expense-test')
-    expect(updatedWallet?.balance).toBe(95500n) // 100000 - 4500 = R$ 955,00
+    // Assertion: IWallet balance should be decreased
+    const updatedIWallet = await db.wallets.get('IWallet-expense-test')
+    expect(updatedIWallet?.balance).toBe(95500n) // 100000 - 4500 = R$ 955,00
   })
 
-  it('should reverse old transaction balance when updating an existing transaction', async () => {
-    // Setup: Wallet + existing expense transaction
+  it('should reverse old ITransaction balance when updating an existing ITransaction', async () => {
+    // Setup: IWallet + existing expense ITransaction
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet: any = {
-      id: 'wallet-update-test',
+    const IWallet: any = {
+      id: 'IWallet-update-test',
       user_id: 'user-1',
-      name: 'Update Wallet',
+      name: 'Update IWallet',
       balance: 80000n, // R$ 800,00
       currency: 'BRL',
       type: 'checking',
@@ -237,7 +237,7 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(wallet)
+    await db.wallets.add(IWallet)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldTx: any = {
@@ -247,7 +247,7 @@ describe('DexieTransactionRepository', () => {
       amount: 2000n, // R$ 20,00 expense
       type: 'expense',
       category_id: 'cat-old',
-      wallet_id: 'wallet-update-test',
+      wallet_id: 'IWallet-update-test',
       date: '2026-04-10T10:00:00Z',
       sync_status: 'synced',
       client_updated_at: new Date().toISOString(),
@@ -256,13 +256,13 @@ describe('DexieTransactionRepository', () => {
       deleted: false,
     }
     await db.transactions.add(oldTx)
-    // Wallet balance should already reflect the old transaction: 80000n includes the -2000n
-    // Actually, the wallet was created at 80000n and then the tx was added separately.
-    // Let's set the wallet to reflect the state after the old tx: started at 82000n, after -2000n = 80000n
-    await db.wallets.update('wallet-update-test', { balance: 80000n })
+    // IWallet balance should already reflect the old ITransaction: 80000n includes the -2000n
+    // Actually, the IWallet was created at 80000n and then the tx was added separately.
+    // Let's set the IWallet to reflect the state after the old tx: started at 82000n, after -2000n = 80000n
+    await db.wallets.update('IWallet-update-test', { balance: 80000n })
 
-    // Action: Update the transaction to a higher amount
-    const updatedTx: Transaction = {
+    // Action: Update the ITransaction to a higher amount
+    const updatedTx: ITransaction = {
       ...oldTx,
       amount: 5000n, // R$ 50,00 (increased from R$ 20,00)
       client_updated_at: new Date().toISOString(),
@@ -270,17 +270,17 @@ describe('DexieTransactionRepository', () => {
     await repository.update(updatedTx.id, updatedTx)
 
     // Assertion: Balance should reflect the delta: 80000 - 5000 + 2000 = 77000n
-    const updatedWallet = await db.wallets.get('wallet-update-test')
-    expect(updatedWallet?.balance).toBe(77000n)
+    const updatedIWallet = await db.wallets.get('IWallet-update-test')
+    expect(updatedIWallet?.balance).toBe(77000n)
   })
 
-  it('should handle wallet change by reversing old wallet and crediting new wallet', async () => {
-    // Setup: Two wallets + existing transaction in wallet A
+  it('should handle IWallet change by reversing old IWallet and crediting new IWallet', async () => {
+    // Setup: Two wallets + existing ITransaction in IWallet A
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const walletA: any = {
-      id: 'wallet-a',
+    const IWalletA: any = {
+      id: 'IWallet-a',
       user_id: 'user-1',
-      name: 'Wallet A',
+      name: 'IWallet A',
       balance: 98000n, // Already has -2000n from old tx
       currency: 'BRL',
       type: 'checking',
@@ -291,10 +291,10 @@ describe('DexieTransactionRepository', () => {
       deleted: false,
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const walletB: any = {
-      id: 'wallet-b',
+    const IWalletB: any = {
+      id: 'IWallet-b',
       user_id: 'user-1',
-      name: 'Wallet B',
+      name: 'IWallet B',
       balance: 50000n,
       currency: 'BRL',
       type: 'savings',
@@ -304,17 +304,17 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.bulkAdd([walletA, walletB])
+    await db.wallets.bulkAdd([IWalletA, IWalletB])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldTx: any = {
-      id: 'tx-wallet-change',
+      id: 'tx-IWallet-change',
       user_id: 'user-1',
       title: 'Old Tx',
       amount: 2000n,
       type: 'expense',
       category_id: 'cat-1',
-      wallet_id: 'wallet-a',
+      wallet_id: 'IWallet-a',
       date: '2026-04-10T10:00:00Z',
       sync_status: 'synced',
       client_updated_at: new Date().toISOString(),
@@ -324,28 +324,28 @@ describe('DexieTransactionRepository', () => {
     }
     await db.transactions.add(oldTx)
 
-    // Action: Move transaction from wallet A to wallet B
-    const movedTx: Transaction = {
+    // Action: Move ITransaction from IWallet A to IWallet B
+    const movedTx: ITransaction = {
       ...oldTx,
-      wallet_id: 'wallet-b', // Changed wallet
+      wallet_id: 'IWallet-b', // Changed IWallet
       client_updated_at: new Date().toISOString(),
     }
     await repository.update(movedTx.id, movedTx)
 
-    // Assertion: Wallet A should be credited (reversed), Wallet B should be debited
-    const finalWalletA = await db.wallets.get('wallet-a')
-    const finalWalletB = await db.wallets.get('wallet-b')
-    expect(finalWalletA?.balance).toBe(100000n) // 98000 + 2000 (reversed)
-    expect(finalWalletB?.balance).toBe(48000n)  // 50000 - 2000
+    // Assertion: IWallet A should be credited (reversed), IWallet B should be debited
+    const finalIWalletA = await db.wallets.get('IWallet-a')
+    const finalIWalletB = await db.wallets.get('IWallet-b')
+    expect(finalIWalletA?.balance).toBe(100000n) // 98000 + 2000 (reversed)
+    expect(finalIWalletB?.balance).toBe(48000n)  // 50000 - 2000
   })
 
-  it('should reverse wallet balance when soft-deleting a transaction', async () => {
+  it('should reverse IWallet balance when soft-deleting a ITransaction', async () => {
     // Setup
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wallet: any = {
-      id: 'wallet-delete-test',
+    const IWallet: any = {
+      id: 'IWallet-delete-test',
       user_id: 'user-1',
-      name: 'Delete Wallet',
+      name: 'Delete IWallet',
       balance: 95000n, // After a R$ 50 expense from 100000n
       currency: 'BRL',
       type: 'checking',
@@ -355,7 +355,7 @@ describe('DexieTransactionRepository', () => {
       version: 1,
       deleted: false,
     }
-    await db.wallets.add(wallet)
+    await db.wallets.add(IWallet)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tx: any = {
@@ -365,7 +365,7 @@ describe('DexieTransactionRepository', () => {
       amount: 5000n, // R$ 50,00
       type: 'expense',
       category_id: 'cat-1',
-      wallet_id: 'wallet-delete-test',
+      wallet_id: 'IWallet-delete-test',
       date: '2026-04-10T10:00:00Z',
       sync_status: 'synced',
       client_updated_at: new Date().toISOString(),
@@ -378,29 +378,29 @@ describe('DexieTransactionRepository', () => {
     // Action: Soft delete
     await repository.delete('tx-to-soft-delete')
 
-    // Assertion: Wallet balance should be reversed (credited back)
-    const updatedWallet = await db.wallets.get('wallet-delete-test')
-    expect(updatedWallet?.balance).toBe(100000n) // 95000 + 5000
+    // Assertion: IWallet balance should be reversed (credited back)
+    const updatedIWallet = await db.wallets.get('IWallet-delete-test')
+    expect(updatedIWallet?.balance).toBe(100000n) // 95000 + 5000
 
-    // Transaction should be marked as deleted
+    // ITransaction should be marked as deleted
     const deletedTx = await db.transactions.get('tx-to-soft-delete')
     expect(deletedTx?.deleted).toBe(true)
   })
 
-  it('should NOT update wallet balance when wallet does not exist', async () => {
-    // Setup: No wallet in DB
-    const initialWallets = await db.wallets.toArray()
-    expect(initialWallets).toHaveLength(0)
+  it('should NOT update IWallet balance when IWallet does not exist', async () => {
+    // Setup: No IWallet in DB
+    const initialwallets = await db.wallets.toArray()
+    expect(initialwallets).toHaveLength(0)
 
-    // Action: Save transaction referencing non-existent wallet
-    const orphanTx: Transaction = {
+    // Action: Save ITransaction referencing non-existent IWallet
+    const orphanTx: ITransaction = {
       id: 'tx-orphan',
       user_id: 'user-1',
       title: 'Orphan Tx',
       amount: 10000n,
       type: 'income',
       category_id: 'cat-1',
-      wallet_id: 'non-existent-wallet',
+      wallet_id: 'non-existent-IWallet',
       date: '2026-04-10T10:00:00Z',
       sync_status: 'pending',
       created_at: new Date().toISOString(),
@@ -409,16 +409,16 @@ describe('DexieTransactionRepository', () => {
       deleted: false,
     }
 
-    // Should not throw (gracefully handles missing wallet)
+    // Should not throw (gracefully handles missing IWallet)
     await expect(repository.create(orphanTx)).resolves.not.toThrow()
 
-    // Transaction should be saved
+    // ITransaction should be saved
     const saved = await db.transactions.get('tx-orphan')
     expect(saved).toBeDefined()
     expect(saved?.amount).toBe(10000n)
 
     // No wallets should exist (nothing to update)
-    const finalWallets = await db.wallets.toArray()
-    expect(finalWallets).toHaveLength(0)
+    const finalwallets = await db.wallets.toArray()
+    expect(finalwallets).toHaveLength(0)
   })
 })

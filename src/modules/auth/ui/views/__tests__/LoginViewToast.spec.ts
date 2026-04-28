@@ -33,7 +33,7 @@ describe('LoginView.vue - Feedback (Message)', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     vi.clearAllMocks()
-    container.register(DI_TOKENS.AuthService, mockAuthService)
+    container.register(DI_TOKENS.IAuthService, mockAuthService)
   })
 
   it('submits login form successfully', async () => {

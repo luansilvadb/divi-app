@@ -1,4 +1,4 @@
-import type { DexieMigration } from '../types'
+import type { IDexieMigration } from '../types'
 
 /**
  * Migration 003 - Convert to BigInt
@@ -6,21 +6,21 @@ import type { DexieMigration } from '../types'
  * Converte todos os campos financeiros de 'number' para 'bigint' nativo
  * para garantir precisão absoluta (Elite Precision).
  */
-export const migration003ConvertToBigInt: DexieMigration = {
+export const migration003ConvertToBigInt: IDexieMigration = {
   version: 3,
   name: 'convert_to_bigint',
   description: 'Converte campos monetários para BigInt para suporte a minor-units com precisão total.',
   createdAt: '2026-04-12T23:30:00Z',
   stores: {}, // Mantém os mesmos índices
   upgrade: async (trans) => {
-    // 1. Transactions: amount
+    // 1. transactions: amount
     await trans.table('transactions').toCollection().modify((item) => {
       if (typeof item.amount === 'number') {
         item.amount = BigInt(Math.round(item.amount))
       }
     })
 
-    // 2. Wallets: balance
+    // 2. wallets: balance
     await trans.table('wallets').toCollection().modify((item) => {
       if (typeof item.balance === 'number') {
         item.balance = BigInt(Math.round(item.balance))

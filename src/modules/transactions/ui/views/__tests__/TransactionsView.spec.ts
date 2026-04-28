@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
-import TransactionsView from '../TransactionsView.vue'
+import transactionsView from '../transactionsView.vue'
 import { ref, nextTick } from 'vue'
 
 // Mock shared components
@@ -60,28 +60,28 @@ vi.mock('@/infrastructure/storage/VaultDatabase', () => ({
   },
 }))
 
-// Mock transaction store to avoid IndexedDB calls
-vi.mock('../../application/stores/transactionStore', () => ({
-  useTransactionStore: () => ({
+// Mock ITransaction store to avoid IndexedDB calls
+vi.mock('../../application/stores/transactionstore', () => ({
+  usetransactionstore: () => ({
     transactions: [],
     wallets: [],
     categories: [],
     isLoading: false,
     searchQuery: '',
     categoryMap: {},
-    walletMap: {},
+    IWalletMap: {},
     totalIncome: 0,
     totalExpense: 0,
     monthlyBalance: 0,
     topCategories: [],
-    groupedTransactions: {},
-    fetchWallets: vi.fn().mockResolvedValue(undefined),
+    groupedtransactions: {},
+    fetchwallets: vi.fn().mockResolvedValue(undefined),
     fetchCategories: vi.fn().mockResolvedValue(undefined),
-    fetchTransactionsByMonth: vi.fn().mockResolvedValue(undefined),
+    fetchtransactionsByMonth: vi.fn().mockResolvedValue(undefined),
   }),
 }))
 
-describe('TransactionsView', () => {
+describe('transactionsView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     isMobileMock.value = false
@@ -90,13 +90,13 @@ describe('TransactionsView', () => {
   it('renders correctly on desktop', () => {
     isMobileMock.value = false
 
-    const wrapper = mount(TransactionsView, {
+    const wrapper = mount(transactionsView, {
       global: {
         stubs: {
           BaseButton: {
             template: '<button><slot /></button>',
           },
-          TransactionItem: true,
+          ITransactionItem: true,
           BaseCard: true,
           BaseSummaryItem: true,
           BaseProgressBar: true,
@@ -104,7 +104,7 @@ describe('TransactionsView', () => {
           BaseMonthSwitcher: true,
           BaseSearchInput: true,
           BaseConfirmDialog: true,
-          TransactionDialog: true,
+          ITransactionDialog: true,
           Teleport: true,
         },
       },
@@ -118,11 +118,11 @@ describe('TransactionsView', () => {
   it('renders correctly on mobile', async () => {
     isMobileMock.value = true
 
-    const wrapper = mount(TransactionsView, {
+    const wrapper = mount(transactionsView, {
       global: {
         stubs: {
           BaseButton: true,
-          TransactionItem: true,
+          ITransactionItem: true,
           BaseCard: true,
           BaseSummaryItem: true,
           BaseProgressBar: true,
@@ -130,7 +130,7 @@ describe('TransactionsView', () => {
           BaseMonthSwitcher: true,
           BaseSearchInput: true,
           BaseConfirmDialog: true,
-          TransactionDialog: true,
+          ITransactionDialog: true,
           Teleport: { template: '<div><slot /></div>' },
         },
       },

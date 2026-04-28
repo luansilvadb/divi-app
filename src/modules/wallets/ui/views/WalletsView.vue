@@ -6,7 +6,7 @@
   >
     <template #action>
       <div class="flex items-center gap-3">
-        <AppleButton variant="primary" size="medium" @click="showAddModal = true" id="btn-create-wallet">
+        <AppleButton variant="primary" size="medium" @click="showAddModal = true" id="btn-create-IWallet">
           Nova Carteira
         </AppleButton>
       </div>
@@ -20,7 +20,7 @@
           class="py-24"
         >
           <template #icon>
-            <i class="i-lucide-wallet text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
+            <i class="i-lucide-IWallet text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
           </template>
         </NEmpty>
 
@@ -32,18 +32,18 @@
           responsive="screen"
           item-responsive
         >
-          <NGridItem v-for="wallet in wallets" :key="wallet.id">
+          <NGridItem v-for="IWallet in wallets" :key="IWallet.id">
             <NCard size="medium" hoverable class="h-full">
               <template #header>
                 <div class="flex items-center gap-3">
-                  <i :class="getWalletIcon(wallet.type)" class="text-xl text-primary-400"></i>
-                  <span class="font-inter font-semibold">{{ wallet.name }}</span>
+                  <i :class="getIWalletIcon(IWallet.type)" class="text-xl text-primary-400"></i>
+                  <span class="font-inter font-semibold">{{ IWallet.name }}</span>
                 </div>
               </template>
               <div class="mt-4">
                 <NText depth="3" class="text-xs uppercase tracking-wider block mb-1">Saldo Atual</NText>
                 <div class="font-jetbrains text-2xl font-semibold tracking-tight tabular-nums">
-                  {{ formatCurrency(Number(wallet.balance) / 100) }}
+                  {{ formatCurrency(Number(IWallet.balance) / 100) }}
                 </div>
               </div>
             </NCard>
@@ -62,13 +62,13 @@
     </div>
 
     <NModal v-model:show="showAddModal" preset="card" title="Nova Carteira" style="width: 400px">
-      <NForm ref="formRef" :model="formModel" :rules="formRules" @submit.prevent="handleSaveWallet">
+      <NForm ref="formRef" :model="formModel" :rules="formRules" @submit.prevent="handleSaveIWallet">
         <NFormItem label="Nome" path="name">
-          <NInput v-model:value="formModel.name" id="input-wallet-name" placeholder="Ex: NuBank, Dinheiro, Reserva..." />
+          <NInput v-model:value="formModel.name" id="input-IWallet-name" placeholder="Ex: NuBank, Dinheiro, Reserva..." />
         </NFormItem>
 
         <NFormItem label="Tipo" path="type">
-          <NSelect v-model:value="formModel.type" :options="typeOptions" id="select-wallet-type" />
+          <NSelect v-model:value="formModel.type" :options="typeOptions" id="select-IWallet-type" />
         </NFormItem>
 
         <NFormItem label="Saldo Inicial" path="balance">
@@ -76,7 +76,7 @@
             v-model:value="formModel.balance"
             :precision="2"
             :step="0.01"
-            id="input-wallet-balance"
+            id="input-IWallet-balance"
             class="w-full"
           >
             <template #prefix>R$</template>
@@ -85,7 +85,7 @@
 
         <div class="flex justify-end gap-3 mt-6">
           <NButton @click="showAddModal = false">Cancelar</NButton>
-          <NButton type="primary" attr-type="submit" :loading="isSaving" id="btn-save-wallet">
+          <NButton type="primary" attr-type="submit" :loading="isSaving" id="btn-save-IWallet">
             Salvar
           </NButton>
         </div>
@@ -121,17 +121,17 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
-import type { WalletService } from '../../application/services/WalletService'
+import type { IWalletService } from '../../core/ports/IWalletService'
 
 const message = useMessage()
-const walletService = useService<WalletService>(DI_TOKENS.WalletService)
+const walletService = useService<IWalletService>(DI_TOKENS.IWalletService)
 const isMobile = useIsMobile()
 
 // Subscribe to RxJS subject
 const wallets = useObservable(walletService.wallets$)
 
 onMounted(() => {
-  walletService.loadWallets()
+  walletService.loadwallets()
 })
 
 const totalPatrimony = computed(() => {
@@ -160,7 +160,7 @@ const typeOptions = [
   { label: 'Dinheiro Físico', value: 'cash' },
 ]
 
-function getWalletIcon(type: string) {
+function getIWalletIcon(type: string) {
   switch (type) {
     case 'cash': return 'i-lucide-coins'
     case 'investment': return 'i-lucide-line-chart'
@@ -168,11 +168,11 @@ function getWalletIcon(type: string) {
   }
 }
 
-async function handleSaveWallet() {
+async function handleSaveIWallet() {
   if (!formModel.value.name) return
   isSaving.value = true
   try {
-    await walletService.createWallet({
+    await walletService.createIWallet({
       name: formModel.value.name,
       type: formModel.value.type as any,
       currency: 'BRL',

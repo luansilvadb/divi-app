@@ -31,7 +31,7 @@
           </AppleButton>
         </div>
 
-        <!-- Apple-style Category Cards -->
+        <!-- Apple-style ICategory Cards -->
         <div v-else class="apple-category-grid">
           <div
             v-for="category in displayCategories"
@@ -116,12 +116,12 @@ import StandardPageLayout from '@/shared/components/templates/StandardPageLayout
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import CategoryDialog from '@/shared/components/organisms/CategoryDialog.vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
-import type { CategoryService } from '../../application/services/CategoryService'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategoryService } from '../../core/ports/ICategoryService'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 const message = useMessage()
 const dialog = useDialog()
-const categoryService = useService<CategoryService>(DI_TOKENS.CategoryService)
+const categoryService = useService<ICategoryService>(DI_TOKENS.ICategoryService)
 const isMobile = useIsMobile()
 
 // Subscribe to RxJS subject
@@ -151,7 +151,7 @@ onMounted(() => {
 
 const showModal = ref(false)
 const isSaving = ref(false)
-const editingCategory = ref<Category | null>(null)
+const editingCategory = ref<ICategory | null>(null)
 
 const parentOptions = computed(() => {
   if (!categories.value) return []
@@ -168,7 +168,7 @@ function openAddModal() {
   showModal.value = true
 }
 
-function openEditModal(category: Category) {
+function openEditModal(category: ICategory) {
   editingCategory.value = category
   showModal.value = true
 }
@@ -276,7 +276,7 @@ function handleDelete() {
   max-width: 400px;
 }
 
-/* Apple Category Grid */
+/* Apple ICategory Grid */
 .apple-category-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -305,7 +305,7 @@ function handleDelete() {
   }
 }
 
-/* Apple Category Card */
+/* Apple ICategory Card */
 .apple-category-card {
   background: #ffffff;
   border-radius: 18px;

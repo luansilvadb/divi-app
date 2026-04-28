@@ -1,12 +1,13 @@
 import { BehaviorSubject } from 'rxjs'
-import type { ICategoryRepository } from '@/shared/domain/contracts/ICategoryRepository'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategoryRepository } from '../../core/ports/ICategoryRepository'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
+import type { ICategoryService } from '@/modules/categories/core/ports/ICategoryService'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 import { AuthError, ValidationError, NotFoundError } from '@/core/errors'
 
 
-export class CategoryService {
-  private _categoriesSubject = new BehaviorSubject<Category[]>([])
+export class CategoryService implements ICategoryService {
+  private _categoriesSubject = new BehaviorSubject<ICategory[]>([])
   public readonly categoriesSubject = this._categoriesSubject
   public readonly categories$ = this._categoriesSubject.asObservable()
 
@@ -15,7 +16,7 @@ export class CategoryService {
   async loadCategories(): Promise<void> {
     const allCategories = await this.categoryRepository.getAll()
     // Single-pass filter using for loop (more efficient than .filter())
-    const activeCategories: Category[] = []
+    const activeCategories: ICategory[] = []
     for (let i = 0, len = allCategories.length; i < len; i++) {
       if (!allCategories[i]!.deleted) activeCategories.push(allCategories[i]!)
     }
@@ -32,7 +33,7 @@ export class CategoryService {
 
     if (!userId) return
 
-    const defaults: Partial<Category>[] = [
+    const defaults: Partial<ICategory>[] = [
       { id: crypto.randomUUID(), name: 'Alimentação', icon: 'i-lucide-utensils', color: '#10b981' },
       { id: crypto.randomUUID(), name: 'Transporte', icon: 'i-lucide-bus', color: '#3b82f6' },
       { id: crypto.randomUUID(), name: 'Lazer', icon: 'i-lucide-ticket', color: '#8b5cf6' },
@@ -50,7 +51,7 @@ export class CategoryService {
 
     // Recarrega após o seed (single-pass filter)
     const allCategories = await this.categoryRepository.getAll()
-    const activeCategories: Category[] = []
+    const activeCategories: ICategory[] = []
     for (let i = 0, len = allCategories.length; i < len; i++) {
       if (!allCategories[i]!.deleted) activeCategories.push(allCategories[i]!)
     }
@@ -64,8 +65,8 @@ export class CategoryService {
     if (!userId) throw new AuthError('User not authenticated')
 
     // Guard clause: Required field validation
-    if (!params.name?.trim()) throw new ValidationError('Category name is required')
-    if (!params.color?.trim()) throw new ValidationError('Category color is required')
+    if (!params.name?.trim()) throw new ValidationError('ICategory name is required')
+    if (!params.color?.trim()) throw new ValidationError('ICategory color is required')
 
     await this.categoryRepository.create({
       user_id: userId,
@@ -79,21 +80,21 @@ export class CategoryService {
 
   async updateCategory(id: string, params: { name: string; icon: string; color: string; parent_id?: string | null }): Promise<void> {
     // Guard clause: ID validation
-    if (!id?.trim()) throw new ValidationError('Category ID is required')
+    if (!id?.trim()) throw new ValidationError('ICategory ID is required')
 
     const allCategories = await this.categoryRepository.getAll()
 
     // Use Map for O(1) lookup instead of O(n) find
-    const categoryMap = new Map<string, Category>()
+    const categoryMap = new Map<string, ICategory>()
     for (const cat of allCategories) {
       categoryMap.set(cat.id, cat)
     }
 
     const existing = categoryMap.get(id)
-    if (!existing) throw new NotFoundError('Category')
+    if (!existing) throw new NotFoundError('ICategory')
 
     // Guard clause: Required fields on update
-    if (!params.name?.trim()) throw new ValidationError('Category name is required')
+    if (!params.name?.trim()) throw new ValidationError('ICategory name is required')
 
     await this.categoryRepository.update(id, {
       name: params.name.trim(),

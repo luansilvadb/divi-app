@@ -7,7 +7,7 @@ import type {
   AuthChangeEvent,
   Session,
   AuthError,
-  User,
+  IUser,
 } from '@supabase/supabase-js'
 
 // Helper para criar um mock de tabela Supabase com método delete em cadeia
@@ -101,17 +101,17 @@ describe('SupabaseAuth', () => {
     expect(supabase.auth.signOut).toHaveBeenCalled()
   })
 
-  it('should return mapped User when getCurrentUser is called', async () => {
+  it('should return mapped IUser when getCurrentUser is called', async () => {
     const mockSupabaseUser = {
       id: '123',
       email: 'test@test.com',
       user_metadata: {
-        full_name: 'Test User',
+        full_name: 'Test IUser',
         avatar_url: 'http://test.com/avatar.png',
       },
     }
     vi.mocked(supabase.auth.getUser).mockResolvedValueOnce({
-      data: { user: mockSupabaseUser as unknown as User },
+      data: { user: mockSupabaseUser as unknown as IUser },
       error: null,
     } as UserResponse)
 
@@ -121,7 +121,7 @@ describe('SupabaseAuth', () => {
     expect(user).toEqual({
       id: '123',
       email: 'test@test.com',
-      name: 'Test User',
+      name: 'Test IUser',
       avatar_url: 'http://test.com/avatar.png',
     })
   })
@@ -148,7 +148,7 @@ describe('SupabaseAuth', () => {
             id: '123',
             email: 'test@test.com',
             user_metadata: {
-              full_name: 'Test User',
+              full_name: 'Test IUser',
             },
           },
         } as unknown as Session,
@@ -164,7 +164,7 @@ describe('SupabaseAuth', () => {
     expect(callback).toHaveBeenCalledWith({
       id: '123',
       email: 'test@test.com',
-      name: 'Test User',
+      name: 'Test IUser',
       avatar_url: undefined,
     })
   })

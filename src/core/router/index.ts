@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { container } from '../di'
-import type { IAuthService } from '../../modules/auth/domain/contracts/IAuthService'
+import type { IAuthService } from '../../modules/auth/core/ports/IAuthService'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

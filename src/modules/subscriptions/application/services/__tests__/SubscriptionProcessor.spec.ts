@@ -43,7 +43,7 @@ describe('SubscriptionProcessor', () => {
       amount: 5000n,
       billing_day: 10,
       category_id: 'cat-1',
-      wallet_id: 'wallet-1',
+      wallet_id: 'IWallet-1',
       last_billed_at: null,
       deleted: false,
     }
@@ -79,7 +79,7 @@ describe('SubscriptionProcessor', () => {
       amount: 5000n,
       billing_day: 10,
       category_id: 'cat-1',
-      wallet_id: 'wallet-1',
+      wallet_id: 'IWallet-1',
       last_billed_at: mockDate.toISOString(), // Already billed today
       deleted: false,
     }

@@ -1,46 +1,47 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import type { IWalletRepository } from '@/shared/domain/contracts/IWalletRepository';
-import type { Wallet } from '@/shared/domain/entities/Wallet';
+import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository';
+import type { IWallet } from '@/modules/wallets/core/entities/IWallet';
+import type { IWalletService } from '@/modules/wallets/core/ports/IWalletService';
 import { useAuthStore } from '@/modules/auth/application/authStore';
 import { AuthError, ValidationError } from '@/core/errors';
 
 // Constants for currency conversion
 const MINOR_UNIT_MULTIPLIER = 100;
 
-export class WalletService {
-  private _walletsSubject = new BehaviorSubject<Wallet[]>([]);
+export class WalletService implements IWalletService {
+  private _walletsSubject = new BehaviorSubject<IWallet[]>([]);
   public readonly walletsSubject = this._walletsSubject;
-  public wallets$: Observable<Wallet[]> = this._walletsSubject.asObservable();
+  public wallets$: Observable<IWallet[]> = this._walletsSubject.asObservable();
 
-  constructor(private walletRepo: IWalletRepository) {}
+  constructor(private IWalletRepo: IWalletRepository) {}
 
-  async loadWallets(): Promise<void> {
-    const wallets = await this.walletRepo.getAll();
+  async loadwallets(): Promise<void> {
+    const wallets = await this.IWalletRepo.getAll();
     this._walletsSubject.next(wallets);
   }
 
-  async createWallet(walletData: Pick<Wallet, 'name' | 'type' | 'currency' | 'icon'> & { balance: number }): Promise<void> {
+  async createIWallet(IWalletData: Pick<IWallet, 'name' | 'type' | 'currency' | 'icon'> & { balance: number }): Promise<void> {
     // Guard clause: Authentication check
     const authStore = useAuthStore();
     const activeUserId = authStore.user?.id;
     if (!activeUserId) throw new AuthError('User not authenticated');
 
     // Guard clause: Required field validation
-    if (!walletData.name?.trim()) throw new ValidationError('Wallet name is required');
-    if (!walletData.currency?.trim()) throw new ValidationError('Wallet currency is required');
+    if (!IWalletData.name?.trim()) throw new ValidationError('IWallet name is required');
+    if (!IWalletData.currency?.trim()) throw new ValidationError('IWallet currency is required');
 
-    const walletToCreate: any = {
-      ...walletData,
-      balance: BigInt(Math.round(walletData.balance * MINOR_UNIT_MULTIPLIER)),
+    const IWalletToCreate: any = {
+      ...IWalletData,
+      balance: BigInt(Math.round(IWalletData.balance * MINOR_UNIT_MULTIPLIER)),
       user_id: activeUserId,
     };
 
-    await this.walletRepo.create(walletToCreate);
-    await this.loadWallets();
+    await this.IWalletRepo.create(IWalletToCreate);
+    await this.loadwallets();
   }
 
-  async updateWallet(id: string, walletData: Partial<Wallet>): Promise<void> {
-    await this.walletRepo.update(id, walletData);
-    await this.loadWallets();
+  async updateIWallet(id: string, IWalletData: Partial<IWallet>): Promise<void> {
+    await this.IWalletRepo.update(id, IWalletData);
+    await this.loadwallets();
   }
 }

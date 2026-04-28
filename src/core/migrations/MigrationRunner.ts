@@ -1,10 +1,10 @@
 import type Dexie from 'dexie'
-import type { DexieMigration, MigrationResult } from './types'
+import type { IIDexieMigration, IMigrationResult } from './types'
 import { MigrationRegistry } from './MigrationRegistry'
 
 /**
  * Orchestrates the application of all registered Dexie migrations.
- * Translates each DexieMigration into Dexie's native `.version().stores().upgrade()` calls.
+ * Translates each IIDexieMigration into Dexie's native `.version().stores().upgrade()` calls.
  */
 export class MigrationRunner {
   /**
@@ -14,11 +14,11 @@ export class MigrationRunner {
    * Internally, this iterates over the MigrationRegistry and calls:
    *   `db.version(N).stores(migration.stores).upgrade(migration.upgrade)`
    *
-   * @returns Array of MigrationResult describing the outcome of each migration.
+   * @returns Array of IMigrationResult describing the outcome of each migration.
    */
-  static applyAll(db: Dexie): MigrationResult[] {
+  static applyAll(db: Dexie): IMigrationResult[] {
     const migrations = MigrationRegistry.getAll()
-    const results: MigrationResult[] = []
+    const results: IMigrationResult[] = []
 
     // Validate sequence integrity before applying
     MigrationRegistry.validate()
@@ -44,6 +44,7 @@ export class MigrationRunner {
         results.push({
           version: migration.version,
           name: migration.name,
+          success: true,
           status: 'applied',
           duration,
         })
@@ -58,6 +59,7 @@ export class MigrationRunner {
         results.push({
           version: migration.version,
           name: migration.name,
+          success: false,
           status: 'failed',
           error: errorMessage,
           duration,
@@ -83,7 +85,7 @@ export class MigrationRunner {
   /**
    * Applies a single migration to the Dexie instance.
    */
-  private static applyMigration(db: Dexie, migration: DexieMigration): void {
+  private static applyMigration(db: Dexie, migration: IIDexieMigration): void {
     const version = db.version(migration.version).stores(migration.stores)
 
     if (migration.upgrade) {

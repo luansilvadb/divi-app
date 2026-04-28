@@ -90,11 +90,11 @@
 import { NModal, NDrawer, NText } from 'naive-ui'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import CategoryFormContent from './CategoryFormContent.vue'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 defineProps<{
   show: boolean
-  category?: Category | null
+  category?: ICategory | null
   parentOptions: Array<{ label: string; value: string }>
 }>()
 

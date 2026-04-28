@@ -1,17 +1,17 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { ref } from 'vue'
-import { useTransactionStats } from '../../application/stores/useTransactionStats'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
+import { usetransactionstats } from '../../application/stores/usetransactionstats'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 type UITransaction = any
 
 describe('Balance Calculation', () => {
-  let mockTransactions: UITransaction[]
-  let mockCategoryMap: Record<string, Category>
+  let mocktransactions: UITransaction[]
+  let mockCategoryMap: Record<string, ICategory>
 
   beforeEach(() => {
-    mockTransactions = [
+    mocktransactions = [
       {
         id: 'tx-1',
         title: 'Salary',
@@ -19,7 +19,7 @@ describe('Balance Calculation', () => {
         amount: 500000n, // R$ 5.000,00
         type: 'income',
         category_id: 'cat-income',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-01',
         _dateKey: '2026-04-01',
         _timestamp: 1711929600000,
@@ -38,7 +38,7 @@ describe('Balance Calculation', () => {
         amount: 15000n, // R$ 150,00
         type: 'expense',
         category_id: 'cat-food',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-15',
         _dateKey: '2026-04-15',
         _timestamp: 1713139200000,
@@ -57,7 +57,7 @@ describe('Balance Calculation', () => {
         amount: 4500n, // R$ 45,00
         type: 'expense',
         category_id: 'cat-entertainment',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-20',
         _dateKey: '2026-04-20',
         _timestamp: 1713571200000,
@@ -72,37 +72,37 @@ describe('Balance Calculation', () => {
     ]
 
     mockCategoryMap = {
-      'cat-income': { id: 'cat-income', name: 'Salary', color: '#3b82f6', icon: 'wallet' },
+      'cat-income': { id: 'cat-income', name: 'Salary', color: '#3b82f6', icon: 'IWallet' },
       'cat-food': { id: 'cat-food', name: 'Food', color: '#10b981', icon: 'shopping' },
       'cat-entertainment': { id: 'cat-entertainment', name: 'Entertainment', color: '#8b5cf6', icon: 'movie' },
     }
   })
 
-  describe('useTransactionStats', () => {
+  describe('usetransactionstats', () => {
     it('should calculate total income correctly', () => {
-      const transactionsRef = ref(mockTransactions as unknown as Transaction[])
+      const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome } = useTransactionStats(transactionsRef, () => ref(categoryMap))
+      const { totalIncome } = usetransactionstats(transactionsRef, () => ref(categoryMap))
 
       expect(totalIncome.value).toBe(5000) // 500000n / 100 = 5000
     })
 
     it('should calculate total expense correctly', () => {
-      const transactionsRef = ref(mockTransactions as unknown as Transaction[])
+      const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalExpense } = useTransactionStats(transactionsRef, () => ref(categoryMap))
+      const { totalExpense } = usetransactionstats(transactionsRef, () => ref(categoryMap))
 
       // 15000n + 4500n = 19500n / 100 = 195
       expect(totalExpense.value).toBe(195)
     })
 
     it('should calculate monthly balance correctly', () => {
-      const transactionsRef = ref(mockTransactions as unknown as Transaction[])
+      const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { monthlyBalance, totalIncome, totalExpense } = useTransactionStats(
+      const { monthlyBalance, totalIncome, totalExpense } = usetransactionstats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -112,14 +112,14 @@ describe('Balance Calculation', () => {
     })
 
     it('should exclude deleted transactions from calculations', () => {
-      const deletedTransaction: UITransaction = {
+      const deletedITransaction: UITransaction = {
         id: 'tx-deleted',
         title: 'Deleted Expense',
         _titleLower: 'deleted expense',
         amount: 100000n,
         type: 'expense',
         category_id: 'cat-food',
-        wallet_id: 'wallet-1',
+        wallet_id: 'IWallet-1',
         date: '2026-04-10',
         _dateKey: '2026-04-10',
         _timestamp: 1712707200000,
@@ -132,10 +132,10 @@ describe('Balance Calculation', () => {
         deleted: true, // Deleted
       }
 
-      const transactionsRef = ref([...mockTransactions, deletedTransaction] as unknown as Transaction[])
+      const transactionsRef = ref([...mocktransactions, deletedITransaction] as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalExpense, monthlyBalance } = useTransactionStats(transactionsRef, () => ref(categoryMap))
+      const { totalExpense, monthlyBalance } = usetransactionstats(transactionsRef, () => ref(categoryMap))
 
       // Should not include the deleted 100000n expense
       expect(totalExpense.value).toBe(195)
@@ -143,10 +143,10 @@ describe('Balance Calculation', () => {
     })
 
     it('should calculate top categories correctly', () => {
-      const transactionsRef = ref(mockTransactions as unknown as Transaction[])
+      const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { topCategories } = useTransactionStats(transactionsRef, () => ref(categoryMap))
+      const { topCategories } = usetransactionstats(transactionsRef, () => ref(categoryMap))
 
       // Should have categories (expense categories sorted by total)
       expect(topCategories.value.length).toBeGreaterThan(0)
@@ -164,10 +164,10 @@ describe('Balance Calculation', () => {
     })
 
     it('should calculate category percentages correctly', () => {
-      const transactionsRef = ref(mockTransactions as unknown as Transaction[])
+      const transactionsRef = ref(mocktransactions as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { topCategories } = useTransactionStats(transactionsRef, () => ref(categoryMap))
+      const { topCategories } = usetransactionstats(transactionsRef, () => ref(categoryMap))
 
       // Percentages should sum to 100
       const totalPercent = topCategories.value.reduce((sum, cat) => sum + cat.percent, 0)
@@ -177,11 +177,11 @@ describe('Balance Calculation', () => {
       expect(topCategories.value[0].percent).toBeGreaterThan(topCategories.value[1].percent)
     })
 
-    it('should handle empty transaction list', () => {
-      const transactionsRef = ref([] as Transaction[])
+    it('should handle empty ITransaction list', () => {
+      const transactionsRef = ref([] as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance, topCategories } = useTransactionStats(
+      const { totalIncome, totalExpense, monthlyBalance, topCategories } = usetransactionstats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -193,11 +193,11 @@ describe('Balance Calculation', () => {
     })
 
     it('should handle transactions with only income', () => {
-      const incomeOnly = mockTransactions.filter((t) => t.type === 'income')
-      const transactionsRef = ref(incomeOnly as unknown as Transaction[])
+      const incomeOnly = mocktransactions.filter((t) => t.type === 'income')
+      const transactionsRef = ref(incomeOnly as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance, topCategories } = useTransactionStats(
+      const { totalIncome, totalExpense, monthlyBalance, topCategories } = usetransactionstats(
         transactionsRef,
         () => ref(categoryMap),
       )
@@ -209,11 +209,11 @@ describe('Balance Calculation', () => {
     })
 
     it('should handle transactions with only expenses', () => {
-      const expenseOnly = mockTransactions.filter((t) => t.type === 'expense')
-      const transactionsRef = ref(expenseOnly as unknown as Transaction[])
+      const expenseOnly = mocktransactions.filter((t) => t.type === 'expense')
+      const transactionsRef = ref(expenseOnly as unknown as ITransaction[])
       const categoryMap = mockCategoryMap
 
-      const { totalIncome, totalExpense, monthlyBalance } = useTransactionStats(
+      const { totalIncome, totalExpense, monthlyBalance } = usetransactionstats(
         transactionsRef,
         () => ref(categoryMap),
       )

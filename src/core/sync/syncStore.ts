@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export type SyncStatus = 'online' | 'offline' | 'syncing' | 'synced' | 'pending' | 'failed'
 
-export interface SyncLog {
+export interface ISyncLog {
   id: string
   timestamp: string
   status: 'success' | 'failed' | 'pending'
@@ -18,7 +18,7 @@ export const useSyncStore = defineStore('sync', {
     fatalErrorCount: 0,
     isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
     error: null as string | null,
-    logs: [] as SyncLog[],
+    logs: [] as ISyncLog[],
     updateCounter: 0, // Sinalizador reativo de mudança
   }),
   actions: {
@@ -44,8 +44,8 @@ export const useSyncStore = defineStore('sync', {
     setError(error: string | null) {
       this.error = error
     },
-    addLog(log: Omit<SyncLog, 'id' | 'timestamp'>) {
-      const newLog: SyncLog = {
+    addLog(log: Omit<ISyncLog, 'id' | 'timestamp'>) {
+      const newLog: ISyncLog = {
         ...log,
         id: crypto.randomUUID(),
         timestamp: new Date().toISOString(),

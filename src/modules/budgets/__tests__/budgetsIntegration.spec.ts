@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { useBudgetStore } from '../application/stores/budgetStore'
-import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
+import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
 import { db } from '@/infrastructure/storage/VaultDatabase'
-import type { Budget } from '@/shared/domain/entities/Budget'
-import type { Transaction } from '@/shared/domain/entities/Transaction'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
+import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 // Mock SyncEngine
 vi.mock('@/core/sync/SyncEngine', () => {
@@ -42,12 +42,12 @@ describe('Budgets Integration', () => {
     await db.categories.add(category)
 
     const budgetStore = useBudgetStore()
-    const transactionStore = useTransactionStore()
+    const transactionstore = usetransactionstore()
 
     // 2. Initialize Store
     budgetStore.initialize()
 
-    // 3. Create Budget
+    // 3. Create IBudget
     await budgetStore.saveBudget({
       category_id: 'c1',
       limit_value: 1000n,
@@ -61,8 +61,8 @@ describe('Budgets Integration', () => {
     // 4. Initial Consumption (0)
     expect(budgetStore.getConsumed(budgetStore.budgets[0]!)).toBe(0)
 
-    // 5. Add Transaction
-    await transactionStore.saveTransaction({
+    // 5. Add ITransaction
+    await transactionstore.saveITransaction({
       id: 't1',
       title: 'Dinner',
       amount: 150n,
@@ -73,9 +73,9 @@ describe('Budgets Integration', () => {
     } as any)
 
     // 6. Verify Reactive Update
-    // In a real integration, we'd wait for transactionStore to update its internal 'transactions' ref
-    // But transactionStore update logic might be complex.
-    // For this test, let's assume transactionStore.transactions is updated by saveTransaction call.
+    // In a real integration, we'd wait for transactionstore to update its internal 'transactions' ref
+    // But transactionstore update logic might be complex.
+    // For this test, let's assume transactionstore.transactions is updated by saveITransaction call.
 
     // Wait for any async effects
     await new Promise((resolve) => setTimeout(resolve, 100))

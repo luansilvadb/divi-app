@@ -1,4 +1,4 @@
-import type { DexieMigration } from '../types'
+import type { IDexieMigration } from '../types'
 
 /**
  * Migration 001 - Initial Schema
@@ -7,7 +7,7 @@ import type { DexieMigration } from '../types'
  * This MUST replicate the exact same stores definition that was previously
  * in the DiviDatabase constructor to preserve existing IndexedDB data.
  */
-export const migration001InitialSchema: DexieMigration = {
+export const migration001InitialSchema: IDexieMigration = {
   version: 1,
   name: 'initial_schema',
   description: 'Initial schema matching the original DiviDB_v2 store definitions.',

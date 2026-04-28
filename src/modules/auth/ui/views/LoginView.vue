@@ -179,8 +179,8 @@ import {
 } from 'naive-ui'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IAuthService } from '../../domain/contracts/IAuthService'
-import type { IVaultCryptoManager } from '../../domain/contracts/IVaultCryptoManager'
+import type { IAuthService } from '../../core/ports/IAuthService'
+import type { IVaultCryptoManager } from '../../core/ports/IVaultCryptoManager'
 import type { ISyncEngine } from '@/core/sync/contracts/ISyncEngine'
 import { useAuthStore } from '../../application/authStore'
 
@@ -191,9 +191,9 @@ const email = ref('')
 const password = ref('')
 const message = useMessage()
 
-const authService = container.resolve<IAuthService>(DI_TOKENS.AuthService)
-const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.VaultCryptoManager)
-const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.SyncEngine)
+const authService = container.resolve<IAuthService>(DI_TOKENS.IAuthService)
+const vaultCryptoManager = container.resolve<IVaultCryptoManager>(DI_TOKENS.IVaultCryptoManager)
+const syncEngine = container.resolve<ISyncEngine>(DI_TOKENS.ISyncEngine)
 const currentYear = new Date().getFullYear()
 
 async function handleSubmit() {
@@ -202,12 +202,12 @@ async function handleSubmit() {
     if (isRegister.value) {
       await authService.registerWithEmail({ email: email.value, password: password.value })
       // Initialize vault with same password
-      await authStore.initializeVault(password.value, vaultCryptoManager, syncEngine)
+      await authStore.initializeVault(password.value)
       message.success('Conta criada com sucesso!')
     } else {
       await authService.signInWithEmail({ email: email.value, password: password.value })
       // Initialize vault with same password
-      await authStore.initializeVault(password.value, vaultCryptoManager, syncEngine)
+      await authStore.initializeVault(password.value)
       message.success('Login realizado com sucesso!')
     }
   } catch (error: unknown) {

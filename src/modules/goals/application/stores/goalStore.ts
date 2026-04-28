@@ -2,13 +2,13 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import type { IGoalRepository } from '@/shared/domain/contracts/IGoalRepository'
-import type { Goal } from '@/shared/domain/entities/Goal'
+import type { IGoalRepository } from '../../core/ports/IGoalRepository'
+import type { IGoal } from '@/modules/goals/core/entities/IGoal'
 
 export const useGoalStore = defineStore('goals', () => {
-  const goalRepo = container.resolve<IGoalRepository>(DI_TOKENS.GoalRepository)
+  const goalRepo = container.resolve<IGoalRepository>(DI_TOKENS.IGoalRepository)
 
-  const goals = ref<Goal[]>([])
+  const goals = ref<IGoal[]>([])
   const isLoading = ref(false)
   const searchQuery = ref('')
 
@@ -21,7 +21,7 @@ export const useGoalStore = defineStore('goals', () => {
     }
   }
 
-  const saveGoal = async (goal: Goal) => {
+  const saveGoal = async (goal: IGoal) => {
     try {
       await goalRepo.save(goal)
       await fetchGoals()

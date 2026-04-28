@@ -2,20 +2,20 @@ import { defineStore } from 'pinia'
 import { shallowRef } from 'vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
-import { CategoryService } from '@/modules/categories/application/services/CategoryService'
-import type { Category } from '@/shared/domain/entities/Category'
+import type { ICategoryService } from '@/modules/categories/core/ports/ICategoryService'
+import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 
 export const useCategoryStore = defineStore('categories', () => {
-  const categoryService = container.resolve<CategoryService>(DI_TOKENS.CategoryService)
+  const categoryService = container.resolve<ICategoryService>(DI_TOKENS.ICategoryService)
 
-  const categories = shallowRef<Category[]>([])
-  const categoryMap = shallowRef<Record<string, Category>>({})
+  const categories = shallowRef<ICategory[]>([])
+  const categoryMap = shallowRef<Record<string, ICategory>>({})
 
   async function fetchCategories() {
     await categoryService.loadCategories()
     const c = categoryService.categoriesSubject.getValue()
     categories.value = c
-    const map: Record<string, Category> = {}
+    const map: Record<string, ICategory> = {}
     for (let i = 0, len = c.length; i < len; i++) {
       const item = c[i]!
       map[item.id] = item
@@ -23,7 +23,7 @@ export const useCategoryStore = defineStore('categories', () => {
     categoryMap.value = map
   }
 
-  async function saveCategory(category: Category) {
+  async function saveCategory(category: ICategory) {
     await categoryService.createCategory({
       name: category.name,
       icon: category.icon,

@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { MigrationRegistry } from '../MigrationRegistry'
-import type { DexieMigration } from '../types'
+import type { IDexieMigration } from '../types'
 
-function createMigration(overrides: Partial<DexieMigration> = {}): DexieMigration {
+function createMigration(overrides: Partial<IDexieMigration> = {}): IDexieMigration {
   return {
     version: 1,
     name: 'test_migration',

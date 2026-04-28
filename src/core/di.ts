@@ -3,20 +3,20 @@
  * Facilitates strict layer isolation according to Clean Architecture
  */
 
-import { SupabaseAuthService } from '../modules/auth/infrastructure/services/SupabaseAuthService'
-import { DexieTransactionRepository } from '../modules/transactions/infrastructure/DexieTransactionRepository'
-import {
-  DexieWalletRepository,
-  DexieCategoryRepository,
-} from '../modules/transactions/infrastructure/repositories/DexieMetadataRepositories'
-import { TransactionService } from '../modules/transactions/application/services/TransactionService'
+import { supabase } from './supabase'
+import { SupabaseAuthService } from '../modules/auth/adapters/SupabaseAuthService'
+import { AuthService } from '../modules/auth/core/services/AuthService'
+import { DexieITransactionRepository } from '../modules/transactions/adapters/DexieITransactionRepository'
+import { DexieIWalletRepository } from '../modules/wallets/adapters/DexieIWalletRepository'
+import { DexieCategoryRepository } from '../modules/categories/adapters/DexieCategoryRepository'
+import { DexiePayeeRepository } from '../modules/transactions/adapters/DexiePayeeRepository'
+import { TransactionService } from '../modules/transactions/core/services/TransactionService'
 import { WalletService } from '../modules/wallets/application/services/WalletService'
 import { CategoryService } from '../modules/categories/application/services/CategoryService'
-import { DexiePayeeRepository } from '../modules/transactions/infrastructure/repositories/PayeeRepository'
-import { DexieLoanRepository } from '../modules/loans/infrastructure/repositories/DexieLoanRepository'
-import { DexieBudgetRepository } from '../modules/budgets/infrastructure/repositories/DexieBudgetRepository'
-import { DexieGoalRepository } from '../modules/goals/infrastructure/repositories/DexieGoalRepository'
-import { DexieSubscriptionRepository } from '../modules/subscriptions/infrastructure/repositories/DexieSubscriptionRepository'
+import { DexieLoanRepository } from '../modules/loans/adapters/DexieLoanRepository'
+import { DexieBudgetRepository } from '../modules/budgets/adapters/DexieBudgetRepository'
+import { DexieGoalRepository } from '../modules/goals/adapters/DexieGoalRepository'
+import { DexieSubscriptionRepository } from '../modules/subscriptions/adapters/DexieSubscriptionRepository'
 import { ActivityLogService } from '../modules/activity-log/application/services/ActivityLogService'
 import { ExportService } from '../modules/transactions/application/services/ExportService'
 import { AssetLoader } from '../shared/utils/asset-loader'
@@ -24,34 +24,34 @@ import { GoalLogicService } from '../modules/goals/application/services/GoalLogi
 import { SyncEngine } from './sync/SyncEngine'
 import { PredictionService } from '../modules/transactions/application/PredictionService'
 import { vaultDb } from '../infrastructure/storage/VaultDatabase'
-import { VaultTransactionRepository } from '../modules/ledger/infrastructure/repositories/VaultTransactionRepository'
-import { TransactionService as LedgerTransactionService } from '../modules/ledger/application/services/TransactionService'
 import { VaultCryptoManager } from '../infrastructure/crypto/VaultCryptoManager'
-import { AutoCreateService } from '../modules/transactions/application/services/AutoCreateService'
+import { AutoCreateService } from '../modules/transactions/core/services/AutoCreateService'
+import { AutoCategorizationService } from '../modules/transactions/core/services/AutoCategorizationService'
 
 import { DI_TOKENS } from './di-tokens'
 
-type Token<T = unknown> = string | (new (...args: unknown[]) => T)
+export interface IDIContainer {
+  register<T>(token: string, implementation: T): void;
+  resolve<T>(token: string): T;
+}
 
-class Container {
+class Container implements IDIContainer {
   private services = new Map<string, unknown>()
 
   /**
-   * Register a service by token or class reference
+   * Register a service by token
    */
-  register<T>(token: Token<T>, instance: T): void {
-    const key = typeof token === 'string' ? token : token.name
-    this.services.set(key, instance)
+  register<T>(token: string, implementation: T): void {
+    this.services.set(token, implementation)
   }
 
   /**
-   * Resolve a service by token or class reference
+   * Resolve a service by token
    */
-  resolve<T>(token: Token<T>): T {
-    const key = typeof token === 'string' ? token : token.name
-    const service = this.services.get(key)
+  resolve<T>(token: string): T {
+    const service = this.services.get(token)
     if (!service) {
-      throw new Error(`[DI] Service not found: ${key}`)
+      throw new Error(`[DI] Service not found: ${token}`)
     }
     return service as T
   }
@@ -59,42 +59,48 @@ class Container {
 
 export const container = new Container()
 
-// To maintain compatibility with existing code during migration,
-// we register both with the string from DI_TOKENS and the explicit string.
-container.register(DI_TOKENS.AuthService, new SupabaseAuthService())
-const transactionRepo = new DexieTransactionRepository()
-container.register(DI_TOKENS.TransactionRepository, transactionRepo)
-container.register(DI_TOKENS.TransactionService, new TransactionService(transactionRepo))
+// Composition Root - Wiring things up
 
-const vaultTransactionRepo = new VaultTransactionRepository()
-container.register(DI_TOKENS.VaultTransactionRepository, vaultTransactionRepo)
-container.register(DI_TOKENS.LedgerTransactionService, new LedgerTransactionService(vaultTransactionRepo))
+// Auth
+const supabaseAuthAdapter = new SupabaseAuthService(supabase)
+const authService = new AuthService(supabaseAuthAdapter)
+container.register(DI_TOKENS.IAuthService, authService)
 
-const walletRepo = new DexieWalletRepository()
-container.register(DI_TOKENS.WalletRepository, walletRepo)
-container.register(DI_TOKENS.WalletService, new WalletService(walletRepo))
+// transactions
+const transactionRepo = new DexieITransactionRepository()
+container.register(DI_TOKENS.ITransactionRepository, transactionRepo)
+container.register(DI_TOKENS.ITransactionService, new TransactionService(transactionRepo, authService))
+container.register(DI_TOKENS.IAutoCategorizationService, new AutoCategorizationService())
 
+// wallets
+const walletRepo = new DexieIWalletRepository()
+container.register(DI_TOKENS.IWalletRepository, walletRepo)
+container.register(DI_TOKENS.IWalletService, new WalletService(walletRepo))
+
+// Categories
 const categoryRepo = new DexieCategoryRepository()
-container.register(DI_TOKENS.CategoryRepository, categoryRepo)
-container.register(DI_TOKENS.CategoryService, new CategoryService(categoryRepo))
-container.register(DI_TOKENS.PayeeRepository, new DexiePayeeRepository())
-container.register(DI_TOKENS.LoanRepository, new DexieLoanRepository())
-container.register(DI_TOKENS.BudgetRepository, new DexieBudgetRepository())
-container.register(DI_TOKENS.GoalRepository, new DexieGoalRepository())
-container.register(DI_TOKENS.GoalLogicService, new GoalLogicService())
-container.register(DI_TOKENS.SubscriptionRepository, new DexieSubscriptionRepository())
+container.register(DI_TOKENS.ICategoryRepository, categoryRepo)
+container.register(DI_TOKENS.ICategoryService, new CategoryService(categoryRepo))
+
+// Others
+container.register(DI_TOKENS.IPayeeRepository, new DexiePayeeRepository())
+container.register(DI_TOKENS.ILoanRepository, new DexieLoanRepository())
+container.register(DI_TOKENS.IBudgetRepository, new DexieBudgetRepository())
+container.register(DI_TOKENS.IGoalRepository, new DexieGoalRepository())
+container.register(DI_TOKENS.IGoalLogicService, new GoalLogicService())
+container.register(DI_TOKENS.ISubscriptionRepository, new DexieSubscriptionRepository())
 const activityLogService = new ActivityLogService()
-container.register(DI_TOKENS.ActivityLogService, activityLogService)
-container.register(DI_TOKENS.AssetLoader, new AssetLoader(activityLogService))
-container.register(DI_TOKENS.ExportService, new ExportService())
-container.register(DI_TOKENS.SyncEngine, new SyncEngine())
-container.register(DI_TOKENS.Database, vaultDb)
-container.register(DI_TOKENS.PredictionService, new PredictionService(vaultDb))
-container.register(DI_TOKENS.VaultCryptoManager, new VaultCryptoManager())
-container.register(DI_TOKENS.AutoCreateService, new AutoCreateService(
-  container.resolve<CategoryService>(DI_TOKENS.CategoryService),
-  container.resolve<WalletService>(DI_TOKENS.WalletService),
+container.register(DI_TOKENS.IActivityLogService, activityLogService)
+container.register(DI_TOKENS.IAssetLoader, new AssetLoader(activityLogService))
+container.register(DI_TOKENS.IExportService, new ExportService())
+container.register(DI_TOKENS.ISyncEngine, new SyncEngine())
+container.register(DI_TOKENS.IDatabase, vaultDb)
+container.register(DI_TOKENS.IPredictionService, new PredictionService(vaultDb))
+container.register(DI_TOKENS.IVaultCryptoManager, new VaultCryptoManager())
+container.register(DI_TOKENS.IAutoCreateService, new AutoCreateService(
+  container.resolve(DI_TOKENS.ICategoryService),
+  container.resolve(DI_TOKENS.IWalletService),
 ))
 
-// Helper to provide/inject services in Vue components if needed
-export const useService = <T>(token: Token<T>): T => container.resolve(token)
+// Helper to provide/inject services in Vue components
+export const useService = <T>(token: string): T => container.resolve<T>(token)

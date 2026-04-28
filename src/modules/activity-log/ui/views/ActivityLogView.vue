@@ -122,7 +122,7 @@ import type { IActivityLogService } from '../../domain/contracts/IActivityLogSer
 import type { Activity } from '../../domain/entities/Activity'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
-const activityService = container.resolve<IActivityLogService>(DI_TOKENS.ActivityLogService)
+const activityService = container.resolve<IActivityLogService>(DI_TOKENS.IActivityLogService)
 const activities = ref<Activity[]>([])
 const isLoading = ref(true)
 const isRefreshing = ref(false)
