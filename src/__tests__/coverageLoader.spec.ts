@@ -109,8 +109,6 @@ describe('Coverage Loader - Import all uncovered files', () => {
   it('should load remaining components', async () => {
     const errorMsg = await import('@/shared/components/ErrorMessage.vue')
     expect(errorMsg).toBeDefined()
-    const pwaPrompt = await import('@/shared/components/PWAUpdatePrompt.vue')
-    expect(pwaPrompt).toBeDefined()
     const baseBadge = await import('@/shared/components/atoms/BaseBadge.vue')
     expect(baseBadge).toBeDefined()
     const baseIconBox = await import('@/shared/components/atoms/BaseIconBox.vue')

@@ -6,15 +6,16 @@
     :loading="store.isLoading"
   >
     <template #action>
-      <NButton
-        v-if="!isMobile"
-        type="primary"
-        round
-        @click="showAddSubscriptionModal = true"
-      >
-        <template #icon><i class="i-lucide-plus"></i></template>
-        Novo Serviço
-      </NButton>
+      <div class="flex items-center gap-3">
+        <AppleButton
+          v-if="!isMobile"
+          variant="primary"
+          size="medium"
+          @click="showAddSubscriptionModal = true"
+        >
+          Nova Assinatura
+        </AppleButton>
+      </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -29,7 +30,7 @@
             class="py-24"
           >
             <template #icon>
-              <i class="i-lucide-credit-card text-5xl text-violet-500/40"></i>
+              <i class="i-lucide-credit-card text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
             </template>
           </NEmpty>
 
@@ -65,7 +66,7 @@
               <NCard hoverable class="cursor-pointer">
                 <NSpace justify="space-between" align="center">
                   <NSpace align="center" :size="12">
-                    <div class="w-11 h-11 rounded-2xl bg-violet-500/10 flex items-center justify-center text-lg">
+                    <div class="w-11 h-11 rounded-2xl bg-[rgba(0,122,255,0.08)] flex items-center justify-center text-lg">
                       💳
                     </div>
                     <NSpace vertical :size="2">
@@ -131,13 +132,27 @@
         </NSpace>
       </aside>
     </div>
+
+    <!-- Mobile FAB Button -->
+    <div
+      v-if="isMobile"
+      class="fixed bottom-24 right-6 z-50 md:hidden"
+    >
+      <AppleButton
+        variant="primary"
+        size="large"
+        @click="showAddSubscriptionModal = true"
+        class="!rounded-full !w-14 !h-14 !p-0 !shadow-lg"
+      >
+        <i class="i-lucide-plus text-xl"></i>
+      </AppleButton>
+    </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import {
-  NButton,
   NCard,
   NStatistic,
   NSpace,
@@ -155,6 +170,7 @@ import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import ItemSyncIndicator from '@/shared/components/atoms/ItemSyncIndicator.vue'
 
 const store = useSubscriptionStore()

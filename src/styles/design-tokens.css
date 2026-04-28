@@ -1,0 +1,256 @@
+/**
+ * Divi Design System Tokens
+ *
+ * Apple HIG-inspired design tokens. Light-first, corporate financial identity.
+ * Reference: openspec/changes/apple-design-system-refactor/
+ */
+
+:root {
+  /* ========================================
+     SPACING SCALE (8pt Base)
+     ======================================== */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px - base unit */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+
+  /* ========================================
+     TYPOGRAPHY SCALE
+     Font Stack: Inter, system fonts
+     ======================================== */
+  --text-xs: 11px;
+  --text-xs-line-height: 1.4;
+
+  --text-sm: 13px;
+  --text-sm-line-height: 1.5;
+
+  --text-base: 15px;
+  --text-base-line-height: 1.6;
+
+  --text-lg: 17px;
+  --text-lg-line-height: 1.5;
+
+  --text-xl: 20px;
+  --text-xl-line-height: 1.4;
+
+  --text-2xl: 24px;
+  --text-2xl-line-height: 1.3;
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ========================================
+     COLOR TOKENS - LIGHT MODE (Apple HIG)
+     ======================================== */
+
+  /* Primary — Apple System Blue */
+  --color-primary: #007AFF;
+  --color-primary-hover: #0066DD;
+  --color-primary-active: #0055CC;
+  --color-primary-subtle: rgba(0, 122, 255, 0.08);
+  --color-on-primary: #ffffff;
+
+  /* Apple Action Blue (for buttons and CTAs) */
+  --color-apple-action: #0071e3;
+  --color-apple-action-hover: #0077ed;
+  --color-apple-link: #0066cc;
+  --color-apple-link-bright: #2997ff;
+
+  /* Success — Apple System Green */
+  --color-success: #34C759;
+  --color-success-hover: #2DB34E;
+  --color-success-subtle: rgba(52, 199, 89, 0.08);
+  --color-on-success: #ffffff;
+
+  /* Warning — Apple System Orange */
+  --color-warning: #FF9500;
+  --color-warning-hover: #E08500;
+  --color-warning-subtle: rgba(255, 149, 0, 0.08);
+  --color-on-warning: #ffffff;
+
+  /* Error — Apple System Red */
+  --color-error: #FF3B30;
+  --color-error-hover: #E03530;
+  --color-error-subtle: rgba(255, 59, 48, 0.08);
+  --color-on-error: #ffffff;
+
+  /* Info — Apple System Indigo */
+  --color-info: #5856D6;
+  --color-info-hover: #4B48C7;
+  --color-info-subtle: rgba(88, 86, 214, 0.08);
+  --color-on-info: #ffffff;
+
+  /* ========================================
+     SURFACE SYSTEM — Apple Grouped Backgrounds
+     ======================================== */
+
+  /* App-level surfaces */
+  --surface-background: #F2F2F7;   /* iOS grouped background */
+  --surface-primary: #FFFFFF;       /* Cards, modals, sheets */
+  --surface-secondary: #F2F2F7;    /* Nested groups, input bg */
+  --surface-tertiary: #FFFFFF;     /* Tertiary elevation */
+
+  /* Separators — Apple-style alpha */
+  --surface-separator: rgba(60, 60, 67, 0.12);
+  --surface-separator-opaque: #C6C6C8;
+
+  /* Border Colors — Apple Minimalist Containment */
+  --border-color-default: #d2d2d7;              /* Soft Border Gray - Apple standard input border */
+  --border-color-hover: #6e6e73;                /* Secondary Neutral Gray - hover state */
+  --border-color-focus: #0071e3;                /* Apple Action Blue - focus state */
+
+  /* Overlay */
+  --surface-overlay: rgba(0, 0, 0, 0.32);
+
+  /* Focus ring */
+  --surface-focus: rgba(0, 122, 255, 0.4);
+
+  /* ========================================
+     TEXT SYSTEM — Apple Alpha Hierarchy
+     ======================================== */
+  --text-label:       #000000;                    /* Primary label */
+  --text-secondary:   rgba(60, 60, 67, 0.6);     /* Secondary label */
+  --text-tertiary:    rgba(60, 60, 67, 0.3);     /* Tertiary label */
+  --text-quaternary:  rgba(60, 60, 67, 0.18);    /* Quaternary label */
+  --text-disabled:    rgba(60, 60, 67, 0.3);     /* Disabled */
+  --text-inverse:     #FFFFFF;                    /* On dark bg */
+
+  /* Legacy aliases (keep for backward compat, point to new tokens) */
+  --text-primary: #000000;
+
+  /* ========================================
+     SKELETON COLORS — Light
+     ======================================== */
+  --skeleton-base: rgba(0, 0, 0, 0.05);
+  --skeleton-highlight: rgba(0, 0, 0, 0.08);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 3px rgba(0, 122, 255, 0.35);
+
+  /* ========================================
+     ELEVATION SYSTEM — Discrete Apple Shadows
+     ======================================== */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* ========================================
+     BORDER RADIUS SCALE
+     ======================================== */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ========================================
+     ANIMATION TOKENS
+     ======================================== */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+
+  /* Easing Functions */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Theme Transition */
+  --theme-transition: background-color var(--duration-normal) var(--ease-in-out),
+                      color var(--duration-normal) var(--ease-in-out),
+                      border-color var(--duration-normal) var(--ease-in-out),
+                      box-shadow var(--duration-normal) var(--ease-in-out);
+}
+
+/* ========================================
+   DARK MODE — Apple Dark Palette
+   ======================================== */
+.dark {
+  /* Primary — Apple System Blue Dark */
+  --color-primary: #0A84FF;
+  --color-primary-hover: #258FFF;
+  --color-primary-active: #3D99FF;
+  --color-primary-subtle: rgba(10, 132, 255, 0.12);
+
+  /* Success — Apple System Green Dark */
+  --color-success: #30D158;
+  --color-success-hover: #4ADB6C;
+  --color-success-subtle: rgba(48, 209, 88, 0.12);
+
+  /* Warning — Apple System Orange Dark */
+  --color-warning: #FF9F0A;
+  --color-warning-hover: #FFAC2A;
+  --color-warning-subtle: rgba(255, 159, 10, 0.12);
+
+  /* Error — Apple System Red Dark */
+  --color-error: #FF453A;
+  --color-error-hover: #FF5E54;
+  --color-error-subtle: rgba(255, 69, 58, 0.12);
+
+  /* Info — Apple System Indigo Dark */
+  --color-info: #5E5CE6;
+  --color-info-hover: #7472EC;
+  --color-info-subtle: rgba(94, 92, 230, 0.12);
+
+  /* Surface System — Apple Dark */
+  --surface-background: #000000;     /* iOS dark background */
+  --surface-primary: #1C1C1E;        /* Secondary system background */
+  --surface-secondary: #2C2C2E;     /* Tertiary system background */
+  --surface-tertiary: #3A3A3C;      /* Third level */
+
+  /* Separators — Apple dark style */
+  --surface-separator: rgba(84, 84, 88, 0.65);
+  --surface-separator-opaque: #38383A;
+
+  /* Border Colors — Apple Dark Mode */
+  --border-color-default: #3a3a3c;              /* Graphite - Apple dark input border */
+  --border-color-hover: #636366;                /* Lighter Graphite - hover state */
+  --border-color-focus: #2997ff;                /* High-Luminance Link Blue - focus state */
+
+  /* Overlay */
+  --surface-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Focus ring dark */
+  --surface-focus: rgba(10, 132, 255, 0.4);
+
+  /* Text — Apple Dark Alpha Hierarchy */
+  --text-label:       #FFFFFF;
+  --text-secondary:   rgba(235, 235, 245, 0.6);
+  --text-tertiary:    rgba(235, 235, 245, 0.3);
+  --text-quaternary:  rgba(235, 235, 245, 0.18);
+  --text-disabled:    rgba(235, 235, 245, 0.3);
+  --text-inverse:     #000000;
+  --text-primary:     #FFFFFF;
+
+  /* Apple Near-Black Ink */
+  --color-apple-ink: #1d1d1f;
+  --color-apple-secondary-gray: #6e6e73;
+  --color-apple-pale-gray: #f5f5f7;
+  --color-apple-soft-border: #d2d2d7;
+  --color-apple-mid-border: #86868b;
+  --color-apple-graphite-a: #272729;
+  --color-apple-graphite-b: #262629;
+  --color-apple-graphite-c: #28282b;
+  --color-apple-graphite-d: #2a2a2c;
+  --color-apple-utility-dark: #424245;
+
+  /* Skeleton Colors — Dark */
+  --skeleton-base: rgba(255, 255, 255, 0.06);
+  --skeleton-highlight: rgba(255, 255, 255, 0.10);
+
+  /* Focus Ring — Dark */
+  --focus-ring: 0 0 0 3px rgba(10, 132, 255, 0.4);
+
+  /* Elevation — Dark uses NO shadows, only border differentiation */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { NInput, NButton, NDivider, useMessage } from 'naive-ui'
+import { NInput, NButton, NDivider, useMessage, NCard } from 'naive-ui'
 import { SupabaseAuth } from '../../infrastructure/SupabaseAuth'
 
 const authService = new SupabaseAuth()
@@ -45,9 +45,9 @@ const handleGoogleLogin = async () => {
 </script>
 
 <template>
-  <div class="flex min-h-screen items-center justify-center bg-zinc-50 p-4 dark:bg-zinc-950">
-    <div class="w-full max-w-md rounded-3xl bg-white dark:bg-zinc-900 p-10 shadow-2xl border border-zinc-200 dark:border-zinc-800">
-      <h2 class="mb-8 text-center text-3xl font-black text-zinc-800 dark:text-zinc-50 tracking-tight">
+  <div class="flex min-h-screen items-center justify-center p-4" style="background: var(--surface-background);">
+    <NCard class="w-full max-w-md rounded-2xl shadow-md" :bordered="false">
+      <h2 class="mb-8 text-center text-3xl font-bold tracking-tight" style="color: var(--text-label);">
         {{ isLoginMode ? 'Entrar' : 'Criar Conta' }}
       </h2>
 
@@ -60,13 +60,12 @@ const handleGoogleLogin = async () => {
             type="text"
             placeholder="seu@email.com"
             required
-            class="!rounded-xl"
             size="large"
           />
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="password" class="text-[10px] font-bold uppercase tracking-widest text-zinc-400 ml-1">Senha</label>
+          <label for="password" class="text-[10px] font-bold uppercase tracking-widest text-tertiary ml-1">Senha</label>
           <NInput
             id="password"
             v-model:value="password"
@@ -74,7 +73,6 @@ const handleGoogleLogin = async () => {
             show-password-on="mousedown"
             placeholder="Sua senha"
             required
-            class="!rounded-xl"
             size="large"
           />
         </div>
@@ -83,20 +81,20 @@ const handleGoogleLogin = async () => {
           attr-type="submit"
           type="primary"
           :loading="loading"
-          class="mt-4 w-full !h-12 !rounded-xl font-bold shadow-lg shadow-violet-500/20"
+          class="mt-4 w-full !h-12 font-semibold"
         >
           {{ isLoginMode ? 'Entrar' : 'Registrar' }}
         </NButton>
       </form>
 
       <NDivider title-placement="center">
-        <span class="text-[10px] font-bold uppercase tracking-widest text-zinc-400">ou</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-tertiary">ou</span>
       </NDivider>
 
       <NButton
         type="default"
         ghost
-        class="w-full !h-12 !rounded-xl font-bold"
+        class="w-full !h-12 font-bold"
         @click="handleGoogleLogin"
       >
         <template #icon><i class="i-lucide-chrome"></i></template>
@@ -105,12 +103,12 @@ const handleGoogleLogin = async () => {
 
       <div class="mt-8 text-center text-sm">
         <button
-          class="text-zinc-500 hover:text-violet-500 font-bold border-none bg-transparent cursor-pointer transition-colors"
+          class="font-semibold border-none bg-transparent cursor-pointer transition-colors" style="color: var(--color-primary);"
           @click.prevent="toggleMode"
         >
           {{ isLoginMode ? 'Não tem conta? Registre-se' : 'Já tem conta? Faça login' }}
         </button>
       </div>
-    </div>
+    </NCard>
   </div>
 </template>

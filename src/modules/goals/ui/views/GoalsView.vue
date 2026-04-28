@@ -6,15 +6,16 @@
     :loading="store.isLoading"
   >
     <template #action>
-      <NButton
-        v-if="!isMobile"
-        type="primary"
-        round
-        @click="showAddGoalModal = true"
-      >
-        <template #icon><i class="i-lucide-plus"></i></template>
-        Nova Meta
-      </NButton>
+      <div class="flex items-center gap-3">
+        <AppleButton
+          v-if="!isMobile"
+          variant="primary"
+          size="medium"
+          @click="showAddGoalModal = true"
+        >
+          Nova Meta
+        </AppleButton>
+      </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -29,7 +30,7 @@
             class="py-24"
           >
             <template #icon>
-              <i class="i-lucide-target text-5xl text-violet-500/40"></i>
+              <i class="i-lucide-target text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
             </template>
           </NEmpty>
 
@@ -102,7 +103,7 @@
 
           <NCard>
             <template #header><NText strong>Insights de IA</NText></template>
-            <NCard embedded size="small" class="!border-violet-500/10 !bg-violet-500/5">
+            <NCard embedded size="small" class="!border-[rgba(0,122,255,0.1)] !bg-[rgba(0,122,255,0.05)]">
               <NText class="text-sm leading-relaxed">
                 Mantendo o ritmo atual, você alcançará a meta
                 <NText type="primary" strong>"Viagem Japão"</NText> em
@@ -113,13 +114,27 @@
         </NSpace>
       </aside>
     </div>
+
+    <!-- Mobile FAB Button -->
+    <div
+      v-if="isMobile"
+      class="fixed bottom-24 right-6 z-50 md:hidden"
+    >
+      <AppleButton
+        variant="primary"
+        size="large"
+        @click="showAddGoalModal = true"
+        class="!rounded-full !w-14 !h-14 !p-0 !shadow-lg"
+      >
+        <i class="i-lucide-plus text-xl"></i>
+      </AppleButton>
+    </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import {
-  NButton,
   NCard,
   NStatistic,
   NSpace,
@@ -136,6 +151,7 @@ import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import GoalCard from '@/shared/components/molecules/GoalCard.vue'
 
 const store = useGoalStore()

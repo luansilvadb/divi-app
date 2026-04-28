@@ -8,8 +8,6 @@
     <NDialogProvider>
       <NMessageProvider>
         <NNotificationProvider>
-          <PWAUpdatePrompt />
-
           <MainLayout v-if="isLoggedIn && !isLoginRoute" @logout="handleLogout">
             <RouterView />
           </MainLayout>
@@ -17,7 +15,7 @@
           <!-- Fallback full-screen for Login and Unauthenticated paths -->
           <div
             v-else
-            class="flex h-screen w-screen overflow-hidden bg-obsidian text-slate-100"
+            class="flex h-screen w-screen overflow-hidden" style="background: var(--surface-background); color: var(--text-label);"
           >
             <main class="flex-1 h-full overflow-y-auto overflow-x-hidden relative">
               <RouterView />
@@ -40,17 +38,12 @@ import type { IAuthService } from './modules/auth/domain/contracts/IAuthService'
 import type { IVaultCryptoManager } from './modules/auth/domain/contracts/IVaultCryptoManager'
 import type { ISyncEngine } from './core/sync/contracts/ISyncEngine'
 import { DI_TOKENS } from './core/di-tokens'
-import PWAUpdatePrompt from './shared/components/PWAUpdatePrompt.vue'
 import {
   NConfigProvider,
   NMessageProvider,
   NDialogProvider,
   NNotificationProvider,
   NGlobalStyle,
-  NButton,
-  NCard,
-  NSpace,
-  NText,
   darkTheme,
   ptBR,
   datePtBR,

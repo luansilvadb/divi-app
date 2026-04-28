@@ -2,47 +2,50 @@
 const CENTS_PER_UNIT = 100
 
 export class BigIntAdapter {
-  // Método para converter decimal string para BigInt (em centavos)
-  static parseDecimalToBigInt(decimalString: string): bigint | null {
+  private static normalizeInput(decimalString: string): string | null {
     if (!decimalString || decimalString.trim() === '') {
-      return null;
+      return null
     }
 
-    // Remove espaços e caracteres não numéricos (exceto ponto e vírgula)
-    const cleaned = decimalString.trim().replace(/[^0-9.,]/g, '');
+    const cleaned = decimalString.trim().replace(/[^0-9.,]/g, '')
+    const normalized = cleaned.replace(',', '.')
 
-    // Substitui vírgula por ponto para padronizar
-    const normalized = cleaned.replace(',', '.');
-
-    // Verifica se há mais de um ponto
     if ((normalized.match(/\./g) || []).length > 1) {
-      return null;
+      return null
     }
 
-    // Extrai parte inteira e decimal
-    const parts = normalized.split('.');
-    let integerPart = '0';
-    let decimalPart = '00';
+    return normalized
+  }
+
+  private static parseParts(normalized: string): { integerPart: string; decimalPart: string } {
+    const parts = normalized.split('.')
+    let integerPart = '0'
+    let decimalPart = '00'
 
     if (parts.length >= 1 && parts[0]) {
-      // Sem ponto decimal ou parte inteira
-      integerPart = parts[0] || '0';
+      integerPart = parts[0] || '0'
     }
 
     if (parts.length >= 2 && parts[1]) {
-      // Com ponto decimal
-      decimalPart = parts[1].padEnd(2, '0').substring(0, 2);
+      decimalPart = parts[1].padEnd(2, '0').substring(0, 2)
     }
 
-    // Remove zeros à esquerda da parte inteira
-    integerPart = integerPart.replace(/^0+(?=\d)/, '') || '0';
+    integerPart = integerPart.replace(/^0+(?=\d)/, '') || '0'
 
-    // Combina partes para formar centavos
+    return { integerPart, decimalPart }
+  }
+
+  // Método para converter decimal string para BigInt (em centavos)
+  static parseDecimalToBigInt(decimalString: string): bigint | null {
+    const normalized = this.normalizeInput(decimalString)
+    if (!normalized) return null
+
+    const { integerPart, decimalPart } = this.parseParts(normalized)
+
     try {
-      const amountInCents = BigInt(integerPart + decimalPart);
-      return amountInCents;
+      return BigInt(integerPart + decimalPart)
     } catch {
-      return null;
+      return null
     }
   }
 

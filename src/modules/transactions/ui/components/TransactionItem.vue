@@ -10,10 +10,7 @@
       <div class="flex items-center gap-3 flex-1 min-w-0">
         <div class="relative shrink-0">
           <div
-            class="w-12 h-12 rounded-full flex items-center justify-center border"
-            :class="[
-              'border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 text-xl'
-            ]"
+            class="w-12 h-12 rounded-full flex items-center justify-center border border-separator bg-surface-secondary text-xl"
           >
             <img
               v-if="categoryIcon"
@@ -21,14 +18,14 @@
               class="w-6 h-6 object-contain"
               @error="handleImageError"
             />
-            <i v-else class="i-lucide-banknote text-zinc-400"></i>
+            <i v-else class="i-lucide-banknote text-tertiary"></i>
           </div>
 
           <div
-            class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white dark:border-[#18181b] flex items-center justify-center"
+            class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-surface-primary flex items-center justify-center"
             :class="getBadgeClass()"
           >
-            <i :class="getArrowIcon()" class="text-[10px] text-white font-black"></i>
+            <i :class="getArrowIcon()" class="text-[10px] text-white font-bold"></i>
           </div>
         </div>
 
@@ -117,9 +114,9 @@ function formatTime(date: Date | string) {
 
 function getBadgeClass() {
   if (props.transaction.type === 'transfer') {
-    return 'bg-gray-500'
+    return 'bg-tertiary'
   }
-  return props.transaction.type === 'income' ? 'bg-emerald-500' : 'bg-red-500'
+  return props.transaction.type === 'income' ? 'bg-success' : 'bg-error'
 }
 
 function getArrowIcon() {

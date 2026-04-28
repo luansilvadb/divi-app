@@ -4,14 +4,14 @@
       v-model:value="localValue"
       :placeholder="placeholder"
       size="large"
-      class="!rounded-2xl !bg-zinc-100 dark:!bg-zinc-900 !border-zinc-200 dark:!border-zinc-800 transition-all duration-300"
+      class="!rounded-xl transition-all duration-150 ease-out"
       @input="onInput"
       clearable
       @clear="clear"
     >
       <template #prefix>
-        <i v-if="loading" class="i-lucide-loader-2 animate-spin text-lg text-violet-500"></i>
-        <i v-else class="i-lucide-search text-lg text-zinc-400 group-focus-within:text-violet-500 transition-colors"></i>
+        <i v-if="loading" class="i-lucide-loader-2 animate-spin text-lg" style="color: var(--color-primary)"></i>
+        <i v-else class="i-lucide-search text-lg transition-colors" style="color: var(--text-tertiary)"></i>
       </template>
     </NInput>
   </div>
@@ -59,11 +59,5 @@ const clear = () => {
 </script>
 
 <style scoped>
-:deep(.n-input) {
-  --n-border-radius: 16px !important;
-  --n-placeholder-color: #a1a1aa !important;
-}
-:deep(.n-input__border) {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* Naive UI theme handles all styling via naiveTheme.ts */
 </style>

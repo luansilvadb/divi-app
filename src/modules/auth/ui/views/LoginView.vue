@@ -32,7 +32,8 @@
               </svg>
             </div>
             <NText
-              class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent !bg-gradient-to-br from-violet-500 to-indigo-600"
+              class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
+              style="background-image: linear-gradient(to bottom right, var(--color-primary), var(--color-info));"
             >
               Divi
             </NText>
@@ -150,9 +151,9 @@
           <!-- Terms -->
           <NText depth="3" class="text-center text-[10px] leading-relaxed">
             Ao continuar, você concorda com nossos<br />
-            <a href="#" class="underline underline-offset-2 hover:text-violet-500 transition-colors">Termos de Uso</a>
+            <a href="#" class="underline underline-offset-2 hover:text-[#007AFF] transition-colors">Termos de Uso</a>
             e
-            <a href="#" class="underline underline-offset-2 hover:text-violet-500 transition-colors">Política de Privacidade</a>
+            <a href="#" class="underline underline-offset-2 hover:text-[#007AFF] transition-colors">Política de Privacidade</a>
           </NText>
         </NSpace>
       </NCard>

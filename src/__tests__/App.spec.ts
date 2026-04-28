@@ -4,15 +4,6 @@ import App from '../App.vue'
 import { createPinia } from 'pinia'
 import router from '../core/router'
 
-// Mock PWA virtual module
-vi.mock('virtual:pwa-register/vue', () => ({
-  useRegisterSW: () => ({
-    needRefresh: { value: false },
-    offlineReady: { value: false },
-    updateServiceWorker: vi.fn(),
-  }),
-}))
-
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

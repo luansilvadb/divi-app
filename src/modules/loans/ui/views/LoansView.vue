@@ -6,15 +6,16 @@
     :loading="store.isLoading"
   >
     <template #action>
-      <NButton
-        v-if="!isMobile"
-        type="primary"
-        round
-        @click="showAddLoanModal = true"
-      >
-        <template #icon><i class="i-lucide-plus"></i></template>
-        Novo Registro
-      </NButton>
+      <div class="flex items-center gap-3">
+        <AppleButton
+          v-if="!isMobile"
+          variant="primary"
+          size="medium"
+          @click="showAddLoanModal = true"
+        >
+          Novo Empréstimo
+        </AppleButton>
+      </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -32,7 +33,7 @@
             class="py-24"
           >
             <template #icon>
-              <i class="i-lucide-landmark text-5xl text-violet-500/40"></i>
+              <i class="i-lucide-landmark text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
             </template>
           </NEmpty>
 
@@ -116,13 +117,27 @@
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />
+
+    <!-- Mobile FAB Button -->
+    <div
+      v-if="isMobile"
+      class="fixed bottom-24 right-6 z-50 md:hidden"
+    >
+      <AppleButton
+        variant="primary"
+        size="large"
+        @click="showAddLoanModal = true"
+        class="!rounded-full !w-14 !h-14 !p-0 !shadow-lg"
+      >
+        <i class="i-lucide-plus text-xl"></i>
+      </AppleButton>
+    </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import {
-  NButton,
   NCard,
   NStatistic,
   NSpace,
@@ -139,6 +154,7 @@ import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseSearchInput from '@/shared/components/molecules/BaseSearchInput.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import LoanCard from '@/shared/components/molecules/LoanCard.vue'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 

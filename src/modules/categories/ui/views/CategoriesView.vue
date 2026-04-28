@@ -1,232 +1,187 @@
 <template>
   <StandardPageLayout
-    title="Categorias Custo-Métricas"
+    title="Categorias"
     highlight="Categorias"
-    subtitle="Classifique e entenda o direcionamento do seu patrimônio."
+    subtitle="Organize suas despesas com categorias visuais e intuitivas."
   >
     <template #action>
-      <NButton type="primary" round @click="openAddModal" id="btn-create-category">
-        <template #icon><i class="i-lucide-plus"></i></template>
-        Nova Categoria
-      </NButton>
+      <div class="flex items-center gap-3">
+        <AppleButton variant="primary" size="medium" @click="openAddModal" id="btn-create-category">
+          Nova Categoria
+        </AppleButton>
+      </div>
     </template>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <main class="lg:col-span-2 space-y-6">
-        <NEmpty
+    <div class="apple-categories-container">
+      <main class="apple-main-content">
+        <!-- Apple-style Empty State -->
+        <div
           v-if="!categories || categories.length === 0"
-          description="Nenhuma categoria configurada."
-          class="py-24"
+          class="apple-empty-state"
         >
-          <template #icon>
-            <i class="i-lucide-tag text-5xl text-violet-500/40"></i>
-          </template>
-        </NEmpty>
-        
-        <NGrid
-          v-else
-          cols="1 640:2"
-          :x-gap="20"
-          :y-gap="20"
-          responsive="screen"
-          item-responsive
-        >
-          <NGridItem v-for="category in categories" :key="category.id">
-            <NCard size="small" hoverable class="h-full relative overflow-hidden" @click="openEditModal(category)">
-              <div 
-                class="absolute left-0 top-0 bottom-0 w-1.5" 
-                :style="{ backgroundColor: category.color }"
-              ></div>
-              <div class="flex items-center gap-3 pl-2">
-                <div 
-                  class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-200/50"
-                  :style="{ color: category.color }"
-                >
-                  <i :class="category.icon" class="text-xl"></i>
-                </div>
-                <div>
-                  <div class="font-inter font-semibold text-base">{{ category.name }}</div>
-                  <div v-if="category.parent_id" class="text-xs text-secondary-500 flex items-center gap-1">
-                    <i class="i-lucide-corner-down-right"></i> Subcategoria
-                  </div>
-                </div>
-              </div>
-            </NCard>
-          </NGridItem>
-        </NGrid>
+          <div class="apple-empty-icon">
+            <i class="i-lucide-tag text-6xl text-[#0071e3]"></i>
+          </div>
+          <h3 class="apple-empty-title">Nenhuma categoria ainda</h3>
+          <p class="apple-empty-description">
+            Crie categorias para organizar suas transações e ter mais controle sobre seus gastos.
+          </p>
+          <AppleButton variant="primary" size="medium" @click="openAddModal">
+            Criar Primeira Categoria
+          </AppleButton>
+        </div>
+
+        <!-- Apple-style Category Cards -->
+        <div v-else class="apple-category-grid">
+          <div
+            v-for="category in displayCategories"
+            :key="category.id"
+            class="apple-category-card"
+            :style="{
+              '--category-color': category.color,
+              '--category-color-light': category.color + '15'
+            }"
+            @click="openEditModal(category)"
+          >
+            <div class="apple-card-icon">
+              <i :class="category.icon" class="text-xl"></i>
+            </div>
+            <div class="apple-card-content">
+              <h3 class="apple-card-title">{{ category.displayName }}</h3>
+              <p v-if="category.parent_id" class="apple-card-subtitle">
+                <i class="i-lucide-corner-down-right text-xs"></i>
+                Subcategoria
+              </p>
+            </div>
+            <div class="apple-card-chevron">
+              <i class="i-lucide-chevron-right text-lg"></i>
+            </div>
+          </div>
+        </div>
       </main>
 
-      <aside class="side-column space-y-6">
-        <NCard>
-          <template #header><NText strong>Total de Categorias</NText></template>
-          <div class="font-jetbrains text-3xl font-bold tabular-nums text-primary-400">
+      <!-- Apple-style Stats Panel -->
+      <aside class="apple-stats-panel">
+        <div class="apple-stat-card">
+          <div class="apple-stat-header">
+            <i class="i-lucide-grid-3x3 text-[#0071e3] text-xl"></i>
+            <span class="apple-stat-label">Total de Categorias</span>
+          </div>
+          <div class="apple-stat-value">
             {{ categories?.length || 0 }}
           </div>
-        </NCard>
+          <p class="apple-stat-description">
+            {{ categories?.length === 1 ? '1 categoria criada' : `${categories?.length || 0} categorias criadas` }}
+          </p>
+        </div>
       </aside>
     </div>
 
     <!-- Modal Form -->
-    <NModal v-model:show="showModal" preset="card" :title="isSubmittingEdit ? 'Editar Categoria' : 'Nova Categoria'" style="width: 420px">
-      <NForm ref="formRef" :model="formModel" :rules="formRules" @submit.prevent="handleSave">
-        <NFormItem label="Nome" path="name">
-          <NInput v-model:value="formModel.name" id="input-category-name" placeholder="Ex: Mercado, Viagem..." />
-        </NFormItem>
+    <CategoryDialog
+      :category="editingCategory"
+      :show="showModal"
+      :parent-options="parentOptions"
+      @close="showModal = false"
+      @saved="handleSave"
+      @delete="handleDelete"
+    />
 
-        <div class="grid grid-cols-2 gap-4">
-          <NFormItem label="Cor Tática" path="color">
-            <NColorPicker v-model:value="formModel.color" :swatches="swatches" />
-          </NFormItem>
-          
-          <NFormItem label="Ícone" path="icon">
-            <NSelect v-model:value="formModel.icon" :options="iconOptions" />
-          </NFormItem>
-        </div>
-
-        <NFormItem label="Subcategoria de (Opcional)" path="parent_id">
-          <NSelect 
-            v-model:value="formModel.parent_id" 
-            :options="parentOptions" 
-            clearable 
-            placeholder="Nenhuma (Raiz)"
-          />
-        </NFormItem>
-
-        <div class="flex justify-between mt-6">
-          <NButton 
-            v-if="isSubmittingEdit" 
-            type="error" 
-            ghost 
-            @click="handleDelete"
-            class="mr-auto"
-          >
-            Excluir
-          </NButton>
-          <div class="flex gap-3 justify-end flex-grow">
-            <NButton @click="showModal = false">Cancelar</NButton>
-            <NButton type="primary" attr-type="submit" :loading="isSaving" id="btn-save-category">
-              Salvar
-            </NButton>
-          </div>
-        </div>
-      </NForm>
-    </NModal>
+    <!-- Mobile FAB Button -->
+    <div
+      v-if="isMobile"
+      class="fixed bottom-24 right-6 z-50 md:hidden"
+    >
+      <AppleButton
+        variant="primary"
+        size="large"
+        @click="openAddModal"
+        class="!rounded-full !w-14 !h-14 !p-0 !shadow-lg"
+      >
+        <i class="i-lucide-plus text-xl"></i>
+      </AppleButton>
+    </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import {
-  NButton, NCard, NText, NEmpty, NGrid, NGridItem, NModal, NForm, NFormItem, NInput, NSelect, NColorPicker, useMessage, useDialog
+  useMessage, useDialog
 } from 'naive-ui'
 import { useObservable } from '@vueuse/rxjs'
 import { useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
+import CategoryDialog from '@/shared/components/organisms/CategoryDialog.vue'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 import type { CategoryService } from '../../application/services/CategoryService'
 import type { Category } from '@/shared/domain/entities/Category'
 
 const message = useMessage()
 const dialog = useDialog()
 const categoryService = useService<CategoryService>(DI_TOKENS.CategoryService)
+const isMobile = useIsMobile()
 
 // Subscribe to RxJS subject
 const categories = useObservable(categoryService.categories$)
+
+// Computed property to sanitize and transform category display data
+const displayCategories = computed(() => {
+  if (!categories.value) return []
+
+  return categories.value.map(category => {
+    // Check if name is a UUID or malformed
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(category.name || '')
+    const displayName = isUUID || !category.name || category.name.trim() === ''
+      ? 'Sem Nome'
+      : category.name
+
+    return {
+      ...category,
+      displayName
+    }
+  })
+})
 
 onMounted(() => {
   categoryService.loadCategories()
 })
 
-// Options for the form
-const swatches = [
-  '#f87171', '#fb923c', '#fbbf24', '#a3e635', '#4ade80', '#34d399', '#2dd4bf', '#22d3ee', '#38bdf8', '#60a5fa', '#818cf8', '#a78bfa', '#e879f9', '#f472b6', '#fb7185'
-]
-
-const iconOptions = [
-  { label: '🛒 Carrinho', value: 'i-lucide-shopping-cart' },
-  { label: '🍽️ Talheres', value: 'i-lucide-utensils' },
-  { label: '🚌 Ônibus', value: 'i-lucide-bus' },
-  { label: '🚗 Carro', value: 'i-lucide-car' },
-  { label: '🎟️ Lazer', value: 'i-lucide-ticket' },
-  { label: '🏠 Casa', value: 'i-lucide-home' },
-  { label: '❤️ Saúde', value: 'i-lucide-heart' },
-  { label: '🎓 Estudo', value: 'i-lucide-graduation-cap' },
-  { label: '📱 Conta', value: 'i-lucide-smartphone' },
-  { label: '🐕 Pet', value: 'i-lucide-dog' },
-  { label: '💼 Trabalho', value: 'i-lucide-briefcase' },
-  { label: '🏷️ Tag G.', value: 'i-lucide-tag' },
-]
+const showModal = ref(false)
+const isSaving = ref(false)
+const editingCategory = ref<Category | null>(null)
 
 const parentOptions = computed(() => {
   if (!categories.value) return []
-  // Avoid self-parenting logic filtering could go here, for now list all
   return categories.value
-    .filter(c => c.id !== editingId.value)
+    .filter(c => c.id !== editingCategory.value?.id)
     .map(c => ({
       label: c.name,
       value: c.id
     }))
 })
 
-const showModal = ref(false)
-const isSaving = ref(false)
-const isSubmittingEdit = ref(false)
-const editingId = ref<string | null>(null)
-
-const formModel = ref({
-  name: '',
-  color: '#3b82f6',
-  icon: 'i-lucide-tag',
-  parent_id: null as string | null
-})
-
-const formRules = {
-  name: { required: true, message: 'O nome é obrigatório' },
-}
-
 function openAddModal() {
-  editingId.value = null
-  isSubmittingEdit.value = false
-  formModel.value = {
-    name: '',
-    color: swatches[Math.floor(Math.random() * swatches.length)] || '#3b82f6',
-    icon: 'i-lucide-tag',
-    parent_id: null
-  }
+  editingCategory.value = null
   showModal.value = true
 }
 
 function openEditModal(category: Category) {
-  editingId.value = category.id
-  isSubmittingEdit.value = true
-  formModel.value = {
-    name: category.name,
-    color: category.color,
-    icon: category.icon,
-    parent_id: category.parent_id || null
-  }
+  editingCategory.value = category
   showModal.value = true
 }
 
-async function handleSave() {
-  if (!formModel.value.name) return
+async function handleSave(data: { name: string; color: string; icon: string; parent_id: string | null }) {
+  if (!data.name) return
   isSaving.value = true
   try {
-    if (isSubmittingEdit.value && editingId.value) {
-      await categoryService.updateCategory(editingId.value, {
-        name: formModel.value.name,
-        icon: formModel.value.icon,
-        color: formModel.value.color,
-        parent_id: formModel.value.parent_id
-      })
+    if (editingCategory.value) {
+      await categoryService.updateCategory(editingCategory.value.id, data)
       message.success('Categoria atualizada com sucesso!')
     } else {
-      await categoryService.createCategory({
-        name: formModel.value.name,
-        icon: formModel.value.icon,
-        color: formModel.value.color,
-        parent_id: formModel.value.parent_id
-      })
+      await categoryService.createCategory(data)
       message.success('Categoria criada com sucesso!')
     }
     showModal.value = false
@@ -239,8 +194,8 @@ async function handleSave() {
 }
 
 function handleDelete() {
-  if (!editingId.value) return
-  
+  if (!editingCategory.value) return
+
   dialog.warning({
     title: 'Excluir Categoria',
     content: 'Tem certeza que deseja excluir esta categoria?',
@@ -248,13 +203,323 @@ function handleDelete() {
     negativeText: 'Cancelar',
     onPositiveClick: async () => {
       try {
-        await categoryService.deleteCategory(editingId.value!)
+        await categoryService.deleteCategory(editingCategory.value!.id)
         message.success('Categoria excluída.')
         showModal.value = false
-      } catch (err) {
+      } catch {
         message.error('Erro ao excluir categoria.')
       }
     }
   })
 }
 </script>
+
+<style scoped>
+/* Apple Categories Container */
+.apple-categories-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  padding: 4rem 0 2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .apple-categories-container {
+    grid-template-columns: 1fr 360px;
+    gap: 4rem;
+  }
+}
+
+/* Apple Main Content */
+.apple-main-content {
+  min-height: 400px;
+  padding-bottom: 2rem;
+}
+
+/* Apple Empty State */
+.apple-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  animation: apple-fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apple-empty-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #f5f5f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.apple-empty-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 0.75rem 0;
+  letter-spacing: -0.02em;
+}
+
+.apple-empty-description {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 17px;
+  color: #6e6e73;
+  line-height: 1.47;
+  margin: 0 0 2rem 0;
+  max-width: 400px;
+}
+
+/* Apple Category Grid */
+.apple-category-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  animation: apple-fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 640px) {
+  .apple-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .apple-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .apple-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Apple Category Card */
+.apple-category-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-category-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--category-color);
+  opacity: 0;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apple-category-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+.apple-category-card:hover::before {
+  opacity: 1;
+}
+
+.apple-category-card:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Apple Card Icon */
+.apple-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--category-color-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--category-color);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apple-category-card:hover .apple-card-icon {
+  transform: scale(1.05);
+}
+
+/* Apple Card Content */
+.apple-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.apple-card-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.01em;
+  line-height: 1.24;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apple-card-subtitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 13px;
+  color: #6e6e73;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  line-height: 1.33;
+}
+
+/* Apple Card Chevron */
+.apple-card-chevron {
+  color: #c7c7cc;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.apple-category-card:hover .apple-card-chevron {
+  transform: translateX(2px);
+  color: #8e8e93;
+}
+
+/* Apple Stats Panel */
+.apple-stats-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+@media (max-width: 1023px) {
+  .apple-stats-panel {
+    position: static;
+  }
+}
+
+.apple-stat-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.apple-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0;
+}
+
+.apple-stat-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6e6e73;
+  letter-spacing: -0.01em;
+}
+
+.apple-stat-value {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.apple-stat-description {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  color: #6e6e73;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* Apple Animations */
+@keyframes apple-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .apple-empty-icon {
+    background: #2c2c2e;
+  }
+
+  .apple-empty-title,
+  .apple-stat-value {
+    color: #f5f5f7;
+  }
+
+  .apple-empty-description,
+  .apple-stat-label {
+    color: #8e8e93;
+  }
+
+  .apple-stat-description {
+    color: #6e6e73;
+  }
+
+  /* Cards maintain light theme regardless of system preference */
+  /* .apple-category-card and .apple-stat-card keep their default light styles */
+
+  /* Card text colors remain optimized for light backgrounds */
+  .apple-card-title {
+    color: #1d1d1f;
+  }
+
+  .apple-card-subtitle {
+    color: #6e6e73;
+  }
+
+  .apple-card-chevron {
+    color: #c7c7cc;
+  }
+
+  .apple-category-card:hover .apple-card-chevron {
+    color: #8e8e93;
+  }
+}
+</style>

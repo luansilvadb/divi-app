@@ -49,6 +49,7 @@ export default defineConfigWithVueTs(
           },
         },
       ],
+      'complexity': ['warn', { max: 10 }],
     },
   },
 

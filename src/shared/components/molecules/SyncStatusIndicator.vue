@@ -2,13 +2,13 @@
   <NTooltip trigger="hover" placement="bottom">
     <template #trigger>
       <div
-        class="sync-status-indicator flex items-center gap-2 px-3 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm transition-all duration-300 group cursor-default shadow-sm"
+        class="sync-status-indicator flex items-center gap-2 px-3 py-1.5 rounded-full border border-separator bg-surface-primary/80 backdrop-blur-sm transition-all duration-150 ease-out group cursor-default"
       >
         <!-- Simple Status Icon -->
         <div class="relative flex items-center justify-center w-5 h-5">
           <i
             :class="statusInfo.icon"
-            class="text-[0.9rem] transition-all duration-500"
+            class="text-[0.9rem] transition-all duration-150 ease-out"
             :style="{ color: statusInfo.color }"
           ></i>
         </div>
@@ -16,13 +16,13 @@
         <!-- Status Label (Hidden on small screens) -->
         <div class="hidden sm:flex items-center gap-1.5 overflow-hidden">
           <span
-            class="text-[10px] font-bold tracking-tight uppercase opacity-60 group-hover:opacity-100 transition-opacity whitespace-nowrap text-zinc-500 dark:text-zinc-400"
+            class="text-[10px] font-bold tracking-tight uppercase opacity-60 group-hover:opacity-100 transition-opacity whitespace-nowrap text-secondary"
           >
             {{ statusInfo.label }}
           </span>
           <div
             v-if="pendingCount > 0"
-            class="px-1.5 py-0.5 rounded-md bg-amber-500/10 text-amber-500 text-[10px] font-black animate-pulse"
+            class="px-1.5 py-0.5 rounded-md bg-warning-subtle text-warning text-[10px] font-bold animate-pulse"
           >
             {{ pendingCount }}
           </div>
@@ -44,11 +44,11 @@ const { status, isOnline, lastSyncTime, pendingCount } = storeToRefs(store)
 
 const statusInfo = computed(() => {
   if (!isOnline.value) {
-    return { label: 'Modo Offline', icon: 'i-lucide-wifi-off', color: '#a1a1aa' }
+    return { label: 'Modo Offline', icon: 'i-lucide-wifi-off', color: 'var(--text-tertiary)' }
   }
 
   if (pendingCount.value > 0 && status.value !== 'syncing') {
-    return { label: 'Pendente', icon: 'i-lucide-clock', color: '#f59e0b' }
+    return { label: 'Pendente', icon: 'i-lucide-clock', color: 'var(--color-warning)' }
   }
 
   switch (status.value) {
@@ -56,18 +56,18 @@ const statusInfo = computed(() => {
       return {
         label: 'Sincronizando',
         icon: 'i-lucide-refresh-cw animate-spin',
-        color: '#8b5cf6',
+        color: 'var(--color-info)',
       }
     case 'synced':
       return {
         label: 'Sincronizado',
         icon: 'i-lucide-check-circle',
-        color: '#10b981',
+        color: 'var(--color-success)',
       }
     case 'pending':
-      return { label: 'Aguardando Rede', icon: 'i-lucide-clock', color: '#f59e0b' }
+      return { label: 'Aguardando Rede', icon: 'i-lucide-clock', color: 'var(--color-warning)' }
     default:
-      return { label: 'Conectado', icon: 'i-lucide-check-circle', color: '#10b981' }
+      return { label: 'Conectado', icon: 'i-lucide-check-circle', color: 'var(--color-success)' }
   }
 })
 

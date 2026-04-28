@@ -5,12 +5,9 @@
     :quaternary="variant === 'ghost'"
     :disabled="disabled || loading"
     :loading="loading"
+    :size="size"
     v-bind="$attrs"
-    class="!font-bold transition-all duration-modern ease-modern active:scale-95"
-    :class="[
-      { '!px-6 !py-2.5': size === 'medium' },
-      { '!px-4 !py-1.5': size === 'small' }
-    ]"
+    class="apple-button"
   >
     <template v-if="$slots.icon" #icon>
       <slot name="icon" />
@@ -42,16 +39,25 @@ const props = withDefaults(
 )
 
 const naiveType = computed(() => {
-  if (props.variant === 'danger' || props.variant === 'danger-tinted') return 'error'
+  if (props.variant === 'danger') return 'error'
   if (props.variant === 'primary') return 'primary'
-  if (props.variant === 'secondary') return 'info'
+  if (props.variant === 'secondary') return 'default' // Use default with custom styling
   return 'default'
 })
 </script>
 
 <style scoped>
-.glass-button {
-  background: rgba(var(--color-zinc-500-rgb), 0.1);
-  backdrop-filter: blur(8px);
+/* Apple-inspired button transitions */
+.apple-button {
+  transition:
+    background-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 150ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    box-shadow 150ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Ensure focus-visible is properly handled */
+.apple-button:focus-visible {
+  outline: none;
 }
 </style>

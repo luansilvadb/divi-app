@@ -34,41 +34,57 @@ export class VaultTransactionRepository implements ITransactionRepository {
     }
   }
 
+  private calculateWalletDelta(transaction: Transaction, oldData: LocalTransaction | undefined): bigint {
+    let walletDelta = BigInt(transaction.amount)
+    if (transaction.type === 'expense') walletDelta = -walletDelta
+
+    if (oldData && !oldData.deleted) {
+      let oldWalletDelta = BigInt(oldData.amount)
+      if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
+
+      if (oldData.wallet_id === transaction.wallet_id) {
+        walletDelta = walletDelta - oldWalletDelta
+      } else {
+        walletDelta = walletDelta + oldWalletDelta
+      }
+    }
+
+    return walletDelta
+  }
+
+  private async applyWalletChanges(
+    transaction: Transaction,
+    oldData: LocalTransaction | undefined,
+    walletDelta: bigint,
+  ): Promise<void> {
+    if (oldData && !oldData.deleted && oldData.wallet_id !== transaction.wallet_id) {
+      const oldWallet = await db.wallets.get(oldData.wallet_id)
+      if (oldWallet) {
+        let oldWalletDelta = BigInt(oldData.amount)
+        if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
+        await db.wallets.put({
+          ...oldWallet,
+          balance: BigInt(oldWallet.balance) - oldWalletDelta,
+        })
+      }
+    }
+
+    if (walletDelta !== 0n) {
+      const wallet = await db.wallets.get(transaction.wallet_id)
+      if (wallet) {
+        await db.wallets.put({ ...wallet, balance: BigInt(wallet.balance) + walletDelta })
+      }
+    }
+  }
+
   async save(transaction: Transaction): Promise<void> {
     try {
       await db.transaction('rw', db.transactions, db.wallets, async () => {
         const id = transaction.id || uuidv7()
         const oldData = await db.transactions.get(id)
 
-        // Calcular o impacto da transação atual (income soma, expense subtrai)
-        let walletDelta = BigInt(transaction.amount)
-        if (transaction.type === 'expense') walletDelta = -walletDelta
-
-        if (oldData && !oldData.deleted) {
-          // Reverter impacto da transação antiga
-          let oldWalletDelta = BigInt(oldData.amount)
-          if (oldData.type === 'expense') oldWalletDelta = -oldWalletDelta
-
-          if (oldData.wallet_id === transaction.wallet_id) {
-            walletDelta = walletDelta - oldWalletDelta
-          } else {
-            // Mudança de carteira: reverter na antiga
-            const oldWallet = await db.wallets.get(oldData.wallet_id)
-            if (oldWallet) {
-              await db.wallets.put({
-                ...oldWallet,
-                balance: BigInt(oldWallet.balance) - oldWalletDelta,
-              })
-            }
-          }
-        }
-
-        if (walletDelta !== 0n) {
-          const wallet = await db.wallets.get(transaction.wallet_id)
-          if (wallet) {
-            await db.wallets.put({ ...wallet, balance: BigInt(wallet.balance) + walletDelta })
-          }
-        }
+        const walletDelta = this.calculateWalletDelta(transaction, oldData)
+        await this.applyWalletChanges(transaction, oldData, walletDelta)
 
         const localData: LocalTransaction = {
           id,

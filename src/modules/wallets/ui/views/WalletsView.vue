@@ -5,10 +5,11 @@
     subtitle="Governança de patrimônio e saldo detalhado."
   >
     <template #action>
-      <NButton type="primary" round @click="showAddModal = true" id="btn-create-wallet">
-        <template #icon><i class="i-lucide-plus"></i></template>
-        Nova Carteira
-      </NButton>
+      <div class="flex items-center gap-3">
+        <AppleButton variant="primary" size="medium" @click="showAddModal = true" id="btn-create-wallet">
+          Nova Carteira
+        </AppleButton>
+      </div>
     </template>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -19,10 +20,10 @@
           class="py-24"
         >
           <template #icon>
-            <i class="i-lucide-wallet text-5xl text-violet-500/40"></i>
+            <i class="i-lucide-wallet text-5xl text-[rgba(0,122,255,0.3)] dark:text-[rgba(10,132,255,0.3)]"></i>
           </template>
         </NEmpty>
-        
+
         <NGrid
           v-else
           cols="1 1024:2"
@@ -65,16 +66,16 @@
         <NFormItem label="Nome" path="name">
           <NInput v-model:value="formModel.name" id="input-wallet-name" placeholder="Ex: NuBank, Dinheiro, Reserva..." />
         </NFormItem>
-        
+
         <NFormItem label="Tipo" path="type">
           <NSelect v-model:value="formModel.type" :options="typeOptions" id="select-wallet-type" />
         </NFormItem>
 
         <NFormItem label="Saldo Inicial" path="balance">
-          <NInputNumber 
-            v-model:value="formModel.balance" 
-            :precision="2" 
-            :step="0.01" 
+          <NInputNumber
+            v-model:value="formModel.balance"
+            :precision="2"
+            :step="0.01"
             id="input-wallet-balance"
             class="w-full"
           >
@@ -90,23 +91,41 @@
         </div>
       </NForm>
     </NModal>
+
+    <!-- Mobile FAB Button -->
+    <div
+      v-if="isMobile"
+      class="fixed bottom-24 right-6 z-50 md:hidden"
+    >
+      <AppleButton
+        variant="primary"
+        size="large"
+        @click="showAddModal = true"
+        class="!rounded-full !w-14 !h-14 !p-0 !shadow-lg"
+      >
+        <i class="i-lucide-plus text-xl"></i>
+      </AppleButton>
+    </div>
   </StandardPageLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import {
-  NButton, NCard, NText, NEmpty, NGrid, NGridItem, NModal, NForm, NFormItem, NInput, NSelect, NInputNumber, useMessage
+  NCard, NText, NEmpty, NGrid, NGridItem, NModal, NForm, NFormItem, NInput, NSelect, NInputNumber, useMessage
 } from 'naive-ui'
 import { useObservable } from '@vueuse/rxjs'
 import { useService } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
+import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
+import { useIsMobile } from '@/shared/composables/useIsMobile'
 import { formatCurrency } from '@/shared/utils/formatters'
 import type { WalletService } from '../../application/services/WalletService'
 
 const message = useMessage()
 const walletService = useService<WalletService>(DI_TOKENS.WalletService)
+const isMobile = useIsMobile()
 
 // Subscribe to RxJS subject
 const wallets = useObservable(walletService.wallets$)

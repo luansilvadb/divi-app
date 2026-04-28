@@ -1,19 +1,19 @@
 import { describe, it, expect } from 'vitest'
 import { commonTheme, darkThemeOverrides } from '../naiveTheme'
 
-describe('Naive UI Theme Tokens (Elite Cockpit)', () => {
-  it('should have correct Obsidian and Navy colors in dark theme', () => {
+describe('Naive UI Theme Tokens (Apple Design System)', () => {
+  it('should have correct Apple dark colors in dark theme', () => {
     const common = darkThemeOverrides.common
-    expect(common?.bodyColor).toBe('#020617') // Obsidian Black
-    expect(common?.cardColor).toBe('#0A192F') // Deep Navy
+    expect(common?.bodyColor).toBe('#1C1C1E') // Apple Dark Background
+    expect(common?.cardColor).toBe('#2C2C2E') // Apple Grouped Background
   })
 
-  it('should have Muted Gold as the primary color across themes', () => {
-    expect(commonTheme?.primaryColor).toBe('#B45309')
+  it('should have System Blue as the primary color across themes', () => {
+    expect(commonTheme?.primaryColor).toBe('#007AFF')
   })
 
-  it('should have rigid border radius (2px)', () => {
-    expect(commonTheme?.borderRadius).toBe('2px')
+  it('should have standard border radius (6px for sm)', () => {
+    expect(commonTheme?.borderRadius).toBe('6px')
   })
 
   it('should use Inter as the main font family', () => {

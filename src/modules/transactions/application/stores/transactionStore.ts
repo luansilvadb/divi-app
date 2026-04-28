@@ -80,15 +80,8 @@ export const useTransactionStore = defineStore('transactions', () => {
   // Grouping functionality - extracted to useTransactionGrouping composable (SRP)
   const { groupedTransactions } = useTransactionGrouping(filteredTransactionsArray)
 
-  async function saveTransaction(transaction: Transaction) {
-    if (transaction.amount < 0n) {
-      throw new Error('Amount must be positive')
-    }
-
-    const activeUserId = authStore.user?.id
-    if (!activeUserId) throw new Error('User not authenticated')
-
-    const enriched: Transaction = {
+  function enrichTransaction(transaction: Transaction, activeUserId: string): Transaction {
+    return {
       ...transaction,
       id: transaction.id || uuidv7(),
       user_id: transaction.user_id || activeUserId,
@@ -98,9 +91,10 @@ export const useTransactionStore = defineStore('transactions', () => {
       client_updated_at: new Date().toISOString(),
       version: transaction.version || 1,
     }
+  }
 
+  async function updateLocalState(enriched: Transaction, isNew: boolean) {
     const index = transactions.value.findIndex((t) => t.id === enriched.id)
-    const isNew = index === -1
     const newArray = [...transactions.value]
     if (!isNew) {
       newArray[index] = enriched
@@ -108,17 +102,34 @@ export const useTransactionStore = defineStore('transactions', () => {
       newArray.unshift(enriched)
     }
     transactions.value = newArray
+  }
+
+  async function logTransactionActivity(enriched: Transaction, activeUserId: string, isNew: boolean) {
+    const displayAmt = BigIntAdapter.fromMinorUnits(enriched.amount)
+    await activityLogService.logActivity({
+      action: isNew ? 'Nova Transação' : 'Transação Atualizada',
+      description: `R$ ${displayAmt} : ${enriched.title}`,
+      type: 'success',
+      user_id: activeUserId,
+    })
+  }
+
+  async function saveTransaction(transaction: Transaction) {
+    if (transaction.amount < 0n) {
+      throw new Error('Amount must be positive')
+    }
+
+    const activeUserId = authStore.user?.id
+    if (!activeUserId) throw new Error('User not authenticated')
+
+    const enriched = enrichTransaction(transaction, activeUserId)
+    const isNew = !transactions.value.some((t) => t.id === enriched.id)
+
+    await updateLocalState(enriched, isNew)
 
     try {
       await transactionRepo.save(enriched)
-
-      const displayAmt = BigIntAdapter.fromMinorUnits(enriched.amount)
-      await activityLogService.logActivity({
-        action: isNew ? 'Nova Transação' : 'Transação Atualizada',
-        description: `R$ ${displayAmt} : ${enriched.title}`,
-        type: 'success',
-        user_id: activeUserId,
-      })
+      await logTransactionActivity(enriched, activeUserId, isNew)
 
       const date = new Date(enriched.date)
       await fetchTransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
@@ -183,7 +194,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     const walletService = container.resolve<WalletService>(DI_TOKENS.WalletService)
     const isUpdate = !!walletData.id
 
-    if (isUpdate) {
+    if (isUpdate && walletData.id) {
       // Update existing wallet
       const existing = walletStore.walletMap[walletData.id]
       if (!existing) throw new Error('Wallet not found')

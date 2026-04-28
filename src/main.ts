@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 
 import 'virtual:uno.css'
 import './core/styles/main.css'
+import './core/theme/interactionStates.css' // Apple HIG interaction states
 import App from './App.vue'
 import router from './core/router'
 import { vaultDb } from '@/infrastructure/storage/VaultDatabase'

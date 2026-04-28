@@ -11,7 +11,7 @@
           <NCard>
             <NSpace vertical align="center" :size="16" class="py-4">
               <div
-                class="w-24 h-24 rounded-full bg-violet-500/10 flex items-center justify-center border-4 border-violet-500/5 transition-transform hover:scale-105 duration-500"
+                class="w-24 h-24 rounded-full bg-[rgba(0,122,255,0.08)] flex items-center justify-center border-4 border-violet-500/5 transition-transform hover:scale-105 duration-500"
               >
                 <NText type="primary" strong class="text-3xl">
                   {{ authStore.user?.email?.charAt(0).toUpperCase() || 'U' }}
@@ -41,7 +41,7 @@
                     <i :class="isDark ? 'i-lucide-sun' : 'i-lucide-moon'" class="text-lg"></i>
                   </div>
                 </template>
-                <span class="flex-1 text-left font-bold text-zinc-700 dark:text-zinc-300 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">Mudar Tema</span>
+                <span class="flex-1 text-left font-bold text-zinc-700 dark:text-zinc-300 group-hover:text-[#007AFF] dark:group-hover:text-[#0A84FF] transition-colors">Mudar Tema</span>
                 <NTag size="small" round :type="isDark ? 'warning' : 'info'" quaternary>{{ isDark ? 'Escuro' : 'Claro' }}</NTag>
               </NButton>
 
@@ -91,7 +91,7 @@
         <NCard>
           <template #header>
             <NSpace align="center" :size="8">
-              <i class="i-lucide-user text-lg text-violet-500"></i>
+              <i class="i-lucide-user text-lg text-[#007AFF]"></i>
               <NText strong>Dados da Conta</NText>
             </NSpace>
           </template>
