@@ -82,34 +82,46 @@ export class SyncEngine implements ISyncEngine {
    * Implements LWW by checking server timestamps before upserting.
    */
   public async pushDirtyRecords() {
-    if (this.isPushing) return
-    if (typeof navigator !== 'undefined' && !navigator.onLine) return
+    if (this.shouldSkipPush()) return
 
     const crypto = VaultCryptoManager.getInstance()
-    if (!crypto.hasKey()) {
-      console.warn('[SyncEngine] Vault locked. Skipping push until vault is unlocked.')
-      return
-    }
-
     const user = await this.getAuthenticatedUser()
     if (!user) return
 
-    this.isPushing = true
-    const store = this.safeStore()
-    store?.setStatus('syncing')
+    this.startPush()
 
     try {
       for (const tableName of SYNCABLE_TABLES) {
         await this.pushTableRecords(tableName, user.id, crypto)
       }
 
-      store?.setStatus('synced')
-      store?.setLastSyncTime(new Date().toISOString())
+      this.finalizePushSuccess()
     } catch (err) {
-      this.handlePushError(err, store)
+      this.handlePushError(err, this.safeStore())
     } finally {
       this.isPushing = false
     }
+  }
+
+  private shouldSkipPush(): boolean {
+    if (this.isPushing) return true
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return true
+    if (!VaultCryptoManager.getInstance().hasKey()) {
+      console.warn('[SyncEngine] Vault locked. Skipping push until vault is unlocked.')
+      return true
+    }
+    return false
+  }
+
+  private startPush() {
+    this.isPushing = true
+    this.safeStore()?.setStatus('syncing')
+  }
+
+  private finalizePushSuccess() {
+    const store = this.safeStore()
+    store?.setStatus('synced')
+    store?.setLastSyncTime(new Date().toISOString())
   }
 
   private async getAuthenticatedUser(): Promise<{ id: string } | null> {
@@ -465,21 +477,28 @@ export class SyncEngine implements ISyncEngine {
     upsertError: any,
     userId: string
   ): Promise<void> {
-    const { data: sessionData } = await supabase.auth.getSession()
-    console.error(`[SyncEngine] ⛔ RLS VIOLATION for ${tableName}:${recordId}`, {
-      message: upsertError.message,
-      payloadUserId: userId,
-      authUserId: userId,
-      sessionExists: !!sessionData?.session,
-      sessionUserId: sessionData?.session?.user?.id,
-      tokenExpiry: sessionData?.session?.expires_at
-        ? new Date(sessionData.session.expires_at * 1000).toISOString()
-        : 'N/A',
-      userIdMatch: userId === sessionData?.session?.user?.id,
-    })
+    const diagnostics = await this.getRlsDiagnostics(upsertError, userId)
+    console.error(`[SyncEngine] ⛔ RLS VIOLATION for ${tableName}:${recordId}`, diagnostics)
 
     await table.update(recordId, { sync_status: 'failed' })
     console.warn(`[SyncEngine] Record ${tableName}:${recordId} marked as 'failed'. Check Supabase RLS policies for INSERT on table "${tableName}".`)
+  }
+
+  private async getRlsDiagnostics(upsertError: any, userId: string) {
+    const { data: sessionData } = await supabase.auth.getSession()
+    const session = sessionData?.session
+    
+    return {
+      message: upsertError.message,
+      payloadUserId: userId,
+      authUserId: userId,
+      sessionExists: !!session,
+      sessionUserId: session?.user?.id,
+      tokenExpiry: session?.expires_at 
+        ? new Date(session.expires_at * 1000).toISOString() 
+        : 'N/A',
+      userIdMatch: userId === session?.user?.id,
+    }
   }
 
   /**

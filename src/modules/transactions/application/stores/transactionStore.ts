@@ -11,16 +11,12 @@ import type { IActivityLogService } from '@/modules/activity-log/core/ports/IAct
 import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
-import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import { useWalletStore } from './useWalletStore'
-import { WalletService } from '@/modules/wallets/application/services/WalletService'
 import { useCategoryStore } from './useCategoryStore'
 import { useTransactionStats } from './useTransactionStats'
 import { useTransactionSearch } from './useTransactionSearch'
 import { useITransactionGrouping } from './useITransactionGrouping'
 import { messages, formatMessage } from '@/shared/messages/catalog'
-
-type UITransaction = any
 
 export const useTransactionStore = defineStore('transactions', () => {
   // Services
@@ -29,7 +25,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   const syncStore = useSyncStore()
   const authStore = useAuthStore()
 
-  // Composed stores for backward compatibility
+  // Composed stores
   const walletStore = useWalletStore()
   const categoryStore = useCategoryStore()
 
@@ -39,6 +35,18 @@ export const useTransactionStore = defineStore('transactions', () => {
   const currentYear = ref(new Date().getFullYear())
   const currentMonth = ref(new Date().getMonth() + 1)
 
+  /**
+   * Transforms a domain entity into a UI-optimized object with pre-computed fields for search and grouping.
+   */
+  function mapToUITransaction(transaction: ITransaction) {
+    return {
+      ...transaction,
+      _titleLower: (transaction.title || '').toLowerCase(),
+      _timestamp: new Date(transaction.date).getTime(),
+      _dateKey: (transaction.date || '').substring(0, 10),
+    }
+  }
+
   async function fetchtransactionsByMonth(year: number, month: number) {
     isLoading.value = true
     currentYear.value = year
@@ -46,12 +54,9 @@ export const useTransactionStore = defineStore('transactions', () => {
 
     try {
       const raw = await ITransactionRepo.getByMonth(year, month)
-      raw.sort((a, b) => {
-        const timeA = (a as UITransaction)._timestamp
-        const timeB = (b as UITransaction)._timestamp
-        return timeB - timeA
-      })
-      transactions.value = [...raw]
+      const uiTransactions = raw.map(mapToUITransaction)
+      uiTransactions.sort((a, b) => b._timestamp - a._timestamp)
+      transactions.value = [...uiTransactions]
     } finally {
       isLoading.value = false
     }
@@ -61,54 +66,48 @@ export const useTransactionStore = defineStore('transactions', () => {
   watch(
     () => syncStore.updateCounter,
     () => {
-      console.log('[transactionStore] Re-buscando dados devido a mudança no Sync...')
+      console.log('[transactionStore] Re-fetching data due to sync update...')
       fetchtransactionsByMonth(currentYear.value, currentMonth.value)
     },
   )
 
-  // ITransaction filtering - delegated to composable for SRP
   const activetransactions = computed(() => {
-    return (transactions.value as UITransaction[]).filter((ITransaction) => !ITransaction.deleted)
+    return transactions.value.filter((tx) => !tx.deleted)
   })
 
-  // Search functionality - extracted to usetransactionsearch composable (SRP)
+  // Search functionality (SRP)
   const { searchQuery, filteredtransactions: filteredtransactionsArray } = useTransactionSearch(
     activetransactions,
     computed(() => categoryStore.categoryMap),
   )
 
-  // Grouping functionality - extracted to useITransactionGrouping composable (SRP)
+  // Grouping functionality (SRP)
   const { groupedtransactions } = useITransactionGrouping(filteredtransactionsArray)
 
-  function enrichITransaction(ITransaction: ITransaction, activeUserId: string): ITransaction {
+  function enrichITransaction(transaction: ITransaction, activeUserId: string): ITransaction {
     return {
-      ...ITransaction,
-      id: ITransaction.id || uuidv7(),
-      user_id: ITransaction.user_id || activeUserId,
-      date: ITransaction.date || new Date().toISOString().slice(0, 10),
+      ...transaction,
+      id: transaction.id || uuidv7(),
+      user_id: transaction.user_id || activeUserId,
+      date: transaction.date || new Date().toISOString().slice(0, 10),
       sync_status: 'pending',
       deleted: false,
       client_updated_at: new Date().toISOString(),
-      version: ITransaction.version || 1,
+      version: transaction.version || 1,
     }
   }
 
   async function updateLocalState(enriched: ITransaction, isNew: boolean) {
-    const uiTx = {
-      ...(enriched as any),
-      _titleLower: (enriched.title || '').toLowerCase(),
-      _timestamp: new Date(enriched.date).getTime(),
-      _dateKey: (enriched.date || '').substring(0, 10),
-    }
-
+    const uiTx = mapToUITransaction(enriched)
     const index = transactions.value.findIndex((t) => t.id === enriched.id)
-    const newArray: any[] = [...transactions.value]
+    const newArray = [...transactions.value]
+    
     if (!isNew && index !== -1) {
       newArray[index] = uiTx
     } else {
       newArray.unshift(uiTx)
     }
-    transactions.value = newArray as any
+    transactions.value = newArray
   }
 
   async function logITransactionActivity(enriched: ITransaction, activeUserId: string, isNew: boolean) {
@@ -121,15 +120,15 @@ export const useTransactionStore = defineStore('transactions', () => {
     })
   }
 
-  async function saveITransaction(ITransaction: ITransaction) {
-    if (ITransaction.amount < 0n) {
+  async function saveITransaction(transaction: ITransaction) {
+    if (transaction.amount < 0n) {
       throw new Error('Amount must be positive')
     }
 
     const activeUserId = authStore.user?.id
     if (!activeUserId) throw new Error('User not authenticated')
 
-    const enriched = enrichITransaction(ITransaction, activeUserId)
+    const enriched = enrichITransaction(transaction, activeUserId)
     const isUpdate = transactions.value.some((t) => t.id === enriched.id)
 
     try {
@@ -145,15 +144,7 @@ export const useTransactionStore = defineStore('transactions', () => {
       const date = new Date(enriched.date)
       await fetchtransactionsByMonth(date.getFullYear(), date.getMonth() + 1)
     } catch (err) {
-      const errorContext = {
-        operation: 'saveITransaction',
-        ITransactionId: enriched.id,
-        ITransactionTitle: enriched.title,
-        userId: activeUserId,
-        isNew: !isUpdate,
-        error: err instanceof Error ? err.message : String(err),
-      }
-      console.error('[transactionStore] Failed to save ITransaction:', errorContext, err)
+      console.error('[transactionStore] Failed to save transaction:', err)
       await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
@@ -162,6 +153,7 @@ export const useTransactionStore = defineStore('transactions', () => {
   async function deleteITransaction(id: string) {
     const index = transactions.value.findIndex((t) => t.id === id)
     let deletedTitle = 'Desconhecida'
+    
     if (index !== -1) {
       const target = transactions.value[index]!
       deletedTitle = target.title
@@ -187,50 +179,13 @@ export const useTransactionStore = defineStore('transactions', () => {
         })
       }
     } catch (err) {
-      const errorContext = {
-        operation: 'deleteITransaction',
-        ITransactionId: id,
-        ITransactionTitle: deletedTitle,
-        userId: authStore.user?.id,
-        error: err instanceof Error ? err.message : String(err),
-      }
-      console.error('[transactionStore] Failed to delete ITransaction:', errorContext, err)
+      console.error('[transactionStore] Failed to delete transaction:', err)
       await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
   }
 
-  // IWallet operations - delegated to walletservice for backward compatibility
-  async function saveIWallet(IWalletData: Partial<IWallet> & { name: string; balanceNum?: number; currency?: string }) {
-    const walletService = container.resolve<WalletService>(DI_TOKENS.IWalletService)
-    const isUpdate = !!IWalletData.id
-
-    if (isUpdate && IWalletData.id) {
-      // Update existing IWallet
-      const existing = walletStore.IWalletMap[IWalletData.id]
-      if (!existing) throw new Error('IWallet not found')
-
-      await walletService.updateIWallet(IWalletData.id, {
-        ...IWalletData,
-        balance: IWalletData.balanceNum !== undefined
-          ? BigInt(Math.round(IWalletData.balanceNum * 100))
-          : existing.balance,
-        currency: IWalletData.currency || existing.currency,
-      })
-      await walletStore.fetchwallets()
-    } else {
-      // Create new IWallet
-      await walletService.createIWallet({
-        name: IWalletData.name,
-        type: IWalletData.type || 'checking',
-        currency: IWalletData.currency || 'BRL',
-        icon: IWalletData.icon || 'IWallet',
-        balance: IWalletData.balanceNum || 0,
-      })
-    }
-  }
-
-  // Stats via composition - pass the shallowRefs directly
+  // Stats via composition
   const categoryMapRef = computed(() => categoryStore.categoryMap)
   const stats = useTransactionStats(transactions as unknown as Ref<ITransaction[]>, () => categoryMapRef as unknown as Ref<Record<string, ICategory>>)
 
@@ -253,7 +208,7 @@ export const useTransactionStore = defineStore('transactions', () => {
     fetchtransactionsByMonth,
     saveITransaction,
     deleteITransaction,
-    saveIWallet,
-    saveCategory: (categoryData: ICategory) => categoryStore.saveCategory(categoryData),
+    saveIWallet: (data: any) => walletStore.saveIWallet(data),
+    saveCategory: (data: any) => categoryStore.saveCategory(data),
   }
 })

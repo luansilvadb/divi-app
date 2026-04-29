@@ -35,45 +35,51 @@ export class BigIntAdapter {
     return { integerPart, decimalPart }
   }
 
-  // Método para converter decimal string para BigInt (em centavos)
+  /**
+   * Converts decimal string to BigInt (in cents)
+   */
   static parseDecimalToBigInt(decimalString: string): bigint | null {
-    if (!decimalString) return null;
+    if (!decimalString) return null
     
-    const trimmed = decimalString.trim();
-    if (!trimmed) return null;
+    const trimmed = decimalString.trim()
+    if (!trimmed) return null
 
-    const normalized = this.normalizeInput(trimmed);
+    const normalized = this.normalizeInput(trimmed)
     if (normalized === null) {
-      const cleaned = trimmed.replace(/[^0-9.,]/g, '');
-      const isEmptyOrSeparator = !cleaned || cleaned === '.' || cleaned === ',';
-      return isEmptyOrSeparator ? 0n : null;
+      const cleaned = trimmed.replace(/[^0-9.,]/g, '')
+      const isEmptyOrSeparator = !cleaned || cleaned === '.' || cleaned === ','
+      return isEmptyOrSeparator ? 0n : null
     }
 
-    const { integerPart, decimalPart } = this.parseParts(normalized);
+    const { integerPart, decimalPart } = this.parseParts(normalized)
     
     try {
-      return BigInt(integerPart + decimalPart);
+      return BigInt(integerPart + decimalPart)
     } catch {
-      return null;
+      return null
     }
-  }
-
-  // Método para serializar BigInt para JSON
-  static serializeBigInt(value: bigint): string {
-    return value.toString();
-  }
-
-  static toString(value: bigint): string {
-    return value.toString();
-  }
-
-  // Método para desserializar BigInt de JSON
-  static deserializeBigInt(value: string): bigint {
-    return BigInt(value);
   }
 
   /**
-   * Converte valor amigável (decimal como número ou string) para BigInt (centavos / minor units)
+   * Serializes BigInt to string for JSON
+   */
+  static serializeBigInt(value: bigint): string {
+    return value.toString()
+  }
+
+  static toString(value: bigint): string {
+    return value.toString()
+  }
+
+  /**
+   * Deserializes BigInt from string
+   */
+  static deserializeBigInt(value: string): bigint {
+    return BigInt(value)
+  }
+
+  /**
+   * Converts a user-friendly value (decimal number or string) to minor units (cents)
    */
   static toMinorUnits(value: number | string): bigint {
     const num = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value
@@ -82,7 +88,7 @@ export class BigIntAdapter {
   }
 
   /**
-   * Converte BigInt (centavos) para string decimal amigável
+   * Converts BigInt minor units (cents) to a user-friendly decimal string
    */
   static fromMinorUnits(value: bigint): string {
     const num = Number(value) / CENTS_PER_UNIT
@@ -90,10 +96,10 @@ export class BigIntAdapter {
   }
 
   /**
-   * Soma um array de valores BigInt e retorna como número decimal
-   * @param values Array de valores BigInt
-   * @param selector Função opcional para extrair o valor do item
-   * @returns Soma convertida para número decimal
+   * Sums an array of BigInt values and returns as a decimal number
+   * @param items Array of items
+   * @param selector Function to extract the BigInt value from the item
+   * @returns Sum converted to decimal number
    */
   static sumToNumber<T>(items: T[], selector: (item: T) => bigint | string): number {
     const sum = items.reduce((acc, item) => {
@@ -103,4 +109,3 @@ export class BigIntAdapter {
     return Number(sum) / CENTS_PER_UNIT
   }
 }
-

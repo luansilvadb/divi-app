@@ -17,8 +17,8 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Configure refactoring environment (ensure `knip`, `eslint`, `oxlint` are ready)
-- [ ] T002 [P] Update `eslint.config.ts` to set `complexity` rule to `error` level with max 10
+- [X] T001 Configure refactoring environment (ensure `knip`, `eslint`, `oxlint` are ready)
+- [X] T002 [P] Update `eslint.config.ts` to set `complexity` rule to `error` level with max 10
 
 ---
 
@@ -28,8 +28,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Create `useTransactionForm` composable skeleton in `src/modules/transactions/application/composables/useTransactionForm.ts`
-- [ ] T004 Setup fail-fast gates: ensure the project builds and all tests pass BEFORE starting refactoring
+- [X] T003 Create `useTransactionForm` composable skeleton in `src/modules/transactions/application/composables/useTransactionForm.ts`
+- [X] T004 Setup fail-fast gates: ensure the project builds and all tests pass BEFORE starting refactoring
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -43,12 +43,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T005 [P] [US1] Extract form state and validation logic from `src/shared/components/organisms/ITransactionFormContent.vue` to `src/modules/transactions/application/composables/useTransactionForm.ts`
-- [ ] T006 [P] [US1] Extract currency masking logic from `src/shared/components/organisms/ITransactionFormContent.vue` to `src/modules/transactions/application/composables/useTransactionForm.ts`
-- [ ] T007 [US1] Refactor `handleSubmit` and `buildITransactionData` in `src/shared/components/organisms/ITransactionFormContent.vue` to delegate to the new composable
-- [ ] T008 [P] [US1] Remove obsolete comments and finalized bigint "TODO" logic in `src/shared/utils/bigint-adapter.ts`
-- [ ] T009 [US1] Verify Story 1: Run `npx eslint src` and ensure no complexity errors in modified files
-- [ ] T010 [US1] Run existing unit tests: `npm test src/shared/components/organisms/__tests__/ITransactionFormContent.spec.ts` (if exists) or full suite
+- [X] T005 [P] [US1] Extract form state and validation logic from `src/shared/components/organisms/ITransactionFormContent.vue` to `src/modules/transactions/application/composables/useTransactionForm.ts`
+- [X] T006 [P] [US1] Extract currency masking logic from `src/shared/components/organisms/ITransactionFormContent.vue` to `src/modules/transactions/application/composables/useTransactionForm.ts`
+- [X] T007 [US1] Refactor `handleSubmit` and `buildITransactionData` in `src/shared/components/organisms/ITransactionFormContent.vue` to delegate to the new composable
+- [X] T008 [P] [US1] Remove obsolete comments and finalized bigint "TODO" logic in `src/shared/utils/bigint-adapter.ts`
+- [X] T009 [US1] Verify Story 1: Run `npx eslint src` and ensure no complexity errors in modified files
+- [X] T010 [US1] Run existing unit tests: `npm test src/shared/components/organisms/__tests__/ITransactionFormContent.spec.ts` (if exists) or full suite
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -62,11 +62,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Refactor `src/modules/transactions/application/stores/transactionStore.ts` to remove `saveIWallet` delegation (move logic to `walletStore`)
-- [ ] T012 [US2] Refactor `src/modules/transactions/application/stores/transactionStore.ts` to remove `saveCategory` delegation (move logic to `categoryStore`)
-- [ ] T013 [US2] Simplify `transactionStore.ts` by consolidating UI-only transformation logic into the `enrichITransaction` or a dedicated mapper
-- [ ] T014 [US2] Run `knip` to identify and remove any now-orphaned exports or files in the transaction module
-- [ ] T015 [US2] Verify Story 2: Run full test suite to ensure no breakage in wallet/category creation flows
+- [X] T011 [US2] Refactor `src/modules/transactions/application/stores/transactionStore.ts` to remove `saveIWallet` delegation (move logic to `walletStore`)
+- [X] T012 [US2] Refactor `src/modules/transactions/application/stores/transactionStore.ts` to remove `saveCategory` delegation (move logic to `categoryStore`)
+- [X] T013 [US2] Simplify `transactionStore.ts` by consolidating UI-only transformation logic into the `enrichITransaction` or a dedicated mapper
+- [X] T014 [US2] Run `knip` to identify and remove any now-orphaned exports or files in the transaction module
+- [X] T015 [US2] Verify Story 2: Run full test suite to ensure no breakage in wallet/category creation flows
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -76,9 +76,9 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T016 [P] Documentation updates: ensure `README.md` and architecture docs reflect the new composable-based structure
-- [ ] T017 Final audit of all user-facing strings against `src/shared/messages/catalog.ts`
-- [ ] T018 Run `quickstart.md` validation to confirm all success criteria (SLOC reduction, zero complexity errors)
+- [X] T016 [P] Documentation updates: ensure `README.md` and architecture docs reflect the new composable-based structure
+- [X] T017 Final audit of all user-facing strings against `src/shared/messages/catalog.ts`
+- [X] T018 Run `quickstart.md` validation to confirm all success criteria (SLOC reduction, zero complexity errors)
 
 ---
 
