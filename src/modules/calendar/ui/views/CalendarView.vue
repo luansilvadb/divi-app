@@ -167,12 +167,12 @@ import {
   NStatistic,
   NDivider,
 } from 'naive-ui'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { formatCurrency } from '@/shared/utils/formatters'
 import BaseMonthSwitcher from '@/shared/components/molecules/BaseMonthSwitcher.vue'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 
-const store = usetransactionstore()
+const store = useTransactionStore()
 
 const currentDate = ref(new Date())
 const selectedDate = ref(new Date())

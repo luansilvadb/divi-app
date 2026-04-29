@@ -7,7 +7,7 @@ type UITransaction = any
  * Composable for ITransaction search functionality.
  * Separates search concerns from main ITransaction store (SRP).
  */
-export function usetransactionsearch(
+export function useTransactionSearch(
   activetransactions: ComputedRef<UITransaction[]>,
   categoryMap: Ref<Record<string, ICategory>> | ComputedRef<Record<string, ICategory>>,
 ) {

@@ -1,6 +1,6 @@
 import type { ISubscriptionRepository } from '../core/ports/ISubscriptionRepository'
 import type { ISubscription } from '@/modules/subscriptions/core/entities/ISubscription'
-import { db, type ILocalSubscription } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db, type ILocalSubscription } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 import { InfrastructureError } from '@/core/errors/InfrastructureError'
 

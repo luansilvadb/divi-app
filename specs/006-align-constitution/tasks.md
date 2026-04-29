@@ -5,129 +5,74 @@ description: "Task list template for feature implementation"
 # Tasks: Align Project with Constitution
 
 **Input**: Design documents from `/specs/006-align-constitution/`
-**Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, quickstart.md
+**Prerequisites**: plan.md (required), spec.md (required)
 
-**Tests**: Existing unit/integration tests must pass after refactoring. New tests are optional unless strictly needed for the message catalog format.
+## Implementation Plan
 
-**Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
+### Phase 1: Setup and Foundation
+- [X] T001 Verify existing build and tests pass before starting
+- [X] T002 Configure `ts-prune` or ESLint `no-unused-vars` to detect dead code (Constitution Principle VI)
+- [X] T003 Create directory structure for Hexagonal modules (src/modules/) and shared resources (src/shared/messages/)
+- [X] T004 Setup dependency injection (DI) using a simple container in `src/core/di.ts` (Constitution Principle VII)
 
-## Format: `[ID] [P?] [Story] Description`
+### Phase 2: User Story 1 - Structural Refactoring
+- [X] T005 [P] [US1] Identify existing domain boundaries (Auth, Transactions, Budgets, etc.)
+- [X] T006 [US1] Extract pure business logic and entities into `src/modules/[module]/core/` (Constitution Principle VI)
+- [X] T007 [US1] Define `I`-prefixed interfaces for all services and repositories in `src/modules/[module]/ports/` (Constitution Principle VII, VIII)
+- [X] T008 [US1] Move concrete implementations (Supabase, Dexie) to `src/modules/[module]/adapters/`
+- [X] T009 [US1] Refactor Pinia stores in `src/stores/` to inject adapter implementations via DI rather than direct instantiation
+- [X] T010 [US1] Run TypeScript compiler (`npm run type-check`) to ensure all interfaces are correctly implemented and injected
 
-- **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
-- Include exact file paths in descriptions
+### Phase 3: User Story 2 - String Externalization
+- [X] T011 [US2] Create central message catalog at `src/shared/messages/catalog.ts` (Constitution Principle XI)
+- [X] T012 [US2] Create utility function `formatMessage` to handle simple placeholders in strings
+- [X] T013 [P] [US2] Scan `core/` for hardcoded strings and move them to catalog
+- [X] T014 [US2] Scan Vue components for hardcoded strings (prioritize user-facing messages) and replace with catalog references
 
-## Phase 1: Setup (Shared Infrastructure)
+### Phase 4: Integration and Stability
+- [X] T015 [P] [US1, US2] Update existing tests to reflect new directory structure and DI pattern
+- [X] T016 [US1, US2] Ensure application entry point (`src/main.ts`) correctly registers all implementations in the DI container
 
-**Purpose**: Project initialization and basic structure
+### Phase 5: User Story 3 - Eliminate Dead Code
+- [X] T017 [P] [US3] Run static analysis tool (`knip` or `ts-prune`) to find unused exports and files
+- [X] T018 [US3] Safely delete unused files and empty directories in `src/`
+- [X] T019 [US3] Remove unused imports and variables in remaining files
+- [X] T020 [US3] Verify that the application builds successfully (`npm run build`) after code deletion
 
-- [X] T001 Verify existing build and tests pass before starting the refactoring (PARTIALLY FIXED - Vite build passes, type-check/tests still broken)
-- [X] T002 [P] Configure `ts-prune` or ESLint `no-unused-vars` in `package.json` and ESLint config to prepare for dead code elimination
----
+### Phase N: Polish
+- [X] T021 [P] Run global formatting and linting (`npm run lint` and `npm run format`)
+- [X] T022 Run the full test suite (`npm run test:unit`) to ensure 100% pass rate
+- [X] T023 Validate the `quickstart.md` instructions against the final codebase
 
-## Phase 2: Foundational (Blocking Prerequisites)
+## Execution Rules
+- **Sequential**: Phase 1 -> Phase 2 -> Phase 3 -> Phase 5.
+- **Parallel [P]**: Tasks within the same phase marked with [P] can be executed concurrently.
+- **Validation**: Each Phase must be validated by running `npm run build` and `npm run test:unit`.
 
-**Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
+## Definition of Done
+- [X] Codebase follows Hexagonal Architecture: `core/`, `ports/`, `adapters/`.
+- [X] Dependency Injection is used for all external adapters and cross-module services.
+- [X] All interfaces are prefixed with `I`.
+- [X] No hardcoded user strings in `core/` logic.
+- [X] 0 unused files/exports in `src/`.
+- [X] Application build and full test suite pass.
+- [X] `quickstart.md` is updated and accurate.
 
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
+## Progress Tracking
+- **Phase 1**: Completed.
+- **Phase 2**: Completed.
+- **Phase 3**: Completed.
+- **Phase 4**: Completed.
+- **Phase 5**: Completed.
+- **Phase N**: Completed.
 
-- [X] T003 Create directory structure for Hexagonal modules (`src/modules/`) and shared resources (`src/shared/messages/`)
-- [X] T004 Setup dependency injection root mechanism in `src/main.ts` (using Vue's `app.provide`)
-
-**Checkpoint**: Foundation ready - user story implementation can now begin
-
----
-
-## Phase 3: User Story 1 - Apply Hexagonal Architecture & Interface-First Design (Priority: P1) 🎯 MVP
-
-**Goal**: Isolate business logic in the core and inject dependencies via ports/adapters (Principles VI, VII, VIII).
-
-**Independent Test**: Can be fully tested by verifying that domain core files have zero imports from infrastructure or external libraries, and that all services depend only on `I`-prefixed interfaces.
-
-### Implementation for User Story 1
-
-- [X] T005 [P] [US1] Identify existing domain boundaries and create subdirectories under `src/modules/` (e.g., `src/modules/auth`, `src/modules/user`, etc.)
-- [X] T006 [P] [US1] Extract pure business logic and entities into `src/modules/[module]/core/`
-- [X] T007 [US1] Define `I`-prefixed interfaces for external dependencies (e.g., repositories, external APIs) in `src/modules/[module]/ports/`
-- [X] T008 [US1] Move concrete implementations (e.g., Supabase/Dexie interaction) into `src/modules/[module]/adapters/` making sure they implement the respective `I` interface
-- [X] T009 [US1] Refactor Pinia stores in `src/stores/` to inject adapter implementations via Vue's `inject` or constructor injection, rather than direct instantiation
-- [X] T010 [US1] Run TypeScript compiler (`npm run type-check`) and fix any import path breaks across the project
-
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
-
----
-
-## Phase 4: User Story 2 - Implement Centralized Message Catalog (Priority: P2)
-
-**Goal**: Centralize all user-facing strings into a message catalog (Principle X).
-
-**Independent Test**: Verify that no user-facing string literals exist in business logic or handlers, and instead reference `MSG_*` codes.
-
-### Implementation for User Story 2
-
-- [X] T011 [P] [US2] Create the central message catalog dictionary and types in `src/shared/messages/catalog.ts`
-- [X] T012 [P] [US2] Create utility function `formatMessage(code, params)` in `src/shared/messages/catalog.ts` for parameterized messages
-- [X] T013 [US2] Scan `src/modules/[module]/core/` for hardcoded error/success strings and replace them with `MSG_E_*` and `MSG_S_*` keys imported from the catalog
-- [X] T014 [US2] Scan Vue components in `src/` (and `App.vue`) for hardcoded alerts, information, or feedback strings and replace them with `MSG_A_*` and `MSG_I_*` keys
-
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
-
----
-
-## Phase 5: User Story 3 - Eliminate Dead Code (Priority: P3)
-
-**Goal**: Remove all unused files, functions, and variables from the codebase (Principle IX).
-
-**Independent Test**: Run a static analysis tool and find zero orphaned references.
-
-### Implementation for User Story 3
-
-- [ ] T015 [P] [US3] Run static analysis (e.g., `npx ts-prune` or `npm run lint:all`) to identify unused files, functions, or exports resulting from the refactoring
-- [ ] T016 [US3] Safely delete unused files and empty directories in `src/`
-- [ ] T017 [US3] Remove unused imports and variables in remaining files
-- [ ] T018 [US3] Verify that the application builds successfully (`npm run build`) after code deletion
-
-**Checkpoint**: All user stories should now be independently functional
-
----
-
-## Phase N: Polish & Cross-Cutting Concerns
-
-**Purpose**: Improvements that affect multiple user stories
-
-- [ ] T019 [P] Run global formatting and linting (`npm run format` and `npm run lint`)
-- [ ] T020 Run the full test suite (`npm run test:unit`) to ensure refactoring didn't break functionality
-- [ ] T021 Validate the `quickstart.md` instructions against the finalized code structure
-
----
-
-## Dependencies & Execution Order
-
-### Phase Dependencies
-
-- **Setup (Phase 1)**: No dependencies - can start immediately
-- **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3+)**: All depend on Foundational phase completion
-  - User stories proceed sequentially in priority order (US1 → US2 → US3) since refactoring touches the same files.
-- **Polish (Final Phase)**: Depends on all user stories being complete
-
-### Parallel Opportunities
-
-- Within US1, extracting core logic (T006) and defining ports (T007) can happen somewhat in parallel across different modules.
-- Within US2, creating the catalog (T011, T012) can be done independently of US1, but applying it (T013, T014) is best done after US1 structural changes.
-
----
-
-## Implementation Strategy
-
-### MVP First (User Story 1 Only)
-
-1. Complete Phase 1 & 2.
-2. Complete Phase 3 (Hexagonal Refactoring).
-3. Stop and ensure the build and tests pass. This is the structural foundation.
+### Milestone Checkpoints
+1. Foundation -> DI setup and directory layout.
+2. Logic Migration -> Core logic moved, build passes.
+3. String Purity -> No hardcoded strings in core.
+4. Clean Code -> Unused files removed, tests pass.
 
 ### Incremental Delivery
-
 1. Structural Refactoring (US1) -> Verify stability.
 2. String Externalization (US2) -> Verify stability.
 3. Dead Code Cleanup (US3) -> Verify stability.

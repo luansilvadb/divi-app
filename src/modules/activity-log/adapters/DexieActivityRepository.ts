@@ -1,6 +1,6 @@
 import type { IActivityRepository } from '../core/ports/IActivityRepository'
 import type { IActivity } from '../core/entities/IActivity'
-import { db } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db } from '@/infrastructure/storage/VaultDatabase'
 
 export class DexieActivityRepository implements IActivityRepository {
   async getAll(): Promise<IActivity[]> {

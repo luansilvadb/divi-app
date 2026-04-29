@@ -190,7 +190,7 @@ import {
   useMessage,
   type FormInst
 } from 'naive-ui'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
 import { useService } from '@/core/di'
@@ -205,7 +205,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['close', 'saved'])
-const store = usetransactionstore()
+const store = useTransactionStore()
 const autoCatService = useService<IAutoCategorizationService>(DI_TOKENS.IAutoCategorizationService)
 const autoCreateService = useService<IAutoCreateService>(DI_TOKENS.IAutoCreateService)
 const { rules, validateForm } = useITransactionValidation()

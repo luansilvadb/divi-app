@@ -5,7 +5,7 @@ import { DI_TOKENS } from '@/core/di-tokens'
 import type { IWalletService } from '@/modules/wallets/core/ports/IWalletService'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 
-export const usewalletstore = defineStore('wallets', () => {
+export const useWalletStore = defineStore('wallets', () => {
   const walletService = container.resolve<IWalletService>(DI_TOKENS.IWalletService)
 
   const wallets = shallowRef<IWallet[]>([])

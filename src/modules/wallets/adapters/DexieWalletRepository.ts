@@ -1,6 +1,6 @@
 import type { IWalletRepository } from '@/modules/wallets/core/ports/IWalletRepository'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
-import { db, type ILocalIWallet } from '@/infrastructure/storage/VaultDatabase'
+import { vaultDb as db, type ILocalIWallet } from '@/infrastructure/storage/VaultDatabase'
 import { SyncEngine } from '@/core/sync/SyncEngine'
 
 export class DexieWalletRepository implements IWalletRepository {

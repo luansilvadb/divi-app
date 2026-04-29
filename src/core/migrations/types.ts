@@ -38,11 +38,3 @@ export interface IMigrationResult {
   error?: string
 }
 
-/**
- * Context for migration execution.
- */
-export interface IMigrationContext {
-  db: Dexie
-  currentVersion: number
-  targetVersion: number
-}

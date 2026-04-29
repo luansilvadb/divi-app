@@ -12,17 +12,17 @@ import { BigIntAdapter } from '@/shared/utils/bigint-adapter'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
-import { usewalletstore } from './usewalletstore'
+import { useWalletStore } from './useWalletStore'
 import { WalletService } from '@/modules/wallets/application/services/WalletService'
 import { useCategoryStore } from './useCategoryStore'
-import { usetransactionstats } from './usetransactionstats'
-import { usetransactionsearch } from './usetransactionsearch'
+import { useTransactionStats } from './useTransactionStats'
+import { useTransactionSearch } from './useTransactionSearch'
 import { useITransactionGrouping } from './useITransactionGrouping'
 import { messages, formatMessage } from '@/shared/messages/catalog'
 
 type UITransaction = any
 
-export const usetransactionstore = defineStore('transactions', () => {
+export const useTransactionStore = defineStore('transactions', () => {
   // Services
   const ITransactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.ITransactionRepository)
   const activityLogService = container.resolve<IActivityLogService>(DI_TOKENS.IActivityLogService)
@@ -30,7 +30,7 @@ export const usetransactionstore = defineStore('transactions', () => {
   const authStore = useAuthStore()
 
   // Composed stores for backward compatibility
-  const walletstore = usewalletstore()
+  const walletStore = useWalletStore()
   const categoryStore = useCategoryStore()
 
   const transactions = shallowRef<any[]>([])
@@ -61,7 +61,7 @@ export const usetransactionstore = defineStore('transactions', () => {
   watch(
     () => syncStore.updateCounter,
     () => {
-      console.log('[transactionstore] Re-buscando dados devido a mudança no Sync...')
+      console.log('[transactionStore] Re-buscando dados devido a mudança no Sync...')
       fetchtransactionsByMonth(currentYear.value, currentMonth.value)
     },
   )
@@ -72,7 +72,7 @@ export const usetransactionstore = defineStore('transactions', () => {
   })
 
   // Search functionality - extracted to usetransactionsearch composable (SRP)
-  const { searchQuery, filteredtransactions: filteredtransactionsArray } = usetransactionsearch(
+  const { searchQuery, filteredtransactions: filteredtransactionsArray } = useTransactionSearch(
     activetransactions,
     computed(() => categoryStore.categoryMap),
   )
@@ -153,7 +153,7 @@ export const usetransactionstore = defineStore('transactions', () => {
         isNew: !isUpdate,
         error: err instanceof Error ? err.message : String(err),
       }
-      console.error('[transactionstore] Failed to save ITransaction:', errorContext, err)
+      console.error('[transactionStore] Failed to save ITransaction:', errorContext, err)
       await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
@@ -194,7 +194,7 @@ export const usetransactionstore = defineStore('transactions', () => {
         userId: authStore.user?.id,
         error: err instanceof Error ? err.message : String(err),
       }
-      console.error('[transactionstore] Failed to delete ITransaction:', errorContext, err)
+      console.error('[transactionStore] Failed to delete ITransaction:', errorContext, err)
       await fetchtransactionsByMonth(currentYear.value, currentMonth.value)
       throw err
     }
@@ -207,7 +207,7 @@ export const usetransactionstore = defineStore('transactions', () => {
 
     if (isUpdate && IWalletData.id) {
       // Update existing IWallet
-      const existing = walletstore.IWalletMap[IWalletData.id]
+      const existing = walletStore.IWalletMap[IWalletData.id]
       if (!existing) throw new Error('IWallet not found')
 
       await walletService.updateIWallet(IWalletData.id, {
@@ -217,7 +217,7 @@ export const usetransactionstore = defineStore('transactions', () => {
           : existing.balance,
         currency: IWalletData.currency || existing.currency,
       })
-      await walletstore.fetchwallets()
+      await walletStore.fetchwallets()
     } else {
       // Create new IWallet
       await walletService.createIWallet({
@@ -232,23 +232,23 @@ export const usetransactionstore = defineStore('transactions', () => {
 
   // Stats via composition - pass the shallowRefs directly
   const categoryMapRef = computed(() => categoryStore.categoryMap)
-  const stats = usetransactionstats(transactions as unknown as Ref<ITransaction[]>, () => categoryMapRef as unknown as Ref<Record<string, ICategory>>)
+  const stats = useTransactionStats(transactions as unknown as Ref<ITransaction[]>, () => categoryMapRef as unknown as Ref<Record<string, ICategory>>)
 
   return {
     transactions,
-    wallets: computed(() => walletstore.wallets),
+    wallets: computed(() => walletStore.wallets),
     categories: computed(() => categoryStore.categories),
     isLoading,
     searchQuery,
     categoryMap: computed(() => categoryStore.categoryMap),
-    IWalletMap: computed(() => walletstore.IWalletMap),
+    IWalletMap: computed(() => walletStore.IWalletMap),
     totalIncome: computed(() => stats.totalIncome.value),
     totalExpense: computed(() => stats.totalExpense.value),
     monthlyBalance: computed(() => stats.monthlyBalance.value),
     activetransactions: computed(() => stats.activetransactions.value),
     topCategories: computed(() => stats.topCategories.value),
     groupedtransactions,
-    fetchwallets: () => walletstore.fetchwallets(),
+    fetchwallets: () => walletStore.fetchwallets(),
     fetchCategories: () => categoryStore.fetchCategories(),
     fetchtransactionsByMonth,
     saveITransaction,

@@ -1,4 +1,4 @@
-export const DI_TOKENS = {
+export const DI_TOKENS = Object.freeze({
   IAuthService: 'IAuthService',
   ITransactionRepository: 'ITransactionRepository',
   IWalletRepository: 'IWalletRepository',
@@ -24,4 +24,4 @@ export const DI_TOKENS = {
   IAutoCreateService: 'IAutoCreateService',
   IAutoCategorizationService: 'IAutoCategorizationService',
   IDashboardService: 'IDashboardService',
-} as const;
+} as const);

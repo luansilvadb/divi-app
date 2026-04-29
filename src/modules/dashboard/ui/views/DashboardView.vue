@@ -42,7 +42,7 @@
           </div>
           <div>
             <p class="text-2xl font-bold tracking-tight tabular-nums mt-2 text-label">
-              {{ formatCurrency(transactionstore.totalIncome) }}
+              {{ formatCurrency(transactionStore.totalIncome) }}
             </p>
             <div class="flex items-center gap-1.5 mt-2">
               <span class="text-[11px] font-semibold text-success">+12%</span>
@@ -64,7 +64,7 @@
           </div>
           <div>
             <p class="text-2xl font-bold tracking-tight tabular-nums mt-2 text-label">
-              {{ formatCurrency(transactionstore.totalExpense) }}
+              {{ formatCurrency(transactionStore.totalExpense) }}
             </p>
             <!-- IBudget usage bar -->
             <div class="mt-3">
@@ -170,10 +170,10 @@
                 >
                   <div
                     class="absolute left-0 top-1.5 bottom-1.5 w-0.5 rounded-r-full"
-                    :style="{ background: transactionstore.categoryMap[t.category_id]?.color || 'var(--color-primary)' }"
+                    :style="{ background: transactionStore.categoryMap[t.category_id]?.color || 'var(--color-primary)' }"
                   ></div>
                   <img
-                    v-if="transactionstore.categoryMap[t.category_id]?.icon"
+                    v-if="transactionStore.categoryMap[t.category_id]?.icon"
                     :src="getCategoryIcon(t.category_id)"
                     class="w-4 h-4 grayscale opacity-40 group-hover:opacity-100 group-hover:grayscale-0 transition-all"
                   />
@@ -184,7 +184,7 @@
                 <div class="flex-1 min-w-0">
                   <p class="text-[13px] font-medium truncate text-label">{{ t.title || 'Atividade' }}</p>
                   <p class="text-[11px] truncate mt-0.5 text-tertiary">
-                    {{ transactionstore.IWalletMap[t.wallet_id]?.name || 'Conta' }}
+                    {{ transactionStore.IWalletMap[t.wallet_id]?.name || 'Conta' }}
                   </p>
                 </div>
 
@@ -235,7 +235,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useObservable } from '@vueuse/rxjs'
 import { useDashboardStore } from '@/modules/dashboard/application/stores/dashboardStore'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { messages } from '@/shared/messages/catalog'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AccountGrid from '@/shared/components/organisms/AccountGrid.vue'
@@ -248,7 +248,7 @@ import type { ITransactionRepository } from '@/modules/transactions/core/ports/I
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 const dashboardStore = useDashboardStore()
-const transactionstore = usetransactionstore()
+const transactionStore = useTransactionStore()
 const assetLoader = container.resolve<IAssetLoader>(DI_TOKENS.IAssetLoader)
 const ITransactionRepo = container.resolve<ITransactionRepository>(DI_TOKENS.ITransactionRepository)
 
@@ -270,7 +270,7 @@ const filteredtransactions = computed(() => {
 
 const walletstatsMap = computed(() => {
   const stats: Record<string, any> = {}
-  const transactions = transactionstore.activetransactions || []
+  const transactions = transactionStore.activetransactions || []
 
   transactions.forEach((t) => {
     if (!stats[t.wallet_id]) {
@@ -294,7 +294,7 @@ const walletstatsMap = computed(() => {
   return stats
 })
 
-function getCategoryIcon(id: string) { return assetLoader.sanitize(transactionstore.categoryMap[id]?.icon) }
+function getCategoryIcon(id: string) { return assetLoader.sanitize(transactionStore.categoryMap[id]?.icon) }
 function formatCurrency(v: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 }
@@ -305,7 +305,7 @@ const growthLabels = ['Out', 'Nov', 'Dez', 'Jan', 'Fev', 'Mar']
 onMounted(async () => {
   await Promise.all([
     dashboardStore.fetchDashboardData(),
-    transactionstore.fetchtransactionsByMonth(new Date().getFullYear(), new Date().getMonth() + 1),
+    transactionStore.fetchtransactionsByMonth(new Date().getFullYear(), new Date().getMonth() + 1),
   ])
 })
 </script>

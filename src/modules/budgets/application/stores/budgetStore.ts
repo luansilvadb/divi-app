@@ -4,13 +4,13 @@ import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IBudgetRepository } from '../../core/ports/IBudgetRepository'
 import type { IBudget } from '@/modules/budgets/core/entities/IBudget'
-import { usetransactionstore } from '@/modules/transactions/application/stores/transactionstore'
+import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { useAuthStore } from '@/modules/auth/application/authStore'
 import type { Subscription } from 'rxjs'
 
 export const useBudgetStore = defineStore('budgets', () => {
   const budgetRepo = container.resolve<IBudgetRepository>(DI_TOKENS.IBudgetRepository)
-  const transactionstore = usetransactionstore()
+  const transactionStore = useTransactionStore()
   const authStore = useAuthStore()
 
   const budgets = ref<IBudget[]>([])
@@ -37,8 +37,8 @@ export const useBudgetStore = defineStore('budgets', () => {
   }
 
   const getConsumed = (budget: IBudget) => {
-    // Current month transactions from transactionstore (which are already filtered/reactive)
-    const consumed = transactionstore.transactions
+    // Current month transactions from transactionStore (which are already filtered/reactive)
+    const consumed = transactionStore.transactions
       .filter((t) => t.category_id === budget.category_id && !t.deleted && t.type === 'expense')
       .reduce((acc, t) => acc + BigInt(t.amount), 0n)
     return Number(consumed)
