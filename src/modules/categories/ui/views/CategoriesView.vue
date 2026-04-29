@@ -4,6 +4,7 @@
     highlight="Categorias"
     subtitle="Organize suas despesas com categorias visuais e intuitivas."
   >
+    <AtmosphereBackground />
     <template #action>
       <div class="flex items-center gap-3">
         <AppleButton variant="primary" size="medium" @click="openAddModal" id="btn-create-category">
@@ -20,7 +21,7 @@
           class="apple-empty-state"
         >
           <div class="apple-empty-icon">
-            <i class="i-lucide-tag text-6xl text-[#0071e3]"></i>
+            <i class="i-lucide-tag text-6xl text-[var(--color-primary)]"></i>
           </div>
           <h3 class="apple-empty-title">Nenhuma categoria ainda</h3>
           <p class="apple-empty-description">
@@ -34,12 +35,13 @@
         <!-- Apple-style ICategory Cards -->
         <div v-else class="apple-category-grid">
           <div
-            v-for="category in displayCategories"
+            v-for="(category, index) in displayCategories"
             :key="category.id"
             class="apple-category-card"
             :style="{
               '--category-color': category.color,
-              '--category-color-light': category.color + '15'
+              '--category-color-light': category.color + '15',
+              '--delay': `${index * 50}ms`
             }"
             @click="openEditModal(category)"
           >
@@ -64,7 +66,7 @@
       <aside class="apple-stats-panel">
         <div class="apple-stat-card">
           <div class="apple-stat-header">
-            <i class="i-lucide-grid-3x3 text-[#0071e3] text-xl"></i>
+            <i class="i-lucide-grid-3x3 text-[var(--color-primary)] text-xl"></i>
             <span class="apple-stat-label">Total de Categorias</span>
           </div>
           <div class="apple-stat-value">
@@ -115,6 +117,7 @@ import { DI_TOKENS } from '@/core/di-tokens'
 import StandardPageLayout from '@/shared/components/templates/StandardPageLayout.vue'
 import AppleButton from '@/shared/components/apple-ui/AppleButton.vue'
 import CategoryDialog from '@/shared/components/organisms/CategoryDialog.vue'
+import AtmosphereBackground from '@/shared/components/AtmosphereBackground.vue'
 import { useIsMobile } from '@/shared/composables/useIsMobile'
 import type { ICategoryService } from '../../core/ports/ICategoryService'
 import type { ICategory } from '@/modules/categories/core/entities/ICategory'
@@ -219,14 +222,14 @@ function handleDelete() {
 .apple-categories-container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3rem;
-  padding: 4rem 0 2rem 0;
+  gap: var(--space-8);
+  padding: var(--space-10) 0 var(--space-6) 0;
 }
 
 @media (min-width: 1024px) {
   .apple-categories-container {
     grid-template-columns: 1fr 360px;
-    gap: 4rem;
+    gap: var(--space-12);
   }
 }
 
@@ -259,20 +262,20 @@ function handleDelete() {
 }
 
 .apple-empty-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
+  font-family: inherit;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
   color: var(--text-label);
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 var(--space-2) 0;
   letter-spacing: -0.02em;
 }
 
 .apple-empty-description {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: 17px;
+  font-family: inherit;
+  font-size: var(--text-lg);
   color: var(--text-tertiary);
-  line-height: 1.47;
-  margin: 0 0 2rem 0;
+  line-height: var(--text-lg-line-height);
+  margin: 0 0 var(--space-8) 0;
   max-width: 400px;
 }
 
@@ -307,18 +310,25 @@ function handleDelete() {
 
 /* Apple ICategory Card */
 .apple-category-card {
-  background: var(--surface-primary);
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border-radius: var(--radius-xl);
-  padding: 1.25rem;
+  padding: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--duration-normal) var(--ease-spring), 
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out),
+              background-color var(--duration-normal) var(--ease-out);
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--surface-separator);
+  border: 1px solid var(--glass-border);
   position: relative;
   overflow: hidden;
+  animation: apple-fade-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
 }
 
 .apple-category-card::before {
@@ -327,24 +337,26 @@ function handleDelete() {
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 3px;
   background: var(--category-color);
-  opacity: 0;
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.4;
+  transition: all var(--duration-normal) var(--ease-out);
 }
 
 .apple-category-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--border-color-hover);
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--shadow-lg), 0 8px 24px var(--category-color-light);
+  border-color: var(--category-color);
+  background: var(--category-color-light);
 }
 
 .apple-category-card:hover::before {
   opacity: 1;
+  width: 6px;
 }
 
 .apple-category-card:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(-1px) scale(0.98);
   box-shadow: var(--shadow-sm);
 }
 
@@ -359,7 +371,7 @@ function handleDelete() {
   justify-content: center;
   flex-shrink: 0;
   color: var(--category-color);
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--duration-normal) var(--ease-spring);
 }
 
 .apple-category-card:hover .apple-card-icon {
@@ -373,11 +385,11 @@ function handleDelete() {
 }
 
 .apple-card-title {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
+  font-family: inherit;
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
   color: var(--text-label);
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 var(--space-1) 0;
   letter-spacing: -0.01em;
   line-height: 1.24;
   overflow: hidden;
@@ -426,48 +438,65 @@ function handleDelete() {
 }
 
 .apple-stat-card {
-  background: var(--surface-primary);
-  border-radius: var(--radius-xl);
-  padding: 1.75rem;
+  background: var(--surface-glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-2xl);
+  padding: 2.25rem;
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--surface-separator);
+  border: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-stat-card::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 140px;
+  height: 140px;
+  background: var(--color-primary-subtle);
+  filter: blur(40px);
+  border-radius: 50%;
+  pointer-events: none;
 }
 
 .apple-stat-header {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.75rem;
   margin-bottom: 0;
 }
 
 .apple-stat-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-tertiary);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--text-secondary);
   letter-spacing: -0.01em;
 }
 
 .apple-stat-value {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 36px;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: 48px;
+  font-weight: var(--font-bold);
   color: var(--text-label);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: -0.04em;
+  line-height: 1;
   margin: 0;
 }
 
 .apple-stat-description {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: 14px;
+  font-family: inherit;
+  font-size: var(--text-sm);
   color: var(--text-tertiary);
   margin: 0;
-  line-height: 1.4;
-  font-weight: 400;
+  line-height: var(--text-sm-line-height);
+  font-weight: var(--font-medium);
 }
 
 /* Apple Animations */

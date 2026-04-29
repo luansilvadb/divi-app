@@ -169,6 +169,15 @@
                       color var(--duration-normal) var(--ease-in-out),
                       border-color var(--duration-normal) var(--ease-in-out),
                       box-shadow var(--duration-normal) var(--ease-in-out);
+
+  /* ========================================
+     GLASSMORPISM & ATMOSPHERE
+     ======================================== */
+  --surface-glass: rgba(255, 255, 255, 0.7);
+  --glass-blur: 12px;
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --atmosphere-opacity: 0.6;
+  --atmosphere-blur: 80px;
 }
 
 /* ========================================
@@ -254,4 +263,8 @@
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
+
+  /* Glassmorphism Dark */
+  --surface-glass: rgba(28, 28, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
