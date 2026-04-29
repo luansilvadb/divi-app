@@ -170,7 +170,7 @@
     </div>
 
     <ITransactionDialog
-      :ITransaction="editingITransaction"
+      :transaction="editingITransaction"
       :show="showForm"
       @close="handleCloseForm"
       @saved="refreshtransactions"

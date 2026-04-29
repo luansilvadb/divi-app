@@ -82,8 +82,7 @@ export class SyncEngine implements ISyncEngine {
    * Implements LWW by checking server timestamps before upserting.
    */
   public async pushDirtyRecords() {
-    if (this.isPushing) return
-    if (typeof navigator !== 'undefined' && !navigator.onLine) return
+    if (this.shouldSkipPush()) return
 
     const crypto = VaultCryptoManager.getInstance()
     if (!crypto.hasKey()) {
@@ -110,6 +109,12 @@ export class SyncEngine implements ISyncEngine {
     } finally {
       this.isPushing = false
     }
+  }
+
+  private shouldSkipPush(): boolean {
+    if (this.isPushing) return true
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return true
+    return false
   }
 
   private async getAuthenticatedUser(): Promise<{ id: string } | null> {
@@ -465,17 +470,19 @@ export class SyncEngine implements ISyncEngine {
     upsertError: any,
     userId: string
   ): Promise<void> {
-    const { data: sessionData } = await supabase.auth.getSession()
+    const { data } = await supabase.auth.getSession()
+    const session = data?.session
+    
     console.error(`[SyncEngine] ⛔ RLS VIOLATION for ${tableName}:${recordId}`, {
       message: upsertError.message,
       payloadUserId: userId,
       authUserId: userId,
-      sessionExists: !!sessionData?.session,
-      sessionUserId: sessionData?.session?.user?.id,
-      tokenExpiry: sessionData?.session?.expires_at
-        ? new Date(sessionData.session.expires_at * 1000).toISOString()
+      sessionExists: !!session,
+      sessionUserId: session?.user?.id,
+      tokenExpiry: session?.expires_at
+        ? new Date(session.expires_at * 1000).toISOString()
         : 'N/A',
-      userIdMatch: userId === sessionData?.session?.user?.id,
+      userIdMatch: userId === session?.user?.id,
     })
 
     await table.update(recordId, { sync_status: 'failed' })

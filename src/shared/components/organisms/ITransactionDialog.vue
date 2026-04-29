@@ -17,67 +17,67 @@
             <NText
               class="text-xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none mb-1"
             >
-              {{ ITransaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
-            </NText>
-            <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Receitas</p>
-          </div>
-        </div>
-
-        <div class="flex-1 overflow-y-auto pb-safe">
-          <ITransactionFormContent
-            :initial-data="ITransaction"
-            @close="$emit('close')"
-            @saved="handleSaved"
-          />
+            {{ transaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
+          </NText>
+          <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-400">Receitas</p>
         </div>
       </div>
-    </NDrawer>
-  </template>
 
-  <!-- Desktop Modal -->
-  <template v-else>
-    <NModal
-      :show="show"
-      @update:show="handleClose"
-      preset="card"
-      :closable="false"
-      class="!max-w-2xl !rounded-[24px] !bg-white !border-none shadow-2xl"
-      :header-style="{ padding: '0' }"
-      :content-style="{ padding: '0' }"
-    >
-      <template #header>
-        <div class="relative w-full">
-          <div class="px-6 pt-6 pb-6 flex items-start justify-between">
-            <!-- Header Content -->
-            <div class="flex flex-col gap-1">
-              <h2 class="text-[#1d1d1f] dark:text-white font-sf-display font-semibold text-[24px] leading-[1.3] tracking-[-0.02em]">
-                {{ ITransaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
-              </h2>
-              <p class="text-[#6e6e73] dark:text-[#8e8e93] text-[17px] font-sf-text font-normal leading-[1.5]">
-                {{ ITransaction ? messages.MSG_I_TX_EDIT_DESC : messages.MSG_I_TX_NEW_DESC }}
-              </p>
-            </div>
-
-            <!-- Close Button - Apple Style -->
-            <button
-              class="w-9 h-9 rounded-full flex items-center justify-center text-[#6e6e73] dark:text-[#8e8e93] hover:bg-[#f5f5f7] dark:hover:bg-[#2c2c2e] hover:text-[#1d1d1f] dark:hover:text-white active:scale-95 transition-all duration-150"
-              @click="$emit('close')"
-            >
-              <i class="i-lucide-x text-xl"></i>
-            </button>
-          </div>
-        </div>
-      </template>
-
-      <div class="px-5 pb-5">
+      <div class="flex-1 overflow-y-auto pb-safe">
         <ITransactionFormContent
-          :initial-data="ITransaction"
+          :initial-data="transaction"
           @close="$emit('close')"
           @saved="handleSaved"
         />
       </div>
-    </NModal>
-  </template>
+    </div>
+  </NDrawer>
+</template>
+
+<!-- Desktop Modal -->
+<template v-else>
+  <NModal
+    :show="show"
+    @update:show="handleClose"
+    preset="card"
+    :closable="false"
+    class="!max-w-2xl !rounded-[24px] !bg-white !border-none shadow-2xl"
+    :header-style="{ padding: '0' }"
+    :content-style="{ padding: '0' }"
+  >
+    <template #header>
+      <div class="relative w-full">
+        <div class="px-6 pt-6 pb-6 flex items-start justify-between">
+          <!-- Header Content -->
+          <div class="flex flex-col gap-1">
+            <h2 class="text-[#1d1d1f] dark:text-white font-sf-display font-semibold text-[24px] leading-[1.3] tracking-[-0.02em]">
+              {{ transaction ? messages.MSG_I_TX_EDIT : messages.MSG_I_TX_NEW }}
+            </h2>
+            <p class="text-[#6e6e73] dark:text-[#8e8e93] text-[17px] font-sf-text font-normal leading-[1.5]">
+              {{ transaction ? messages.MSG_I_TX_EDIT_DESC : messages.MSG_I_TX_NEW_DESC }}
+            </p>
+          </div>
+
+          <!-- Close Button - Apple Style -->
+          <button
+            class="w-9 h-9 rounded-full flex items-center justify-center text-[#6e6e73] dark:text-[#8e8e93] hover:bg-[#f5f5f7] dark:hover:bg-[#2c2c2e] hover:text-[#1d1d1f] dark:hover:text-white active:scale-95 transition-all duration-150"
+            @click="$emit('close')"
+          >
+            <i class="i-lucide-x text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <div class="px-5 pb-5">
+      <ITransactionFormContent
+        :initial-data="transaction"
+        @close="$emit('close')"
+        @saved="handleSaved"
+      />
+    </div>
+  </NModal>
+</template>
 </template>
 
 <script setup lang="ts">
@@ -88,8 +88,8 @@ import ITransactionFormContent from './ITransactionFormContent.vue'
 import type { ITransaction } from '@/modules/transactions/core/entities/ITransaction'
 
 defineProps<{
-  show: boolean
-  ITransaction?: ITransaction | null
+show: boolean
+transaction?: ITransaction | null
 }>()
 
 const emit = defineEmits(['close', 'saved'])

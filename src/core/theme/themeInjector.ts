@@ -13,30 +13,42 @@
     document.documentElement.classList.remove('dark');
   }
 
+  const palettes = {
+    dark: {
+      '--color-accent-main': '#0A84FF',
+      '--color-surface-100': '#1C1C1E',
+      '--color-surface-200': '#2C2C2E',
+      '--color-neutral-1': 'rgba(255,255,255,0.85)',
+      '--color-neutral-2': 'rgba(235,235,245,0.6)',
+      '--color-error-main': '#FF453A',
+      '--color-success-main': '#30D158',
+      '--color-info-main': '#0A84FF',
+      '--color-warning-main': '#FF9F0A',
+      '--color-separator': 'rgba(84,84,88,0.65)',
+    },
+    light: {
+      '--color-accent-main': '#007AFF',
+      '--color-surface-100': '#FFFFFF',
+      '--color-surface-200': '#F2F2F7',
+      '--color-neutral-1': 'rgba(0,0,0,0.85)',
+      '--color-neutral-2': 'rgba(60,60,67,0.6)',
+      '--color-error-main': '#FF3B30',
+      '--color-success-main': '#34C759',
+      '--color-info-main': '#007AFF',
+      '--color-warning-main': '#FF9500',
+      '--color-separator': 'rgba(60,60,67,0.12)',
+    }
+  };
+
   // Inject CSS variables for Chart.js theming — Apple HIG palette
   function injectChartColors() {
     const root = document.documentElement;
     const isDarkMode = root.classList.contains('dark');
+    const palette = palettes[isDarkMode ? 'dark' : 'light'];
 
-    // Primary accent — Apple System Blue
-    root.style.setProperty('--color-accent-main', isDarkMode ? '#0A84FF' : '#007AFF');
-
-    // Surface colors for chart backgrounds / tooltips
-    root.style.setProperty('--color-surface-100', isDarkMode ? '#1C1C1E' : '#FFFFFF');
-    root.style.setProperty('--color-surface-200', isDarkMode ? '#2C2C2E' : '#F2F2F7');
-
-    // Neutral colors for axis text — Apple alpha hierarchy
-    root.style.setProperty('--color-neutral-1', isDarkMode ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.85)');
-    root.style.setProperty('--color-neutral-2', isDarkMode ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)');
-
-    // Feedback colors — Apple system semantic colors
-    root.style.setProperty('--color-error-main',   isDarkMode ? '#FF453A' : '#FF3B30');
-    root.style.setProperty('--color-success-main', isDarkMode ? '#30D158' : '#34C759');
-    root.style.setProperty('--color-info-main',    isDarkMode ? '#0A84FF' : '#007AFF');
-    root.style.setProperty('--color-warning-main', isDarkMode ? '#FF9F0A' : '#FF9500');
-
-    // Separator for chart grid lines
-    root.style.setProperty('--color-separator', isDarkMode ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)');
+    Object.entries(palette).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
   }
 
   // Initial injection
