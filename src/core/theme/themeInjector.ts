@@ -18,25 +18,22 @@
     const root = document.documentElement;
     const isDarkMode = root.classList.contains('dark');
 
-    // Primary accent — Apple System Blue
-    root.style.setProperty('--color-accent-main', isDarkMode ? '#0A84FF' : '#007AFF');
+    const themeColors: Record<string, { dark: string; light: string }> = {
+      '--color-accent-main': { dark: '#0A84FF', light: '#007AFF' },
+      '--color-surface-100': { dark: '#1C1C1E', light: '#FFFFFF' },
+      '--color-surface-200': { dark: '#2C2C2E', light: '#F2F2F7' },
+      '--color-neutral-1': { dark: 'rgba(255,255,255,0.85)', light: 'rgba(0,0,0,0.85)' },
+      '--color-neutral-2': { dark: 'rgba(235,235,245,0.6)', light: 'rgba(60,60,67,0.6)' },
+      '--color-error-main': { dark: '#FF453A', light: '#FF3B30' },
+      '--color-success-main': { dark: '#30D158', light: '#34C759' },
+      '--color-info-main': { dark: '#0A84FF', light: '#007AFF' },
+      '--color-warning-main': { dark: '#FF9F0A', light: '#FF9500' },
+      '--color-separator': { dark: 'rgba(84,84,88,0.65)', light: 'rgba(60,60,67,0.12)' },
+    };
 
-    // Surface colors for chart backgrounds / tooltips
-    root.style.setProperty('--color-surface-100', isDarkMode ? '#1C1C1E' : '#FFFFFF');
-    root.style.setProperty('--color-surface-200', isDarkMode ? '#2C2C2E' : '#F2F2F7');
-
-    // Neutral colors for axis text — Apple alpha hierarchy
-    root.style.setProperty('--color-neutral-1', isDarkMode ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.85)');
-    root.style.setProperty('--color-neutral-2', isDarkMode ? 'rgba(235,235,245,0.6)' : 'rgba(60,60,67,0.6)');
-
-    // Feedback colors — Apple system semantic colors
-    root.style.setProperty('--color-error-main',   isDarkMode ? '#FF453A' : '#FF3B30');
-    root.style.setProperty('--color-success-main', isDarkMode ? '#30D158' : '#34C759');
-    root.style.setProperty('--color-info-main',    isDarkMode ? '#0A84FF' : '#007AFF');
-    root.style.setProperty('--color-warning-main', isDarkMode ? '#FF9F0A' : '#FF9500');
-
-    // Separator for chart grid lines
-    root.style.setProperty('--color-separator', isDarkMode ? 'rgba(84,84,88,0.65)' : 'rgba(60,60,67,0.12)');
+    Object.entries(themeColors).forEach(([property, values]) => {
+      root.style.setProperty(property, isDarkMode ? values.dark : values.light);
+    });
   }
 
   // Initial injection

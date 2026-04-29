@@ -18,29 +18,8 @@
       >
         <RouterLink to="/" class="flex items-center no-underline w-full group">
           <!-- Logo SVG replicado do Login -->
-          <div class="shrink-0 drop-shadow-md group-active:scale-95 transition-transform">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 44 44"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <rect width="44" height="44" rx="11" fill="url(#logoGradientSidebar)" />
-              <path
-                d="M14 16C14 14.8954 14.8954 14 16 14H22C25.866 14 29 17.134 29 21C29 24.866 25.866 28 22 28H18V30C18 31.1046 17.1046 32 16 32C14.8954 32 14 31.1046 14 30V16Z"
-                fill="white"
-                fill-opacity="0.95"
-              />
-              <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.65" />
-              <defs>
-                <linearGradient id="logoGradientSidebar" x1="0" y1="0" x2="44" y2="44">
-                  <stop stop-color="#007AFF" />
-                  <stop offset="1" stop-color="#5856D6" />
-                </linearGradient>
-              </defs>
-            </svg>
+          <div class="shrink-0 group-active:scale-95 transition-transform">
+            <AppLogo :size="40" :withShadow="false" />
           </div>
 
           <!-- Texto Replicado do Login (com ajuste de tamanho para sidebar) -->
@@ -122,6 +101,7 @@ import {
   NAvatar,
   type MenuOption
 } from 'naive-ui'
+import AppLogo from '@/shared/components/atoms/AppLogo.vue'
 import { useSidebarStore } from '../../stores/sidebarStore'
 
 const sidebarStore = useSidebarStore()

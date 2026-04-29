@@ -57,7 +57,7 @@ export default defineConfigWithVueTs(
           ignoreRestSiblings: true,
         },
       ],
-      'complexity': ['warn', { max: 10 }],
+      'complexity': ['error', { max: 10 }],
     },
   },
 

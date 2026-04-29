@@ -84,7 +84,14 @@ describe('transactionStore CRUD', () => {
       await store.fetchtransactionsByMonth(2026, 4)
 
       expect(mockITransactionRepo.getByMonth).toHaveBeenCalledWith(2026, 4)
-      expect(store.transactions).toEqual(mockTxs)
+      expect(store.transactions).toEqual([
+        expect.objectContaining({
+          ...sampleTx,
+          _titleLower: sampleTx.title.toLowerCase(),
+          _timestamp: new Date(sampleTx.date).getTime(),
+          _dateKey: sampleTx.date.substring(0, 10),
+        }),
+      ])
     })
 
     it('should handle repository errors gracefully during fetch', async () => {
@@ -158,7 +165,7 @@ describe('transactionStore CRUD', () => {
       await store.saveITransaction(updatedTx)
 
       const found = store.transactions.find((t) => t.id === sampleTx.id)
-      expect(found?.title).toBe('New Title')
+      expect(found).toMatchObject({ title: 'New Title', _titleLower: 'new title' })
     })
 
     it('should assign current user_id when saving a new ITransaction', async () => {

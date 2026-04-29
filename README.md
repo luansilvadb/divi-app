@@ -90,10 +90,16 @@ This project follows strict **Hexagonal Architecture** (Core/Ports/Adapters) and
     -   "Expand before contract" approach for all destructive changes.
     -   Rollbacks MUST be safe and non-destructive.
 
+5.  **Composables for Complex Logic (Principle 4)**:
+    -   Extract complex UI logic, form validation, and state transformations into dedicated composables.
+    -   Components MUST remain thin and focused on layout and event delegation.
+    -   Maintain unit test parity for all extracted logic.
+
 ### Monetary Values (BigInt)
 
-All monetary operations and values in this application must use `BigInt` to prevent floating-point precision errors. We use a centralized `bigint-adapter` to parse and format these values. 
+All monetary operations and values in this application must use `BigInt` to prevent floating-point precision errors. We use a centralized `BigIntAdapter` to parse and format these values. 
 
-- **Always** import and use `parseDecimalToBigInt` when receiving user input (e.g. from UI forms).
-- **Always** import and use `formatBigIntToDecimal` when formatting internal `BigInt` amounts for display.
+- **Always** use `BigIntAdapter.toMinorUnits` or `BigIntAdapter.parseDecimalToBigInt` when receiving user input.
+- **Always** use `BigIntAdapter.fromMinorUnits` when formatting internal `BigInt` amounts for display.
 - Ensure all repository implementations properly serialize/deserialize `BigInt` values if the underlying storage does not support them natively.
+

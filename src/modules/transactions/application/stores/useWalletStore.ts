@@ -23,9 +23,36 @@ export const useWalletStore = defineStore('wallets', () => {
     IWalletMap.value = map
   }
 
+  async function saveIWallet(IWalletData: Partial<IWallet> & { name: string; balanceNum?: number; currency?: string }) {
+    const isUpdate = !!IWalletData.id
+
+    if (isUpdate && IWalletData.id) {
+      const existing = IWalletMap.value[IWalletData.id]
+      if (!existing) throw new Error('IWallet not found')
+
+      await walletService.updateIWallet(IWalletData.id, {
+        ...IWalletData,
+        balance: IWalletData.balanceNum !== undefined
+          ? BigInt(Math.round(IWalletData.balanceNum * 100))
+          : existing.balance,
+        currency: IWalletData.currency || existing.currency,
+      })
+    } else {
+      await walletService.createIWallet({
+        name: IWalletData.name,
+        type: IWalletData.type || 'checking',
+        currency: IWalletData.currency || 'BRL',
+        icon: IWalletData.icon || 'IWallet',
+        balance: IWalletData.balanceNum || 0,
+      })
+    }
+    await fetchwallets()
+  }
+
   return {
     wallets,
     IWalletMap,
     fetchwallets,
+    saveIWallet,
   }
 })
