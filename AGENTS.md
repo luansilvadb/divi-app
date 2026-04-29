@@ -1,7 +1,7 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
-specs/011-ui-polish-consistency/plan.md
+specs/012-fix-naive-ui-type-error/plan.md
 <!-- SPECKIT END -->
 
 ## Established Project Patterns

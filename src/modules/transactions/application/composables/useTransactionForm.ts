@@ -8,7 +8,7 @@ import { messages } from '@/shared/messages/catalog'
 import { useITransactionValidation } from '@/modules/transactions/application/composables/useITransactionValidation'
 import type { IAutoCategorizationService } from '@/modules/transactions/core/ports/IAutoCategorizationService'
 import type { IAutoCreateService } from '@/modules/transactions/core/ports/IAutoCreateService'
-import type { MessageApiInjection } from 'naive-ui/lib/message/src/types'
+import type { MessageApi } from 'naive-ui'
 
 interface ITransactionForm {
   title: string
@@ -22,7 +22,7 @@ interface ITransactionForm {
 export function useTransactionForm(
   props: { initialData?: ITransaction | null },
   emit: (event: 'saved' | 'close', ...args: any[]) => void,
-  message: MessageApiInjection
+  message: MessageApi
 ) {
   const store = useTransactionStore()
   const autoCatService = useService<IAutoCategorizationService>(DI_TOKENS.IAutoCategorizationService)
