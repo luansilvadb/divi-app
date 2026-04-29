@@ -251,7 +251,7 @@ function handleDelete() {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: #f5f5f7;
+  background: var(--surface-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -262,7 +262,7 @@ function handleDelete() {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   font-size: 24px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-label);
   margin: 0 0 0.75rem 0;
   letter-spacing: -0.02em;
 }
@@ -270,7 +270,7 @@ function handleDelete() {
 .apple-empty-description {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   font-size: 17px;
-  color: #6e6e73;
+  color: var(--text-tertiary);
   line-height: 1.47;
   margin: 0 0 2rem 0;
   max-width: 400px;
@@ -307,16 +307,16 @@ function handleDelete() {
 
 /* Apple ICategory Card */
 .apple-category-card {
-  background: #ffffff;
-  border-radius: 18px;
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
   padding: 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--surface-separator);
   position: relative;
   overflow: hidden;
 }
@@ -335,8 +335,8 @@ function handleDelete() {
 
 .apple-category-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-color-hover);
 }
 
 .apple-category-card:hover::before {
@@ -345,14 +345,14 @@ function handleDelete() {
 
 .apple-category-card:active {
   transform: translateY(0) scale(0.98);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Apple Card Icon */
 .apple-card-icon {
   width: 48px;
   height: 48px;
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   background: var(--category-color-light);
   display: flex;
   align-items: center;
@@ -374,9 +374,9 @@ function handleDelete() {
 
 .apple-card-title {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
-  color: #1d1d1f;
+  color: var(--text-label);
   margin: 0 0 0.25rem 0;
   letter-spacing: -0.01em;
   line-height: 1.24;
@@ -387,8 +387,8 @@ function handleDelete() {
 
 .apple-card-subtitle {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: 13px;
-  color: #6e6e73;
+  font-size: 12px;
+  color: var(--text-tertiary);
   margin: 0;
   display: flex;
   align-items: center;
@@ -398,7 +398,7 @@ function handleDelete() {
 
 /* Apple Card Chevron */
 .apple-card-chevron {
-  color: #c7c7cc;
+  color: var(--text-quaternary);
   display: flex;
   align-items: center;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -406,7 +406,7 @@ function handleDelete() {
 
 .apple-category-card:hover .apple-card-chevron {
   transform: translateX(2px);
-  color: #8e8e93;
+  color: var(--text-tertiary);
 }
 
 /* Apple Stats Panel */
@@ -426,11 +426,11 @@ function handleDelete() {
 }
 
 .apple-stat-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--surface-separator);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -445,9 +445,9 @@ function handleDelete() {
 
 .apple-stat-label {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
-  color: #6e6e73;
+  color: var(--text-tertiary);
   letter-spacing: -0.01em;
 }
 
@@ -455,7 +455,7 @@ function handleDelete() {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   font-size: 36px;
   font-weight: 700;
-  color: #1d1d1f;
+  color: var(--text-label);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin: 0;
@@ -464,7 +464,7 @@ function handleDelete() {
 .apple-stat-description {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   font-size: 14px;
-  color: #6e6e73;
+  color: var(--text-tertiary);
   margin: 0;
   line-height: 1.4;
   font-weight: 400;
@@ -482,44 +482,6 @@ function handleDelete() {
   }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  .apple-empty-icon {
-    background: #2c2c2e;
-  }
-
-  .apple-empty-title,
-  .apple-stat-value {
-    color: #f5f5f7;
-  }
-
-  .apple-empty-description,
-  .apple-stat-label {
-    color: #8e8e93;
-  }
-
-  .apple-stat-description {
-    color: #6e6e73;
-  }
-
-  /* Cards maintain light theme regardless of system preference */
-  /* .apple-category-card and .apple-stat-card keep their default light styles */
-
-  /* Card text colors remain optimized for light backgrounds */
-  .apple-card-title {
-    color: #1d1d1f;
-  }
-
-  .apple-card-subtitle {
-    color: #6e6e73;
-  }
-
-  .apple-card-chevron {
-    color: #c7c7cc;
-  }
-
-  .apple-category-card:hover .apple-card-chevron {
-    color: #8e8e93;
-  }
-}
+/* Dark mode handled via CSS custom properties (design tokens) */
+/* No additional overrides needed — tokens adapt automatically */
 </style>

@@ -11,7 +11,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3" style="gap: var(--space-6); padding-bottom: var(--space-8);">
       <!-- MAIN COLUMN -->
-      <main class="lg:col-span-2 order-2 lg:order-1" style="padding: 0 var(--space-6);">
+      <main class="lg:col-span-2 order-2 lg:order-1">
         <div class="flex flex-col gap-4">
           <BaseSearchInput
             v-model="store.searchQuery"
@@ -223,11 +223,13 @@ onUnmounted(() => {
 <style scoped>
 /* Sidebar Cards */
 .sidebar-card {
-  border-radius: 16px;
+  border-radius: var(--radius-xl);
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  border: 1px solid var(--surface-separator);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 /* Overview Card */

@@ -14,8 +14,12 @@
     <div class="flex flex-col h-full py-2">
       <!-- HEADER / LOGO -->
       <div
-        class="flex items-center w-full pl-[18px] pr-[18px] h-24 shrink-0 transition-opacity"
+        class="flex items-center w-full pl-[18px] pr-[18px] h-24 shrink-0 transition-opacity relative overflow-hidden"
       >
+        <!-- Subtle Brand Mesh Gradient -->
+        <div class="absolute inset-0 opacity-10 dark:opacity-[0.15] pointer-events-none blur-[60px] translate-y-[-20%]">
+          <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_30%,var(--color-primary),transparent),radial-gradient(circle_at_80%_70%,var(--color-info),transparent)]"></div>
+        </div>
         <RouterLink to="/" class="flex items-center no-underline w-full group">
           <!-- Logo SVG replicado do Login -->
           <div class="shrink-0 group-active:scale-95 transition-transform">
@@ -32,8 +36,8 @@
             }"
           >
             <NText
-              class="text-[1.75rem] font-bold tracking-tight leading-none"
-              :style="{ color: 'var(--text-label)' }"
+              class="text-[1.85rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
+              style="background-image: linear-gradient(135deg, var(--color-primary), var(--color-info));"
             >
               Divi
             </NText>
@@ -82,7 +86,10 @@
               }"
             >
               <NText strong class="block truncate leading-tight text-[14px]" :style="{ color: 'var(--text-label)' }">Luan Silva</NText>
-              <NText class="block text-[11px] font-semibold truncate mt-0.5" :style="{ color: '#007AFF' }">Premium</NText>
+              <div class="premium-badge mt-1">
+                <i class="i-lucide-crown text-[10px] mr-1"></i>
+                <span>Premium</span>
+              </div>
             </div>
           </div>
         </RouterLink>
@@ -211,6 +218,20 @@ function handleMenuClick(key: string) {
   margin-top: 4px !important;
 }
 
+/* 4. Premium Active State with Glow & Gradient */
+.sidebar-menu-wrapper :deep(.n-menu-item-content.n-menu-item-content--selected::before) {
+  background: linear-gradient(135deg, var(--color-primary-subtle), rgba(0, 113, 227, 0.03)) !important;
+  box-shadow: inset 0 0 0 1px var(--color-primary-subtle), 0 4px 12px var(--color-primary-subtle) !important;
+}
+
+.sidebar-menu-wrapper :deep(.n-menu-item-content:hover:not(.n-menu-item-content--selected)::before) {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+}
+
+.dark .sidebar-menu-wrapper :deep(.n-menu-item-content:hover:not(.n-menu-item-content--selected)::before) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 /* Force Text spacing to universally match our external Footer/Header structure */
 .sidebar-menu-wrapper :deep(.n-menu-item-content-header) {
   padding-left: 16px !important;
@@ -238,5 +259,25 @@ function handleMenuClick(key: string) {
 
 .n-layout-sider--collapsed .sidebar-menu-wrapper :deep(.n-menu-item-group:not(:first-child)) {
   margin-top: 16px !important;
+}
+.premium-badge {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  padding: 1px 6px;
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.12), rgba(88, 86, 214, 0.12));
+  color: var(--color-primary);
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(0, 122, 255, 0.2);
+}
+
+.dark .premium-badge {
+  background: linear-gradient(135deg, rgba(10, 132, 255, 0.15), rgba(94, 92, 230, 0.15));
+  color: #0A84FF;
+  border-color: rgba(10, 132, 255, 0.3);
 }
 </style>

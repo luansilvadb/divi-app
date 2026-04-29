@@ -8,8 +8,8 @@
       class="header-backdrop absolute inset-0 pointer-events-none transition-opacity duration-200"
       :style="headerBackdropStyle"
     >
-      <!-- Solid Bottom Border -->
-      <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-zinc-300 dark:bg-zinc-800"></div>
+      <!-- Semi-transparent Bottom Divider -->
+      <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-[var(--surface-separator)] opacity-60"></div>
     </div>
 
     <!-- 2. Content Layer -->
@@ -21,8 +21,13 @@
 
           <div class="h-4 w-[1px] bg-zinc-200 dark:bg-zinc-800 mx-1 opacity-20"></div>
 
-          <button class="flex items-center justify-center w-8 h-8 rounded-full border border-separator bg-surface-primary/80 backdrop-blur-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-all duration-150 active:scale-95">
+          <button class="relative flex items-center justify-center w-8 h-8 rounded-full border border-separator bg-surface-primary/80 backdrop-blur-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-all duration-150 active:scale-95 group">
             <i class="i-lucide-bell text-[0.9rem]"></i>
+            <!-- Premium Notification Indicator -->
+            <span class="absolute top-1.5 right-1.5 flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
           </button>
         </div>
 
@@ -81,9 +86,10 @@ const headerBackdropStyle = computed(() => {
   return {
     opacity: p,
     backdropFilter: `blur(${Math.min(12, p * 12)}px)`,
-    // Very high opacity to ensure the small title has a clean background
-    backgroundColor: p > 0.8 ? 'rgba(242, 242, 247, 0.98)' : 'rgba(242, 242, 247, 0.4)',
-      boxShadow: p > 0.9 ? '0 1px 0 var(--surface-separator)' : 'none',
+    // Seamless linear interpolation for premium glass feel
+    backgroundColor: `rgba(242, 242, 247, ${0.4 + (p * 0.58)})`, 
+    boxShadow: p > 0.9 ? '0 1px 0 var(--surface-separator)' : 'none',
+    '--header-p': p
   }
 })
 
@@ -146,7 +152,7 @@ const titleAfter = computed(() => titleParts.value.after)
 }
 
 :global(.dark) .header-backdrop {
-  background-color: rgba(0, 0, 0, 0.98) !important;
-  box-shadow: 0 1px 0 rgba(84,84,88,0.65) !important;
+  background-color: rgba(0, 0, 0, calc(0.4 + var(--header-p, 0) * 0.58)) !important;
+  box-shadow: 0 1px 0 rgba(84, 84, 88, calc(var(--header-p, 0) * 0.65)) !important;
 }
 </style>

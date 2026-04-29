@@ -1,25 +1,28 @@
 <template>
   <div class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Premium Background -->
+    <div class="mesh-gradient" aria-hidden="true"></div>
+
     <!-- Content -->
     <div class="relative z-20 flex flex-col items-center gap-8 p-6 w-full max-w-[480px] animate-fade-in">
       <!-- Glass card -->
-      <NCard class="w-full" size="large">
+      <NCard class="w-full glass-card" size="large" :bordered="false">
         <NSpace vertical align="center" :size="24">
           <!-- Logo -->
           <NSpace align="center" :size="12">
-            <AppLogo :size="44" />
+            <AppLogo :size="48" />
             <NText
-              class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
-              style="background-image: linear-gradient(to bottom right, var(--color-primary), var(--color-info));"
+              class="text-[2.5rem] sm:text-[3.25rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
+              style="background-image: linear-gradient(135deg, var(--color-primary), var(--color-info));"
             >
               Divi
             </NText>
           </NSpace>
 
           <!-- Tagline -->
-          <NText class="text-center text-lg leading-relaxed">
+          <NText class="text-center text-lg leading-snug tracking-tight text-secondary">
             Suas finanças pessoais,<br />
-            <NText strong>simplificadas.</NText>
+            <NText strong class="text-label">simplificadas.</NText>
           </NText>
 
           <!-- Auth Form -->
@@ -204,3 +207,33 @@ async function handleGoogleLogin() {
   }
 }
 </script>
+
+<style scoped>
+.mesh-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--surface-background);
+  background-image:
+    radial-gradient(at 0% 0%, var(--color-primary-subtle) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, var(--color-info-subtle) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, var(--color-success-subtle) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, var(--color-warning-subtle) 0px, transparent 50%);
+  filter: blur(100px);
+  opacity: 0.6;
+}
+
+.glass-card {
+  backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+}
+
+:deep(.dark) .glass-card {
+  background: rgba(28, 28, 30, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24) !important;
+}
+</style>

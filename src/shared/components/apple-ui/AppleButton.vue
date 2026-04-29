@@ -54,7 +54,7 @@ const handleClick = (event: MouseEvent) => {
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: filter 0.15s ease, transform 0.15s ease, background-color 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -62,64 +62,60 @@ const handleClick = (event: MouseEvent) => {
 }
 
 .apple-button:hover:not(.apple-button--disabled) {
-  transform: scale(1.02);
-  opacity: 0.9;
+  transform: scale(1.015);
+  filter: brightness(1.08);
 }
 
 .apple-button:active:not(.apple-button--disabled) {
-  transform: scale(0.98);
+  transform: scale(0.975);
+  filter: brightness(0.95);
 }
 
 .apple-button--disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 /* Variant: Primary */
 .apple-button--primary {
-  background-color: #0071e3;
+  background-color: var(--color-primary);
   color: #ffffff;
-  border-radius: 8px;
-}
-
-.apple-button--primary:hover:not(.apple-button--disabled) {
-  background-color: #0077ed;
+  border-radius: 9px;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 /* Variant: Secondary */
 .apple-button--secondary {
-  background-color: #1d1d1f;
-  color: #ffffff;
-  border-radius: 8px;
-}
-
-.apple-button--secondary:hover:not(.apple-button--disabled) {
-  background-color: #2d2d2f;
+  background-color: var(--surface-secondary);
+  color: var(--text-label);
+  border-radius: 9px;
+  border: 1px solid var(--surface-separator);
 }
 
 /* Variant: Ghost */
 .apple-button--ghost {
   background-color: transparent;
-  color: #0071e3;
-  border: 1px solid #d2d2d7;
-  border-radius: 8px;
+  color: var(--color-primary);
+  border: 1px solid var(--surface-separator);
+  border-radius: 9px;
 }
 
 .apple-button--ghost:hover:not(.apple-button--disabled) {
-  background-color: rgba(0, 113, 227, 0.05);
-  border-color: #0071e3;
+  background-color: var(--color-primary-subtle);
+  border-color: var(--color-primary);
+  filter: none;
 }
 
 /* Size: Small */
 .apple-button--small {
-  padding: 6px 12px;
-  font-size: 14px;
+  padding: 5px 12px;
+  font-size: 13px;
 }
 
 /* Size: Medium */
 .apple-button--medium {
-  padding: 8px 15px;
-  font-size: 17px;
+  padding: 8px 16px;
+  font-size: 15px;
 }
 
 /* Size: Large */
@@ -128,9 +124,9 @@ const handleClick = (event: MouseEvent) => {
   font-size: 17px;
 }
 
-/* Focus state for accessibility */
+/* Focus state */
 .apple-button:focus-visible {
-  outline: 2px solid #0071e3;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 </style>

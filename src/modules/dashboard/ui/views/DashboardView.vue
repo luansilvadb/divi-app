@@ -7,73 +7,80 @@
     <div class="flex flex-col gap-6 pb-4">
 
       <!-- ── HERO SUMMARY ─────────────────────────────────── -->
-      <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- Net Worth (destaque) -->
         <div
-          class="relative overflow-hidden rounded-xl flex flex-col justify-between p-6 col-span-1 md:col-span-1 bg-primary text-white min-h-[148px] transition-colors duration-normal"
+          class="relative overflow-hidden rounded-[var(--radius-2xl)] flex flex-col justify-between p-7 col-span-1 md:col-span-1 bg-primary text-white min-h-[160px] shadow-lg shadow-primary/15 border border-white/5 cursor-default"
           id="dashboard-networth-card"
         >
-          <div class="flex items-start justify-between">
+          <!-- Premium Animated Mesh -->
+          <div class="absolute inset-0 opacity-40 pointer-events-none overflow-hidden">
+            <div class="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] animate-mesh-slow bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25)_0%,transparent_50%),radial-gradient(circle_at_70%_80%,rgba(0,0,0,0.15)_0%,transparent_50%)]"></div>
+          </div>
+
+          <div class="relative z-10 flex items-start justify-between">
             <div>
-              <p class="text-[11px] font-semibold uppercase tracking-widest text-white/60">{{ messages.MSG_I_NET_WORTH }}</p>
+              <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-white/70">{{ messages.MSG_I_NET_WORTH }}</p>
             </div>
-            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-white/15">
-              <i class="i-lucide-landmark text-sm text-white"></i>
+            <div class="w-9 h-9 rounded-full flex items-center justify-center bg-white/15 backdrop-blur-sm border border-white/10">
+              <i class="i-lucide-landmark text-base text-white"></i>
             </div>
           </div>
-          <div>
-            <p class="text-3xl font-bold tracking-tight tabular-nums mt-2">
+          <div class="relative z-10">
+            <p class="text-3xl font-black tracking-tight tabular-nums mt-1 leading-none">
               {{ formatCurrency(dashboardStore.totalBalance) }}
             </p>
-            <p class="text-[11px] mt-1 text-white/50">{{ messages.MSG_I_NET_WORTH_DESC }}</p>
+            <p class="text-[11px] mt-2 text-white/60 font-medium">{{ messages.MSG_I_NET_WORTH_DESC }}</p>
           </div>
         </div>
 
         <!-- Receitas -->
         <div
-          class="rounded-xl flex flex-col justify-between p-6 overflow-hidden bg-surface-primary border border-separator min-h-[148px] transition-colors duration-normal"
+          class="rounded-[var(--radius-2xl)] flex flex-col justify-between p-7 overflow-hidden bg-surface-primary border border-separator min-h-[160px] shadow-md shadow-zinc-200/50 dark:shadow-none cursor-default"
           id="dashboard-income-card"
         >
           <div class="flex items-start justify-between">
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">{{ messages.MSG_I_INCOME }}</p>
-            <div class="w-7 h-7 rounded-full flex items-center justify-center bg-success/10">
-              <i class="i-lucide-trending-up text-xs text-success"></i>
+            <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-tertiary">{{ messages.MSG_I_INCOME }}</p>
+            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-success/10">
+              <i class="i-lucide-trending-up text-sm text-success"></i>
             </div>
           </div>
           <div>
-            <p class="text-2xl font-bold tracking-tight tabular-nums mt-2 text-label">
+            <p class="text-2xl font-bold tracking-tight tabular-nums mt-1 text-label">
               {{ formatCurrency(transactionStore.totalIncome) }}
             </p>
-            <div class="flex items-center gap-1.5 mt-2">
-              <span class="text-[11px] font-semibold text-success">+12%</span>
-              <span class="text-[11px] text-tertiary">{{ messages.MSG_I_VS_LAST_MONTH }}</span>
+            <div class="flex items-center gap-1.5 mt-2.5">
+              <div class="flex items-center justify-center px-1.5 py-0.5 rounded bg-success/10 text-success text-[10px] font-bold">
+                +12%
+              </div>
+              <span class="text-[10px] font-medium text-tertiary">{{ messages.MSG_I_VS_LAST_MONTH }}</span>
             </div>
           </div>
         </div>
 
         <!-- Despesas -->
         <div
-          class="rounded-xl flex flex-col justify-between p-6 overflow-hidden bg-surface-primary border border-separator min-h-[148px] transition-colors duration-normal"
+          class="rounded-[var(--radius-2xl)] flex flex-col justify-between p-7 overflow-hidden bg-surface-primary border border-separator min-h-[160px] shadow-md shadow-zinc-200/50 dark:shadow-none cursor-default"
           id="dashboard-expense-card"
         >
           <div class="flex items-start justify-between">
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-tertiary">{{ messages.MSG_I_EXPENSE }}</p>
-            <div class="w-7 h-7 rounded-full flex items-center justify-center bg-error/10">
-              <i class="i-lucide-trending-down text-xs text-error"></i>
+            <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-tertiary">{{ messages.MSG_I_EXPENSE }}</p>
+            <div class="w-8 h-8 rounded-full flex items-center justify-center bg-error/10">
+              <i class="i-lucide-trending-down text-sm text-error"></i>
             </div>
           </div>
           <div>
-            <p class="text-2xl font-bold tracking-tight tabular-nums mt-2 text-label">
+            <p class="text-2xl font-bold tracking-tight tabular-nums mt-1 text-label">
               {{ formatCurrency(transactionStore.totalExpense) }}
             </p>
             <!-- IBudget usage bar -->
-            <div class="mt-3">
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="text-[10px] text-tertiary">{{ messages.MSG_I_BUDGET_USAGE }}</span>
-                <span class="text-[10px] font-semibold text-secondary">65%</span>
+            <div class="mt-4">
+              <div class="flex items-center justify-between mb-1.5 px-0.5">
+                <span class="text-[10px] font-medium text-tertiary">{{ messages.MSG_I_BUDGET_USAGE }}</span>
+                <span class="text-[10px] font-bold text-secondary">65%</span>
               </div>
-              <div class="h-1 rounded-full overflow-hidden bg-surface-secondary">
-                <div class="h-full rounded-full transition-all duration-150 ease-out w-[65%] bg-error"></div>
+              <div class="h-1.5 rounded-full overflow-hidden bg-surface-secondary">
+                <div class="h-full rounded-full transition-all duration-500 ease-out w-[65%] bg-error/80"></div>
               </div>
             </div>
           </div>
@@ -311,6 +318,16 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@keyframes mesh-slow {
+  0% { transform: translate(-5%, -5%) rotate(0deg); }
+  50% { transform: translate(5%, 5%) rotate(5deg); }
+  100% { transform: translate(-5%, -5%) rotate(0deg); }
+}
+
+.animate-mesh-slow {
+  animation: mesh-slow 15s ease-in-out infinite;
+}
+
 .divide-y > * + * {
   border-top: 1px solid var(--surface-separator);
 }

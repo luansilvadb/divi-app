@@ -15,7 +15,9 @@
             <span class="budget-title">{{ budget.name || categoryName }}</span>
             <span v-if="showBadge" class="budget-badge" :class="badgeClass">{{ badgeText }}</span>
           </div>
-          <span class="budget-period">{{ periodLabel }}</span>
+          <div class="budget-category-badge">
+            <span class="budget-card-category">{{ categoryName }}</span>
+          </div>
         </div>
       </div>
 
@@ -169,6 +171,43 @@ const formatCurrency = (value: number | bigint) => {
 </script>
 
 <style scoped>
+/* Premium Progress Bar Refinements */
+:deep(.n-progress-rail) {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden;
+}
+
+:deep(.dark) :deep(.n-progress-rail) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+:deep(.n-progress-fill) {
+  box-shadow: 0 2px 8px -2px v-bind(progressColor);
+  position: relative;
+}
+
+/* Subtle Shimmer Effect */
+:deep(.n-progress-fill::after) {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  animation: progress-shimmer 2.5s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 .budget-card {
   border-radius: var(--radius-xl);
   background-color: var(--surface-primary) !important;
@@ -261,11 +300,27 @@ const formatCurrency = (value: number | bigint) => {
   border: 1px solid rgba(255, 59, 48, 0.2);
 }
 
-.budget-period {
-  font-size: 10px;
-  color: var(--text-secondary);
+.budget-category-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: var(--surface-secondary);
+  border: 1px solid var(--surface-separator);
+  transition: all 0.2s var(--ease-out);
+}
+
+.budget-card-category {
+  font-size: 9px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+}
+
+.budget-card:hover .budget-category-badge {
+  border-color: var(--color-primary-subtle);
+  background-color: var(--surface-primary);
 }
 
 /* Values */
@@ -279,6 +334,7 @@ const formatCurrency = (value: number | bigint) => {
   font-size: 28px;
   font-weight: var(--font-semibold);
   color: var(--text-label);
+  font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
   line-height: 1.1;
 }

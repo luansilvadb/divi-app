@@ -241,11 +241,39 @@ const handleRetry = () => {
  */
 
 .datacard-wrapper {
+  position: relative;
   /* Smooth transitions for all state changes */
   transition: background-color var(--duration-normal) var(--ease-out),
               border-color var(--duration-normal) var(--ease-out),
               box-shadow var(--duration-normal) var(--ease-in-out),
               transform var(--duration-fast) var(--ease-out);
+}
+
+/* Premium Top Edge Highlight on Hover */
+.datacard-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--radius-lg);
+  right: var(--radius-lg);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  opacity: 0;
+  z-index: 10;
+  transition: opacity var(--duration-normal) var(--ease-out);
+  pointer-events: none;
+}
+
+.datacard-wrapper:hover::before {
+  opacity: 1;
+}
+
+.dark .datacard-wrapper::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+.datacard-wrapper.datacard-glass:hover {
+  background-color: color-mix(in srgb, var(--surface-primary) 95%, transparent) !important;
 }
 
 /* Ensure NCard internals don't add unwanted borders */
@@ -276,6 +304,18 @@ const handleRetry = () => {
 
 .datacard-disabled * {
   pointer-events: none;
+}
+
+/* Glassmorphism effect for premium material feel */
+.datacard-glass {
+  background-color: color-mix(in srgb, var(--surface-primary) 85%, transparent) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--surface-separator) !important;
+}
+
+:global(.dark) .datacard-glass {
+  background-color: color-mix(in srgb, var(--surface-primary) 80%, transparent) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
 }
 
 /* Default slot content wrapper */
