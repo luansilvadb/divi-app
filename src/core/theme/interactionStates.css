@@ -41,13 +41,15 @@ a:hover,
     transform var(--transition-normal) var(--ease-out-smooth);
 }
 
-/* Hover on clickable cards */
-.n-card:hover,
+/* Hover on clickable or hoverable cards */
+.n-card.n-card--hoverable:hover,
+.n-card.clickable:hover,
 .n-list-item:hover {
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-.dark .n-card:hover,
+.dark .n-card.n-card--hoverable:hover,
+.dark .n-card.clickable:hover,
 .dark .n-list-item:hover {
   background-color: rgba(255, 255, 255, 0.03);
 }

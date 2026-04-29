@@ -7,30 +7,7 @@
         <NSpace vertical align="center" :size="24">
           <!-- Logo -->
           <NSpace align="center" :size="12">
-            <div class="shrink-0 drop-shadow-md">
-              <svg
-                width="44"
-                height="44"
-                viewBox="0 0 44 44"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <rect width="44" height="44" rx="12" fill="url(#logoGradient)" />
-                <path
-                  d="M14 16C14 14.8954 14.8954 14 16 14H22C25.866 14 29 17.134 29 21C29 24.866 25.866 28 22 28H18V30C18 31.1046 17.1046 32 16 32C14.8954 32 14 31.1046 14 30V16Z"
-                  fill="white"
-                  fill-opacity="0.95"
-                />
-                <circle cx="30" cy="28" r="4" fill="white" fill-opacity="0.6" />
-                <defs>
-                  <linearGradient id="logoGradient" x1="0" y1="0" x2="44" y2="44">
-                    <stop stop-color="#8b5cf6" />
-                    <stop offset="1" stop-color="#6366f1" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
+            <AppLogo :size="44" />
             <NText
               class="text-[2.5rem] sm:text-[3rem] font-black tracking-tighter leading-none !bg-clip-text !text-transparent"
               style="background-image: linear-gradient(to bottom right, var(--color-primary), var(--color-info));"
@@ -177,6 +154,7 @@ import {
   NText,
   useMessage,
 } from 'naive-ui'
+import AppLogo from '@/shared/components/atoms/AppLogo.vue'
 import { container } from '@/core/di'
 import { DI_TOKENS } from '@/core/di-tokens'
 import type { IAuthService } from '../../core/ports/IAuthService'
