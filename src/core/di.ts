@@ -27,6 +27,7 @@ import { vaultDb } from '../infrastructure/storage/VaultDatabase'
 import { VaultCryptoManager } from '../infrastructure/crypto/VaultCryptoManager'
 import { AutoCreateService } from '../modules/transactions/core/services/AutoCreateService'
 import { AutoCategorizationService } from '../modules/transactions/core/services/AutoCategorizationService'
+import { ConsoleLogger } from '../infrastructure/logging/ConsoleLogger'
 
 import { DI_TOKENS } from './di-tokens'
 
@@ -110,6 +111,9 @@ container.register(DI_TOKENS.IDashboardService, new DashboardService(
   container.resolve(DI_TOKENS.IWalletRepository),
   container.resolve(DI_TOKENS.ILoanRepository)
 ))
+
+// Infrastructure
+container.register(DI_TOKENS.ILogger, new ConsoleLogger('Global'))
 
 // Helper to provide/inject services in Vue components
 export const useService = <T>(token: string): T => container.resolve<T>(token)

@@ -37,27 +37,24 @@ export class BigIntAdapter {
 
   // Método para converter decimal string para BigInt (em centavos)
   static parseDecimalToBigInt(decimalString: string): bigint | null {
-    if (!decimalString || decimalString.trim() === '') {
-      return null
-    }
+    if (!decimalString) return null;
+    
+    const trimmed = decimalString.trim();
+    if (!trimmed) return null;
 
-    const normalized = this.normalizeInput(decimalString)
+    const normalized = this.normalizeInput(trimmed);
     if (normalized === null) {
-      // normalizeInput returns null for invalid format (e.g., multiple dots)
-      // Only return 0n if the cleaned string was empty (e.g., 'abc' → cleaned to '' → 0n)
-      const cleaned = decimalString.trim().replace(/[^0-9.,]/g, '')
-      if (!cleaned || cleaned === '' || cleaned === '.' || cleaned === ',') {
-        return 0n
-      }
-      return null
+      const cleaned = trimmed.replace(/[^0-9.,]/g, '');
+      const isEmptyOrSeparator = !cleaned || cleaned === '.' || cleaned === ',';
+      return isEmptyOrSeparator ? 0n : null;
     }
 
-    const { integerPart, decimalPart } = this.parseParts(normalized)
-
+    const { integerPart, decimalPart } = this.parseParts(normalized);
+    
     try {
-      return BigInt(integerPart + decimalPart)
+      return BigInt(integerPart + decimalPart);
     } catch {
-      return null
+      return null;
     }
   }
 

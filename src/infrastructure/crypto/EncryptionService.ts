@@ -1,4 +1,4 @@
-import { AppError } from '@/core/errors'
+import { InfrastructureError } from '@/core/errors'
 
 /**
  * EncryptionService
@@ -58,11 +58,9 @@ export class EncryptionService {
       return decoder.decode(decryptedContent)
     } catch (err) {
       console.error('[EncryptionService] Decryption failed - possible wrong key or tampered data.', err)
-      throw new AppError(
+      throw new InfrastructureError(
         'Falha na decriptografia de dados soberanos.',
-        'DECRYPTION_ERROR',
-        500,
-        true
+        { originalError: err }
       )
     }
   }

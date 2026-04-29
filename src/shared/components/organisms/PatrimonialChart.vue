@@ -8,6 +8,8 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue'
 import Chart from 'chart.js/auto'
 import type { ChartConfiguration, ScriptableContext } from 'chart.js'
+import { useChartTheme } from '@/shared/composables/useChartTheme'
+import { messages } from '@/shared/messages/catalog'
 
 const props = defineProps<{
   data: number[]
@@ -17,35 +19,7 @@ const props = defineProps<{
 const chartRef = ref<HTMLCanvasElement | null>(null)
 let chartInstance: Chart | null = null
 
-// Get CSS variable value with fallback
-function getCssVar(name: string, fallback: string): string {
-  if (typeof window === 'undefined') return fallback
-  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  return value || fallback
-}
-
-// Get all theme colors for chart
-function getChartColors() {
-  const accentColor = getCssVar('--color-accent-main', '#8b5cf6')
-  const surface100 = getCssVar('--color-surface-100', '#FFFFFF')
-  const neutral2 = getCssVar('--color-neutral-2', 'rgba(0,0,0,0.6)')
-  const isDark = document.documentElement.classList.contains('dark')
-
-  // Tooltip background based on theme
-  const tooltipBg = isDark ? 'rgba(44, 44, 46, 0.95)' : 'rgba(255, 255, 255, 0.95)'
-  const tooltipTitleColor = neutral2
-  const tooltipBodyColor = isDark ? '#FFFFFF' : '#000000'
-
-  return {
-    accentColor,
-    surface100,
-    neutral2,
-    tooltipBg,
-    tooltipTitleColor,
-    tooltipBodyColor,
-    isDark,
-  }
-}
+const { colors, hexToRgba } = useChartTheme()
 
 function initChart() {
   if (!chartRef.value) return
@@ -53,7 +27,7 @@ function initChart() {
   const ctx = chartRef.value.getContext('2d')
   if (!ctx) return
 
-  const colors = getChartColors()
+  const currentColors = colors.value
 
   const config: ChartConfiguration = {
     type: 'line',
@@ -61,12 +35,12 @@ function initChart() {
       labels: props.labels,
       datasets: [
         {
-          label: 'Patrimônio',
+          label: messages.MSG_I_PATRIMONY,
           data: props.data,
-          borderColor: colors.accentColor,
+          borderColor: currentColors.accentColor,
           borderWidth: 4,
-          pointBackgroundColor: colors.isDark ? '#2C2C2E' : '#FFFFFF',
-          pointBorderColor: colors.accentColor,
+          pointBackgroundColor: currentColors.pointBg,
+          pointBorderColor: currentColors.accentColor,
           pointBorderWidth: 3,
           pointRadius: 0,
           pointHoverRadius: 7,
@@ -77,11 +51,11 @@ function initChart() {
             if (!chartArea) return undefined
             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
             // Parse accent color to rgba for gradient
-            const accentRgb = hexToRgba(colors.accentColor, 0.4)
-            const accentRgbLight = hexToRgba(colors.accentColor, 0.1)
+            const accentRgb = hexToRgba(currentColors.accentColor, 0.4)
+            const accentRgbLight = hexToRgba(currentColors.accentColor, 0.1)
             gradient.addColorStop(0, accentRgb)
             gradient.addColorStop(0.5, accentRgbLight)
-            gradient.addColorStop(1, hexToRgba(colors.accentColor, 0.0))
+            gradient.addColorStop(1, hexToRgba(currentColors.accentColor, 0.0))
             return gradient
           },
           tension: 0.45,
@@ -99,10 +73,10 @@ function initChart() {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: colors.tooltipBg,
-          titleColor: colors.tooltipTitleColor,
+          backgroundColor: currentColors.tooltipBg,
+          titleColor: currentColors.tooltipTitleColor,
           titleFont: { size: 13, weight: 'normal' },
-          bodyColor: colors.tooltipBodyColor,
+          bodyColor: currentColors.tooltipBodyColor,
           bodyFont: { size: 16, weight: 'bold' },
           padding: 16,
           cornerRadius: 12,
@@ -124,11 +98,11 @@ function initChart() {
         y: {
           border: { display: false },
           grid: {
-            color: colors.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+            color: currentColors.gridColor,
             drawTicks: false,
           },
           ticks: {
-            color: colors.neutral2,
+            color: currentColors.neutral2,
             padding: 12,
             font: { size: 12, family: 'Inter, sans-serif' },
             callback: (value) => `R$ ${Number(value) / 1000}k`,
@@ -138,7 +112,7 @@ function initChart() {
           border: { display: false },
           grid: { display: false },
           ticks: {
-            color: colors.neutral2,
+            color: currentColors.neutral2,
             padding: 12,
             font: { size: 12, family: 'Inter, sans-serif' },
           },
@@ -150,27 +124,11 @@ function initChart() {
   chartInstance = new Chart(ctx, config)
 }
 
-// Helper to convert hex to rgba
-function hexToRgba(hex: string, alpha: number): string {
-  // Handle rgba() format
-  if (hex.startsWith('rgba')) return hex
-  // Handle rgb() format
-  if (hex.startsWith('rgb(')) {
-    const values = hex.match(/\d+/g)
-    if (values) return `rgba(${values[0]}, ${values[1]}, ${values[2]}, ${alpha})`
-  }
-  // Handle hex
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
 // Update chart colors when theme changes
 function updateChartTheme() {
   if (!chartInstance) return
 
-  const colors = getChartColors()
+  const currentColors = colors.value
   const dataset = chartInstance.data.datasets[0] as {
     borderColor?: string
     pointBorderColor?: string
@@ -178,23 +136,23 @@ function updateChartTheme() {
   } | undefined
 
   if (dataset) {
-    dataset.borderColor = colors.accentColor
-    dataset.pointBorderColor = colors.accentColor
-    dataset.pointBackgroundColor = colors.isDark ? '#2C2C2E' : '#FFFFFF'
+    dataset.borderColor = currentColors.accentColor
+    dataset.pointBorderColor = currentColors.accentColor
+    dataset.pointBackgroundColor = currentColors.pointBg
   }
 
   const options = chartInstance.options
   if (options.plugins?.tooltip) {
-    options.plugins.tooltip.backgroundColor = colors.tooltipBg
-    options.plugins.tooltip.titleColor = colors.tooltipTitleColor
-    options.plugins.tooltip.bodyColor = colors.tooltipBodyColor
+    options.plugins.tooltip.backgroundColor = currentColors.tooltipBg
+    options.plugins.tooltip.titleColor = currentColors.tooltipTitleColor
+    options.plugins.tooltip.bodyColor = currentColors.tooltipBodyColor
   }
   if (options.scales?.y) {
-    options.scales.y.grid = { ...options.scales.y.grid, color: colors.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }
-    options.scales.y.ticks = { ...options.scales.y.ticks, color: colors.neutral2 }
+    options.scales.y.grid = { ...options.scales.y.grid, color: currentColors.gridColor }
+    options.scales.y.ticks = { ...options.scales.y.ticks, color: currentColors.neutral2 }
   }
   if (options.scales?.x) {
-    options.scales.x.ticks = { ...options.scales.x.ticks, color: colors.neutral2 }
+    options.scales.x.ticks = { ...options.scales.x.ticks, color: currentColors.neutral2 }
   }
 
   chartInstance.update('none') // Update without animation
@@ -202,16 +160,11 @@ function updateChartTheme() {
 
 onMounted(() => {
   initChart()
-  // Listen for theme changes
-  window.addEventListener('storage', handleStorageChange)
 })
 
-function handleStorageChange(e: StorageEvent) {
-  if (e.key === 'divi-ui-theme') {
-    // Small delay to allow theme injector to update CSS vars
-    setTimeout(updateChartTheme, 50)
-  }
-}
+watch(colors, () => {
+  updateChartTheme()
+})
 
 watch(
   () => props.data,
@@ -226,7 +179,6 @@ watch(
 )
 
 onUnmounted(() => {
-  window.removeEventListener('storage', handleStorageChange)
   if (chartInstance) {
     chartInstance.destroy()
   }

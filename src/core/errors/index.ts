@@ -1,9 +1,5 @@
-export {
-  AppError,
-  ValidationError,
-  NotFoundError,
-  AuthError,
-  ApiError,
-  isAppError,
-  toAppError
-} from './AppError'
+export { DomainError } from './DomainError';
+export { InfrastructureError } from './InfrastructureError';
+export { ValidationError } from './ValidationError';
+export { AuthError } from './AuthError';
+export { NotFoundError } from './NotFoundError';
