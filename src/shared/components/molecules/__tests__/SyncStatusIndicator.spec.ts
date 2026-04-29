@@ -19,6 +19,7 @@ describe('SyncStatusIndicator.vue', () => {
     })
     expect(wrapper.text()).toContain('Sincronizado')
     expect(wrapper.find('i').classes()).toContain('i-lucide-check-circle')
+    expect(wrapper.find('i').classes()).toContain('text-success-main')
   })
 
   it('renders correctly when syncing', () => {
@@ -43,6 +44,7 @@ describe('SyncStatusIndicator.vue', () => {
     expect(wrapper.text()).toContain('Sincronizando')
     expect(wrapper.find('i').classes()).toContain('i-lucide-refresh-cw')
     expect(wrapper.find('i').classes()).toContain('animate-spin')
+    expect(wrapper.find('i').classes()).toContain('text-info-main')
   })
 
   it('displays pending count', () => {
@@ -66,5 +68,6 @@ describe('SyncStatusIndicator.vue', () => {
     })
     expect(wrapper.text()).toContain('5')
     expect(wrapper.text()).toContain('Pendente')
+    expect(wrapper.find('i').classes()).toContain('text-warning-main')
   })
 })

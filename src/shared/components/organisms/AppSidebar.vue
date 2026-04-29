@@ -14,7 +14,7 @@
     <div class="flex flex-col h-full py-2">
       <!-- HEADER / LOGO -->
       <div
-        class="flex items-center w-full pl-[18px] pr-4 h-24 shrink-0 transition-opacity"
+        class="flex items-center w-full pl-[18px] pr-[18px] h-24 shrink-0 transition-opacity"
       >
         <RouterLink to="/" class="flex items-center no-underline w-full group">
           <!-- Logo SVG replicado do Login -->
@@ -119,7 +119,7 @@ watch(() => route.path, (newPath) => {
 })
 
 function renderIcon(iconClass: string) {
-  return () => h('i', { class: iconClass + ' text-[1.25rem]' })
+  return () => h('i', { class: iconClass + ' text-[1.5rem]' })
 }
 
 const menuOptions: MenuOption[] = [
@@ -131,7 +131,7 @@ const menuOptions: MenuOption[] = [
       { label: 'Dashboard', key: '/', icon: renderIcon('i-lucide-layout-dashboard') },
       { label: 'Transações', key: '/transactions', icon: renderIcon('i-lucide-arrow-left-right') },
       { label: 'Categorias', key: '/categories', icon: renderIcon('i-lucide-tag') },
-      { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-IWallet') },
+      { label: 'Orçamentos', key: '/budgets', icon: renderIcon('i-lucide-wallet') },
       { label: 'Metas', key: '/goals', icon: renderIcon('i-lucide-target') },
       { label: 'Empréstimos', key: '/loans', icon: renderIcon('i-lucide-banknote') },
       { label: 'Assinaturas', key: '/subscriptions', icon: renderIcon('i-lucide-refresh-cw') },

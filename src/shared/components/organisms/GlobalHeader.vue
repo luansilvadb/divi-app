@@ -17,12 +17,12 @@
 
         <!-- Actions -->
         <div class="header-actions absolute top-0 right-6 h-16 flex items-center gap-2 md:gap-4 z-30">
-          <SyncStatusIndicator class="scale-90" />
+          <SyncStatusIndicator />
 
           <div class="h-4 w-[1px] bg-zinc-200 dark:bg-zinc-800 mx-1 opacity-20"></div>
 
-          <button class="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors">
-            <i class="i-lucide-bell text-lg"></i>
+          <button class="flex items-center justify-center w-8 h-8 rounded-full border border-separator bg-surface-primary/80 backdrop-blur-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-all duration-150 active:scale-95">
+            <i class="i-lucide-bell text-[0.9rem]"></i>
           </button>
         </div>
 

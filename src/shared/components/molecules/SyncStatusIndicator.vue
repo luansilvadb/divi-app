@@ -7,16 +7,16 @@
         <!-- Simple Status Icon -->
         <div class="relative flex items-center justify-center w-5 h-5">
           <i
-            :class="statusInfo.icon"
+            :class="[statusInfo.icon, statusInfo.textClass]"
             class="text-[0.9rem] transition-all duration-150 ease-out"
-            :style="{ color: statusInfo.color }"
           ></i>
         </div>
 
         <!-- Status Label (Hidden on small screens) -->
         <div class="hidden sm:flex items-center gap-1.5 overflow-hidden">
           <span
-            class="text-[10px] font-bold tracking-tight uppercase opacity-60 group-hover:opacity-100 transition-opacity whitespace-nowrap text-secondary"
+            class="text-[10px] font-bold tracking-tight uppercase opacity-80 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+            :class="statusInfo.textClass"
           >
             {{ statusInfo.label }}
           </span>
@@ -44,11 +44,11 @@ const { status, isOnline, lastSyncTime, pendingCount } = storeToRefs(store)
 
 const statusInfo = computed(() => {
   if (!isOnline.value) {
-    return { label: 'Modo Offline', icon: 'i-lucide-wifi-off', color: 'var(--text-tertiary)' }
+    return { label: 'Modo Offline', icon: 'i-lucide-wifi-off', textClass: 'text-muted' }
   }
 
   if (pendingCount.value > 0 && status.value !== 'syncing') {
-    return { label: 'Pendente', icon: 'i-lucide-clock', color: 'var(--color-warning)' }
+    return { label: 'Pendente', icon: 'i-lucide-clock', textClass: 'text-warning-main dark:text-warning-main-dark' }
   }
 
   switch (status.value) {
@@ -56,18 +56,18 @@ const statusInfo = computed(() => {
       return {
         label: 'Sincronizando',
         icon: 'i-lucide-refresh-cw animate-spin',
-        color: 'var(--color-info)',
+        textClass: 'text-info-main dark:text-info-main-dark',
       }
     case 'synced':
       return {
         label: 'Sincronizado',
         icon: 'i-lucide-check-circle',
-        color: 'var(--color-success)',
+        textClass: 'text-success-main dark:text-success-main-dark',
       }
     case 'pending':
-      return { label: 'Aguardando Rede', icon: 'i-lucide-clock', color: 'var(--color-warning)' }
+      return { label: 'Aguardando Rede', icon: 'i-lucide-clock', textClass: 'text-warning-main dark:text-warning-main-dark' }
     default:
-      return { label: 'Conectado', icon: 'i-lucide-check-circle', color: 'var(--color-success)' }
+      return { label: 'Conectado', icon: 'i-lucide-check-circle', textClass: 'text-success-main dark:text-success-main-dark' }
   }
 })
 
