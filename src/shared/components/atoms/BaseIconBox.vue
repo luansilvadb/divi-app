@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-0 flex items-center justify-center transition-all duration-150 ease-out"
+    class="rounded-[10px] flex items-center justify-center transition-all duration-200 ease-out hover:scale-105"
     :class="[sizeClasses[size]]"
     :style="customStyle"
   >
@@ -36,7 +36,8 @@ const customStyle = computed(() => {
     // Using CSS variables for dynamic theming (Light/Dark)
     backgroundColor: `${props.color}15`, // 15 hex = ~8% opacity
     color: props.color,
-    border: `1px solid ${props.color}25` // 25 hex = ~15% opacity
+    border: `1px solid ${props.color}30`, // Increased visibility
+    boxShadow: `inset 0 1px 1px ${props.color}15` // Premium inner highlight
   }
 })
 </script>

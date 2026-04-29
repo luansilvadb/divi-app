@@ -3,7 +3,7 @@
     class="fixed bottom-6 left-0 right-0 z-[100] px-4 pointer-events-none md:hidden will-change-transform"
   >
     <nav
-      class="pointer-events-auto mx-auto w-full max-w-[440px] bg-[var(--surface-primary)] border-t border-[var(--surface-separator)] shadow-sm rounded-[2.5rem] p-1 flex items-center overflow-hidden"
+      class="pointer-events-auto mx-auto w-full max-w-[440px] bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50 shadow-[var(--shadow-lg)] rounded-[2.5rem] p-1.5 flex items-center overflow-hidden"
     >
       <template v-for="item in items" :key="item.label">
         <RouterLink v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
@@ -17,7 +17,7 @@
           >
             <div
               v-if="isPageActive(item.route)"
-              class="absolute inset-0 bg-[rgba(0,122,255,0.06)] dark:bg-[rgba(10,132,255,0.08)] rounded-[1.5rem] transition-opacity duration-300 pointer-events-none"
+              class="absolute inset-0 bg-[#007AFF]/10 dark:bg-[#0A84FF]/15 rounded-[1.5rem] transition-all duration-300 pointer-events-none scale-90"
             ></div>
 
             <i
@@ -72,7 +72,7 @@ const emit = defineEmits<{
 const items = computed(() => [
   { label: 'Dashboard', icon: 'i-lucide-layout-dashboard', route: '/' },
   { label: 'Transações', icon: 'i-lucide-arrow-left-right', route: '/transactions' },
-  { label: 'Orçamentos', icon: 'i-lucide-IWallet', route: '/budgets' },
+  { label: 'Orçamentos', icon: 'i-lucide-wallet', route: '/budgets' },
   { label: 'Mais', icon: 'i-lucide-more-horizontal', action: () => emit('open-drawer') },
 ])
 </script>

@@ -2,7 +2,8 @@
   <NTooltip trigger="hover" placement="bottom">
     <template #trigger>
       <div
-        class="sync-status-indicator flex items-center gap-2 px-3 py-1.5 rounded-full border border-separator bg-surface-primary/80 backdrop-blur-sm transition-all duration-150 ease-out group cursor-default"
+        class="sync-status-indicator flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 dark:border-zinc-800/50 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md shadow-[var(--shadow-sm)] transition-all duration-300 ease-out group cursor-default"
+        :class="{ 'animate-pulse-subtle': status === 'syncing' || pendingCount > 0 }"
       >
         <!-- Simple Status Icon -->
         <div class="relative flex items-center justify-center w-5 h-5">
@@ -22,7 +23,7 @@
           </span>
           <div
             v-if="pendingCount > 0"
-            class="px-1.5 py-0.5 rounded-md bg-warning-subtle text-warning text-[10px] font-bold animate-pulse"
+            class="px-2 py-0.5 rounded-full bg-[#FF9500]/15 text-[#FF9500] text-[9px] font-black tracking-widest border border-[#FF9500]/20"
           >
             {{ pendingCount }}
           </div>
@@ -86,3 +87,29 @@ const tooltipContent = computed(() => {
   return statusInfo.value.label
 })
 </script>
+
+<style scoped>
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(0.985); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.sync-status-indicator {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sync-status-indicator:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+:deep(.dark) .sync-status-indicator:hover {
+  background-color: rgba(24, 24, 27, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+</style>

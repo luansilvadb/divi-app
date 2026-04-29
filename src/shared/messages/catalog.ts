@@ -93,6 +93,7 @@ export const messages = {
   MSG_A_DELETE_CONFIRM: 'Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.',
   MSG_A_UNSAVED_CHANGES: 'Você tem alterações não salvas. Deseja sair?',
   MSG_A_DELETE_WALLET_TITLE: 'Excluir Conta',
+  MSG_I_SEARCH_SHORTCUT: 'Pressione {key} para buscar',
 } as const;
 
 export type MessageCode = keyof typeof messages;
