@@ -1,16 +1,18 @@
 <!-- 
 Sync Impact Report:
-- Version change: 1.5.0 -> 1.6.0
+- Version change: 1.6.0 -> 1.7.0
 - Modified principles: 
-  - VIII. Architecture (added Base components and inheritance rule)
-- Added sections:
   - None
+- Added sections:
+  - XVII. Fail Fast
+  - XVIII. Backward Compatibility
 - Removed sections: 
   - None
 - Templates requiring updates (✅ updated / ⚠ pending):
   - .specify/templates/plan-template.md (✅ updated - no changes required)
   - .specify/templates/spec-template.md (✅ updated - no changes required)
-  - .specify/templates/tasks-template.md (✅ updated - no changes required)
+  - .specify/templates/tasks-template.md (✅ updated - added references to XVII and XVIII)
+  - README.md (✅ updated - fixed principle numbering and added XVII, XVIII)
 - Deferred items:
   - None
 -->
@@ -85,8 +87,14 @@ Database migrations are immutable artifacts. Once a migration has been applied t
 ### XVI. Single Source of Truth
 Any value, rule, or contract that crosses module boundaries must have exactly one owner and one canonical location. Duplication of cross-cutting concerns — whether constants, mappings, contracts, or configuration — is a defect, not a style choice. When something needs to change, there is exactly one place to change it. If that place does not exist yet, it must be created before the value is used anywhere. Principles X, XII, XV, and the shared primitives defined in VIII are all instances of this rule.
 
+### XVII. Fail Fast
+The system must surface failures at the earliest possible boundary — never silently absorb them and never defer them to runtime. Invalid configuration prevents startup. A broken contract (missing interface implementation, schema mismatch, unresolvable dependency) is caught at initialization, not at the moment a user triggers the affected path. Every boundary defined in XIV is a fail-fast gate: data that does not conform is rejected immediately and visibly, with a typed error (XII) and a structured log entry (XIII), before it can corrupt state downstream. Silent failures — swallowed exceptions, empty catch blocks, undefined fallbacks masking missing values — are violations of this principle regardless of context.
+
+### XVIII. Backward Compatibility
+No change to a public contract — interface, API, schema, or message format — is destructive without an explicit transition phase. The rule is expand before contract: add the new before removing the old, migrate data before dropping its source, deprecate before deleting. A rollback must always be safe: the previous version of the system must be able to run against the current state of the database and external contracts without data loss or breakage. This principle governs schema changes (XV), interface evolution (VI), and any cross-module contract (XVI). A change that makes rollback destructive is not a change — it is a one-way door, and one-way doors require explicit, documented justification before they are opened.
+
 ## Governance
 
 Amendments require documentation, approval, and a migration plan. All PRs/reviews must verify compliance. Complexity must be justified.
 
-**Version**: 1.6.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-28
+**Version**: 1.7.0 | **Ratified**: 2026-04-28 | **Last Amended**: 2026-04-29

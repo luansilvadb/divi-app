@@ -74,14 +74,21 @@ This project follows strict **Hexagonal Architecture** (Core/Ports/Adapters) and
     -   `adapters/`: Concrete implementations of ports (e.g., Supabase, Dexie).
     -   `ui/views/` & `ui/components/`: Framework-specific UI code.
 
-2.  **Interface-First Design (Principle VIII)**:
+2.  **Interface-First Design (Principle VI)**:
     -   All cross-boundary dependencies MUST use interfaces.
     -   Interfaces MUST be prefixed with `I` (e.g., `IAuthService`, `ITransaction`).
     -   Concrete classes must never be imported directly from other modules.
 
-3.  **Dependency Injection**:
+3.  **Architecture & Fail Fast (Principles VIII, XVII)**:
+    -   Strict Hexagonal separation.
+    -   System MUST fail fast on invalid configuration or unresolvable dependencies at startup.
     -   Use the manual DI container in `src/core/di.ts` to register and resolve services.
     -   Use `container.resolve(DI_TOKENS.IService)` in classes and the `useService` composable in Vue components.
+
+4.  **Backward Compatibility (Principle XVIII)**:
+    -   Changes to public contracts or schemas MUST be backward compatible.
+    -   "Expand before contract" approach for all destructive changes.
+    -   Rollbacks MUST be safe and non-destructive.
 
 ### Monetary Values (BigInt)
 
