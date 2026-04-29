@@ -3,10 +3,10 @@
     <!-- Confirm Delete Dialog -->
     <BaseConfirmDialog
       :show="showConfirmDelete"
-      title="Excluir Conta"
+      :title="messages.MSG_A_DELETE_WALLET_TITLE"
       :message="messages.MSG_A_DELETE_CONFIRM"
-      confirm-text="Excluir"
-      cancel-text="Cancelar"
+      :confirm-text="messages.MSG_I_DELETE"
+      :cancel-text="messages.MSG_I_CANCEL"
       @confirm="confirmDelete"
       @cancel="showConfirmDelete = false"
     />
@@ -91,7 +91,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import {
   NButton,
   NForm,
@@ -101,13 +101,13 @@ import {
   NGrid,
   NGi,
   useMessage,
-  type FormInst,
-  type FormRules
+  type FormInst
 } from 'naive-ui'
 import { useTransactionStore } from '@/modules/transactions/application/stores/transactionStore'
 import { messages } from '@/shared/messages/catalog'
 import type { IWallet } from '@/modules/wallets/core/entities/IWallet'
 import BaseConfirmDialog from '@/shared/components/molecules/BaseConfirmDialog.vue'
+import { useWalletValidation } from '@/shared/composables/useWalletValidation'
 
 const props = defineProps<{
   initialData?: IWallet | null
@@ -118,24 +118,14 @@ const store = useTransactionStore()
 const message = useMessage()
 
 const formRef = ref<FormInst | null>(null)
-const isSubmitting = ref(false)
 const showConfirmDelete = ref(false)
 
-const form = reactive({
-  name: '',
-  balance: null as number | null,
-  currency: 'BRL',
-})
-
-const rules: FormRules = {
-  name: { required: true, message: 'Nome da conta é obrigatório', trigger: 'blur' },
-  balance: { required: true, type: 'number', message: 'Saldo inicial é obrigatório', trigger: 'blur' },
-}
+const { form, rules, isSubmitting, setForm } = useWalletValidation()
 
 const currencyOptions = [
-  { label: 'Real (BRL)', value: 'BRL' },
-  { label: 'Dólar (USD)', value: 'USD' },
-  { label: 'Euro (EUR)', value: 'EUR' },
+  { label: messages.MSG_I_CURRENCY_BRL, value: 'BRL' },
+  { label: messages.MSG_I_CURRENCY_USD, value: 'USD' },
+  { label: messages.MSG_I_CURRENCY_EUR, value: 'EUR' },
 ]
 
 const currencyConfigs: Record<string, { locale: string; symbol: string }> = {
@@ -169,9 +159,11 @@ watch(
   () => props.initialData,
   (newData) => {
     if (newData) {
-      form.name = newData.name
-      form.balance = typeof newData.balance === 'bigint' ? Number(newData.balance) / 100 : newData.balance
-      form.currency = newData.currency
+      setForm({
+        name: newData.name,
+        balance: typeof newData.balance === 'bigint' ? Number(newData.balance) / 100 : newData.balance,
+        currency: newData.currency
+      })
     }
   },
   { immediate: true },
@@ -186,8 +178,6 @@ const confirmDelete = async () => {
   showConfirmDelete.value = false
   isSubmitting.value = true
   try {
-    // Note: Transaction store needs a deleteWallet if it doesn't have one
-    // For now we'll mock it or use saveWallet with deleted flag if supported
     message.warning('Funcionalidade de exclusão em desenvolvimento.')
     emit('close')
   } catch {

@@ -24,4 +24,5 @@ export const DI_TOKENS = Object.freeze({
   IAutoCreateService: 'IAutoCreateService',
   IAutoCategorizationService: 'IAutoCategorizationService',
   IDashboardService: 'IDashboardService',
+  ILogger: 'ILogger',
 } as const);

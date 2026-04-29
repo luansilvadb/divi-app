@@ -22,10 +22,8 @@ export type {
   ILocalITransaction,
   ILocalIWallet,
   ILocalCategory,
-  ILocalPayee,
   ILocalLoan,
   ILocalSubscription,
-  ILocalActivity,
   ILocalBudget,
   ILocalGoal,
 } from './types'

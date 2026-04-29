@@ -1,5 +1,3 @@
-import type { Dexie } from 'dexie'
-
 /**
  * Interface for individual Dexie migrations.
  * Complies with Principle VIII (Interface Naming).

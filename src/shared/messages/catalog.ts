@@ -75,9 +75,24 @@ export const messages = {
   MSG_I_YEAR_1: '1 Ano',
   MSG_I_NO_ACTIVITY: 'Nenhuma atividade encontrada',
 
+  // Generic UI Strings (MSG_I_*)
+  MSG_I_NAME: 'Nome',
+  MSG_I_BALANCE: 'Saldo',
+  MSG_I_CURRENCY: 'Moeda',
+  MSG_I_SAVE: 'Salvar',
+  MSG_I_CANCEL: 'Cancelar',
+  MSG_I_DELETE: 'Excluir',
+  MSG_I_EDIT: 'Editar',
+  MSG_I_CONFIRM: 'Confirmar',
+  MSG_I_PATRIMONY: 'Patrimônio',
+  MSG_I_CURRENCY_BRL: 'Real (BRL)',
+  MSG_I_CURRENCY_USD: 'Dólar (USD)',
+  MSG_I_CURRENCY_EUR: 'Euro (EUR)',
+
   // Alert/Confirm Messages (MSG_A_*)
   MSG_A_DELETE_CONFIRM: 'Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.',
   MSG_A_UNSAVED_CHANGES: 'Você tem alterações não salvas. Deseja sair?',
+  MSG_A_DELETE_WALLET_TITLE: 'Excluir Conta',
 } as const;
 
 export type MessageCode = keyof typeof messages;
